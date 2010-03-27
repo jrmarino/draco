@@ -21,6 +21,7 @@
 -- GNAT was originally developed  by the GNAT team at  New York University. --
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
+-- Copyright (C) 2010 AuroraUX (www.auroraux.org)                           --
 ------------------------------------------------------------------------------
 
 with Ada.Characters.Conversions; use Ada.Characters.Conversions;
@@ -45,7 +46,7 @@ procedure Gnatchop is
    Config_File_Name : constant String_Access := new String'("gnat.adc");
    --  The name of the file holding the GNAT configuration pragmas
 
-   Gcc : String_Access := new String'("gcc");
+   Gcc : String_Access := new String'("gnatgcc");
    --  May be modified by switch --GCC=
 
    Gcc_Set : Boolean := False;

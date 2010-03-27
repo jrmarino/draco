@@ -21,6 +21,7 @@
 -- GNAT was originally developed  by the GNAT team at  New York University. --
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
+-- Copyright (C) 2010 AuroraUX (www.auroraux.org)                           --
 ------------------------------------------------------------------------------
 
 --  Gnatlink usage: please consult the gnat documentation
@@ -137,7 +138,7 @@ procedure Gnatlink is
    --  This table collects the arguments to be passed to compile the binder
    --  generated file.
 
-   Gcc : String_Access := Program_Name ("gcc", "gnatlink");
+   Gcc : String_Access := Program_Name ("gnatgcc", "gnatlink");
 
    Read_Mode : constant String := "r" & ASCII.NUL;
 

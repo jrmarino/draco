@@ -27,6 +27,7 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
+ * Copyright (C) 2010 AuroraUX (www.auroraux.org)                           *
  ****************************************************************************/
 
 /* This file contains system dependent symbols that are referenced in the
@@ -350,7 +351,7 @@ __gnat_ttyname (int filedes)
   || defined (__MACHTEN__) || defined (__hpux__) || defined (_AIX) \
   || (defined (__svr4__) && defined (i386)) || defined (__Lynx__) \
   || defined (__CYGWIN__) || defined (__FreeBSD__) || defined (__OpenBSD__) \
-  || defined (__GLIBC__) || defined (__APPLE__)
+  || defined (__GLIBC__) || defined (__APPLE__) || defined (__DragonFly__)
 
 #ifdef __MINGW32__
 #if OLD_MINGW
@@ -408,7 +409,7 @@ getc_immediate_common (FILE *stream,
     || defined (__CYGWIN32__) || defined (__MACHTEN__) || defined (__hpux__) \
     || defined (_AIX) || (defined (__svr4__) && defined (i386)) \
     || defined (__Lynx__) || defined (__FreeBSD__) || defined (__OpenBSD__) \
-    || defined (__GLIBC__) || defined (__APPLE__)
+    || defined (__GLIBC__) || defined (__APPLE__) || defined (__DragonFly__)
   char c;
   int nread;
   int good_one = 0;
@@ -428,7 +429,7 @@ getc_immediate_common (FILE *stream,
     || defined (__osf__) || defined (__MACHTEN__) || defined (__hpux__) \
     || defined (_AIX) || (defined (__svr4__) && defined (i386)) \
     || defined (__Lynx__) || defined (__FreeBSD__) || defined (__OpenBSD__) \
-    || defined (__GLIBC__) || defined (__APPLE__)
+    || defined (__GLIBC__) || defined (__APPLE__) || defined (__DragonFly__)
       eof_ch = termios_rec.c_cc[VEOF];
 
       /* If waiting (i.e. Get_Immediate (Char)), set MIN = 1 and wait for
@@ -924,8 +925,9 @@ __gnat_localtime_tzoff (const time_t *timer, long *off)
 /* Darwin, Free BSD, Linux, Tru64, where component tm_gmtoff is present in
    struct tm */
 
-#elif defined (__APPLE__) || defined (__FreeBSD__) || defined (linux) ||\
-     (defined (__alpha__) && defined (__osf__)) || defined (__GLIBC__)
+#elif defined (__APPLE__) || defined (__FreeBSD__) || defined (__DragonFly__) \
+     || defined (linux) || (defined (__alpha__) && defined (__osf__)) \
+     || defined (__GLIBC__)
 {
   localtime_r (timer, &tp);
   *off = tp.tm_gmtoff;

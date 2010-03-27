@@ -27,6 +27,7 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
+ * Copyright (C) 2010 AuroraUX (www.auroraux.org)                           *
  ****************************************************************************/
 
 /* This file contains those routines named by Import pragmas in
@@ -1037,7 +1038,8 @@ __gnat_open_new_temp (char *path, int fmode)
   strcpy (path, "GNAT-XXXXXX");
 
 #if (defined (__FreeBSD__) || defined (__NetBSD__) || defined (__OpenBSD__) \
-  || defined (linux) || defined(__GLIBC__)) && !defined (__vxworks)
+  || defined (__DragonFly__) || defined (linux) || defined(__GLIBC__)) \
+  && !defined (__vxworks)
   return mkstemp (path);
 #elif defined (__Lynx__)
   mktemp (path);
@@ -1193,7 +1195,7 @@ __gnat_tmp_name (char *tmp_filename)
   }
 
 #elif defined (linux) || defined (__FreeBSD__) || defined (__NetBSD__) \
-  || defined (__OpenBSD__) || defined(__GLIBC__)
+  || defined (__OpenBSD__) || defined(__GLIBC__) || defined (__DragonFly__)
 #define MAX_SAFE_PATH 1000
   char *tmpdir = getenv ("TMPDIR");
 
@@ -3468,6 +3470,7 @@ _flush_cache()
       && ! (defined (linux) && defined (__ia64__)) \
       && ! (defined (linux) && defined (powerpc)) \
       && ! defined (__FreeBSD__) \
+      && ! defined (__DragonFly__) \
       && ! defined (__Lynx__) \
       && ! defined (__hpux__) \
       && ! defined (__APPLE__) \

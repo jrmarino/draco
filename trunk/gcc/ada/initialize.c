@@ -27,6 +27,7 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
+ * Copyright (C) 2010 AuroraUX (www.auroraux.org)                           *
  ****************************************************************************/
 
 /*  This unit provides default implementation for __gnat_initialize ()
@@ -255,7 +256,7 @@ __gnat_initialize (void *eh ATTRIBUTE_UNUSED)
 /******************************************/
 
 #elif defined (__Lynx__) || defined (__FreeBSD__) || defined(__NetBSD__) \
-  || defined (__OpenBSD__)
+  || defined (__OpenBSD__) || defined (__DragonFly__)
 
 extern void __gnat_init_float (void);
 

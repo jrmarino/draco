@@ -5,6 +5,7 @@
 # Copyright (C) 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001,
 # 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Free Software
 # Foundation, Inc.
+# Copyright (C) 2010 AuroraUX (www.auroraux.org)
 #
 # This configure script is free software; the Free Software Foundation
 # gives unlimited permission to copy, distribute and modify it.
@@ -2059,6 +2060,11 @@ case "${target}" in
     TOOLS_TARGET_PAIRS="mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb"
     ;;
   *86-*-freebsd*)
+    TOOLS_TARGET_PAIRS="\
+    mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
+    indepsw.adb<indepsw-gnu.adb"
+    ;;
+  *86-*-dragonfly*)
     TOOLS_TARGET_PAIRS="\
     mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
     indepsw.adb<indepsw-gnu.adb"

@@ -27,6 +27,7 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
+ * Copyright (C) 2010 AuroraUX (www.auroraux.org)                           *
  ****************************************************************************/
 
 /* Tru64 UNIX V4.0F <stdlib.h> declares unsetenv() only if AES_SOURCE (which
@@ -301,7 +302,8 @@ void __gnat_clearenv (void) {
   }
 #elif defined (__MINGW32__) || defined (__FreeBSD__) || defined (__APPLE__) \
    || (defined (__vxworks) && defined (__RTP__)) || defined (__CYGWIN__) \
-   || defined (__NetBSD__) || defined (__OpenBSD__) || defined (__rtems__)
+   || defined (__NetBSD__) || defined (__OpenBSD__) || defined (__rtems__) \
+   || defined (__DragonFly__)
   /* On Windows, FreeBSD and MacOS there is no function to clean all the
      environment but there is a "clean" way to unset a variable. So go
      through the environ table and call __gnat_unsetenv on all entries */

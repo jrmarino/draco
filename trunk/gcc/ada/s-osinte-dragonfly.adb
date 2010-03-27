@@ -31,7 +31,7 @@
 -- Copyright (C) 2010 AuroraUX (www.auroraux.org)                           --
 ------------------------------------------------------------------------------
 
---  This is the FreeBSD THREADS version of this package
+--  This is the DragonFly THREADS version of this package
 
 with Interfaces.C; use Interfaces.C;
 

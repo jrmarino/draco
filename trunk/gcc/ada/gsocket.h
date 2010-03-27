@@ -27,6 +27,7 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
+ * Copyright (C) 2010 AuroraUX (www.auroraux.org)                           *
  ****************************************************************************/
 
 #if defined(__nucleus__) || defined(VTHREADS)
@@ -212,7 +213,8 @@
  * VxWorks and VMS).
  */
 
-#if defined (_AIX) || defined (__FreeBSD__) || defined (__hpux__) || defined (__osf__) || defined (_WIN32) || defined (__APPLE__)
+#if defined (_AIX) || defined (__FreeBSD__) || defined (__hpux__) || defined (__osf__) || defined (_WIN32) \
+ || defined (__APPLE__) || defined (__DragonFly__)
 # define HAVE_THREAD_SAFE_GETxxxBYyyy 1
 #elif defined (sgi) || defined (linux) || defined (__GLIBC__) || (defined (sun) && defined (__SVR4) && !defined (__vxworks)) || defined(__rtems__)
 # define HAVE_GETxxxBYyyy_R 1
@@ -224,7 +226,7 @@
 # define Need_Netdb_Buffer 0
 #endif
 
-#if defined (__FreeBSD__) || defined (__vxworks) || defined(__rtems__)
+#if defined (__FreeBSD__) || defined (__DragonFly__) || defined (__vxworks) || defined(__rtems__)
 # define Has_Sockaddr_Len 1
 #else
 # define Has_Sockaddr_Len 0

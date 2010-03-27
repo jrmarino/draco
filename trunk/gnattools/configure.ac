@@ -1,5 +1,6 @@
 # Configure script for libada.
 #   Copyright 2003, 2004, 2009 Free Software Foundation, Inc.
+#   Copyright 2010 AuroraUX (www.auroraux.org)
 #
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -99,6 +100,11 @@ case "${target}" in
     TOOLS_TARGET_PAIRS="mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb"
     ;;
   *86-*-freebsd*)
+    TOOLS_TARGET_PAIRS="\
+    mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
+    indepsw.adb<indepsw-gnu.adb"
+    ;;
+  *86-*-dragonfly*)
     TOOLS_TARGET_PAIRS="\
     mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
     indepsw.adb<indepsw-gnu.adb"

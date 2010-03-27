@@ -27,6 +27,7 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
+ * Copyright (C) 2010 AuroraUX (www.auroraux.org)                           *
  ****************************************************************************/
 
 /*  This unit contains initialization circuits that are system dependent.
@@ -1713,7 +1714,7 @@ void __gnat_set_features ()
 /* FreeBSD Section */
 /*******************/
 
-#elif defined (__FreeBSD__)
+#elif defined (__FreeBSD__) || defined (__DragonFly__)
 
 #include <signal.h>
 #include <sys/ucontext.h>
@@ -2311,7 +2312,7 @@ __gnat_install_handler (void)
 
 #if defined (_WIN32) || defined (__INTERIX) || defined (__EMX__) \
   || defined (__Lynx__) || defined(__NetBSD__) || defined(__FreeBSD__) \
-  || defined (__OpenBSD__)
+  || defined (__OpenBSD__) || defined (__DragonFly__)
 
 #define HAVE_GNAT_INIT_FLOAT
 

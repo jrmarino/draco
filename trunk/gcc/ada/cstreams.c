@@ -27,6 +27,7 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
+ * Copyright (C) 2010 AuroraUX (www.auroraux.org)                           *
  ****************************************************************************/
 
 /* Routines required for implementing routines in Interfaces.C.Streams */
@@ -185,7 +186,7 @@ __gnat_full_name (char *nam, char *buffer)
 #elif defined (MSDOS)
   _fixpath (nam, buffer);
 
-#elif defined (sgi) || defined (__FreeBSD__)
+#elif defined (sgi) || defined (__FreeBSD__) || defined (__DragonFly__)
 
   /* Use realpath function which resolves links and references to . and ..
      on those Unix systems that support it. Note that GNU/Linux provides it but
