@@ -55,4 +55,12 @@ chmod +x host_gnatmake
 # Limit the stack to 16MB for stack checking
 ulimit -s 16384
 
-exec $SHELL $testdir/run_all.sh ${1+"$@"}
+# John Marino: The original command was:
+#   exec $SHELL $testdir/run_all.sh ${1+"$@"}
+#
+# The $SHELL command overrides the bin/sh in the run_all.sh script
+# so if it's set to something other than the Bourne shell, errors
+# would occur.  I don't see the point of specifying the shell here
+# when it's already in the script itself.
+
+exec $testdir/run_all.sh ${1+"$@"}
