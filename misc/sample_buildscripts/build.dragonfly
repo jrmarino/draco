@@ -3,7 +3,7 @@
 
 GCC_VERSION=4.5.0
 SNAPSHOT=4.5-20100325
-NATIVE_HOST=i386-backplane-dragonfly2.4.1
+NATIVE_HOST=i386-backplane-dragonfly2.6
 OS_LABEL4VERS="[DragonFly BSD]"
 PREFIX=/usr/local
 PKG_PREFIX=/usr/pkg
@@ -73,7 +73,7 @@ mkdir -p $WRKSRC
 		--with-mpfr=$PKG_PREFIX \
 		--with-mpc=$PKG_PREFIX \
 		--with-libiconv-prefix=$PKG_PREFIX \
-		--enable-threads=posix \
+		--enable-threads=gnat \
 		--enable-shared \
 		--disable-nls
 )
