@@ -1724,7 +1724,7 @@ static void __gnat_error_handler (int, siginfo_t *, ucontext_t *);
 
 static void
 __gnat_error_handler (int sig, siginfo_t *info __attribute__ ((unused)),
-		      ucontext_t *ucontext)
+		      ucontext_t *ucontext __attribute__ ((unused)))
 {
   struct Exception_Data *exception;
   const char *msg;
@@ -1760,7 +1760,7 @@ __gnat_error_handler (int sig, siginfo_t *info __attribute__ ((unused)),
 }
 
 void
-__gnat_install_handler ()
+__gnat_install_handler (void)
 {
   struct sigaction act;
 
