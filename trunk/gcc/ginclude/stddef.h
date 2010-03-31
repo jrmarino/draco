@@ -61,14 +61,13 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #endif
 
 #if defined (__DragonFly__)
-#include <machine/stdint.h>
 #include <sys/types.h>
 #endif
 
 /* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
    defined if the corresponding type is *not* defined.
    FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-#if defined (_ANSI_H_) || defined (_MACHINE_ANSI_H_) || defined (__DragonFly__)
+#if defined(_ANSI_H_) || defined(_MACHINE_ANSI_H_)
 #if !defined(_SIZE_T_) && !defined(_BSD_SIZE_T_)
 #define _SIZE_T
 #endif
@@ -184,7 +183,7 @@ typedef __PTRDIFF_TYPE__ ptrdiff_t;
 #ifndef _SIZE_T_DEFINED_
 #ifndef _SIZE_T_DEFINED
 #ifndef _BSD_SIZE_T_DEFINED_	/* Darwin */
-#ifndef _SIZE_T_DECLARED	/* FreeBSD 5 */
+#ifndef _SIZE_T_DECLARED	/* FreeBSD 5, also DragonFly */
 #ifndef ___int_size_t_h
 #ifndef _GCC_SIZE_T
 #ifndef _SIZET_
@@ -201,12 +200,13 @@ typedef __PTRDIFF_TYPE__ ptrdiff_t;
 #define _SIZE_T_DEFINED_
 #define _SIZE_T_DEFINED
 #define _BSD_SIZE_T_DEFINED_	/* Darwin */
-#define _SIZE_T_DECLARED	/* FreeBSD 5 */
+#define _SIZE_T_DECLARED	/* FreeBSD 5, DragonFly */
 #define ___int_size_t_h
 #define _GCC_SIZE_T
 #define _SIZET_
-#if defined (__FreeBSD__) && (__FreeBSD__ >= 5)
-/* __size_t is a typedef on FreeBSD 5!, must not trash it. */
+#if defined (__DragonFly__) || (defined (__FreeBSD__) && (__FreeBSD__ >= 5))
+/* __size_t is a typedef on FreeBSD 5!, must not trash it. 
+   __size_t is also defined in <machine/stdint.h> on DragonFly BSD */
 #else
 #define __size_t
 #endif
@@ -258,7 +258,7 @@ typedef long ssize_t;
 #ifndef _BSD_WCHAR_T_
 #ifndef _BSD_WCHAR_T_DEFINED_    /* Darwin */
 #ifndef _BSD_RUNE_T_DEFINED_	/* Darwin */
-#ifndef _WCHAR_T_DECLARED /* FreeBSD 5 */
+#ifndef _WCHAR_T_DECLARED /* FreeBSD 5, also DragonFly */
 #ifndef _WCHAR_T_DEFINED_
 #ifndef _WCHAR_T_DEFINED
 #ifndef _WCHAR_T_H
@@ -310,8 +310,10 @@ typedef _BSD_RUNE_T_ rune_t;
 #endif
 /* FreeBSD 5 can't be handled well using "traditional" logic above
    since it no longer defines _BSD_RUNE_T_ yet still desires to export
-   rune_t in some cases... */
-#if defined (__FreeBSD__) && (__FreeBSD__ >= 5)
+   rune_t in some cases... 
+   DragonFly BSD inherited this quirk from FreeBSD 4.8.
+*/
+#if defined (__DragonFly__) || (defined (__FreeBSD__) && (__FreeBSD__ >= 5))
 #if !defined (_ANSI_SOURCE) && !defined (_POSIX_SOURCE)
 #if __BSD_VISIBLE
 #ifndef _RUNE_T_DECLARED

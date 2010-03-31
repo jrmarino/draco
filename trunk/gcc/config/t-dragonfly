@@ -1,11 +1,1 @@
-# Like NetBSD, DragonFly BSD has problems with GCC's stddef.h
-# until stddef.h properly defines everything (like wchar_t) we'll just
-# exclude it from the list.
-
-USER_H = $(srcdir)/ginclude/float.h \
-	 $(srcdir)/ginclude/iso646.h \
-	 $(srcdir)/ginclude/stdarg.h \
-	 $(srcdir)/ginclude/stdbool.h \
-	 $(srcdir)/ginclude/varargs.h \
-	 $(srcdir)/ginclude/stdfix.h \
-	 $(EXTRA_HEADERS)
+# There are no current non-thread makefile fragments for DragonFly BSD
