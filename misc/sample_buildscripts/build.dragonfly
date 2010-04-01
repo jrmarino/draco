@@ -73,7 +73,7 @@ mkdir -p $WRKSRC
 		--with-mpfr=$PKG_PREFIX \
 		--with-mpc=$PKG_PREFIX \
 		--with-libiconv-prefix=$PKG_PREFIX \
-		--enable-threads=gnat \
+		--enable-threads=single \
 		--enable-shared \
 		--disable-nls
 )
