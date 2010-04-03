@@ -51,10 +51,10 @@ x86_64_dragonfly_fallback_frame_state
 
   sf = (struct sigframe *) context->cfa;
   new_cfa = sf->REG_NAME(rsp);
-  fs->cfa_how = CFA_REG_OFFSET;
+  fs->regs.cfa_how = CFA_REG_OFFSET;
   /* Register 7 is rsp  */
-  fs->cfa_reg = 7;
-  fs->cfa_offset = new_cfa - (long) context->cfa;
+  fs->regs.cfa_reg = 7;
+  fs->regs.cfa_offset = new_cfa - (long) context->cfa;
 
   /* The SVR4 register numbering macros aren't usable in libgcc.  */
   fs->regs.reg[0].how = REG_SAVED_OFFSET;
@@ -114,9 +114,9 @@ x86_dragonfly_fallback_frame_state
 
   sf = (struct sigframe *) context->cfa;
   new_cfa = sf->REG_NAME(esp);
-  fs->cfa_how = CFA_REG_OFFSET;
-  fs->cfa_reg = 4;
-  fs->cfa_offset = new_cfa - (long) context->cfa;
+  fs->regs.cfa_how = CFA_REG_OFFSET;
+  fs->regs.cfa_reg = 4;
+  fs->regs.cfa_offset = new_cfa - (long) context->cfa;
 
   /* The SVR4 register numbering macros aren't usable in libgcc.  */
   fs->regs.reg[0].how = REG_SAVED_OFFSET;
