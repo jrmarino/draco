@@ -47,6 +47,10 @@ along with GCC; see the file COPYING3.  If not see
 #undef  MCOUNT_NAME
 #define MCOUNT_NAME ".mcount"
 
+/* mcount may clobber caller-saved registers, so ... */
+#undef  MCOUNT_PRESERVES_ALL_REGS
+#define MCOUNT_PRESERVES_ALL_REGS 0
+
 /* Make gcc agree with <machine/ansi.h>.  */
 
 #undef  SIZE_TYPE
@@ -139,3 +143,9 @@ along with GCC; see the file COPYING3.  If not see
    resets it to full precision.  */
 #undef TARGET_96_ROUND_53_LONG_DOUBLE
 #define TARGET_96_ROUND_53_LONG_DOUBLE 0
+
+/* Define this to be nonzero if static stack checking is supported. */
+#define STACK_CHECK_STATIC_BUILTIN 1
+
+/* Define location of OS-specific unwind support configuration. */
+#define MD_UNWIND_SUPPORT "config/i386/dragonfly-unwind.h"
