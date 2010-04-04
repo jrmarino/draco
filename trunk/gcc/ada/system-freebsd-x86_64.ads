@@ -32,6 +32,7 @@
 -- GNAT was originally developed  by the GNAT team at  New York University. --
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
+-- Copyright (C) 2010 Auroraux (www.auroraux.org)                           --
 ------------------------------------------------------------------------------
 
 package System is
@@ -90,15 +91,16 @@ package System is
    pragma Warnings (Off, Default_Bit_Order); -- kill constant condition warning
 
    --  Priority-related Declarations (RM D.1)
+   --  For FreeBSD 8.0, definitions found in <sys/priority.h>
 
-   Max_Priority           : constant Positive := 30;
-   Max_Interrupt_Priority : constant Positive := 31;
+   Max_Interrupt_Priority : constant Positive := 63;
+   Max_Priority           : constant Positive := Max_Interrupt_Priority - 1;
 
-   subtype Any_Priority       is Integer      range  0 .. 31;
-   subtype Priority           is Any_Priority range  0 .. 30;
-   subtype Interrupt_Priority is Any_Priority range 31 .. 31;
+   subtype Any_Priority       is Integer      range  0 .. Max_Interrupt_Priority;
+   subtype Priority           is Any_Priority range  0 .. Max_Priority;
+   subtype Interrupt_Priority is Any_Priority range  Max_Interrupt_Priority .. Max_Interrupt_Priority;
 
-   Default_Priority : constant Priority := 15;
+   Default_Priority : constant Priority := Max_Priority / 2;
 
 private
 
