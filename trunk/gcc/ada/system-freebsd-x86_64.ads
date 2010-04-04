@@ -96,9 +96,14 @@ package System is
    Max_Interrupt_Priority : constant Positive := 63;
    Max_Priority           : constant Positive := Max_Interrupt_Priority - 1;
 
-   subtype Any_Priority       is Integer      range  0 .. Max_Interrupt_Priority;
-   subtype Priority           is Any_Priority range  0 .. Max_Priority;
-   subtype Interrupt_Priority is Any_Priority range  Max_Interrupt_Priority .. Max_Interrupt_Priority;
+   subtype Any_Priority       is Integer
+     range 0 .. Max_Interrupt_Priority;
+
+   subtype Priority           is Any_Priority
+     range 0 .. Max_Priority;
+
+   subtype Interrupt_Priority is Any_Priority
+     range Max_Interrupt_Priority .. Max_Interrupt_Priority;
 
    Default_Priority : constant Priority := Max_Priority / 2;
 
@@ -118,7 +123,7 @@ private
    --  of the individual switch values.
 
    Backend_Divide_Checks     : constant Boolean := False;
-   Backend_Overflow_Checks   : constant Boolean := False;
+   Backend_Overflow_Checks   : constant Boolean := True;
    Command_Line_Args         : constant Boolean := True;
    Configurable_Run_Time     : constant Boolean := False;
    Denorm                    : constant Boolean := True;
