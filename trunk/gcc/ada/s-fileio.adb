@@ -27,6 +27,7 @@
 -- GNAT was originally developed  by the GNAT team at  New York University. --
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
+-- Copyright (C) 2010 AuroraUX (www.auroraux.org)                           --
 ------------------------------------------------------------------------------
 
 with Ada.Finalization;            use Ada.Finalization;
@@ -231,7 +232,7 @@ package body System.File_IO is
       Close_Status : int := 0;
       Dup_Strm     : Boolean := False;
       File         : AFCB_Ptr renames File_Ptr.all;
-      Errno        : Integer;
+      Errno        : Integer := 0;
 
    begin
       --  Take a task lock, to protect the global data value Open_Files

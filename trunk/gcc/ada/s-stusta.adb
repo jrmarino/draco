@@ -29,6 +29,7 @@
 -- GNARL was developed by the GNARL team at Florida State University.       --
 -- Extensive contributions were provided by Ada Core Technologies, Inc.     --
 --                                                                          --
+-- Copyright (C) 2010 AuroraUX (www.auroraux.org)                           --
 ------------------------------------------------------------------------------
 
 with System.Stack_Usage;
@@ -235,7 +236,7 @@ package body System.Stack_Usage.Tasking is
    ------------
 
    procedure Print (Obj : Stack_Usage_Result) is
-      Pos : Positive;
+      Pos : Positive := 0;
    begin
 
       --  Simply trim the string containing the task name

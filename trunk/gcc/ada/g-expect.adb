@@ -29,6 +29,7 @@
 -- GNAT was originally developed  by the GNAT team at  New York University. --
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
+-- Copyright (C) 2010 AuroraUX (www.auroraux.org)                           --
 ------------------------------------------------------------------------------
 
 with System;              use System;
@@ -1231,15 +1232,21 @@ package body GNAT.Expect is
 
       --  The following commands are not executed on Unix systems, and are only
       --  required for Windows systems. We are now in the parent process.
+      --  Although the if-statement is redundant, it's here so the compiler
+      --  doesn't complain about uninitialized variables.
 
-      --  Restore the old descriptors
+      if No_Fork_On_Target then
 
-      Dup2 (Input,  GNAT.OS_Lib.Standin);
-      Dup2 (Output, GNAT.OS_Lib.Standout);
-      Dup2 (Error,  GNAT.OS_Lib.Standerr);
-      Close (Input);
-      Close (Output);
-      Close (Error);
+         --  Restore the old descriptors
+
+         Dup2 (Input,  GNAT.OS_Lib.Standin);
+         Dup2 (Output, GNAT.OS_Lib.Standout);
+         Dup2 (Error,  GNAT.OS_Lib.Standerr);
+         Close (Input);
+         Close (Output);
+         Close (Error);
+      end if;
+      
    end Set_Up_Child_Communications;
 
    ---------------------------

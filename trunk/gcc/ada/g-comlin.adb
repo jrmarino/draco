@@ -27,6 +27,7 @@
 -- GNAT was originally developed  by the GNAT team at  New York University. --
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
+-- Copyright (C) 2010 AuroraUX (www.auroraux.org)                           --
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Deallocation;
@@ -412,6 +413,7 @@ package body GNAT.Command_Line is
    begin
       Index_In_Switches := 0;
       Switch_Length     := 0;
+      Param             := Parameter_None;
 
       --  Remove all leading spaces first to make sure that Index points
       --  at the start of the first switch.
