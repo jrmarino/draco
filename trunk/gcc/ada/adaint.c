@@ -3401,7 +3401,7 @@ __gnat_to_canonical_file_list_init
 char *
 __gnat_to_canonical_file_list_next (void)
 {
-  static char *empty = "";
+  static const char *empty = "";
   return empty;
 }
 

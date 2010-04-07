@@ -27,6 +27,7 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
+ * Copyright (C) 2010 AuroraUX (www.auroraux.org)                           *
  ****************************************************************************/
 
 #include <sys/stat.h>
@@ -130,6 +131,7 @@ extern int    __gnat_open_read                     (char *, int);
 extern int    __gnat_open_rw                       (char *, int);
 extern int    __gnat_open_create                   (char *, int);
 extern int    __gnat_create_output_file            (char *);
+extern int    __gnat_create_output_file_new        (char *);
 extern int    __gnat_open_append                   (char *, int);
 extern long   __gnat_file_length                   (int);
 extern long   __gnat_named_file_length             (char *);
