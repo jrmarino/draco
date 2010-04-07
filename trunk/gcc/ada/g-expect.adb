@@ -1246,7 +1246,7 @@ package body GNAT.Expect is
          Close (Output);
          Close (Error);
       end if;
-      
+
    end Set_Up_Child_Communications;
 
    ---------------------------

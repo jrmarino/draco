@@ -236,7 +236,7 @@ package body System.Stack_Usage.Tasking is
    ------------
 
    procedure Print (Obj : Stack_Usage_Result) is
-      Pos : Positive := 0;
+      Pos : Positive := 1;
    begin
 
       --  Simply trim the string containing the task name
