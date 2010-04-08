@@ -22,8 +22,52 @@ You should have received a copy of the GNU General Public License
 along with GCC; see the file COPYING3.  If not see
 <http://www.gnu.org/licenses/>.  */
 
+#undef DBX_REGISTER_NUMBER
+#undef WCHAR_TYPE_SIZE
+#undef PTRDIFF_TYPE
+#undef SIZE_TYPE
+#undef LINK_SPEC
+
+#if TARGET_64BIT
+
+#define TARGET_VERSION fprintf (stderr, " (x86-64 DragonFly/ELF)");
+#define DBX_REGISTER_NUMBER(n) dbx64_register_map[n]
+#define WCHAR_TYPE_SIZE	32
+#define PTRDIFF_TYPE	"long int"
+#define SIZE_TYPE	"long unsigned int"
+#define LINK_SPEC "\
+  %{v:-V} \
+  %{assert*} %{R*} %{rpath*} %{defsym*} \
+  %{shared:-Bshareable %{h*} %{soname*}} \
+    %{!shared: \
+      %{!static: \
+        %{rdynamic:-export-dynamic} \
+	%{!dynamic-linker:-dynamic-linker %(dfbsd_dynamic_linker) }} \
+    %{static:-Bstatic}} \
+  %{symbolic:-Bsymbolic}"
+
+#else /* 32-bit arch */
 
 #define TARGET_VERSION fprintf (stderr, " (i386 DragonFly/ELF)");
+#define DBX_REGISTER_NUMBER(n) svr4_dbx_register_map[n]
+#define WCHAR_TYPE_SIZE	BITS_PER_WORD
+#define PTRDIFF_TYPE	"int"
+#define SIZE_TYPE	"unsigned int"
+#define LINK_SPEC "\
+  %{p:%nconsider using `-pg' instead of `-p' with gprof(1)} \
+  %{v:-V} \
+  %{assert*} %{R*} %{rpath*} %{defsym*} \
+  %{shared:-Bshareable %{h*} %{soname*}} \
+    %{!shared: \
+      %{!static: \
+        %{rdynamic:-export-dynamic} \
+        %{!dynamic-linker:-dynamic-linker %(dfbsd_dynamic_linker) }} \
+    %{static:-Bstatic}} \
+  %{symbolic:-Bsymbolic}"
+
+#endif /* TAIL: TARGET_64BIT */
+
+
 
 /* Override the default comment-starter of "/".  */
 #undef  ASM_COMMENT_START
@@ -34,10 +78,6 @@ along with GCC; see the file COPYING3.  If not see
 
 #undef  ASM_APP_OFF
 #define ASM_APP_OFF "#NO_APP\n"
-
-#undef  DBX_REGISTER_NUMBER
-#define DBX_REGISTER_NUMBER(n) \
-  (TARGET_64BIT ? dbx64_register_map[n] : svr4_dbx_register_map[n])
 
 #undef  NO_PROFILE_COUNTERS
 #define NO_PROFILE_COUNTERS	1
@@ -51,16 +91,6 @@ along with GCC; see the file COPYING3.  If not see
 #undef  MCOUNT_PRESERVES_ALL_REGS
 #define MCOUNT_PRESERVES_ALL_REGS 0
 
-/* Make gcc agree with <machine/ansi.h>.  */
-
-#undef  SIZE_TYPE
-#define SIZE_TYPE	(TARGET_64BIT ? "long unsigned int" : "unsigned int")
- 
-#undef  PTRDIFF_TYPE
-#define PTRDIFF_TYPE	(TARGET_64BIT ? "long int" : "int")
-  
-#undef  WCHAR_TYPE_SIZE
-#define WCHAR_TYPE_SIZE	(TARGET_64BIT ? 32 : BITS_PER_WORD)
 
 #undef  SUBTARGET_EXTRA_SPECS	/* i386.h bogusly defines it.  */
 #define SUBTARGET_EXTRA_SPECS \
@@ -89,32 +119,6 @@ along with GCC; see the file COPYING3.  If not see
 #define ENDFILE_SPEC \
   "%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
 
-/* Provide a LINK_SPEC appropriate for DragonFly.  Here we provide support
-   for the special GCC options -static and -shared, which allow us to
-   link things in one of these three modes by applying the appropriate
-   combinations of options at link-time. We like to support here for
-   as many of the other GNU linker options as possible. But I don't
-   have the time to search for those flags. I am sure how to add
-   support for -soname shared_object_name. H.J.
-
-   I took out %{v:%{!V:-V}}. It is too much :-(. They can use
-   -Wl,-V.
-
-   When the -shared link option is used a final link is not being
-   done.  */
-
-#undef	LINK_SPEC
-#define LINK_SPEC "\
-  %{p:%nconsider using `-pg' instead of `-p' with gprof(1)} \
-  %{v:-V} \
-  %{assert*} %{R*} %{rpath*} %{defsym*} \
-  %{shared:-Bshareable %{h*} %{soname*}} \
-    %{!shared: \
-      %{!static: \
-        %{rdynamic:-export-dynamic} \
-        %{!dynamic-linker:-dynamic-linker %(dfbsd_dynamic_linker) }} \
-    %{static:-Bstatic}} \
-  %{symbolic:-Bsymbolic}"
 
 /* A C statement to output to the stdio stream FILE an assembler
    command to advance the location counter to a multiple of 1<<LOG
