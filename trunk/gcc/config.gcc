@@ -482,6 +482,9 @@ case ${target} in
           ;;
       esac
       ;;
+    no | gnat | single)
+      # Let these non-posix thread selections fall through if requested
+      ;;
     *)
       echo 'Unknown thread configuration for FreeBSD'
       exit 1
@@ -520,6 +523,13 @@ case ${target} in
     "" | yes | posix)
       thread_file='posix'
       tmake_file="${tmake_file} t-dragonfly-thread"
+      ;;
+    no | gnat | single)
+      # Let these non-posix thread selections fall through if requested
+      ;;
+    *)
+      echo 'Unknown thread configuration for DragonFly BSD'
+      exit 1
       ;;
   esac
   dfbsd_tm_file="dragonfly-spec.h dragonfly.h"
