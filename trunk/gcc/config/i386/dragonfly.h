@@ -30,11 +30,24 @@ along with GCC; see the file COPYING3.  If not see
 
 #if TARGET_64BIT
 
-#define TARGET_VERSION fprintf (stderr, " (x86-64 DragonFly/ELF)");
 #define DBX_REGISTER_NUMBER(n) dbx64_register_map[n]
 #define WCHAR_TYPE_SIZE	32
 #define PTRDIFF_TYPE	"long int"
 #define SIZE_TYPE	"long unsigned int"
+
+#else /* 32-bit TARGET */
+
+#define DBX_REGISTER_NUMBER(n) svr4_dbx_register_map[n]
+#define WCHAR_TYPE_SIZE	BITS_PER_WORD
+#define PTRDIFF_TYPE	"int"
+#define SIZE_TYPE	"unsigned int"
+
+#endif /* TAIL: TARGET_64BIT */
+
+
+#if defined (__x86_64__)
+
+#define TARGET_VERSION fprintf (stderr, " (x86-64 DragonFly/ELF)");
 #define LINK_SPEC "\
   %{v:-V} \
   %{assert*} %{R*} %{rpath*} %{defsym*} \
@@ -45,14 +58,10 @@ along with GCC; see the file COPYING3.  If not see
 	%{!dynamic-linker:-dynamic-linker %(dfbsd_dynamic_linker) }} \
     %{static:-Bstatic}} \
   %{symbolic:-Bsymbolic}"
-
-#else /* 32-bit arch */
+  
+#else  /* 32-bit arch */
 
 #define TARGET_VERSION fprintf (stderr, " (i386 DragonFly/ELF)");
-#define DBX_REGISTER_NUMBER(n) svr4_dbx_register_map[n]
-#define WCHAR_TYPE_SIZE	BITS_PER_WORD
-#define PTRDIFF_TYPE	"int"
-#define SIZE_TYPE	"unsigned int"
 #define LINK_SPEC "\
   %{p:%nconsider using `-pg' instead of `-p' with gprof(1)} \
   %{v:-V} \
@@ -65,8 +74,7 @@ along with GCC; see the file COPYING3.  If not see
     %{static:-Bstatic}} \
   %{symbolic:-Bsymbolic}"
 
-#endif /* TAIL: TARGET_64BIT */
-
+#endif /* TAIL: defined(__x86_64__) */
 
 
 /* Override the default comment-starter of "/".  */
