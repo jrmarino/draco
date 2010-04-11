@@ -1,0 +1,14 @@
+This is a running list of revisions to GCC which have not yet been
+incorporated into draco.  The most likely reason is that it breaks
+compatibility with gcc 4.5, or rather relies on changes to the c language
+that isn't present in the 4.5 branch yet.  An asterisk means it can be
+incorporated into the current trunk.
+
+ebotczou: 158202:  gccint + testsuite
+ebotczou: 158201:  gccint/utils2.c
+ebotczou: 158200:  gccint/trans.c
+uros:     158195:* i386.c      
+ebotczou: 158175:  gcc/loop-invariant.c
+ebotczou: 158159:  gccint/big-five
+ebotczou: 158156:  gccint/big-five
+ebotczou: 158139:  gccint/big-five + gcc/(four c files)
