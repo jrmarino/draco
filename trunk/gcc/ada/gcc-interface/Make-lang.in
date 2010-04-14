@@ -1,6 +1,7 @@
 # Top level -*- makefile -*- fragment for GNU Ada (GNAT).
 #   Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
-#   2003, 2004, 2005, 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+#   2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+#   Free Software Foundation, Inc.
 
 #This file is part of GCC.
 
@@ -1253,7 +1254,8 @@ ada/trans.o : ada/gcc-interface/trans.c $(CONFIG_H) $(SYSTEM_H) coretypes.h \
    $(GIMPLE_H) ada/gcc-interface/ada.h ada/adadecode.h ada/types.h \
    ada/atree.h ada/elists.h ada/namet.h ada/nlists.h ada/snames.h \
    ada/stringt.h ada/uintp.h ada/urealp.h ada/fe.h ada/sinfo.h ada/einfo.h \
-   $(ADA_TREE_H) ada/gcc-interface/gigi.h gt-ada-trans.h
+   ada/gcc-interface/gadaint.h $(ADA_TREE_H) ada/gcc-interface/gigi.h \
+   gt-ada-trans.h
 	$(COMPILER) -c $(ALL_COMPILERFLAGS) -I.. $(ALL_CPPFLAGS) $< -o $@
 
 ada/utils.o : ada/gcc-interface/utils.c $(CONFIG_H) $(SYSTEM_H) coretypes.h \
