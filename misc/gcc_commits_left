@@ -4,15 +4,11 @@ compatibility with gcc 4.5, or rather relies on changes to the c language
 that isn't present in the 4.5 branch yet.  An asterisk means it can be
 incorporated into the current trunk.
 
-baldrick: 158258:  gccint/two + except (remove)
 ebotczou: 158255:  gccint/four + testsuite
 ebotczou: 158254:  gccint/six + gimple + tree-ssa-ccp 
-ro:       158236:* config.gcc
-ro:       158235:* config.gcc
 ebotczou: 158202:  gccint + testsuite
 ebotczou: 158201:  gccint/utils2.c
 ebotczou: 158200:  gccint/trans.c
-uros:     158195:* i386.c      
 ebotczou: 158175:  gcc/loop-invariant.c
 ebotczou: 158159:  gccint/big-five
 ebotczou: 158156:  gccint/big-five
