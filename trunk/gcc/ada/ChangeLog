@@ -1,3 +1,57 @@
+2010-04-15  Joel Sherrill <joel.sherrill@oarcorp.com>
+
+	* g-socket.adb: A target can have multiple missing errno's.  This
+	will result in multiple errno's being defined as -1.  Because of this
+	we can not use a case but must use a series of if's to avoid 
+	a duplicate case error in GNAT.Sockets.Resolve_Error.
+
+2010-04-15  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* gcc-interface/trans.c (call_to_gnu): Open a nesting level if this is
+	a statement.  Otherwise, if at top-level, push the processing of the
+	elaboration routine.  In the misaligned case, issue the error messages
+	again on entry and create the temporary explicitly.  Do not issue them
+	for CONSTRUCTORs.
+	For a function call, emit the range check if necessary.
+	In the copy-in copy-out case, create the temporary for the return
+	value explicitly.
+	Do not unnecessarily convert by-ref parameters to the formal's type.
+	Remove obsolete guards in conditions.
+	(gnat_to_gnu) <N_Assignment_Statement>: For a function call, pass the
+	target to call_to_gnu in all cases.
+	(gnat_gimplify_expr) <ADDR_EXPR>: Remove handling of SAVE_EXPR.
+	(addressable_p) <CONSTRUCTOR>: Return false if not static.
+	<COMPOUND_EXPR>: New case.
+	* gcc-interface/utils2.c (build_unary_op) <ADDR_EXPR>: Fold a compound
+	expression if it has unconstrained array type.
+	(gnat_mark_addressable) <COMPOUND_EXPR>: New case.
+	(gnat_stabilize_reference) <COMPOUND_EXPR>: Stabilize operands on an
+	individual basis.
+
+2010-04-15  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* gcc-interface/trans.c (gigi): Do not start statement group.
+	(Compilation_Unit_to_gnu): Set current_function_decl to NULL.
+	Start statement group and push binding level here...
+	(gnat_to_gnu) <N_Compilation_Unit>: ...and not here.
+	Do not push fake contexts at top level.  Remove redundant code.
+	(call_to_gnu): Rename a local variable and constify another.
+	* gcc-interface/utils.c (gnat_pushlevel): Fix formatting nits.
+	(set_current_block_context): Set it as the group's block.
+	(gnat_init_decl_processing): Delete unrelated init code.
+	(end_subprog_body): Use NULL_TREE.
+
+2010-04-15  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* gcc-interface/trans.c (call_to_gnu): Do not unnecessarily force
+	side-effects of actual parameters before the call.
+
+2010-04-15  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* gcc-interface/decl.c (validate_size): Reorder, remove obsolete test
+	and warning.
+	(set_rm_size): Reorder and remove obsolete test.
+
 2010-04-14  Eric Botcazou  <ebotcazou@adacore.com>
 
 	* gcc-interface/gigi.h: Reorder declarations and tweak comments.
@@ -19,6 +73,12 @@
 	Ekind.  Return early for class-wide types.  Do not compute initializer
 	unless necessary.  Reuse the tree for an associated class-wide type
 	only if processing its root type.
+
+2010-04-13  Joel Sherrill <joel.sherrill@oarcorp.com>
+
+	* gsocket.h: Run-time can no longer be built without network
+	OS headers available.  Changing RTEMS GNAT build procedure to
+	reflect this and letting run-time build use network .h files.
 
 2010-04-13  Duncan Sands  <baldrick@free.fr>
 
