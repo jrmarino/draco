@@ -85,7 +85,7 @@ extern void mark_visited (tree t);
 
 #define MARK_VISITED(EXP)		\
 do {					\
-  if((EXP) && !TREE_CONSTANT (EXP))	\
+  if((EXP) && !CONSTANT_CLASS_P (EXP))	\
     mark_visited (EXP);			\
 } while (0)
 
@@ -232,28 +232,25 @@ extern bool Sloc_to_locus (Source_Ptr Sloc, location_t *locus);
 
 /* Post an error message.  MSG is the error message, properly annotated.
    NODE is the node at which to post the error and the node to use for the
-   "&" substitution.  */
+   '&' substitution.  */
 extern void post_error (const char *msg, Node_Id node);
 
-/* Similar, but NODE is the node at which to post the error and ENT
-   is the node to use for the "&" substitution.  */
+/* Similar to post_error, but NODE is the node at which to post the error and
+   ENT is the node to use for the '&' substitution.  */
 extern void post_error_ne (const char *msg, Node_Id node, Entity_Id ent);
 
-/* Similar, but NODE is the node at which to post the error, ENT is the node
-   to use for the "&" substitution, and N is the number to use for the ^.  */
+/* Similar to post_error_ne, but NUM is the number to use for the '^'.  */
 extern void post_error_ne_num (const char *msg, Node_Id node, Entity_Id ent,
-                               int n);
+                               int num);
 
-/* Similar to post_error_ne_num, but T is a GCC tree representing the number
-   to write.  If the tree represents a constant that fits within a
-   host integer, the text inside curly brackets in MSG will be output
-   (presumably including a '^').  Otherwise that text will not be output
-   and the text inside square brackets will be output instead.  */
+/* Similar to post_error_ne, but T is a GCC tree representing the number to
+   write.  If T represents a constant, the text inside curly brackets in
+   MSG will be output (presumably including a '^').  Otherwise it will not
+   be output and the text inside square brackets will be output instead.  */
 extern void post_error_ne_tree (const char *msg, Node_Id node, Entity_Id ent,
                                 tree t);
 
-/* Similar to post_error_ne_tree, except that NUM is a second
-   integer to write in the message.  */
+/* Similar to post_error_ne_tree, but NUM is a second integer to write.  */
 extern void post_error_ne_tree_2 (const char *msg, Node_Id node, Entity_Id ent,
                                   tree t, int num);
 
@@ -447,7 +444,6 @@ extern tree get_block_jmpbuf_decl (void);
    and uses GNAT_NODE for location information.  */
 extern void gnat_pushdecl (tree decl, Node_Id gnat_node);
 
-extern void gnat_init_decl_processing (void);
 extern void gnat_init_gcc_eh (void);
 extern void gnat_install_builtins (void);
 
@@ -621,9 +617,6 @@ create_var_decl_1 (tree var_name, tree asm_name, tree type, tree var_init,
   create_var_decl_1 (var_name, asm_name, type, var_init,		\
 		     const_flag, public_flag, extern_flag,		\
 		     static_flag, false, attr_list, gnat_node)
-
-/* Given a DECL and ATTR_LIST, apply the listed attributes.  */
-extern void process_attributes (tree decl, struct attrib *attr_list);
 
 /* Record DECL as a global renaming pointer.  */
 extern void record_global_renaming_pointer (tree decl);

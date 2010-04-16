@@ -242,11 +242,11 @@ find_common_type (tree t1, tree t2)
 static tree
 compare_arrays (tree result_type, tree a1, tree a2)
 {
+  tree result = convert (result_type, boolean_true_node);
+  tree a1_is_null = convert (result_type, boolean_false_node);
+  tree a2_is_null = convert (result_type, boolean_false_node);
   tree t1 = TREE_TYPE (a1);
   tree t2 = TREE_TYPE (a2);
-  tree result = convert (result_type, integer_one_node);
-  tree a1_is_null = convert (result_type, integer_zero_node);
-  tree a2_is_null = convert (result_type, integer_zero_node);
   bool a1_side_effects_p = TREE_SIDE_EFFECTS (a1);
   bool a2_side_effects_p = TREE_SIDE_EFFECTS (a2);
   bool length_zero_p = false;
@@ -303,11 +303,14 @@ compare_arrays (tree result_type, tree a1, tree a2)
 
 	  comparison = build_binary_op (LT_EXPR, result_type, ub, lb);
 	  comparison = SUBSTITUTE_PLACEHOLDER_IN_EXPR (comparison, a1);
+	  if (EXPR_P (comparison))
+	    SET_EXPR_LOCATION (comparison, input_location);
+
 	  length1 = SUBSTITUTE_PLACEHOLDER_IN_EXPR (length1, a1);
 
 	  length_zero_p = true;
 	  this_a1_is_null = comparison;
-	  this_a2_is_null = convert (result_type, integer_one_node);
+	  this_a2_is_null = convert (result_type, boolean_true_node);
 	}
 
       /* If the length is some other constant value, we know that the
@@ -317,6 +320,8 @@ compare_arrays (tree result_type, tree a1, tree a2)
 	{
 	  ub1 = TYPE_MAX_VALUE (TYPE_INDEX_TYPE (TYPE_DOMAIN (t1)));
 	  lb1 = TYPE_MIN_VALUE (TYPE_INDEX_TYPE (TYPE_DOMAIN (t1)));
+	  /* Note that we know that UB2 and LB2 are constant and hence
+	     cannot contain a PLACEHOLDER_EXPR.  */
 	  ub2 = TYPE_MAX_VALUE (TYPE_INDEX_TYPE (TYPE_DOMAIN (t2)));
 	  lb2 = TYPE_MIN_VALUE (TYPE_INDEX_TYPE (TYPE_DOMAIN (t2)));
 	  nbt = get_base_type (TREE_TYPE (ub1));
@@ -325,15 +330,16 @@ compare_arrays (tree result_type, tree a1, tree a2)
 	    = build_binary_op (EQ_EXPR, result_type,
 			       build_binary_op (MINUS_EXPR, nbt, ub1, lb1),
 			       build_binary_op (MINUS_EXPR, nbt, ub2, lb2));
-
-	  /* Note that we know that UB2 and LB2 are constant and hence
-	     cannot contain a PLACEHOLDER_EXPR.  */
-
 	  comparison = SUBSTITUTE_PLACEHOLDER_IN_EXPR (comparison, a1);
+	  if (EXPR_P (comparison))
+	    SET_EXPR_LOCATION (comparison, input_location);
+
 	  length1 = SUBSTITUTE_PLACEHOLDER_IN_EXPR (length1, a1);
 
 	  this_a1_is_null = build_binary_op (LT_EXPR, result_type, ub1, lb1);
-	  this_a2_is_null = convert (result_type, integer_zero_node);
+	  if (EXPR_P (this_a1_is_null))
+	    SET_EXPR_LOCATION (this_a1_is_null, input_location);
+	  this_a2_is_null = convert (result_type, boolean_false_node);
 	}
 
       /* Otherwise compare the computed lengths.  */
@@ -344,13 +350,20 @@ compare_arrays (tree result_type, tree a1, tree a2)
 
 	  comparison
 	    = build_binary_op (EQ_EXPR, result_type, length1, length2);
+	  if (EXPR_P (comparison))
+	    SET_EXPR_LOCATION (comparison, input_location);
 
 	  this_a1_is_null
 	    = build_binary_op (LT_EXPR, result_type, length1,
 			       convert (bt, integer_zero_node));
+	  if (EXPR_P (this_a1_is_null))
+	    SET_EXPR_LOCATION (this_a1_is_null, input_location);
+
 	  this_a2_is_null
 	    = build_binary_op (LT_EXPR, result_type, length2,
 			       convert (bt, integer_zero_node));
+	  if (EXPR_P (this_a2_is_null))
+	    SET_EXPR_LOCATION (this_a2_is_null, input_location);
 	}
 
       result = build_binary_op (TRUTH_ANDIF_EXPR, result_type,
@@ -370,6 +383,7 @@ compare_arrays (tree result_type, tree a1, tree a2)
   if (!length_zero_p)
     {
       tree type = find_common_type (TREE_TYPE (a1), TREE_TYPE (a2));
+      tree comparison;
 
       if (type)
 	{
@@ -377,8 +391,12 @@ compare_arrays (tree result_type, tree a1, tree a2)
 	  a2 = convert (type, a2);
 	}
 
-      result = build_binary_op (TRUTH_ANDIF_EXPR, result_type, result,
-				fold_build2 (EQ_EXPR, result_type, a1, a2));
+      comparison = fold_build2 (EQ_EXPR, result_type, a1, a2);
+      if (EXPR_P (comparison))
+	SET_EXPR_LOCATION (comparison, input_location);
+
+      result
+	= build_binary_op (TRUTH_ANDIF_EXPR, result_type, result, comparison);
     }
 
   /* The result is also true if both sizes are zero.  */
@@ -473,7 +491,7 @@ nonbinary_modular_operation (enum tree_code op_code, tree type, tree lhs,
     {
       result = gnat_protect_expr (result);
       result = fold_build3 (COND_EXPR, op_type,
-			    fold_build2 (LT_EXPR, integer_type_node, result,
+			    fold_build2 (LT_EXPR, boolean_type_node, result,
 					 convert (op_type, integer_zero_node)),
 			    fold_build2 (PLUS_EXPR, op_type, result, modulus),
 			    result);
@@ -484,7 +502,7 @@ nonbinary_modular_operation (enum tree_code op_code, tree type, tree lhs,
     {
       result = gnat_protect_expr (result);
       result = fold_build3 (COND_EXPR, op_type,
-			    fold_build2 (GE_EXPR, integer_type_node,
+			    fold_build2 (GE_EXPR, boolean_type_node,
 					 result, modulus),
 			    fold_build2 (MINUS_EXPR, op_type,
 					 result, modulus),
@@ -698,16 +716,28 @@ build_binary_op (enum tree_code op_code, tree result_type,
       modulus = NULL_TREE;
       break;
 
+    case TRUTH_ANDIF_EXPR:
+    case TRUTH_ORIF_EXPR:
+    case TRUTH_AND_EXPR:
+    case TRUTH_OR_EXPR:
+    case TRUTH_XOR_EXPR:
+#ifdef ENABLE_CHECKING
+      gcc_assert (TREE_CODE (get_base_type (result_type)) == BOOLEAN_TYPE);
+#endif
+      operation_type = left_base_type;
+      left_operand = convert (operation_type, left_operand);
+      right_operand = convert (operation_type, right_operand);
+      break;
+
     case GE_EXPR:
     case LE_EXPR:
     case GT_EXPR:
     case LT_EXPR:
-      gcc_assert (!POINTER_TYPE_P (left_type));
-
-      /* ... fall through ... */
-
     case EQ_EXPR:
     case NE_EXPR:
+#ifdef ENABLE_CHECKING
+      gcc_assert (TREE_CODE (get_base_type (result_type)) == BOOLEAN_TYPE);
+#endif
       /* If either operand is a NULL_EXPR, just return a new one.  */
       if (TREE_CODE (left_operand) == NULL_EXPR)
 	return build2 (op_code, result_type,
@@ -823,13 +853,6 @@ build_binary_op (enum tree_code op_code, tree result_type,
 
       modulus = NULL_TREE;
       break;
-
-    case PREINCREMENT_EXPR:
-    case PREDECREMENT_EXPR:
-    case POSTINCREMENT_EXPR:
-    case POSTDECREMENT_EXPR:
-      /* These operations are not used anymore.  */
-      gcc_unreachable ();
 
     case LSHIFT_EXPR:
     case RSHIFT_EXPR:
@@ -983,7 +1006,9 @@ build_unary_op (enum tree_code op_code, tree result_type, tree operand)
       break;
 
     case TRUTH_NOT_EXPR:
-      gcc_assert (result_type == base_type);
+#ifdef ENABLE_CHECKING
+      gcc_assert (TREE_CODE (get_base_type (result_type)) == BOOLEAN_TYPE);
+#endif
       result = invert_truthvalue (operand);
       break;
 
@@ -1153,21 +1178,17 @@ build_unary_op (enum tree_code op_code, tree result_type, tree operand)
 	      operand = convert (type, operand);
 	    }
 
-	  if (type != error_mark_node)
-	    operation_type = build_pointer_type (type);
-
 	  gnat_mark_addressable (operand);
-	  result = fold_build1 (ADDR_EXPR, operation_type, operand);
+	  result = build_fold_addr_expr (operand);
 	}
 
       TREE_CONSTANT (result) = staticp (operand) || TREE_CONSTANT (operand);
       break;
 
     case INDIRECT_REF:
-      /* If we want to refer to an entire unconstrained array,
-	 make up an expression to do so.  This will never survive to
-	 the backend.  If TYPE is a thin pointer, first convert the
-	 operand to a fat pointer.  */
+      /* If we want to refer to an unconstrained array, use the appropriate
+	 expression to do so.  This will never survive down to the back-end.
+	 But if TYPE is a thin pointer, first convert to a fat pointer.  */
       if (TYPE_IS_THIN_POINTER_P (type)
 	  && TYPE_UNCONSTRAINED_ARRAY (TREE_TYPE (type)))
 	{
@@ -1184,12 +1205,15 @@ build_unary_op (enum tree_code op_code, tree result_type, tree operand)
 	  TREE_READONLY (result)
 	    = TYPE_READONLY (TYPE_UNCONSTRAINED_ARRAY (type));
 	}
+
+      /* If we are dereferencing an ADDR_EXPR, return its operand.  */
       else if (TREE_CODE (operand) == ADDR_EXPR)
 	result = TREE_OPERAND (operand, 0);
 
+      /* Otherwise, build and fold the indirect reference.  */
       else
 	{
-	  result = fold_build1 (op_code, TREE_TYPE (type), operand);
+	  result = build_fold_indirect_ref (operand);
 	  TREE_READONLY (result) = TYPE_READONLY (TREE_TYPE (type));
 	}
 
@@ -1242,7 +1266,7 @@ build_unary_op (enum tree_code op_code, tree result_type, tree operand)
 
 		result = fold_build3 (COND_EXPR, operation_type,
 				      fold_build2 (NE_EXPR,
-						   integer_type_node,
+						   boolean_type_node,
 						   operand,
 						   convert
 						     (operation_type,
@@ -2071,12 +2095,11 @@ build_allocator (tree type, tree init, tree result_type, Entity_Id gnat_proc,
 tree
 fill_vms_descriptor (tree expr, Entity_Id gnat_formal, Node_Id gnat_actual)
 {
-  tree field;
   tree parm_decl = get_gnu_tree (gnat_formal);
-  tree const_list = NULL_TREE;
   tree record_type = TREE_TYPE (TREE_TYPE (parm_decl));
-  int do_range_check =
-      strcmp ("MBO",
+  tree const_list = NULL_TREE, field;
+  const bool do_range_check
+    = strcmp ("MBO",
 	      IDENTIFIER_POINTER (DECL_NAME (TYPE_FIELDS (record_type))));
 
   expr = maybe_unconstrained_array (expr);
@@ -2088,23 +2111,24 @@ fill_vms_descriptor (tree expr, Entity_Id gnat_formal, Node_Id gnat_actual)
 			      SUBSTITUTE_PLACEHOLDER_IN_EXPR
 			      (DECL_INITIAL (field), expr));
 
-      /* Check to ensure that only 32bit pointers are passed in
-	 32bit descriptors */
-      if (do_range_check &&
-          strcmp (IDENTIFIER_POINTER (DECL_NAME (field)), "POINTER") == 0)
+      /* Check to ensure that only 32-bit pointers are passed in
+	 32-bit descriptors */
+      if (do_range_check
+          && strcmp (IDENTIFIER_POINTER (DECL_NAME (field)), "POINTER") == 0)
         {
-	  tree pointer64type =
-	     build_pointer_type_for_mode (void_type_node, DImode, false);
+	  tree pointer64type
+	    = build_pointer_type_for_mode (void_type_node, DImode, false);
 	  tree addr64expr = build_unary_op (ADDR_EXPR, pointer64type, expr);
-	  tree malloc64low =
-	     build_int_cstu (long_integer_type_node, 0x80000000);
+	  tree malloc64low
+	    = build_int_cstu (long_integer_type_node, 0x80000000);
 
 	  add_stmt (build3 (COND_EXPR, void_type_node,
-			    build_binary_op (GE_EXPR, long_integer_type_node,
+			    build_binary_op (GE_EXPR, boolean_type_node,
 					     convert (long_integer_type_node,
 						      addr64expr),
 					     malloc64low),
-			    build_call_raise (CE_Range_Check_Failed, gnat_actual,
+			    build_call_raise (CE_Range_Check_Failed,
+					      gnat_actual,
 					      N_Raise_Constraint_Error),
 			    NULL_TREE));
         }
@@ -2211,9 +2235,12 @@ gnat_protect_expr (tree exp)
      unshared for gimplification; in order to avoid a complexity explosion
      at that point, we protect any expressions more complex than a simple
      arithmetic expression.  */
-  if (!TREE_SIDE_EFFECTS (exp)
-      && !EXPRESSION_CLASS_P (skip_simple_arithmetic (exp)))
-    return exp;
+  if (!TREE_SIDE_EFFECTS (exp))
+    {
+      tree inner = skip_simple_arithmetic (exp);
+      if (!EXPR_P (inner) || REFERENCE_CLASS_P (inner))
+	return exp;
+    }
 
   /* If this is a conversion, protect what's inside the conversion.  */
   if (code == NON_LVALUE_EXPR
