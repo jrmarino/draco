@@ -203,6 +203,7 @@ extern void gigi (Node_Id gnat_root, int max_gnat_node,
                   struct File_Info_Type *file_info_ptr,
                   Entity_Id standard_boolean,
                   Entity_Id standard_integer,
+                  Entity_Id standard_character,
                   Entity_Id standard_long_long_float,
                   Entity_Id standard_exception_type,
                   Int gigi_operating_mode);
@@ -270,45 +271,6 @@ extern int double_float_alignment;
    types whose size is greater or equal to 64 bits, or 0 if this alignment
    is not specifically capped.  */
 extern int double_scalar_alignment;
-
-/* Standard data type sizes.  Most of these are not used.  */
-
-#ifndef CHAR_TYPE_SIZE
-#define CHAR_TYPE_SIZE BITS_PER_UNIT
-#endif
-
-#ifndef SHORT_TYPE_SIZE
-#define SHORT_TYPE_SIZE (BITS_PER_UNIT * MIN ((UNITS_PER_WORD + 1) / 2, 2))
-#endif
-
-#ifndef INT_TYPE_SIZE
-#define INT_TYPE_SIZE BITS_PER_WORD
-#endif
-
-#ifndef LONG_TYPE_SIZE
-#define LONG_TYPE_SIZE BITS_PER_WORD
-#endif
-
-#ifndef LONG_LONG_TYPE_SIZE
-#define LONG_LONG_TYPE_SIZE (BITS_PER_WORD * 2)
-#endif
-
-#ifndef FLOAT_TYPE_SIZE
-#define FLOAT_TYPE_SIZE BITS_PER_WORD
-#endif
-
-#ifndef DOUBLE_TYPE_SIZE
-#define DOUBLE_TYPE_SIZE (BITS_PER_WORD * 2)
-#endif
-
-#ifndef LONG_DOUBLE_TYPE_SIZE
-#define LONG_DOUBLE_TYPE_SIZE (BITS_PER_WORD * 2)
-#endif
-
-/* The choice of SIZE_TYPE here is very problematic.  We need a signed
-   type whose bit width is Pmode.  Assume "long" is such a type here.  */
-#undef SIZE_TYPE
-#define SIZE_TYPE "long int"
 
 /* Data structures used to represent attributes.  */
 
@@ -356,8 +318,14 @@ enum standard_datatypes
   /* Type declaration node  <==> typedef virtual void *T() */
   ADT_fdesc_type,
 
-  /* Null pointer for above type */
+  /* Null pointer for above type.  */
   ADT_null_fdesc,
+
+  /* Value 1 in signed bitsizetype.  */
+  ADT_sbitsize_one_node,
+
+  /* Value BITS_PER_UNIT in signed bitsizetype.  */
+  ADT_sbitsize_unit_node,
 
   /* Function declaration nodes for run-time functions for allocating memory.
      Ada allocators cause calls to these functions to be generated.  Malloc32
@@ -401,6 +369,8 @@ extern GTY(()) tree gnat_raise_decls[(int) LAST_REASON_CODE + 1];
 #define ptr_void_ftype gnat_std_decls[(int) ADT_ptr_void_ftype]
 #define fdesc_type_node gnat_std_decls[(int) ADT_fdesc_type]
 #define null_fdesc_node gnat_std_decls[(int) ADT_null_fdesc]
+#define sbitsize_one_node gnat_std_decls[(int) ADT_sbitsize_one_node]
+#define sbitsize_unit_node gnat_std_decls[(int) ADT_sbitsize_unit_node]
 #define malloc_decl gnat_std_decls[(int) ADT_malloc_decl]
 #define malloc32_decl gnat_std_decls[(int) ADT_malloc32_decl]
 #define free_decl gnat_std_decls[(int) ADT_free_decl]
