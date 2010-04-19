@@ -19,8 +19,6 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-
 package body DriverSwitch is
 
    NumSet      : TSwitchIndex;
@@ -38,27 +36,49 @@ package body DriverSwitch is
    ---------------------------
 
    procedure Post_Process is
-      S_exists : Boolean;
-      c_exists : Boolean;
+      c_exists     : Boolean;
+      S_exists     : Boolean;
+      Q_exists     : Boolean;
+      gnatc_exists : Boolean;
+      gnats_exists : Boolean;
+      BitBucket    : String;
    begin
       GoNoGo := True;
+
+      c_exists     := Switch_Already_Set (SU.To_Unbounded_String ("-c"),
+                                          Partial => False);
+      S_exists     := Switch_Already_Set (SU.To_Unbounded_String ("-S"),
+                                          Partial => False);
+      Q_exists     := Switch_Already_Set (SU.To_Unbounded_String ("-S"),
+                                          Partial => False);
+      gnatc_exists := Switch_Already_Set (SU.To_Unbounded_String ("-gnatc"),
+                                          Partial => True);
+      gnats_exists := Switch_Already_Set (SU.To_Unbounded_String ("-gnats"),
+                                          Partial => True);
+
+
       if SawPG and SawFramePtr then
          GoNoGo := False;
          TIO.Put_Line (switch_err_1);
       end if;
 
-      c_exists := Switch_Already_Set (SU.To_Unbounded_String ("-c"));
-      S_exists := Switch_Already_Set (SU.To_Unbounded_String ("-S"));
       if not c_exists and not S_exists then
          GoNoGo := False;
-         TIO.Put_Line (switch_err_2);         
+         TIO.Put_Line (switch_err_2);
       end if;
 
-      if not Switch_Already_Set (SU.To_Unbounded_String ("-Q")) then
+      if not Q_exists then
          Store_Switch (SU.To_Unbounded_String ("-quiet"));
       end if;
 
-      
+      if gnatc_exists or gnats_exists then
+         BitBucket := DracoSystem.Host_Bit_Bucket
+                        (DracoSystem.Native_System.Null_File_Type);
+         Store_Switch (SU.To_Unbounded_String ("-o " & BitBucket));
+      end if;
+
+
+
    end Post_Process;
 
 
@@ -119,10 +139,6 @@ package body DriverSwitch is
       if Switch_Chars = "-fomit-frame-pointer" then
          SawFramePtr := True;
       end if;
-
-      --  if Switch_Chars = "-Q" then
-      --     SawQ := True;
-      --  end if;
 
       if Switch_Chars = "-fRTS=rtp" then
          Store_Switch (SU.To_Unbounded_String ("-mrtp"));
@@ -192,7 +208,8 @@ package body DriverSwitch is
    ----------------------------------
 
    function Switch_Already_Set (
-      Switch : in SU.Unbounded_String
+      Switch  : in SU.Unbounded_String;
+      Partial : in Boolean
     ) return Boolean
    is
       index   : TSwitchRange := TSwitchRange'First;
@@ -202,10 +219,19 @@ package body DriverSwitch is
       advance := NumSet > index;
 
       while advance loop
-         if SwitchList (index) = Switch then
-            result  := True;
-            exit;
-         end if;
+         case Partial is
+            when true =>
+               if Switch = SwitchList (index) then
+                  result  := True;
+               end if;
+            when false =>
+               if (Switch'Size <= SwitchList (index)'Size) and
+                  (Switch = SwitchList (index)(1 .. Switch'Size)) then
+                  result := True;
+               end if;
+         end case;
+
+         exit when result;
 
          if index = TSwitchRange'Last then
             advance := False;
@@ -260,9 +286,12 @@ package body DriverSwitch is
          return False;
       end if;
 
-      return Switch_Chars (Switch_Chars'First .. Switch_Chars'First + 7) =
+      return Switch_Chars (Switch_Chars'First .. Switch_Chars'First + 6) =
             "--param";
    end Parameter_Switch;
+
+
+   --  function Host_Bit_bucket (
 
 end DriverSwitch;
 

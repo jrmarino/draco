@@ -21,6 +21,7 @@
 
 with Ada.Strings.Unbounded;
 with Ada.Text_IO;
+with DracoSystem;
 
 package DriverSwitch is
 
@@ -62,10 +63,12 @@ private
    --  array, the switch will be saved, otherwise it will be ignored.
 
    function Switch_Already_Set (
-      Switch : in SU.Unbounded_String
+      Switch  : in SU.Unbounded_String,
+      Partial : in Boolean
    ) return Boolean;
    --  Systematically search the previously set switches and return
-   --  true if an entry matches the query.
+   --  true if an entry matches the query.  If a partial match is sought
+   --  through a wildcard (e.g. -gnatc*) then set Partial = true
 
    function Dedicated_Compiler_Switch (
       Switch_Chars : in String
