@@ -179,14 +179,28 @@ package body DriverSwitch is
 
    function Dump_Flags (
       Switch  : in SU.Unbounded_String;
-      Partial : in Boolean
+      Partial : in Boolean;
+      Counter : in out Natural
     ) return SU.Unbounded_String
    is
       index   : TSwitchRange := TSwitchRange'First;
       foundit : Boolean := False;
       advance : Boolean;
-      counter : Natural := 0;
       result  : SU.Unbounded_String := SU.Null_Unbounded_String;
+
+      procedure tackon (
+        result  : in out SU.Unbounded_String;
+        Counter : in out Natural;
+        flag    : in SU.Unbounded_String
+      ) is
+      begin
+         if Counter > 0 then
+            SU.Append (result, " ");
+         end if;
+         Counter := Counter + 1;
+         SU.Append (result, flag);
+      end tackon;
+
    begin
       advance := NumSet > index;
 
@@ -195,17 +209,13 @@ package body DriverSwitch is
             when False =>
                if Switch = SwitchList (index) then
                   foundit := True;
-                  SU.Append (result, SwitchList (index));
+                  tackon (result, Counter, SwitchList (index));
                end if;
             when True =>
                if (Switch'Size <= SwitchList (index)'Size) and
                   (Switch = SU.Unbounded_Slice
                      (SwitchList (index), 1, Switch'Size)) then
-                  if counter > 0 then
-                     SU.Append (result, " ");
-                  end if;
-                  SU.Append (result, SwitchList (index));
-                  counter := counter + 1;
+                  tackon (result, Counter, SwitchList (index));
                end if;
          end case;
 
