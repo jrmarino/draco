@@ -19,9 +19,8 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-with Ada.Strings.Unbounded;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Text_IO;
-with DracoSystem;
 
 package DriverSwitch is
 
@@ -39,10 +38,6 @@ package DriverSwitch is
 
    type TSwitchList is array (TSwitchRange) of SU.Unbounded_String;
 
-   function Is_Switch (Switch_Chars : in String) return Boolean;
-   --  Returns True if Switch_Chars is at least two characters long, and the
-   --  first character is an hyphen ('-').
-
    procedure Set_Switch (Switch_Chars : in String);
    --  The switch will first be validated.  If the string is indeed a switch
    --  and it meets the criteria of being sent to the ada compiler (meaning
@@ -57,13 +52,22 @@ package DriverSwitch is
 
 private
 
+   function Dump_Flags (
+      Switch  : in SU.Unbounded_String;
+      Partial : in Boolean
+   ) return SU.Unbounded_String;
+   --  This function helps construct the argument string.  It can locate a
+   --  specific switch or a slew of switches using a wildcard (e.g. I*).
+   --  The wildcard is indicated by setting Partial to True.  All switches
+   --  are separated by a single space.
+
    procedure Store_Switch (Switch : in SU.Unbounded_String);
    --  When presented a new switch string, a search will be performed to make
    --  sure it doesn't already exist.  If there is space in the preallocated
    --  array, the switch will be saved, otherwise it will be ignored.
 
    function Switch_Already_Set (
-      Switch  : in SU.Unbounded_String,
+      Switch  : in SU.Unbounded_String;
       Partial : in Boolean
    ) return Boolean;
    --  Systematically search the previously set switches and return

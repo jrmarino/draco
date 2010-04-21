@@ -22,11 +22,13 @@
 package DracoSystem is
 
    type BitBucket_Variations is (POSIX, MINGW);
+   subtype TArch is String (1 .. 16);
+   subtype TOSName is String (1 .. 25);
 
    type RecSystem is record
       Null_File_Type : BitBucket_Variations;
-      Architecture   : String;
-      OS_Name        : String;
+      Architecture   : TArch;
+      OS_Name        : TOSName;
       OS_Version     : Positive;
       Have_GNU_AS    : Boolean;
       Dash_For_Pipe  : Boolean;

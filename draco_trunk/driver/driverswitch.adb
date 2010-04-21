@@ -19,15 +19,15 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
+with DracoSystem;
+
 package body DriverSwitch is
 
    NumSet      : TSwitchIndex;
    SwitchList  : TSwitchList;
-   --  SawCorS     : Boolean := False;
    SawPG       : Boolean := False;
    SawFramePtr : Boolean := False;
    GoNoGo      : Boolean := False;
-   --  SawQ        : Boolean := False;
 
 
 
@@ -41,7 +41,7 @@ package body DriverSwitch is
       Q_exists     : Boolean;
       gnatc_exists : Boolean;
       gnats_exists : Boolean;
-      BitBucket    : String;
+      BitBucket    : SU.Unbounded_String;
    begin
       GoNoGo := True;
 
@@ -72,25 +72,12 @@ package body DriverSwitch is
       end if;
 
       if gnatc_exists or gnats_exists then
-         BitBucket := DracoSystem.Host_Bit_Bucket
-                        (DracoSystem.Native_System.Null_File_Type);
-         Store_Switch (SU.To_Unbounded_String ("-o " & BitBucket));
+         BitBucket := SU.To_Unbounded_String (DracoSystem.Host_Bit_Bucket
+                        (DracoSystem.Native_System.Null_File_Type));
+         Store_Switch (SU.To_Unbounded_String ("-o ") & BitBucket);
       end if;
 
-
-
    end Post_Process;
-
-
-   ------------------------
-   -- Is_Switch [Public] --
-   ------------------------
-
-   function Is_Switch (Switch_Chars : in String) return Boolean is
-   begin
-      return Switch_Chars'Length > 1
-        and then Switch_Chars (Switch_Chars'First) = '-';
-   end Is_Switch;
 
 
 
@@ -99,16 +86,14 @@ package body DriverSwitch is
    -------------------------
 
    procedure Set_Switch (Switch_Chars : in String) is
-      DCS     : SU.Unbounded_String;
+      DCS     : SU.Unbounded_String := SU.Null_Unbounded_String;
       KeyChar : Character;
    begin
-      if not Is_Switch (Switch_Chars) then
-         return;
-      end if;
 
       if Dedicated_Compiler_Switch (Switch_Chars) then
-         DCS := SU.To_Unbounded_String ("-gnat") &
-               Switch_Chars (Switch_Chars'First + 5 .. Switch_Chars'Last);
+         DCS := SU.To_Unbounded_String ("-gnat");
+         SU.Append (DCS, Switch_Chars
+               (Switch_Chars'First + 5 .. Switch_Chars'Last));
          Store_Switch (DCS);
 
          if DCS = "-gnatea" then
@@ -187,6 +172,58 @@ package body DriverSwitch is
    end Set_Switch;
 
 
+
+   --------------------------
+   -- Dump_Flags [Private] --
+   --------------------------
+
+   function Dump_Flags (
+      Switch  : in SU.Unbounded_String;
+      Partial : in Boolean
+    ) return SU.Unbounded_String
+   is
+      index   : TSwitchRange := TSwitchRange'First;
+      foundit : Boolean := False;
+      advance : Boolean;
+      counter : Natural := 0;
+      result  : SU.Unbounded_String := SU.Null_Unbounded_String;
+   begin
+      advance := NumSet > index;
+
+      while advance loop
+         case Partial is
+            when False =>
+               if Switch = SwitchList (index) then
+                  foundit := True;
+                  SU.Append (result, SwitchList (index));
+               end if;
+            when True =>
+               if (Switch'Size <= SwitchList (index)'Size) and
+                  (Switch = SU.Unbounded_Slice
+                     (SwitchList (index), 1, Switch'Size)) then
+                  if counter > 0 then
+                     SU.Append (result, " ");
+                  end if;
+                  SU.Append (result, SwitchList (index));
+                  counter := counter + 1;
+               end if;
+         end case;
+
+         exit when foundit;
+
+         if index = TSwitchRange'Last then
+            advance := False;
+         else
+            index := index + 1;
+         end if;
+      end loop;
+
+
+      return result;
+   end Dump_Flags;
+
+
+
    ----------------------------
    -- Store_Switch [Private] --
    ----------------------------
@@ -194,7 +231,7 @@ package body DriverSwitch is
    procedure Store_Switch (Switch : in SU.Unbounded_String) is
    begin
       if (NumSet = TSwitchIndex'Last) or
-         Switch_Already_Set (Switch) then return;
+         Switch_Already_Set (Switch, False) then return;
       end if;
 
       SwitchList (NumSet) := Switch;
@@ -220,13 +257,14 @@ package body DriverSwitch is
 
       while advance loop
          case Partial is
-            when true =>
+            when False =>
                if Switch = SwitchList (index) then
                   result  := True;
                end if;
-            when false =>
+            when True =>
                if (Switch'Size <= SwitchList (index)'Size) and
-                  (Switch = SwitchList (index)(1 .. Switch'Size)) then
+                  (Switch = SU.Unbounded_Slice
+                     (SwitchList (index), 1, Switch'Size)) then
                   result := True;
                end if;
          end case;
