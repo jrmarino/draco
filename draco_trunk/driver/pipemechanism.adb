@@ -95,24 +95,30 @@ package body PipeMechanism is
          return;
       end if;
 
-      --  Duplicate STDIN so we can restore it later.
-      --  This is not necessary for STDOUT since this functionality is built
-      --  into the Spawn overloaded function.
-      stdin_save := Dup (GNAT.OS_Lib.Standin);
-
 
       --  Spawn Program 1.  Its output will be written to the pipe
+      --  The output side of the pipe is closed regardless of the success
+      --  of program execution.  However, if it fails, the input side of the
+      --  pipe is also closed and the procedure aborts early.
+      --  Note that the spawn procedure saves and restores STDIN so that it
+      --  is not necessary to handle that here.
       args1 := GNAT.OS_Lib.Argument_String_To_List (arg_string1);
       GNAT.OS_Lib.Spawn (program_1, args1 (args1'Range), datapipe.Output,
                          retcode, False);
       GNAT.OS_Lib.Free (args1);
+      Close (datapipe.Output);
       if retcode /= 0 then
+         Close (datapipe.Input);
          return;
       end if;
 
 
-      --  Close the write end of the pipe, and connect read end to STDIN
-      Close (datapipe.Output);
+      --  Duplicate STDIN so we can restore it later.  There is no overloaded
+      --  version of spawn that handles alternative input file descriptors.
+      stdin_save := Dup (GNAT.OS_Lib.Standin);
+
+
+      --  Connect read end of the pipe to the STDIN file descriptor
       Dup2  (datapipe.Input, GNAT.OS_Lib.Standin);
 
 
@@ -120,9 +126,6 @@ package body PipeMechanism is
       args2   := GNAT.OS_Lib.Argument_String_To_List (arg_string2);
       retcode := GNAT.OS_Lib.Spawn (program_2, args2 (args2'Range));
       GNAT.OS_Lib.Free (args2);
-      if retcode /= 0 then
-         return;
-      end if;
 
 
       --  Close the read end of the pipe, then restore STDIN
@@ -133,10 +136,10 @@ package body PipeMechanism is
       --  Close the temporary file descriptor
       Close (stdin_save);
 
-
-      success := True;
+      if retcode = 0 then
+         success := True;
+      end if;
    end pipe;
 
 
 end PipeMechanism;
-
