@@ -95,7 +95,7 @@ private
 
    function Switch_Already_Set (
       Switch  : in SU.Unbounded_String;
-      Partial : in Boolean
+      Partial : in Boolean := False
    ) return Boolean;
    --  Systematically search the previously set switches and return
    --  true if an entry matches the query.  If a partial match is sought

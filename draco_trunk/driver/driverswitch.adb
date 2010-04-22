@@ -57,15 +57,21 @@ package body DriverSwitch is
       src_components : PathInfo.RecPathInfo;
       random_s_file  : SU.Unbounded_String;
       pipe_exists    : Boolean;
+      invoke_as      : Boolean;
       S_exists       : Boolean;
 
       procedure Add_Dumpbase;
       procedure Add_Auxbase;
+      procedure Add_Assembler_Output_File;
       procedure Tmp_Name (Buffer : System.Address);
       function  Random_Assembly_Srcfile return SU.Unbounded_String;
-      procedure Add_Output_File (s_file : SU.Unbounded_String;
-                                 s_flag : Boolean;
-                                 piped  : Boolean);
+      procedure Add_Output_File (s_file    : in  SU.Unbounded_String;
+                                 s_flag    : in  Boolean;
+                                 piped     : in  Boolean;
+                                 invoke_as : out Boolean);
+      procedure Add_Assembler_Input_File (
+                                 s_file    : in SU.Unbounded_String;
+                                 piped     : in Boolean);
 
 
       pragma Import (C, Tmp_Name, "__gnat_tmp_name");
@@ -105,15 +111,17 @@ package body DriverSwitch is
       end Random_Assembly_Srcfile;
 
       procedure Add_Output_File (
-         s_file : SU.Unbounded_String;
-         s_flag : Boolean;
-         piped  : Boolean
+         s_file    : in  SU.Unbounded_String;
+         s_flag    : in  Boolean;
+         piped     : in  Boolean;
+         invoke_as : out Boolean
       ) is
          workstr : SU.Unbounded_String;
          gnatc_exists : Boolean;
          gnats_exists : Boolean;
       begin
-         workstr := SU.To_Unbounded_String ("-o ");
+         invoke_as := False;
+         workstr   := SU.To_Unbounded_String ("-o ");
          gnatc_exists := Switch_Already_Set (SU.To_Unbounded_String ("-gnatc"),
                                              Partial => True);
          gnats_exists := Switch_Already_Set (SU.To_Unbounded_String ("-gnats"),
@@ -126,11 +134,36 @@ package body DriverSwitch is
             Append (workstr, src_components.basename & ".s");
          elsif piped then
             Append (workstr, "-");
+            invoke_as := True;
          else
             Append (workstr, s_file);
+            invoke_as := True;
          end if;
+         TackOn (compiler_flags, workstr);
 
       end Add_Output_File;
+
+      procedure Add_Assembler_Output_File is
+         workstr : SU.Unbounded_String;
+      begin
+         workstr := SU.To_Unbounded_String ("-o ");
+         Append (workstr, src_components.basename & ".o");
+         TackOn (assembler_flags, workstr);
+      end Add_Assembler_Output_File;
+
+      procedure Add_Assembler_Input_File (
+         s_file : in SU.Unbounded_String;
+         piped  : in Boolean)
+      is
+      begin
+         if piped then
+            if DracoSystem.Native_System.Dash_For_Pipe then
+               TackOn (assembler_flags, SU.To_Unbounded_String ("-"));
+            end if;
+         else
+            TackOn (assembler_flags, s_file);
+         end if;
+      end Add_Assembler_Input_File;
 
    begin
       FlagIndex       := 0;
@@ -138,10 +171,8 @@ package body DriverSwitch is
       assembler_flags := SU.Null_Unbounded_String;
       src_components  := PathInfo.Info (source_file);
       random_s_file   := Random_Assembly_Srcfile;
-      S_exists        := Switch_Already_Set (SU.To_Unbounded_String ("-S"),
-                                             Partial => False);
-      pipe_exists     := Switch_Already_Set (SU.To_Unbounded_String ("-pipe"),
-                                             Partial => False);
+      S_exists        := Switch_Already_Set (SU.To_Unbounded_String ("-S"));
+      pipe_exists     := Switch_Already_Set (SU.To_Unbounded_String ("-pipe"));
 
       Append (compiler_flags, Dump_Flags ("-I",        True));
       Append (compiler_flags, Dump_Flags ("-quiet",    False));
@@ -160,9 +191,39 @@ package body DriverSwitch is
       Append (compiler_flags, Dump_Flags ("-f",        True));
       Append (compiler_flags, Dump_Flags ("-g",        True));
       Append (compiler_flags, Dump_Flags ("-m",        True));
+      Append (compiler_flags, Dump_Flags ("--param",   True));
 
 --  add cc1_cpu or whatnot here (%1)
-      Add_Output_File (random_s_file, S_exists, pipe_exists);
+
+      TackOn (compiler_flags, source_file);
+      Add_Output_File (random_s_file, S_exists, pipe_exists, invoke_as);
+      --  We still need to set "%W" delete on fail for basename.s
+
+      --  The assembler is a separate program with its own set of flags
+
+      if not invoke_as then
+         return;
+      end if;
+
+      FlagIndex := 0;
+      TackOn (assembler_flags, SU.To_Unbounded_String ("as"));
+      if DracoSystem.Native_System.Have_GNU_AS then
+         Append (assembler_flags, Dump_Flags ("-v", False));
+         if Switch_Already_Set (SU.To_Unbounded_String ("-w")) then
+            TackOn (assembler_flags, SU.To_Unbounded_String ("-W"));
+         end if;
+         Append (assembler_flags, Dump_Flags ("-I", True));
+      end if;
+
+      --  put ASM_SPEC here
+      --  put %Y here (Output the accumulated assembler options specified by
+      --              compilations.)?  Skip?
+      --  %W -o [%w]%b%0   [DONE]
+      --  put ASM_FINAL_SPEC at the end
+
+      Add_Assembler_Output_File;
+      Add_Assembler_Input_File (random_s_file, pipe_exists);
+
    end Build_Arguments;
 
 
@@ -177,13 +238,9 @@ package body DriverSwitch is
       Q_exists     : Boolean;
    begin
       GoNoGo   := True;
-      c_exists := Switch_Already_Set (SU.To_Unbounded_String ("-c"),
-                                      Partial => False);
-      S_exists := Switch_Already_Set (SU.To_Unbounded_String ("-S"),
-                                      Partial => False);
-      Q_exists := Switch_Already_Set (SU.To_Unbounded_String ("-S"),
-                                      Partial => False);
-
+      c_exists := Switch_Already_Set (SU.To_Unbounded_String ("-c"));
+      S_exists := Switch_Already_Set (SU.To_Unbounded_String ("-S"));
+      Q_exists := Switch_Already_Set (SU.To_Unbounded_String ("-S"));
 
       if SawPG and SawFramePtr then
          GoNoGo := False;
@@ -216,11 +273,13 @@ package body DriverSwitch is
          DCS := SU.To_Unbounded_String ("-gnat");
          SU.Append (DCS, Switch_Chars
                (Switch_Chars'First + 5 .. Switch_Chars'Last));
-         Store_Switch (DCS);
 
          if DCS = "-gnatea" then
             Store_Switch (SU.To_Unbounded_String ("-gnatez"));
+            return;
          end if;
+
+         Store_Switch (DCS);
          return;
       end if;
 
@@ -265,6 +324,7 @@ package body DriverSwitch is
       if Switch_Chars = "-coverage" then
          Store_Switch (SU.To_Unbounded_String ("-fprofile-arcs"));
          Store_Switch (SU.To_Unbounded_String ("-ftest-coverage"));
+         return;
       end if;
 
 
@@ -383,7 +443,7 @@ package body DriverSwitch is
 
    function Switch_Already_Set (
       Switch  : in SU.Unbounded_String;
-      Partial : in Boolean
+      Partial : in Boolean := False
     ) return Boolean
    is
       index   : TSwitchRange := TSwitchRange'First;
@@ -457,7 +517,7 @@ package body DriverSwitch is
 
    function Parameter_Switch (Switch_Chars : in String) return Boolean is
    begin
-      if Switch_Chars'Last < 8 then
+      if Switch_Chars'Last < 7 then
          return False;
       end if;
 
