@@ -20,6 +20,10 @@
 
 
 with DracoSystem;
+with PathInfo;
+with System;
+with Ada.IO_Exceptions;
+with Interfaces.C_Streams;
 
 package body DriverSwitch is
 
@@ -28,6 +32,138 @@ package body DriverSwitch is
    SawPG       : Boolean := False;
    SawFramePtr : Boolean := False;
    GoNoGo      : Boolean := False;
+   FlagIndex   : Natural := 0;
+
+
+   ---------------
+   --  Proceed  --
+   ---------------
+
+   function Proceed return Boolean is
+   begin
+      return GoNoGo;
+   end Proceed;
+
+
+   -----------------------
+   --  Build_Arguments  --
+   -----------------------
+
+   procedure Build_Arguments (
+       source_file     : in  SU.Unbounded_String;
+       compiler_flags  : out SU.Unbounded_String;
+       assembler_flags : out SU.Unbounded_String
+   ) is
+      src_components : PathInfo.RecPathInfo;
+      random_s_file  : SU.Unbounded_String;
+      pipe_exists    : Boolean;
+      S_exists       : Boolean;
+
+      procedure Add_Dumpbase;
+      procedure Add_Auxbase;
+      procedure Tmp_Name (Buffer : System.Address);
+      function  Random_Assembly_Srcfile return SU.Unbounded_String;
+      procedure Add_Output_File (s_file : SU.Unbounded_String;
+                                 s_flag : Boolean;
+                                 piped  : Boolean);
+
+
+      pragma Import (C, Tmp_Name, "__gnat_tmp_name");
+
+      procedure Add_Dumpbase is
+         workstr : SU.Unbounded_String;
+      begin
+         workstr := SU.To_Unbounded_String ("-dumpbase ");
+         if (src_components.extension = "adb") or
+            (src_components.extension = "ads") then
+            Append (workstr, src_components.filename);
+         else
+            Append (workstr, src_components.basename);
+            Append (workstr, ".ada");
+         end if;
+         TackOn (compiler_flags, workstr);
+      end Add_Dumpbase;
+
+      procedure Add_Auxbase is
+         workstr : SU.Unbounded_String;
+      begin
+         workstr := SU.To_Unbounded_String ("-auxbase ");
+         Append (workstr, src_components.basename);
+         TackOn (compiler_flags, workstr);
+      end Add_Auxbase;
+
+      function Random_Assembly_Srcfile return SU.Unbounded_String is
+         Namelen : constant Integer := Interfaces.C_Streams.max_path_len;
+         NameStr : aliased String (1 .. Namelen + 1);
+      begin
+         Tmp_Name (NameStr'Address);
+         if NameStr (1) = ASCII.NUL then
+            raise Ada.IO_Exceptions.Use_Error with
+               "Invalid temporary file name";
+         end if;
+         return SU.To_Unbounded_String (NameStr);
+      end Random_Assembly_Srcfile;
+
+      procedure Add_Output_File (
+         s_file : SU.Unbounded_String;
+         s_flag : Boolean;
+         piped  : Boolean
+      ) is
+         workstr : SU.Unbounded_String;
+         gnatc_exists : Boolean;
+         gnats_exists : Boolean;
+      begin
+         workstr := SU.To_Unbounded_String ("-o ");
+         gnatc_exists := Switch_Already_Set (SU.To_Unbounded_String ("-gnatc"),
+                                             Partial => True);
+         gnats_exists := Switch_Already_Set (SU.To_Unbounded_String ("-gnats"),
+                                             Partial => True);
+
+         if gnatc_exists or gnats_exists then
+            Append (workstr, DracoSystem.Host_Bit_Bucket
+                             (DracoSystem.Native_System.Null_File_Type));
+         elsif s_flag then
+            Append (workstr, src_components.basename & ".s");
+         elsif piped then
+            Append (workstr, "-");
+         else
+            Append (workstr, s_file);
+         end if;
+
+      end Add_Output_File;
+
+   begin
+      FlagIndex       := 0;
+      compiler_flags  := SU.Null_Unbounded_String;
+      assembler_flags := SU.Null_Unbounded_String;
+      src_components  := PathInfo.Info (source_file);
+      random_s_file   := Random_Assembly_Srcfile;
+      S_exists        := Switch_Already_Set (SU.To_Unbounded_String ("-S"),
+                                             Partial => False);
+      pipe_exists     := Switch_Already_Set (SU.To_Unbounded_String ("-pipe"),
+                                             Partial => False);
+
+      Append (compiler_flags, Dump_Flags ("-I",        True));
+      Append (compiler_flags, Dump_Flags ("-quiet",    False));
+      Append (compiler_flags, Dump_Flags ("-nostdinc", False));
+      Append (compiler_flags, Dump_Flags ("-nostdlib", False));
+
+      Add_Dumpbase;
+      Add_Auxbase;
+
+      Append (compiler_flags, Dump_Flags ("-O",        True));
+      Append (compiler_flags, Dump_Flags ("-W",        True));
+      Append (compiler_flags, Dump_Flags ("-w",        False));
+      Append (compiler_flags, Dump_Flags ("-p",        False));
+      Append (compiler_flags, Dump_Flags ("-a",        False));
+      Append (compiler_flags, Dump_Flags ("-d",        True));
+      Append (compiler_flags, Dump_Flags ("-f",        True));
+      Append (compiler_flags, Dump_Flags ("-g",        True));
+      Append (compiler_flags, Dump_Flags ("-m",        True));
+
+--  add cc1_cpu or whatnot here (%1)
+      Add_Output_File (random_s_file, S_exists, pipe_exists);
+   end Build_Arguments;
 
 
 
@@ -39,22 +175,14 @@ package body DriverSwitch is
       c_exists     : Boolean;
       S_exists     : Boolean;
       Q_exists     : Boolean;
-      gnatc_exists : Boolean;
-      gnats_exists : Boolean;
-      BitBucket    : SU.Unbounded_String;
    begin
-      GoNoGo := True;
-
-      c_exists     := Switch_Already_Set (SU.To_Unbounded_String ("-c"),
-                                          Partial => False);
-      S_exists     := Switch_Already_Set (SU.To_Unbounded_String ("-S"),
-                                          Partial => False);
-      Q_exists     := Switch_Already_Set (SU.To_Unbounded_String ("-S"),
-                                          Partial => False);
-      gnatc_exists := Switch_Already_Set (SU.To_Unbounded_String ("-gnatc"),
-                                          Partial => True);
-      gnats_exists := Switch_Already_Set (SU.To_Unbounded_String ("-gnats"),
-                                          Partial => True);
+      GoNoGo   := True;
+      c_exists := Switch_Already_Set (SU.To_Unbounded_String ("-c"),
+                                      Partial => False);
+      S_exists := Switch_Already_Set (SU.To_Unbounded_String ("-S"),
+                                      Partial => False);
+      Q_exists := Switch_Already_Set (SU.To_Unbounded_String ("-S"),
+                                      Partial => False);
 
 
       if SawPG and SawFramePtr then
@@ -69,12 +197,6 @@ package body DriverSwitch is
 
       if not Q_exists then
          Store_Switch (SU.To_Unbounded_String ("-quiet"));
-      end if;
-
-      if gnatc_exists or gnats_exists then
-         BitBucket := SU.To_Unbounded_String (DracoSystem.Host_Bit_Bucket
-                        (DracoSystem.Native_System.Null_File_Type));
-         Store_Switch (SU.To_Unbounded_String ("-o ") & BitBucket);
       end if;
 
    end Post_Process;
@@ -172,50 +294,55 @@ package body DriverSwitch is
    end Set_Switch;
 
 
+   ------------------------
+   --  TackOn [Private]  --
+   ------------------------
+
+   procedure TackOn (
+      collection : in out SU.Unbounded_String;
+      flag       : in SU.Unbounded_String
+   ) is
+   begin
+      if FlagIndex > 0 then
+         SU.Append (collection, " ");
+      end if;
+      FlagIndex := FlagIndex + 1;
+      SU.Append (collection, flag);
+   end TackOn;
+
+
+
 
    --------------------------
    -- Dump_Flags [Private] --
    --------------------------
 
    function Dump_Flags (
-      Switch  : in SU.Unbounded_String;
-      Partial : in Boolean;
-      Counter : in out Natural
+      Switch  : in String;
+      Partial : in Boolean
     ) return SU.Unbounded_String
    is
       index   : TSwitchRange := TSwitchRange'First;
       foundit : Boolean := False;
       advance : Boolean;
       result  : SU.Unbounded_String := SU.Null_Unbounded_String;
-
-      procedure tackon (
-        result  : in out SU.Unbounded_String;
-        Counter : in out Natural;
-        flag    : in SU.Unbounded_String
-      ) is
-      begin
-         if Counter > 0 then
-            SU.Append (result, " ");
-         end if;
-         Counter := Counter + 1;
-         SU.Append (result, flag);
-      end tackon;
-
+      USwitch : constant SU.Unbounded_String :=
+                         SU.To_Unbounded_String (Switch);
    begin
       advance := NumSet > index;
 
       while advance loop
          case Partial is
             when False =>
-               if Switch = SwitchList (index) then
+               if USwitch = SwitchList (index) then
                   foundit := True;
-                  tackon (result, Counter, SwitchList (index));
+                  TackOn (result, SwitchList (index));
                end if;
             when True =>
                if (Switch'Size <= SwitchList (index)'Size) and
-                  (Switch = SU.Unbounded_Slice
+                  (USwitch = SU.Unbounded_Slice
                      (SwitchList (index), 1, Switch'Size)) then
-                  tackon (result, Counter, SwitchList (index));
+                  TackOn (result, SwitchList (index));
                end if;
          end case;
 

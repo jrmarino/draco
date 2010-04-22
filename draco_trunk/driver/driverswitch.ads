@@ -38,6 +38,24 @@ package DriverSwitch is
 
    type TSwitchList is array (TSwitchRange) of SU.Unbounded_String;
 
+
+   procedure Build_Arguments (
+       source_file     : in  SU.Unbounded_String;
+       compiler_flags  : out SU.Unbounded_String;
+       assembler_flags : out SU.Unbounded_String
+   );
+   --  This key procedure builds the switches for the compiler and also for
+   --  the assembler.  They are separate because this driver spawns both
+   --  programs separately, unless the -S, -gnatc, or -gnats switches are
+   --  provided by the user.
+
+
+   function Proceed return Boolean;
+   --  After building the arguments, verify that there were no fatch errors
+   --  such as missing both -c and -S flags.  If the switches provided are
+   --  valid, then this function will return True.
+
+
    procedure Set_Switch (Switch_Chars : in String);
    --  The switch will first be validated.  If the string is indeed a switch
    --  and it meets the criteria of being sent to the ada compiler (meaning
@@ -52,8 +70,17 @@ package DriverSwitch is
 
 private
 
+   procedure TackOn (
+      collection : in out SU.Unbounded_String;
+      flag       : in SU.Unbounded_String
+   );
+   --  This is a helper function.  It basically appends a string to another
+   --  string, but if the provided counter is greater than zero, it will
+   --  join them with a space, and then increment the counter.
+
+
    function Dump_Flags (
-      Switch  : in SU.Unbounded_String;
+      Switch  : in String;
       Partial : in Boolean
    ) return SU.Unbounded_String;
    --  This function helps construct the argument string.  It can locate a
