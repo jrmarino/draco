@@ -39,6 +39,21 @@ package DriverSwitch is
    type TSwitchList is array (TSwitchRange) of SU.Unbounded_String;
    type TDetectMethod is (ARCH, TUNE);
 
+   type RecDriverCommands is record
+      version     : Boolean := False;
+      verbose     : Boolean := False;
+      pipe        : Boolean := False;
+      help        : Boolean := False;
+      dumpmachine : Boolean := False;
+      dumpversion : Boolean := False;
+      save_temps  : Boolean := False;
+      psearchdir  : Boolean := False;
+   end record;
+
+   function Commands return RecDriverCommands;
+   --  During the switch scanning process, if driver commands are found
+   --  they are recorded internally inside the RecDriverCommands record and
+   --  this function provides that information publically.
 
    procedure Build_Arguments (
        source_file     : in  SU.Unbounded_String;

@@ -36,8 +36,8 @@ package body DriverSwitch is
    AutoArch    : Boolean := False;
    AutoTune    : Boolean := True;
    FlagIndex   : Natural := 0;
-
-
+   DriverCom   : RecDriverCommands;
+   Ass_options : SU.Unbounded_String := SU.Null_Unbounded_String;
 
 
 
@@ -84,6 +84,16 @@ package body DriverSwitch is
    begin
       return GoNoGo;
    end Proceed;
+   
+   
+   ----------------
+   --  Commands  --
+   ----------------
+   
+   function Commands return RecDriverCommands is
+   begin
+      return DriverCom;
+   end;
 
 
    -----------------------
@@ -234,7 +244,7 @@ package body DriverSwitch is
       Append (compiler_flags, Dump_Flags ("-m",        True));
       Append (compiler_flags, Dump_Flags ("--param",   True));
 
---  add cc1_cpu or whatnot here (%1)
+      Add_CC_Flags_Per_Target_Spec (compiler_flags);
 
       TackOn (compiler_flags, source_file);
       Add_Output_File (random_s_file, S_exists, pipe_exists, invoke_as);
@@ -256,11 +266,13 @@ package body DriverSwitch is
          Append (assembler_flags, Dump_Flags ("-I", True));
       end if;
 
-      --  put ASM_SPEC here
-      --  put %Y here (Output the accumulated assembler options specified by
-      --              compilations.)?  Skip?
-      --  %W -o [%w]%b%0   [DONE]
-      --  put ASM_FINAL_SPEC at the end (only applies to alpha/osf5
+      --  put ASM_SPEC here [skipped since DLC incorporation will delete]
+      
+      if SU.Length (Ass_options) > 0 then 
+         TackOn (assembler_flags, Ass_options);
+      end if;
+      
+      --  put ASM_FINAL_SPEC at the end (only applies to alpha/osf5 [skipped]
 
       Add_Assembler_Output_File;
       Add_Assembler_Input_File (random_s_file, pipe_exists);
@@ -326,6 +338,35 @@ package body DriverSwitch is
 
       use type DracoSystem.CC1_SPEC;
    begin
+   
+      --  All the --xxx long forms have already been converted to their
+      --  short form except for --param by this point.
+      if Switch_Chars = "-fversion" then
+         DriverCom.version := True;
+         return;
+      elsif Switch_Chars = "-v" then
+         DriverCom.verbose := True;
+      elsif Switch_Chars = "-fhelp" then
+         DriverCom.help := True; 
+         return;
+      elsif Switch_Chars = "-dumpmachine" then 
+         DriverCom.dumpmachine := True;
+         return;
+      elsif Switch_Chars = "-dumpversion" then 
+         DriverCom.dumpversion := True;
+         return;
+      elsif Switch_Chars = "-save-temps" then
+         DriverCom.save_temps := True;
+         return;   
+      elsif Switch_Chars = "-print-search-dirs" then
+         DriverCom.psearchdir := True;
+         return;
+      elsif Switch_Chars = "-pipe" then
+         DriverCom.pipe := True;
+         return;
+      end if;
+      
+          
 
       if Dedicated_Compiler_Switch (Switch_Chars) then
          DCS := SU.To_Unbounded_String ("-gnat");
@@ -384,6 +425,20 @@ package body DriverSwitch is
          Store_Switch (SU.To_Unbounded_String ("-ftest-coverage"));
          return;
       end if;
+      
+      if Switch_Chars'Last >= 4 and then 
+        (Switch_Chars (Switch_Chars'First ..
+                       Switch_Chars'First + 3) = "-Wa,") then
+         Ass_options := SU.To_Unbounded_String (Switch_Chars (
+                       Switch_Chars'First + 4 .. Switch_Chars'Last));
+         for n in positive range 1 .. SU.Length (Ass_options) loop
+           if SU.Element (Ass_options, n) = ',' then
+              SU.Replace_Element (Ass_options, n, ' ');
+           end if;
+         end loop; 
+         return;
+      end if;                
+         
 
       --  This section will be removed after DLC replaces GiGi
       if (DracoSystem.Native_System.CC_Flags = DracoSystem.i386) or
