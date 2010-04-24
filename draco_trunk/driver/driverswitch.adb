@@ -23,6 +23,7 @@ with DracoSystem;
 with PathInfo;
 with System;
 with Ada.IO_Exceptions;
+with Interfaces.C.Strings;
 with Interfaces.C_Streams;
 
 package body DriverSwitch is
@@ -32,7 +33,47 @@ package body DriverSwitch is
    SawPG       : Boolean := False;
    SawFramePtr : Boolean := False;
    GoNoGo      : Boolean := False;
+   AutoArch    : Boolean := False;
+   AutoTune    : Boolean := True;
    FlagIndex   : Natural := 0;
+
+
+
+
+
+   ----------------------------------
+   --  Detect_Local_CPU [Private]  --
+   ----------------------------------
+
+   function Detect_Local_CPU (DetectMethod : in TDetectMethod)
+   return SU.Unbounded_String is
+
+      --  Argv is really type char_ptr_array, but theres always only one input
+      --  so we can interchangable use the char_ptr instead
+
+      function Detect_Local_CPU (
+         argc : Interfaces.C.int;
+         argv : Interfaces.C.Strings.chars_ptr)
+      return Interfaces.C.Strings.chars_ptr;
+      pragma Import (C, Detect_Local_CPU, "host_detect_local_cpu");
+
+      numArguments : constant Interfaces.C.int := 1;
+      March        : constant String := "arch";
+      Mtune        : constant String := "tune";
+      PMarch       : constant Interfaces.C.Strings.chars_ptr :=
+                              Interfaces.C.Strings.New_String (March);
+      PMtune       : constant Interfaces.C.Strings.chars_ptr :=
+                              Interfaces.C.Strings.New_String (Mtune);
+      Response     : String (1 .. 128);
+      Presponse    : Interfaces.C.Strings.chars_ptr;
+   begin
+      case DetectMethod is
+         when ARCH => Presponse := Detect_Local_CPU (numArguments, PMarch);
+         when TUNE => Presponse := Detect_Local_CPU (numArguments, PMtune);
+      end case;
+      Response := Interfaces.C.Strings.Value (Presponse);
+      return SU.To_Unbounded_String (Response);
+   end Detect_Local_CPU;
 
 
    ---------------
@@ -219,7 +260,7 @@ package body DriverSwitch is
       --  put %Y here (Output the accumulated assembler options specified by
       --              compilations.)?  Skip?
       --  %W -o [%w]%b%0   [DONE]
-      --  put ASM_FINAL_SPEC at the end
+      --  put ASM_FINAL_SPEC at the end (only applies to alpha/osf5
 
       Add_Assembler_Output_File;
       Add_Assembler_Input_File (random_s_file, pipe_exists);
@@ -236,6 +277,8 @@ package body DriverSwitch is
       c_exists     : Boolean;
       S_exists     : Boolean;
       Q_exists     : Boolean;
+
+      use type DracoSystem.CC1_SPEC;
    begin
       GoNoGo   := True;
       c_exists := Switch_Already_Set (SU.To_Unbounded_String ("-c"));
@@ -256,6 +299,18 @@ package body DriverSwitch is
          Store_Switch (SU.To_Unbounded_String ("-quiet"));
       end if;
 
+      --  This section will be removed after DLC replaces GiGi
+      if (DracoSystem.Native_System.CC_Flags = DracoSystem.stdmips) or
+         (DracoSystem.Native_System.CC_Flags = DracoSystem.mipsiris) then
+
+         if Switch_Already_Set (SU.To_Unbounded_String ("-mel")) and
+            Switch_Already_Set (SU.To_Unbounded_String ("-meb")) then
+            GoNoGo := False;
+            TIO.Put_Line ("The -EB and -EL switches can't be used together");
+         end if;
+
+      end if;
+
    end Post_Process;
 
 
@@ -267,6 +322,9 @@ package body DriverSwitch is
    procedure Set_Switch (Switch_Chars : in String) is
       DCS     : SU.Unbounded_String := SU.Null_Unbounded_String;
       KeyChar : Character;
+      workstr : String (1 .. 32);
+
+      use type DracoSystem.CC1_SPEC;
    begin
 
       if Dedicated_Compiler_Switch (Switch_Chars) then
@@ -327,6 +385,72 @@ package body DriverSwitch is
          return;
       end if;
 
+      --  This section will be removed after DLC replaces GiGi
+      if (DracoSystem.Native_System.CC_Flags = DracoSystem.i386) or
+         (DracoSystem.Native_System.CC_Flags = DracoSystem.darwin) or
+         (DracoSystem.Native_System.CC_Flags = DracoSystem.x86linux) then
+
+         if Switch_Chars = "-mintel-syntax" then
+            Store_Switch (SU.To_Unbounded_String ("-masm=intel"));
+            TIO.Put_Line ("'-mintel-syntax' is deprecated. " &
+                          "Use '-masm=intel' instead.");
+            return;
+         end if;
+         if Switch_Chars = "-mno-intel-syntax" then
+            Store_Switch (SU.To_Unbounded_String ("-masm=att"));
+            TIO.Put_Line ("'-mno-intel-syntax' is deprecated. " &
+                          "Use '-masm=att' instead.");
+            return;
+         end if;
+         if Switch_Chars = "-msse5" then
+            Store_Switch (SU.To_Unbounded_String ("-mavx"));
+            TIO.Put_Line ("'-msse5' was removed.");
+            return;
+         end if;
+         if (Switch_Chars'Last >= 7) and then
+            (Switch_Chars (Switch_Chars'First ..
+                           Switch_Chars'First + 5) = "-mcpu=") then
+            workstr := Switch_Chars (Switch_Chars'First + 6 ..
+                                     Switch_Chars'Last);
+            Store_Switch (SU.To_Unbounded_String ("-mtune=" & workstr));
+            TIO.Put_Line ("'-mcpu=" & workstr & "' is deprecated. Use " &
+                   "'-mtune=" & workstr & "' or '-march=" & workstr &
+                   "' instead.");
+            return;
+         end if;
+         if Switch_Chars = "-march=native" then
+            AutoArch := True;
+            return;
+         end if;
+         if (Switch_Chars'Last >= 7) and then
+            (Switch_Chars (Switch_Chars'First ..
+                           Switch_Chars'First + 6) = "-mtune=") and then
+            (Switch_Chars /= "-mtune=native") then
+            AutoTune := False;
+            return;
+         end if;
+      end if;
+
+      --  This section will be removed after DLC replaces GiGi
+      if (DracoSystem.Native_System.CC_Flags = DracoSystem.stdmips) or
+         (DracoSystem.Native_System.CC_Flags = DracoSystem.mipsiris) then
+
+         if Switch_Chars = "-EB" then
+            Store_Switch (SU.To_Unbounded_String ("-meb"));
+            return;
+         end if;
+         if Switch_Chars = "-EL" then
+            Store_Switch (SU.To_Unbounded_String ("-mel"));
+            return;
+         end if;
+         if (DracoSystem.Native_System.CC_Flags = DracoSystem.mipsiris) and
+            Switch_Chars = "-static" then
+            Store_Switch (SU.To_Unbounded_String ("-mno-abicalls"));
+            return;
+         end if;
+
+      end if;
+
 
       KeyChar := Switch_Chars (Switch_Chars'First + 1);
 
@@ -343,8 +467,11 @@ package body DriverSwitch is
       end if;
 
       --  These are multiletter switches
+      --  The second row is for CC1_SPEC specific switches
       case KeyChar is
          when 'O' | 'W' | 'd' | 'f' | 'I' | 'm' =>
+            Store_Switch (SU.To_Unbounded_String (Switch_Chars));
+         when 'G' | 't' | 's' =>
             Store_Switch (SU.To_Unbounded_String (Switch_Chars));
          when others =>
             null;
@@ -352,6 +479,158 @@ package body DriverSwitch is
 
 
    end Set_Switch;
+
+
+   procedure Add_CC_Flags_Per_Target_Spec (
+      collection : in out SU.Unbounded_String
+   ) is
+
+      procedure i386_core;
+
+      procedure i386_core is
+      begin
+         if DracoSystem.Native_System.CPU_AutoDetect then
+            if AutoArch then
+               TackOn (collection, Detect_Local_CPU (ARCH));
+            end if;
+            if AutoTune then
+               TackOn (collection, Detect_Local_CPU (TUNE));
+            end if;
+         end if;
+      end i386_core;
+
+   begin
+      case DracoSystem.Native_System.CC_Flags is
+      when DracoSystem.g_star =>
+
+         Append (collection, Dump_Flags ("-G", True));
+
+      when DracoSystem.android =>
+
+         if Switch_Already_Set
+            (SU.To_Unbounded_String ("-mandroid"), Partial => False) and
+            then not Switch_Already_Set
+            (SU.To_Unbounded_String ("-fexceptions"), Partial => False) then
+               TackOn (collection, "-fno-exceptions");
+         end if;
+
+      when DracoSystem.symbian =>
+
+         if not Switch_Already_Set
+            (SU.To_Unbounded_String ("-fbuiltin"), False) and
+            then not Switch_Already_Set
+            (SU.To_Unbounded_String ("-fno-builtin"), False) then
+               TackOn (collection, "-fno-builtin");
+         end if;
+         if not Switch_Already_Set
+            (SU.To_Unbounded_String ("-fvisibility="), Partial => True) then
+               TackOn (collection, "-fvisibility=hidden");
+         end if;
+         if not Switch_Already_Set
+            (SU.To_Unbounded_String ("-fshort-enums"), False) and
+            then not Switch_Already_Set
+            (SU.To_Unbounded_String ("-fno-short-enums"), False) then
+               TackOn (collection, "-fno-short-enums");
+         end if;
+         if not Switch_Already_Set
+            (SU.To_Unbounded_String ("-fshort-wchar"), False) and
+            then not Switch_Already_Set
+            (SU.To_Unbounded_String ("-fno-short-wchar"), False) then
+               TackOn (collection, "-fshort-wchar");
+         end if;
+
+      when DracoSystem.vxworks =>
+
+         if Switch_Already_Set
+            (SU.To_Unbounded_String ("-tstrongarm"), False) then
+               TackOn (collection, "-mlittle-endian -mcpu-strongarm");
+         elsif Switch_Already_Set
+            (SU.To_Unbounded_String ("-t4"), False) then
+               TackOn (collection, "-mlittle-endian -march=armv4");
+         elsif Switch_Already_Set
+            (SU.To_Unbounded_String ("-t4be"), False) then
+               TackOn (collection, "-mbig-endian -march=armv4");
+         elsif Switch_Already_Set
+            (SU.To_Unbounded_String ("-t4t"), False) then
+               TackOn (collection, "-mthumb -mthumb-interwork " &
+                                   "-mlittle-endian -march=armv4t");
+         elsif Switch_Already_Set
+            (SU.To_Unbounded_String ("-t4tbe"), False) then
+               TackOn (collection, "-mthumb -mthumb-interwork " &
+                                   "-mbig-endian -march=armv4t");
+         elsif Switch_Already_Set
+            (SU.To_Unbounded_String ("-t5"), False) then
+               TackOn (collection, "-mlittle-endian -march=armv5");
+         elsif Switch_Already_Set
+            (SU.To_Unbounded_String ("-t5be"), False) then
+               TackOn (collection, "-mbig-endian -march=armv5");
+         elsif Switch_Already_Set
+            (SU.To_Unbounded_String ("-t5t"), False) then
+               TackOn (collection, "-mthumb -mthumb-interwork " &
+                                   "-mlittle-endian -march=armv5");
+         elsif Switch_Already_Set
+            (SU.To_Unbounded_String ("-t5tbe"), False) then
+               TackOn (collection, "-mthumb -mthumb-interwork " &
+                                   "-mbig-endian -march=armv5");
+         elsif Switch_Already_Set
+            (SU.To_Unbounded_String ("-txscale"), False) then
+               TackOn (collection, "-mlittle-endian -mcpu=xscale");
+         elsif Switch_Already_Set
+            (SU.To_Unbounded_String ("-txscalebe"), False) then
+               TackOn (collection, "-mbig-endian -mcpu=xscale");
+         else
+               TackOn (collection, "-march=armv4");
+         end if;
+
+      when DracoSystem.i386 =>
+
+         i386_core;
+
+      when DracoSystem.x86linux =>
+
+         i386_core;
+         Append (collection, Dump_Flags ("-G", True));
+
+      when DracoSystem.darwin =>
+
+         i386_core;
+         if not Switch_Already_Set
+            (SU.To_Unbounded_String ("-mkernel"), False) and then
+            not Switch_Already_Set
+            (SU.To_Unbounded_String ("-static"), False) and then
+            not Switch_Already_Set
+            (SU.To_Unbounded_String ("-mdynamic-no-pic"), False) then
+            TackOn (collection, "-fPIC");
+         end if;
+         if Switch_Already_Set
+            (SU.To_Unbounded_String ("g"), False) and then
+            not Switch_Already_Set
+            (SU.To_Unbounded_String ("-fno-eliminate-unused-debug-symbols"),
+                                     False) then
+            TackOn (collection, "-feliminate-unused-debug-symbols");
+         end if;
+
+      when DracoSystem.stdmips | DracoSystem.mipsiris =>
+
+         if Switch_Already_Set
+            (SU.To_Unbounded_String ("-gline"), False) and then
+            not Switch_Already_Set
+            (SU.To_Unbounded_String ("-g"), False) and then
+            not Switch_Already_Set
+            (SU.To_Unbounded_String ("-g0"), False) and then
+            not Switch_Already_Set
+            (SU.To_Unbounded_String ("-g1"), False) and then
+            not Switch_Already_Set
+            (SU.To_Unbounded_String ("-g2"), False) then
+            TackOn (collection, "-g1");
+         end if;
+         Append (collection, Dump_Flags ("-G", True));
+
+      when others =>
+         null;
+      end case;
+   end Add_CC_Flags_Per_Target_Spec;
+
 
 
    ------------------------
@@ -370,6 +649,13 @@ package body DriverSwitch is
       SU.Append (collection, flag);
    end TackOn;
 
+   procedure TackOn (
+      collection : in out SU.Unbounded_String;
+      flag       : in String
+   ) is
+   begin
+      TackOn (collection, SU.To_Unbounded_String (flag));
+   end TackOn;
 
 
 
@@ -495,7 +781,7 @@ package body DriverSwitch is
 
    begin
       if Strlen < 6 then
-         return Result;
+         return False;
       end if;
 
       Substr := Switch_Chars (Switch_Chars'First .. Switch_Chars'First + 4);

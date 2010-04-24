@@ -37,6 +37,7 @@ package DriverSwitch is
            range TSwitchIndex'First .. TSwitchIndex'Last - 1;
 
    type TSwitchList is array (TSwitchRange) of SU.Unbounded_String;
+   type TDetectMethod is (ARCH, TUNE);
 
 
    procedure Build_Arguments (
@@ -70,13 +71,32 @@ package DriverSwitch is
 
 private
 
+   function Detect_Local_CPU (DetectMethod : in TDetectMethod)
+   return SU.Unbounded_String;
+   --  This is an interface to a complex C routine of the GCC i386 driver.  It
+   --  automatically selects cpu-specific switches if it can.  This function
+   --  can be deleted after GiGi is replaced by DLC.
+
+   procedure Add_CC_Flags_Per_Target_Spec (
+      collection : in out SU.Unbounded_String
+   );
+   --  This procedure passes processor and subtarget specific flags back to
+   --  the GCC backend.  This is temporary.  When we replace GiGi, the driver
+   --  with be modified to remove the assembler execution (and replace it with
+   --  LLVM), and this is one of the procedures that will fall out.
+
    procedure TackOn (
       collection : in out SU.Unbounded_String;
       flag       : in SU.Unbounded_String
    );
+   procedure TackOn (
+      collection : in out SU.Unbounded_String;
+      flag       : in String
+   );
    --  This is a helper function.  It basically appends a string to another
    --  string, but if the provided counter is greater than zero, it will
    --  join them with a space, and then increment the counter.
+
 
 
    function Dump_Flags (

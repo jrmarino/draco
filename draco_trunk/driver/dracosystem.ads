@@ -22,16 +22,42 @@
 package DracoSystem is
 
    type BitBucket_Variations is (POSIX, MINGW);
-   subtype TArch is String (1 .. 16);
+   type BackendTargets is (X86, ARM, SPARC, POWERPC, MIPS, IA64, ALPHA);
+   subtype TArch   is String (1 .. 16);
    subtype TOSName is String (1 .. 25);
+   type CC1_SPEC is (
+      blank,     --  default (includes %{profile:-p})
+      g_star,    --  %{G*} alpha/elf.h ia64/ia64.h ia64/linux
+      android,   --  %{mandroid: %{!fexceptions:-fno-exceptions};:} arm/eabi.h
+      symbian,   --  fbuiltin/fvis/fshort-enums/fshort-wchar arm/symbian.h
+      vxworks,   --  12 lines! arm/vxworks.h
+      i386,      --  i386 CC1_CPU_SPEC + local detect i386.h, gnu.h
+      darwin,    --  i386 + 3 lines i386/darwin.h
+      x86linux,  --  i386 + %{G*} i386/linux.h i386/x86-64.h
+      stdmips,   --  4 lines, mips/mips.h mips/linux.h
+      mipsiris,  --  std mips + %{static: -mno-abicalls} mips/iris.h
+      stdppc,    --  2 lines! rs6000/aix.h
+      lynxppc,   --  rs6000/lynx.h
+      darwinppc, --  stdppc + 4 lines rs6000/darwin.h
+      sysv4ppc,  --  stdppc + ~22 lines!!! rs6000/sysv4.h
+      vxppc,     --  4 lines, rs6000/vxworks.h
+      spclinux,  --  sparc/linux.h
+      spclin64,  --  sparc/linux64.h
+      spcnet,    --  sparc/netbsd-elf.h
+      spcsol2,   --  sparc/sol2-bi.h
+      sparc      --  sparc/sparc.h
+   );
 
    type RecSystem is record
       Null_File_Type : BitBucket_Variations;
+      Backend        : BackendTargets;
       Architecture   : TArch;
       OS_Name        : TOSName;
       OS_Version     : Positive;
       Have_GNU_AS    : Boolean;
       Dash_For_Pipe  : Boolean;
+      CPU_AutoDetect : Boolean;
+      CC_Flags       : CC1_SPEC;
       --  Draco Version
       --  GNAT Version
       --  Libexec Search Dir
@@ -46,11 +72,14 @@ package DracoSystem is
 
    Native_System : constant RecSystem := (
       Null_File_Type => POSIX,
+      Backend        => X86,
       Architecture   => "i386",
       OS_Name        => "DragonFly",
       OS_Version     => 200701,
       Have_GNU_AS    => True,
-      Dash_For_Pipe  => True
+      Dash_For_Pipe  => True,
+      CPU_AutoDetect => True,
+      CC_Flags       => i386
    );
 
 
