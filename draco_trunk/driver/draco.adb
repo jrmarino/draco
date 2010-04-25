@@ -19,16 +19,31 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-package body DracoSystem is
+with SwitchMap;
+with DriverSwitch;
+with Ada.Strings.Unbounded;
 
-   function Host_Bit_Bucket (Variation : in BitBucket_Variations)
-   return String is
+procedure Draco is
+
+   package SU renames Ada.Strings.Unbounded;
+
+   DriverCom       : DriverSwitch.RecDriverCommands;
+begin
+   SwitchMap.Analyze_Command_Line;
+
+   declare
+      GroupedSwitches : constant SwitchMap.TGroupedSwitches :=
+                        SwitchMap.Get_Switch_List;
    begin
-      case Variation is
-         when POSIX => return "/dev/null";
-         when MINGW => return "nul";
-      end case;
-   end Host_Bit_Bucket;
+      for n in Positive range GroupedSwitches'First ..
+                              GroupedSwitches'Last loop
+         DriverSwitch.Set_Switch (SU.To_String (GroupedSwitches (n)));
+      end loop;
+   end;
 
-end DracoSystem;
+   DriverCom := DriverSwitch.Commands;
+
+   DriverSwitch.Post_Process;
+
+end Draco;
 

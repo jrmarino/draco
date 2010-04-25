@@ -19,6 +19,8 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
+with Ada.Strings.Fixed;
+
 package body SwitchMap is
 
    GroupedSwitches : TGroupedSwitches (Positive'First .. MaxListSize);
@@ -48,7 +50,8 @@ package body SwitchMap is
                       (Ada.Command_Line.Argument (n)));
             GroupedSwitches (Switch_Count) := Holding;
 
-            Holding := SU.Null_Unbounded_String;
+            Holding   := SU.Null_Unbounded_String;
+            Wait4Next := False;
          else
 
             if (Is_Switch (Ada.Command_Line.Argument (n))) then
@@ -64,39 +67,44 @@ package body SwitchMap is
 
                else
 
-                  case OptionMap (index).Shadow is
-                     when none =>
-                        Switch_Count := Switch_Count + 1;
-                        GroupedSwitches (Switch_Count) :=
-                           SU.To_Unbounded_String (
-                              OptionMap (index).Short_Name);
+                  declare
+                     SN : constant String := Ada.Strings.Fixed.Trim (
+                                             OptionMap (index).Short_Name,
+                                             Ada.Strings.Right);
+                     LN : constant String := Ada.Strings.Fixed.Trim (
+                                             OptionMap (index).Long_Name,
+                                             Ada.Strings.Right);
+                  begin
+                     case OptionMap (index).Shadow is
+                        when none =>
+                           Switch_Count := Switch_Count + 1;
+                           GroupedSwitches (Switch_Count) :=
+                                            SU.To_Unbounded_String (SN);
+                        when glued =>
+                           stub := Ada.Command_Line.Argument (n) (1 .. 2);
+                           if (stub = "--") then
+                              diff := SU.To_Unbounded_String (
+                                 Ada.Command_Line.Argument (n) (LN'Last + 1 ..
+                                 Ada.Command_Line.Argument (n)'Last));
 
-                     when glued =>
-                        stub := Ada.Command_Line.Argument (n) (1 .. 2);
-                        if (stub = "--") then
-                           diff := SU.To_Unbounded_String (
-                                      Ada.Command_Line.Argument (n)
-                                      (OptionMap (index).Long_Name'Size + 1 ..
-                                       Ada.Command_Line.Argument (n)'Size));
-                        else
-                           diff := SU.To_Unbounded_String (
-                                      Ada.Command_Line.Argument (n)
-                                      (OptionMap (index).Short_Name'Size + 1 ..
-                                       Ada.Command_Line.Argument (n)'Size));
-                        end if;
+                           else
+                              diff := SU.To_Unbounded_String (
+                                 Ada.Command_Line.Argument (n) (SN'Last + 1 ..
+                                 Ada.Command_Line.Argument (n)'Last));
+                           end if;
 
-                        Switch_Count := Switch_Count + 1;
-                        GroupedSwitches (Switch_Count) :=
-                           SU.To_Unbounded_String (
-                              OptionMap (index).Short_Name);
-                        SU.Append (GroupedSwitches (Switch_Count), diff);
+                           Switch_Count := Switch_Count + 1;
+                           GroupedSwitches (Switch_Count) :=
+                                            SU.To_Unbounded_String (SN);
+                           SU.Append (GroupedSwitches (Switch_Count), diff);
 
-                     when trailing =>
-                        Wait4Next := True;
-                        Holding   := SU.To_Unbounded_String (
-                                          OptionMap (index).Short_Name);
-                        SU.Append (Holding, " ");
-                  end case;
+                        when trailing =>
+                           Wait4Next := True;
+                           Holding   := SU.To_Unbounded_String (SN);
+                           SU.Append (Holding, " ");
+                     end case;
+                  end;
+
                end if;
             else
                FileList_Count := FileList_Count + 1;
@@ -164,32 +172,46 @@ package body SwitchMap is
       found  : Boolean := False;
       n      : Positive := Positive'First;
       sclen  : Natural;
+      SCS    : TShortName;
+      SCL    : TLongName;
    begin
-      sclen  := Switch_Chars'Size;
+      sclen  := Switch_Chars'Last;
+      Ada.Strings.Fixed.Move (Switch_Chars, SCS, Drop => Ada.Strings.Right);
+      Ada.Strings.Fixed.Move (Switch_Chars, SCL, Drop => Ada.Strings.Right);
+
       loop
          case OptionMap (n).Shadow is
             when none | trailing =>
-               if (Switch_Chars = OptionMap (n).Short_Name) or
-                  (Switch_Chars = OptionMap (n).Long_Name) then
+               if (SCS = OptionMap (n).Short_Name) or
+                  (SCL = OptionMap (n).Long_Name) then
                      found  := True;
                      result := n;
                end if;
             when glued =>
-               if (OptionMap (n).Short_Name'Size <= sclen) and
-                  (Switch_Chars (Switch_Chars'First ..
-                     OptionMap (n).Short_Name'Size) =
-                     OptionMap (n).Short_Name) then
+               declare
+                  stub : constant String := Ada.Strings.Fixed.Trim (
+                            OptionMap (n).Short_Name, Ada.Strings.Right);
+               begin
+                  if stub'Last <= sclen and then
+                     stub = Switch_Chars (stub'First .. stub'Last) then
+                     found  := True;
+                     result := n;
+                  end if;
+               end;
+
+               if not found then
+                  declare
+                     stub : constant String := Ada.Strings.Fixed.Trim (
+                                OptionMap (n).Long_Name, Ada.Strings.Right);
+                  begin
+                     if stub'Last <= sclen and then
+                        stub = Switch_Chars (stub'First .. stub'Last) then
                         found  := True;
                         result := n;
+                     end if;
+                  end;
                end if;
-               if not found and
-                  (OptionMap (n).Long_Name'Size <= sclen) and
-                  (Switch_Chars (Switch_Chars'First ..
-                     OptionMap (n).Long_Name'Size) =
-                     OptionMap (n).Long_Name) then
-                        found := True;
-                        result := n;
-               end if;
+
          end case;
          exit when found or n = OptionMap'Last;
          n := n + 1;

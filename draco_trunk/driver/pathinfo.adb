@@ -32,14 +32,14 @@ package body PathInfo is
       index : Natural;
    begin
       index := SU.Index (
-          source  => path,
+          Source  => path,
           Pattern => Slash,
           Going   => Ada.Strings.Backward
       );
       case index is
          when 0      => result := USDot;
          when 1      => result := SU.To_Unbounded_String (Slash);
-         when others => result := SU.Unbounded_Slice (Path, 1, index - 1);
+         when others => result := SU.Unbounded_Slice (path, 1, index - 1);
       end case;
 
       return result;
@@ -58,13 +58,13 @@ package body PathInfo is
    begin
       full_filename := Filename (path);
       index := SU.Index (
-          source  => full_filename,
+          Source  => full_filename,
           Pattern => SDot,
           Going   => Ada.Strings.Backward
       );
-      if index <= 1 then 
+      if index <= 1 then
          result := full_filename;
-      else 
+      else
          result := SU.Unbounded_Slice (full_filename, 1, index - 1);
       end if;
 
@@ -83,21 +83,21 @@ package body PathInfo is
       result  : SU.Unbounded_String;
       namelen : Natural;
       index   : Natural;
-   begin  
+   begin
       full_filename := Filename (path);
       namelen       := SU.Length (full_filename);
       index := SU.Index (
-          source  => full_filename,
+          Source  => full_filename,
           Pattern => SDot,
           Going   => Ada.Strings.Backward
       );
-      if index <= 1 then 
+      if index <= 1 then
          result := SU.Null_Unbounded_String;
       elsif index = namelen then
          result := SU.Null_Unbounded_String;
       else
-         result := SU.Unbounded_Slice 
-                  (full_filename, index + 1 , namelen);
+         result := SU.Unbounded_Slice
+                   (full_filename, index + 1, namelen);
       end if;
 
       return result;
@@ -116,11 +116,11 @@ package body PathInfo is
    begin
       pathlen := SU.Length (path);
       index := SU.Index (
-          source  => path,
+          Source  => path,
           Pattern => Slash,
           Going   => Ada.Strings.Backward
       );
-      if index = 0 then 
+      if index = 0 then
          result := path;
       elsif index = pathlen then
          result := SU.Null_Unbounded_String;
@@ -132,7 +132,7 @@ package body PathInfo is
    end Filename;
 
 
-   function Info (path   : in SU.Unbounded_String) return recPathInfo is
+   function Info (path   : in SU.Unbounded_String) return RecPathInfo is
       result  : RecPathInfo;
       pathlen : Natural;
       namelen : Natural;
@@ -140,27 +140,27 @@ package body PathInfo is
    begin
       pathlen := SU.Length (path);
       index := SU.Index (
-          source  => path,
+          Source  => path,
           Pattern => Slash,
           Going   => Ada.Strings.Backward
       );
       case index is
          when 0      => result.dirname := USDot;
          when 1      => result.dirname := SU.To_Unbounded_String (Slash);
-         when others => result.dirname := SU.Unbounded_Slice 
+         when others => result.dirname := SU.Unbounded_Slice
                                           (path, 1, index - 1);
       end case;
 
-      if index = 0 then 
+      if index = 0 then
          result.filename := path;
       elsif index = pathlen then
          result.filename := SU.Null_Unbounded_String;
-      else 
+      else
          result.filename := SU.Unbounded_Slice (path, index + 1,  pathlen);
       end if;
 
       index := SU.Index (
-          source  => result.filename,
+          Source  => result.filename,
           Pattern => SDot,
           Going   => Ada.Strings.Backward
       );
@@ -168,13 +168,13 @@ package body PathInfo is
       if (index <= 1) or (index = namelen) then
             result.extension := SU.Null_Unbounded_String;
       else
-            result.extension := SU.Unbounded_Slice (result.filename, 
+            result.extension := SU.Unbounded_Slice (result.filename,
                                 index + 1, namelen);
       end if;
 
-      if index <= 1 then 
+      if index <= 1 then
          result.basename := result.filename;
-      else 
+      else
          result.basename := SU.Unbounded_Slice (result.filename, 1, index - 1);
       end if;
 

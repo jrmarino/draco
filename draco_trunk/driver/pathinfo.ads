@@ -39,7 +39,7 @@ package PathInfo is
    end record;
 
 
-   function Dirname   (path   : in SU.Unbounded_String) return
+   function Dirname   (path : in SU.Unbounded_String) return
       SU.Unbounded_String;
    --  This function will accept a file or directory path as its sole argument
    --  and it will return the directory portion of the path.  If the path
@@ -48,7 +48,7 @@ package PathInfo is
    --  trailing separators, except in the case of the root folder.
 
 
-   function Basename  (path   : in SU.Unbounded_String) return
+   function Basename  (path : in SU.Unbounded_String) return
       SU.Unbounded_String;
    --  This function will accept a path to a file, and return the
    --  filename component of the path.  The result will trim the last period
@@ -57,7 +57,7 @@ package PathInfo is
    --  function instead.
 
 
-   function Extension (path   : in SU.Unbounded_String) return
+   function Extension (path : in SU.Unbounded_String) return
       SU.Unbounded_String;
    --  This function will accept a path to a file, and return just the
    --  file extension, if it exists.  A file extension is defined as the final
@@ -65,14 +65,14 @@ package PathInfo is
    --  period exists, a null string will be returned.
 
 
-   function Filename  (path   : in SU.Unbounded_String) return
+   function Filename  (path : in SU.Unbounded_String) return
       SU.Unbounded_String;
    --  The function will accept a path to a file.  Internally it will strip
    --  out the path to the directory, if one was provided, and it will return
    --  just the filename without any directory separators.
 
 
-   function Info  (path   : in SU.Unbounded_String) return recPathInfo;
+   function Info  (path : in SU.Unbounded_String) return RecPathInfo;
    --  This function will accept a path to a file or directory, and it will
    --  split this information up into various components: path to directory,
    --  full filename, base filename, and filename extension.

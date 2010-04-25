@@ -73,8 +73,8 @@ package DracoSystem is
    Native_System : constant RecSystem := (
       Null_File_Type => POSIX,
       Backend        => X86,
-      Architecture   => "i386",
-      OS_Name        => "DragonFly",
+      Architecture   => "i386            ",
+      OS_Name        => "DragonFly                ",
       OS_Version     => 200701,
       Have_GNU_AS    => True,
       Dash_For_Pipe  => True,

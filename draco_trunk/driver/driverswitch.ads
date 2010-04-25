@@ -123,13 +123,13 @@ private
    --  The wildcard is indicated by setting Partial to True.  All switches
    --  are separated by a single space.
 
-   procedure Store_Switch (Switch : in SU.Unbounded_String);
+   procedure Store_Switch (SSwitch : in String);
    --  When presented a new switch string, a search will be performed to make
    --  sure it doesn't already exist.  If there is space in the preallocated
    --  array, the switch will be saved, otherwise it will be ignored.
 
    function Switch_Already_Set (
-      Switch  : in SU.Unbounded_String;
+      SSwitch : in String;
       Partial : in Boolean := False
    ) return Boolean;
    --  Systematically search the previously set switches and return
