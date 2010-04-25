@@ -19,7 +19,14 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
+with Ada.Strings.Fixed;
+
 package body DracoSystem is
+
+
+   -----------------------
+   --  Host_Bit_Bucket  --
+   -----------------------
 
    function Host_Bit_Bucket (Variation : in BitBucket_Variations)
    return String is
@@ -29,6 +36,54 @@ package body DracoSystem is
          when MINGW => return "nul";
       end case;
    end Host_Bit_Bucket;
+
+
+   ----------------
+   --  Set_Arch  --
+   ----------------
+
+   function Set_Arch (value : String) return TArch is
+      result : TArch := (others => ' ');
+   begin
+      Ada.Strings.Fixed.Move (value, result, Drop => Ada.Strings.Right);
+      return result;
+   end Set_Arch;
+
+
+   ------------------
+   --  Set_OSName  --
+   ------------------
+
+   function Set_OSName (value : String) return TOSName is
+      result : TOSName := (others => ' ');
+   begin
+      Ada.Strings.Fixed.Move (value, result, Drop => Ada.Strings.Right);
+      return result;
+   end Set_OSName;
+
+
+   ------------------
+   --  Set_OSName  --
+   ------------------
+
+   function Set_Target (value : String) return TTarget is
+      result : TTarget := (others => ' ');
+   begin
+      Ada.Strings.Fixed.Move (value, result, Drop => Ada.Strings.Right);
+      return result;
+   end Set_Target;
+
+
+   -------------------
+   --  Set_Version  --
+   -------------------
+
+   function Set_Version (value : String) return TVersion is
+      result : TVersion := (others => ' ');
+   begin
+      Ada.Strings.Fixed.Move (value, result, Drop => Ada.Strings.Right);
+      return result;
+   end Set_Version;
 
 end DracoSystem;
 

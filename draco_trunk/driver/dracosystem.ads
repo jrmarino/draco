@@ -23,8 +23,10 @@ package DracoSystem is
 
    type BitBucket_Variations is (POSIX, MINGW);
    type BackendTargets is (X86, ARM, SPARC, POWERPC, MIPS, IA64, ALPHA);
-   subtype TArch   is String (1 .. 16);
-   subtype TOSName is String (1 .. 25);
+   subtype TArch    is String (1 .. 16);
+   subtype TOSName  is String (1 .. 25);
+   subtype TTarget  is String (1 .. 50);
+   subtype TVersion is String (1 .. 14);
    type CC1_SPEC is (
       blank,     --  default (includes %{profile:-p})
       g_star,    --  %{G*} alpha/elf.h ia64/ia64.h ia64/linux
@@ -51,6 +53,8 @@ package DracoSystem is
    type RecSystem is record
       Null_File_Type : BitBucket_Variations;
       Backend        : BackendTargets;
+      Draco_Version  : TVersion;
+      MachineTarget  : TTarget;
       Architecture   : TArch;
       OS_Name        : TOSName;
       OS_Version     : Positive;
@@ -64,28 +68,16 @@ package DracoSystem is
       --  Library Search Dir?
    end record;
 
-
-
-   --  This file is really a template file meant to be modified by the
-   --  configuration script.  The Native_System constant record is built by
-   --  That script using information specific to the host system.
-
-   Native_System : constant RecSystem := (
-      Null_File_Type => POSIX,
-      Backend        => X86,
-      Architecture   => "i386            ",
-      OS_Name        => "DragonFly                ",
-      OS_Version     => 200701,
-      Have_GNU_AS    => True,
-      Dash_For_Pipe  => True,
-      CPU_AutoDetect => True,
-      CC_Flags       => i386
-   );
-
-
    function Host_Bit_Bucket (Variation : in BitBucket_Variations)
    return String;
    --  This function returns the name of the host bit bucket, e.g. /dev/null
    --  on posix systems.
+
+   function Set_Arch    (value : String) return TArch;
+   function Set_OSName  (value : String) return TOSName;
+   function Set_Target  (value : String) return TTarget;
+   function Set_Version (value : String) return TVersion;
+   --  These functions essentially right-pad the unused characters with spaces
+
 
 end DracoSystem;

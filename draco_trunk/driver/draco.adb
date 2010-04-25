@@ -21,15 +21,24 @@
 
 with SwitchMap;
 with DriverSwitch;
+with Commands;
 with Ada.Strings.Unbounded;
+
+--  Delete later
+with Ada.Text_IO;
 
 procedure Draco is
 
    package SU renames Ada.Strings.Unbounded;
 
    DriverCom       : DriverSwitch.RecDriverCommands;
+   ProcessFiles    : Boolean := True;
+   Did_Something   : Boolean := False;
 begin
    SwitchMap.Analyze_Command_Line;
+   if SwitchMap.File_Count = 0 then
+      ProcessFiles := False;
+   end if;
 
    declare
       GroupedSwitches : constant SwitchMap.TGroupedSwitches :=
@@ -43,7 +52,40 @@ begin
 
    DriverCom := DriverSwitch.Commands;
 
-   DriverSwitch.Post_Process;
+   if DriverCom.dumpmachine then
+      Did_Something := True;
+      ProcessFiles  := False;
+      Commands.Dump_Machine;
+   end if;
+   if DriverCom.dumpversion then
+      Did_Something := True;
+      ProcessFiles := False;
+      Commands.Dump_Version;
+   end if;
+
+   if ProcessFiles then
+      DriverSwitch.Post_Process;
+      if DriverSwitch.Proceed then
+         declare
+            FileList : constant SwitchMap.TFileList :=
+                       SwitchMap.Get_File_List;
+            compiler_flags  : SU.Unbounded_String;
+            assembler_flags : SU.Unbounded_String;
+         begin
+            for n in Positive range FileList'First .. FileList'Last loop
+               DriverSwitch.Build_Arguments (
+                  source_file    => FileList (n),
+                  compiler_flags => compiler_flags,
+                  assembler_flags => assembler_flags
+               );
+               Ada.Text_IO.Put_Line ("gnat1: " & SU.To_String(compiler_flags));
+               Ada.Text_IO.Put_Line ("asm  : " & SU.To_String(assembler_flags));
+            end loop;
+         end;
+      end if;
+   elsif not Did_Something then
+      Commands.Display_Error (Commands.NoInputFiles);
+   end if;
 
 end Draco;
 

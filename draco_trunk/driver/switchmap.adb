@@ -135,6 +135,15 @@ package body SwitchMap is
    end Get_Switch_List;
 
 
+   ---------------------
+   --  File_Count  --
+   ---------------------
+
+   function File_Count return Natural is
+   begin
+      return FileList_Count;
+   end File_Count;
+
 
    ---------------------
    --  Get_File_List  --

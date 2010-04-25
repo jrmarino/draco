@@ -148,6 +148,10 @@ package SwitchMap is
    --  what subset of switches and well as order and substitions, but this is
    --  done in another unit.
 
+   function  File_Count return Natural;
+   --  This function returns the number of switches that have been interpreted
+   --  as input files to process.
+
 private
 
    function Is_Switch (Switch_Chars : in String) return Boolean;

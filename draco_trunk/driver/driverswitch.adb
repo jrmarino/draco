@@ -20,10 +20,9 @@
 
 
 with DracoSystem;
+with DracoSystemSpecs;
 with PathInfo;
-with System;
 with Ada.IO_Exceptions;
---  with Interfaces.C.Strings;
 with Interfaces.C_Streams;
 
 package body DriverSwitch is
@@ -115,14 +114,12 @@ package body DriverSwitch is
    ) is
       src_components : PathInfo.RecPathInfo;
       random_s_file  : SU.Unbounded_String;
-      pipe_exists    : Boolean;
       invoke_as      : Boolean;
       S_exists       : Boolean;
 
       procedure Add_Dumpbase;
       procedure Add_Auxbase;
       procedure Add_Assembler_Output_File;
-      procedure Tmp_Name (Buffer : System.Address);
       function  Random_Assembly_Srcfile return SU.Unbounded_String;
       procedure Add_Output_File (s_file    : in  SU.Unbounded_String;
                                  s_flag    : in  Boolean;
@@ -132,8 +129,6 @@ package body DriverSwitch is
                                  s_file    : in SU.Unbounded_String;
                                  piped     : in Boolean);
 
-
-      pragma Import (C, Tmp_Name, "__gnat_tmp_name");
 
       procedure Add_Dumpbase is
          workstr : SU.Unbounded_String;
@@ -158,15 +153,37 @@ package body DriverSwitch is
       end Add_Auxbase;
 
       function Random_Assembly_Srcfile return SU.Unbounded_String is
-         Namelen : constant Integer := Interfaces.C_Streams.max_path_len;
-         NameStr : aliased String (1 .. Namelen + 1);
+         maxlen : constant Positive := Interfaces.C_Streams.max_path_len + 1;
+         subtype TTemporary is String (1 .. maxlen);
+         type name_access is access all TTemporary;
+         NameStr : aliased TTemporary;
+         NameStr_access : name_access;
+         result : SU.Unbounded_String := SU.Null_Unbounded_String;
+
+         procedure Tmp_Name (tmp_filename : name_access);
+         pragma Import (C, Tmp_Name, "__gnat_tmp_name");
+
       begin
-         Tmp_Name (NameStr'Address);
+         NameStr := (others => ' ');
+         NameStr_access := NameStr'Access;
+         Tmp_Name (NameStr_access);
+
          if NameStr (1) = ASCII.NUL then
-            raise Ada.IO_Exceptions.Use_Error with
-               "Invalid temporary file name";
+               raise Ada.IO_Exceptions.Use_Error with
+                  "Invalid temporary file name";
          end if;
-         return SU.To_Unbounded_String (NameStr);
+
+         declare
+            k : Natural := 0;
+         begin
+            loop
+               k := k + 1;
+               exit when (NameStr (k) = ASCII.NUL) or (k = maxlen);
+            end loop;
+            result := SU.To_Unbounded_String (NameStr (1 .. k) & ".s");
+         end;
+
+         return result;
       end Random_Assembly_Srcfile;
 
       procedure Add_Output_File (
@@ -186,7 +203,7 @@ package body DriverSwitch is
 
          if gnatc_exists or gnats_exists then
             Append (workstr, DracoSystem.Host_Bit_Bucket
-                             (DracoSystem.Native_System.Null_File_Type));
+                             (DracoSystemSpecs.Native_System.Null_File_Type));
          elsif s_flag then
             Append (workstr, src_components.basename & ".s");
          elsif piped then
@@ -214,7 +231,7 @@ package body DriverSwitch is
       is
       begin
          if piped then
-            if DracoSystem.Native_System.Dash_For_Pipe then
+            if DracoSystemSpecs.Native_System.Dash_For_Pipe then
                TackOn (assembler_flags, SU.To_Unbounded_String ("-"));
             end if;
          else
@@ -229,7 +246,6 @@ package body DriverSwitch is
       src_components  := PathInfo.Info (source_file);
       random_s_file   := Random_Assembly_Srcfile;
       S_exists        := Switch_Already_Set ("-S");
-      pipe_exists     := Switch_Already_Set ("-pipe");
 
       Append (compiler_flags, Dump_Flags ("-I",        True));
       Append (compiler_flags, Dump_Flags ("-quiet",    False));
@@ -253,7 +269,7 @@ package body DriverSwitch is
       Add_CC_Flags_Per_Target_Spec (compiler_flags);
 
       TackOn (compiler_flags, source_file);
-      Add_Output_File (random_s_file, S_exists, pipe_exists, invoke_as);
+      Add_Output_File (random_s_file, S_exists, DriverCom.pipe, invoke_as);
       --  We still need to set "%W" delete on fail for basename.s
 
       --  The assembler is a separate program with its own set of flags
@@ -264,7 +280,7 @@ package body DriverSwitch is
 
       FlagIndex := 0;
       TackOn (assembler_flags, SU.To_Unbounded_String ("as"));
-      if DracoSystem.Native_System.Have_GNU_AS then
+      if DracoSystemSpecs.Native_System.Have_GNU_AS then
          Append (assembler_flags, Dump_Flags ("-v", False));
          if Switch_Already_Set ("-w") then
             TackOn (assembler_flags, SU.To_Unbounded_String ("-W"));
@@ -281,7 +297,7 @@ package body DriverSwitch is
       --  put ASM_FINAL_SPEC at the end (only applies to alpha/osf5 [skipped]
 
       Add_Assembler_Output_File;
-      Add_Assembler_Input_File (random_s_file, pipe_exists);
+      Add_Assembler_Input_File (random_s_file, DriverCom.pipe);
 
    end Build_Arguments;
 
@@ -318,8 +334,8 @@ package body DriverSwitch is
       end if;
 
       --  This section will be removed after DLC replaces GiGi
-      if (DracoSystem.Native_System.CC_Flags = DracoSystem.stdmips) or
-         (DracoSystem.Native_System.CC_Flags = DracoSystem.mipsiris) then
+      if (DracoSystemSpecs.Native_System.CC_Flags = DracoSystem.stdmips) or
+         (DracoSystemSpecs.Native_System.CC_Flags = DracoSystem.mipsiris) then
 
          if Switch_Already_Set ("-mel") and
             Switch_Already_Set ("-meb") then
@@ -460,9 +476,9 @@ package body DriverSwitch is
 
 
       --  This section will be removed after DLC replaces GiGi
-      if (DracoSystem.Native_System.CC_Flags = DracoSystem.i386) or
-         (DracoSystem.Native_System.CC_Flags = DracoSystem.darwin) or
-         (DracoSystem.Native_System.CC_Flags = DracoSystem.x86linux) then
+      if (DracoSystemSpecs.Native_System.CC_Flags = DracoSystem.i386) or
+         (DracoSystemSpecs.Native_System.CC_Flags = DracoSystem.darwin) or
+         (DracoSystemSpecs.Native_System.CC_Flags = DracoSystem.x86linux) then
 
          if Switch_Chars = "-mintel-syntax" then
             Store_Switch ("-masm=intel");
@@ -506,8 +522,8 @@ package body DriverSwitch is
       end if;
 
       --  This section will be removed after DLC replaces GiGi
-      if (DracoSystem.Native_System.CC_Flags = DracoSystem.stdmips) or
-         (DracoSystem.Native_System.CC_Flags = DracoSystem.mipsiris) then
+      if (DracoSystemSpecs.Native_System.CC_Flags = DracoSystem.stdmips) or
+         (DracoSystemSpecs.Native_System.CC_Flags = DracoSystem.mipsiris) then
 
          if Switch_Chars = "-EB" then
             Store_Switch ("-meb");
@@ -517,8 +533,8 @@ package body DriverSwitch is
             Store_Switch ("-mel");
             return;
          end if;
-         if (DracoSystem.Native_System.CC_Flags = DracoSystem.mipsiris) and
-            Switch_Chars = "-static" then
+         if (DracoSystemSpecs.Native_System.CC_Flags = DracoSystem.mipsiris)
+            and Switch_Chars = "-static" then
             Store_Switch ("-mno-abicalls");
             return;
          end if;
@@ -563,7 +579,7 @@ package body DriverSwitch is
 
       procedure i386_core is
       begin
-         if DracoSystem.Native_System.CPU_AutoDetect then
+         if DracoSystemSpecs.Native_System.CPU_AutoDetect then
             if AutoArch then
                TackOn (collection, Detect_Local_CPU (ARCH));
             end if;
@@ -574,7 +590,7 @@ package body DriverSwitch is
       end i386_core;
 
    begin
-      case DracoSystem.Native_System.CC_Flags is
+      case DracoSystemSpecs.Native_System.CC_Flags is
       when DracoSystem.g_star =>
 
          Append (collection, Dump_Flags ("-G", True));
@@ -685,6 +701,10 @@ package body DriverSwitch is
       flag       : in SU.Unbounded_String
    ) is
    begin
+      if flag = SU.Null_Unbounded_String then
+         return;
+      end if;
+
       if FlagIndex > 0 then
          SU.Append (collection, " ");
       end if;
@@ -697,6 +717,10 @@ package body DriverSwitch is
       flag       : in String
    ) is
    begin
+      if flag'Last = 0 then
+         return;
+      end if;
+
       TackOn (collection, SU.To_Unbounded_String (flag));
    end TackOn;
 
@@ -713,13 +737,11 @@ package body DriverSwitch is
    is
       index   : TSwitchRange := TSwitchRange'First;
       foundit : Boolean := False;
-      advance : Boolean;
+      advance : Boolean := NumSet > index;
       result  : SU.Unbounded_String := SU.Null_Unbounded_String;
       USwitch : constant SU.Unbounded_String :=
                          SU.To_Unbounded_String (Switch);
    begin
-      advance := NumSet > index;
-
       while advance loop
          case Partial is
             when False =>
@@ -728,7 +750,7 @@ package body DriverSwitch is
                   TackOn (result, SwitchList (index));
                end if;
             when True =>
-               if (Switch'Last <= SU.Length (SwitchList (index))) and
+               if (Switch'Last <= SU.Length (SwitchList (index))) and then
                   (USwitch = SU.Unbounded_Slice
                      (SwitchList (index), 1, Switch'Last)) then
                   TackOn (result, SwitchList (index));
@@ -741,6 +763,7 @@ package body DriverSwitch is
             advance := False;
          else
             index := index + 1;
+            advance := NumSet > index;
          end if;
       end loop;
 
@@ -790,8 +813,8 @@ package body DriverSwitch is
                   result := True;
                end if;
             when True =>
-               if (SU.Length (Switch) <= SU.Length (SwitchList (index))) and
-                  (Switch = SU.Unbounded_Slice
+               if (SU.Length (Switch) <= SU.Length (SwitchList (index)))
+                  and then (Switch = SU.Unbounded_Slice
                      (SwitchList (index), 1, SU.Length (Switch))) then
                   result := True;
                end if;
