@@ -2529,7 +2529,7 @@ ix86_target_string (int isa, int flags, const char *arch, const char *tune,
   if (flags && add_nl_p)
     {
       opts[num++][0] = target_other;
-      sprintf (target_other, "(other flags: %#x)", isa);
+      sprintf (target_other, "(other flags: %#x)", flags);
     }
 
   /* Add -fpmath= option.  */
@@ -10849,7 +10849,7 @@ output_pic_addr_const (FILE *file, rtx x, int code)
 	{
 	  /* We can use %d if the number is <32 bits and positive.  */
 	  if (CONST_DOUBLE_HIGH (x) || CONST_DOUBLE_LOW (x) < 0)
-	    fprintf (file, "%#lx%08lx",
+	    fprintf (file, "0x%lx%08lx",
 		     (unsigned long) CONST_DOUBLE_HIGH (x),
 		     (unsigned long) CONST_DOUBLE_LOW (x));
 	  else
@@ -11427,7 +11427,7 @@ get_some_local_dynamic_name (void)
     return cfun->machine->some_ld_name;
 
   for (insn = get_insns (); insn ; insn = NEXT_INSN (insn))
-    if (INSN_P (insn)
+    if (NONDEBUG_INSN_P (insn)
 	&& for_each_rtx (&PATTERN (insn), get_some_local_dynamic_name_1, 0))
       return cfun->machine->some_ld_name;
 
@@ -12013,7 +12013,7 @@ print_operand (FILE *file, rtx x, int code)
 
       if (ASSEMBLER_DIALECT == ASM_ATT)
 	putc ('$', file);
-      fprintf (file, "%#08lx", (long unsigned int) l);
+      fprintf (file, "0x%08lx", (long unsigned int) l);
     }
 
   /* These float cases don't actually occur as immediate operands.  */
@@ -13673,7 +13673,7 @@ distance_non_agu_define (unsigned int regno1, unsigned int regno2,
       rtx prev = PREV_INSN (insn);
       while (prev && distance < LEA_SEARCH_THRESHOLD)
 	{
-	  if (INSN_P (prev))
+	  if (NONDEBUG_INSN_P (prev))
 	    {
 	      distance++;
               for (def_rec = DF_INSN_DEFS (prev); *def_rec; def_rec++)
@@ -13713,7 +13713,7 @@ distance_non_agu_define (unsigned int regno1, unsigned int regno2,
 		 && prev != insn
 		 && distance < LEA_SEARCH_THRESHOLD)
 	    {
-	      if (INSN_P (prev))
+	      if (NONDEBUG_INSN_P (prev))
 		{
 		  distance++;
 		  for (def_rec = DF_INSN_DEFS (prev); *def_rec; def_rec++)
@@ -13759,7 +13759,7 @@ distance_agu_use (unsigned int regno0, rtx insn)
       rtx next = NEXT_INSN (insn);
       while (next && distance < LEA_SEARCH_THRESHOLD)
 	{
-	  if (INSN_P (next))
+	  if (NONDEBUG_INSN_P (next))
 	    {
 	      distance++;
 
@@ -13808,7 +13808,7 @@ distance_agu_use (unsigned int regno0, rtx insn)
 		 && next != insn
 		 && distance < LEA_SEARCH_THRESHOLD)
 	    {
-	      if (INSN_P (next))
+	      if (NONDEBUG_INSN_P (next))
 		{
 		  distance++;
 
