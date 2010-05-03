@@ -78,8 +78,8 @@ begin
                   compiler_flags => compiler_flags,
                   assembler_flags => assembler_flags
                );
-               Ada.Text_IO.Put_Line ("gnat1: " & SU.To_String(compiler_flags));
-               Ada.Text_IO.Put_Line ("asm  : " & SU.To_String(assembler_flags));
+               Ada.Text_IO.Put_Line ("gnat1: " & SU.To_String (compiler_flags));
+               Ada.Text_IO.Put_Line ("asm  : " & SU.To_String (assembler_flags));
             end loop;
          end;
       end if;
