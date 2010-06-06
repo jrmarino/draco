@@ -28,7 +28,7 @@
 -- now maintained by Ada Core Technologies Inc. in cooperation with Florida --
 -- State University (http://www.gnat.com).                                  --
 --                                                                          --
--- Copyright (C) 2010 John Marino (www.auroraux.org)                           --
+-- Copyright (C) 2010 John Marino (www.auroraux.org)                        --
 ------------------------------------------------------------------------------
 
 --  This is the FreeBSD THREADS version of this package
