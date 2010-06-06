@@ -431,10 +431,6 @@ package body DriverSwitch is
          Store_Switch ("-mrtp");
       end if;
 
-      if Switch_Chars = "-fRTS=sjlj" then
-         Store_Switch ("-fsjlj");
-      end if;
-
       if (Switch_Chars = "-nostdinc") or
          (Switch_Chars = "-nostdlib") or
          Parameter_Switch (Switch_Chars) then

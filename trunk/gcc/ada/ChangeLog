@@ -1,3 +1,8 @@
+2010-06-04  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* gnatlink.adb (gnatlink): Remove support for -fsjlj switch.
+	* gcc-interface/lang-specs.h: Likewise.
+
 2010-05-16  Manuel López-Ibáñez  <manu@gcc.gnu.org>
 
 	* gcc-interface/misc.c (gnat_handle_option): Remove special logic
