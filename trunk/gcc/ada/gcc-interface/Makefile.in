@@ -1,6 +1,6 @@
 # Makefile for GNU Ada Compiler (GNAT).
 #   Copyright (C) 1994-2010 Free Software Foundation, Inc.
-#   Copyright (C) 2010 AuroraUX (www.auroraux.org)
+#   Copyright (C) 2010 John Marino (www.auroraux.org)
 
 #This file is part of GCC.
 

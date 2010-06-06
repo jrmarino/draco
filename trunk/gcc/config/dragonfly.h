@@ -1,6 +1,6 @@
 /* Base configuration file for all DragonFly targets.
    Copyright (C) 1999, 2000, 2001, 2007 Free Software Foundation, Inc.
-   Copyright (C) 2010 AuroraUX (www.auroraux.org)
+   Copyright (C) 2010 John Marino (www.auroraux.org)
 
 This file is part of GCC.
 

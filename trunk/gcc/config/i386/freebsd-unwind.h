@@ -1,6 +1,6 @@
 /* DWARF2 EH unwinding support for FreeBSD: AMD x86-64 and x86.
    Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
-   Copyright (C) 2010 AuroraUX (www.auroraux.org)
+   Copyright (C) 2010 John Marino (www.auroraux.org)
 
 This file is part of GCC.
 

@@ -1,5 +1,5 @@
 /* DWARF2 EH unwinding support for DragonFly BSD: AMD x86-64 and x86.
-   Copyright (C) 2010 AuroraUX (www.auroraux.org) */
+   Copyright (C) 2010 John Marino (www.auroraux.org) */
 
 /* Do code reading to identify a signal frame, and set the frame
    state data appropriately.  See unwind-dw2.c for the structs. */
