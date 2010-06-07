@@ -1,8 +1,8 @@
 #!/bin/sh
 # If you want to build C++, change BUILD_CPP to "YES"
 
-GCC_VERSION=4.5.0
-SNAPSHOT=4.5-20100401
+GCC_VERSION=4.6.0
+SNAPSHOT=4.6-20100605
 NATIVE_HOST=i386-pc-solaris2.11
 OS_LABEL4VERS="[Opensolaris SXCE]"
 ADA_PREFIX=/export/home/opt/ada
