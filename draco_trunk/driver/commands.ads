@@ -60,6 +60,10 @@ package Commands is
    --  search path, defined by the "-B" command line option.  The input will
    --  write over the Path_Libexec variable.
 
+   procedure Display_Version;
+   --  This displays the version of DRACO
+
+
 private
 
    function Number_Of_Directories (path : TBinPath) return Natural;

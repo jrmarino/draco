@@ -30,7 +30,7 @@ package DracoSystemSpecs is
    Native_System : constant DracoSystem.RecSystem := (
       Null_File_Type => DracoSystem.POSIX,
       Backend        => DracoSystem.X86,
-      Draco_Version  => DracoSystem.Set_Version ("2010 Q2"),
+      Draco_Version  => DracoSystem.Set_Version ("2010.Q2"),
       Gnat_Version   => DracoSystem.Set_Version ("4.6.20100605"),
       MachineTarget  => DracoSystem.Set_Target  ("i386-backplane-dragonfly2.6"),
       Architecture   => DracoSystem.Set_Arch    ("i386"),

@@ -60,6 +60,11 @@ begin
          SU.To_String (DriverCom.binsearch)
       );
    end if;
+   if DriverCom.version then
+      Did_Something := True;
+      ProcessFiles  := False;
+      Commands.Display_Version;
+   end if;
    if DriverCom.dumpmachine then
       Did_Something := True;
       ProcessFiles  := False;

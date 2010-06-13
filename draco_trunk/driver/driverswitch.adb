@@ -90,7 +90,7 @@ package body DriverSwitch is
 --  work is planned to be removed over time, it's not worth it.  For now
 --  just return a blank.
 
-      if DetectMethod = TUNE then
+      if DetectMethod = ARCH then
          return SU.To_Unbounded_String ("delete-me-soon");
       end if;
 

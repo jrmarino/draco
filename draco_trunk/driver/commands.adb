@@ -29,6 +29,17 @@ package body Commands is
    Path_Libexec    : Commands.TBinPath;
 
 
+   -----------------------
+   --  Display_Version  --
+   -----------------------
+
+   procedure Display_Version is
+   begin
+      TIO.Put_Line ("DRagon's Ada Compiler Option: DRACO " &
+         DracoSystemSpecs.Native_System.Draco_Version);
+   end Display_Version;
+
+
    ------------------------------------
    --  Override_Default_Search_Path  --
    ------------------------------------
