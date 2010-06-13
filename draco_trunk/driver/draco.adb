@@ -113,8 +113,8 @@ begin
                         if pipe_success then
 
                            if DriverCom.verbose then
-                              TIO.Put_Line ("{DRACO} " & str_compiler_flags &
-                                            " | {ASY} " & str_assembler_flags);
+                              TIO.Put_Line ("{DRAC} " & str_compiler_flags &
+                                            " | {ASSY} " & str_assembler_flags);
                            end if;
                            PipeMechanism.Pipe (
                               gnat1_fullpath,
@@ -133,7 +133,7 @@ begin
                                        (str_compiler_flags);
                               if DriverCom.verbose then
                                  TIO.Put_Line (
-                                    "{DRACO} " &
+                                    "{DRAC} " &
                                     SU.To_String (compiler_flags)
                                  );
                               end if;
@@ -148,14 +148,15 @@ begin
                               end if;
                            end;
                         end if;
-                        if spawn_success and then (str_assembler_flags'Length > 0) then
+                        if spawn_success and then
+                           (str_assembler_flags'Length > 0) then
                            declare
                               args2 : GNAT.OS_Lib.Argument_List_Access;
                            begin
                               args2 := GNAT.OS_Lib.Argument_String_To_List
                                        (str_assembler_flags);
                               if DriverCom.verbose then
-                                 TIO.Put_Line ("{ASY} " & str_assembler_flags);
+                                 TIO.Put_Line ("{ASSY} " & str_assembler_flags);
                               end if;
                               GNAT.OS_Lib.Spawn (
                                 Program_Name => assy_fullpath,
@@ -164,7 +165,7 @@ begin
                               GNAT.OS_Lib.Free (args2);
                            end;
                         end if;
-                        if temp_created then
+                        if not DriverCom.save_temps and temp_created then
                            temp_created := False;
                            Ada.Directories.Delete_File (str_temp_file);
                         end if;
