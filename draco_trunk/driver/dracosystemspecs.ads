@@ -41,7 +41,8 @@ package DracoSystemSpecs is
       CPU_AutoDetect => True,
       CC_Flags       => DracoSystem.i386,
       Path_assembler => DracoSystem.Set_DefPath ("/usr/bin/as"),
-      Path_libexec   => DracoSystem.Set_DefPath ("/export/home/opt/ada/fsf444/libexec/gcc/i386-pc-solaris2.11/4.4.4:../libexec/gcc/i386-pc-solaris2.11/4.4.4")
+      Path_libexec   => DracoSystem.Set_DefPath ("/export/home/opt/ada/fsf444/libexec/gcc/i386-pc-solaris2.11/4.4.4:../libexec/gcc/i386-pc-solaris2.11/4.4.4"),
+      Config_options => DracoSystem.Set_Config  ("--with-gnu-as --with-as=/usr/sfw/bin/gas --enable-shared --disable-nls --disable-multilib --with-gmp=/opt/csw --with-mpfr=/opt/csw --prefix=/opt/csw")
    );
 
 end DracoSystemSpecs;

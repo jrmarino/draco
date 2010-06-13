@@ -29,6 +29,64 @@ package body Commands is
    Path_Libexec    : Commands.TBinPath;
 
 
+   ------------------------------
+   --  Display_Verbose_Header  --
+   ------------------------------
+
+   procedure Display_Verbose_Header is
+   begin
+      TIO.Put_Line ("DRACO " & DracoSystemSpecs.Native_System.Draco_Version);
+      TIO.Put_Line ("Target: " & DracoSystemSpecs.Native_System.MachineTarget);
+      TIO.Put_Line ("Configured: " & Ada.Strings.Fixed.Trim (
+         Source => DracoSystemSpecs.Native_System.Config_options,
+         Side => Ada.Strings.Right)
+      );
+   end Display_Verbose_Header;
+
+   --------------------
+   --  Display_Help  --
+   --------------------
+
+   procedure Display_Help is
+   begin
+      TIO.Put_Line ("Usage: draco [options] file...");
+      TIO.Put_Line ("Options:");
+      TIO.Put_Line ("  --help              " &
+                        "Display this information");
+      TIO.Put_Line ("  --version           " &
+                        "Display compiler version information");
+      TIO.Put_Line ("  -dumpversion        " &
+                        "Display the version of the compiler");
+      TIO.Put_Line ("  -dumpmachine        " &
+                        "Display the compiler's target processor");
+      TIO.Put_Line ("  -print-search-dirs  Display " &
+                        "the directories in the compiler's search path");
+      TIO.Put_Line ("  -Xassembler <arg>   " &
+                        "Pass <arg> on to the assembler");
+      TIO.Put_Line ("  -Wa,<options>       " &
+                        "Pass comma-separated <options> on to the assembler");
+      TIO.Put_Line ("  -save-temps         " &
+                        "Do not delete intermediate files");
+      TIO.Put_Line ("  -pipe               " &
+                        "Use pipes rather than intermediate files");
+      TIO.Put_Line ("  -B <directory>      " &
+                        "Add <directory> to the compiler's search paths");
+      TIO.Put_Line ("  -v                  " &
+                        "Display the programs invoked by the compiler");
+      TIO.Put_Line ("  -S                  " &
+                        "Compile only; do not assemble or link");
+      TIO.Put_Line ("  -c                  " &
+                        "Compile and assemble, but do not link");
+      TIO.Put_Line ("");
+      TIO.Put_Line ("Options starting with -g, -f, -m, -O, -W, or --param " &
+                        "are automatically");
+      TIO.Put_Line (" passed on to the Ada compiler.  In order to pass " &
+                        "other options to the");
+      TIO.Put_Line (" compiler, the -W<letter> options must be used.");
+      TIO.Put_Line ("");
+
+   end Display_Help;
+
    -----------------------
    --  Display_Version  --
    -----------------------

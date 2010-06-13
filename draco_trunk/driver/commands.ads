@@ -63,6 +63,13 @@ package Commands is
    procedure Display_Version;
    --  This displays the version of DRACO
 
+   procedure Display_Help;
+   --  This displays the help screen of DRACO
+
+   procedure Display_Verbose_Header;
+   --  This displays the first few lines of information when verbose option
+   --  is used.
+
 
 private
 

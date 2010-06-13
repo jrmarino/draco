@@ -45,11 +45,13 @@ package body DriverSwitch is
 
    procedure Append_Binary_Search_Path (Switch_Chars : in String) is
    begin
-      if DriverCom.binsearch /= SU.Null_Unbounded_String then
-         Append (DriverCom.binsearch, ":");
+      if Switch_Chars'Length > 3 then
+         if DriverCom.binsearch /= SU.Null_Unbounded_String then
+            Append (DriverCom.binsearch, ":");
+         end if;
+         Append (DriverCom.binsearch, Switch_Chars
+                (Switch_Chars'First + 3 .. Switch_Chars'Last));
       end if;
-      Append (DriverCom.binsearch, Switch_Chars
-             (Switch_Chars'First + 2 .. Switch_Chars'Last));
    end Append_Binary_Search_Path;
 
    ----------------------------------
@@ -467,7 +469,8 @@ package body DriverSwitch is
         (Switch_Chars (Switch_Chars'First ..
                        Switch_Chars'First + 3) = "-Wa,") then
          SU.Append (Ass_options, SU.To_Unbounded_String (
-             Switch_Chars (Switch_Chars'First + 4 .. Switch_Chars'Last)));
+             Switch_Chars (Switch_Chars'First + 4 .. Switch_Chars'Last)
+             & " "));
          for n in Positive range 1 .. SU.Length (Ass_options) loop
             if SU.Element (Ass_options, n) = ',' then
                SU.Replace_Element (Ass_options, n, ' ');
@@ -476,19 +479,14 @@ package body DriverSwitch is
          return;
       end if;
 
-      if Switch_Chars = "-Wa" then
-         declare
-            s : Positive := 3;
-         begin
-            if Ass_options = SU.Null_Unbounded_String then
-               s := 4;
-            end if;
-            SU.Append (Ass_options, SU.To_Unbounded_String (
-               Switch_Chars (Switch_Chars'First + s .. Switch_Chars'Last)));
-         end;
+      if Switch_Chars'Last >= 12 and then
+        (Switch_Chars (Switch_Chars'First ..
+                       Switch_Chars'First + 11) = "-Xassembler ") then
+         SU.Append (Ass_options, SU.To_Unbounded_String (
+             Switch_Chars (Switch_Chars'First + 12 .. Switch_Chars'Last)
+             & " "));
          return;
       end if;
-
 
       --  This section will be removed after DLC replaces GiGi
       if (DracoSystemSpecs.Native_System.CC_Flags = DracoSystem.i386) or

@@ -60,6 +60,11 @@ begin
          SU.To_String (DriverCom.binsearch)
       );
    end if;
+   if DriverCom.help then
+      Did_Something := True;
+      ProcessFiles  := False;
+      Commands.Display_Help;
+   end if;
    if DriverCom.version then
       Did_Something := True;
       ProcessFiles  := False;
@@ -80,6 +85,12 @@ begin
       ProcessFiles  := False;
       Commands.Print_Search_Dirs;
    end if;
+   if DriverCom.verbose then
+      Did_Something := True;
+      Commands.Display_Verbose_Header;
+      TIO.Put_Line ("COMPILER_PATH=" & Commands.Complete_Gnat1_Path);
+      TIO.Put_Line ("ASSEMBLR_PATH=" & Commands.Full_Assembler_Path);
+   end if;
 
    if ProcessFiles then
       DriverSwitch.Post_Process;
@@ -99,11 +110,6 @@ begin
             if gnat1_fullpath'Length = 0 then
                Commands.Display_Error (Commands.GNAT1_Not_Found);
             else
-               if DriverCom.verbose then
-                  TIO.Put_Line ("COMPILER_PATH=" & gnat1_fullpath);
-                  TIO.Put_Line ("ASSEMBLR_PATH=" & assy_fullpath);
-               end if;
-
                for n in Positive range FileList'First .. FileList'Last loop
                   DriverSwitch.Build_Arguments (
                      source_file     => FileList (n),

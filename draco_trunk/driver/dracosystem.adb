@@ -102,5 +102,22 @@ package body DracoSystem is
       return result;
    end Set_DefPath;
 
+
+   -------------------
+   --  Set_Config  --
+   -------------------
+
+   function Set_Config  (value : String) return TConfOpt is
+      result : TConfOpt := (others => ' ');
+   begin
+      Ada.Strings.Fixed.Move (
+         Source => value,
+         Target => result,
+         Drop   => Ada.Strings.Right,
+         Pad    => ' '
+      );
+      return result;
+   end Set_Config;
+
 end DracoSystem;
 

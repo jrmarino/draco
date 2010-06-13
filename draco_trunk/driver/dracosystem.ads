@@ -28,6 +28,7 @@ package DracoSystem is
    subtype TTarget  is String (1 .. 50);
    subtype TVersion is String (1 .. 14);
    subtype TDefPath is String (1 .. 250);
+   subtype TConfOpt is String (1 .. 500);
    type CC1_SPEC is (
       blank,     --  default (includes %{profile:-p})
       g_star,    --  %{G*} alpha/elf.h ia64/ia64.h ia64/linux
@@ -66,6 +67,7 @@ package DracoSystem is
       CC_Flags       : CC1_SPEC;
       Path_assembler : TDefPath;
       Path_libexec   : TDefPath;
+      Config_options : TConfOpt;
    end record;
 
    function Host_Bit_Bucket (Variation : in BitBucket_Variations)
@@ -78,6 +80,7 @@ package DracoSystem is
    function Set_Target  (value : String) return TTarget;
    function Set_Version (value : String) return TVersion;
    function Set_DefPath (value : String) return TDefPath;
+   function Set_Config  (value : String) return TConfOpt;
    --  These functions essentially right-pad the unused characters with spaces
 
 

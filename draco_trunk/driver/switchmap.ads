@@ -65,6 +65,7 @@ package SwitchMap is
       ("--extra-warnings            ", "-W                    ", none),
       ("--extdirs                   ", "-fextdirs=            ", glued),
       ("--for-assembler             ", "-Wa                   ", trailing),
+      ("--for-assembler-too         ", "-Xassembler           ", trailing),
       ("--for-linker                ", "-Xlinker              ", trailing),
       ("--force-link                ", "-u                    ", trailing),
       ("--coverage                  ", "-coverage             ", none),
