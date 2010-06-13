@@ -23,13 +23,15 @@ with SwitchMap;
 with DriverSwitch;
 with Commands;
 with Ada.Strings.Unbounded;
-
---  Delete later
 with Ada.Text_IO;
+with Ada.Directories;
+with PipeMechanism;
+with GNAT.OS_Lib;
 
 procedure Draco is
 
    package SU renames Ada.Strings.Unbounded;
+   package TIO renames Ada.Text_IO;
 
    DriverCom       : DriverSwitch.RecDriverCommands;
    ProcessFiles    : Boolean := True;
@@ -77,16 +79,99 @@ begin
                        SwitchMap.Get_File_List;
             compiler_flags  : SU.Unbounded_String;
             assembler_flags : SU.Unbounded_String;
+            temporary_file  : SU.Unbounded_String;
+            gnat1_fullpath  : constant String := Commands.Complete_Gnat1_Path;
+            assy_fullpath   : constant String := Commands.Full_Assembler_Path;
+            pipe_success    : Boolean := True;
+            spawn_success   : Boolean := True;
+            temp_created    : Boolean := False;
          begin
-            for n in Positive range FileList'First .. FileList'Last loop
-               DriverSwitch.Build_Arguments (
-                  source_file    => FileList (n),
-                  compiler_flags => compiler_flags,
-                  assembler_flags => assembler_flags
-               );
-               Ada.Text_IO.Put_Line ("gnat1: " & SU.To_String (compiler_flags));
-               Ada.Text_IO.Put_Line ("asm  : " & SU.To_String (assembler_flags));
-            end loop;
+            if gnat1_fullpath'Length = 0 then
+               Commands.Display_Error (Commands.GNAT1_Not_Found);
+            else
+               if DriverCom.verbose then
+                  TIO.Put_Line ("COMPILER_PATH=" & gnat1_fullpath);
+                  TIO.Put_Line ("ASSEMBLER_PATH=" & assy_fullpath);
+               end if;
+
+               for n in Positive range FileList'First .. FileList'Last loop
+                  DriverSwitch.Build_Arguments (
+                     source_file     => FileList (n),
+                     compiler_flags  => compiler_flags,
+                     assembler_flags => assembler_flags,
+                     temporary_file  => temporary_file
+                  );
+                  declare
+                     str_compiler_flags  : constant String :=
+                                           SU.To_String (compiler_flags);
+                     str_assembler_flags : constant String :=
+                                           SU.To_String (assembler_flags);
+                     str_temp_file       : constant String :=
+                                           SU.To_String (temporary_file);
+                  begin
+                     if DriverCom.pipe then
+                        if pipe_success then
+
+                           if DriverCom.verbose then
+                              TIO.Put_Line ("{DRACO} " & str_compiler_flags &
+                                            " | {ASY} " & str_assembler_flags);
+                           end if;
+                           PipeMechanism.Pipe (
+                              gnat1_fullpath,
+                              str_compiler_flags,
+                              assy_fullpath,
+                              str_assembler_flags,
+                              pipe_success
+                           );
+                        end if;
+                     else
+                        if spawn_success then
+                           declare
+                              args1 : GNAT.OS_Lib.Argument_List_Access;
+                           begin
+                              args1 := GNAT.OS_Lib.Argument_String_To_List
+                                       (str_compiler_flags);
+                              if DriverCom.verbose then
+                                 TIO.Put_Line (
+                                    "{DRACO} " &
+                                    SU.To_String (compiler_flags)
+                                 );
+                              end if;
+                              GNAT.OS_Lib.Spawn (
+                                 Program_Name => gnat1_fullpath,
+                                 Args         => args1 (args1'Range),
+                                 Success      => spawn_success);
+                              GNAT.OS_Lib.Free (args1);
+                              if (str_temp_file'Length > 0) then
+                                 temp_created := Ada.Directories.Exists
+                                                 (str_temp_file);
+                              end if;
+                           end;
+                        end if;
+                        if spawn_success and then (str_assembler_flags'Length > 0) then
+                           declare
+                              args2 : GNAT.OS_Lib.Argument_List_Access;
+                           begin
+                              args2 := GNAT.OS_Lib.Argument_String_To_List
+                                       (str_assembler_flags);
+                              if DriverCom.verbose then
+                                 TIO.Put_Line ("{ASY} " & str_assembler_flags);
+                              end if;
+                              GNAT.OS_Lib.Spawn (
+                                Program_Name => assy_fullpath,
+                                Args         => args2 (args2'Range),
+                                Success      => spawn_success);
+                              GNAT.OS_Lib.Free (args2);
+                           end;
+                        end if;
+                        if temp_created then
+                           temp_created := False;
+                           Ada.Directories.Delete_File (str_temp_file);
+                        end if;
+                     end if;
+                  end;
+               end loop;
+            end if;
          end;
       end if;
    elsif not Did_Something then

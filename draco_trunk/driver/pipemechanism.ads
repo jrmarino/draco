@@ -30,11 +30,11 @@ package PipeMechanism is
 
 
    procedure Pipe (
-      program_1:   in String;
-      arg_string1: in String;
-      program_2:   in String;
-      arg_string2: in String;
-      success:     out Boolean
+      program_1   : in  String;
+      arg_string1 : in  String;
+      program_2   : in  String;
+      arg_string2 : in  String;
+      success     : out Boolean
    );
    --  This procedure is the entire point of the package.  There was no
    --  specific "pipe" functionality in the GNAT library, but the components

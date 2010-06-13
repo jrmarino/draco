@@ -37,11 +37,11 @@ package DracoSystemSpecs is
       OS_Name        => DracoSystem.Set_OSName  ("DragonFly"),
       OS_Version     => 200602,
       Have_GNU_AS    => True,
-      Dash_For_Pipe  => False,
+      Dash_For_Pipe  => True,
       CPU_AutoDetect => True,
       CC_Flags       => DracoSystem.i386,
-      Path_lib       => DracoSystem.Set_DefPath ("/export/home/opt/ada/gpl09/lib/gcc/i386-pc-solaris2.11/4.3.4:../lib/gcc/i386-pc-solaris2.11/4.3.4"),
-      Path_libexec   => DracoSystem.Set_DefPath ("/export/home/opt/ada/gpl09/libexec/gcc/i386-pc-solaris2.11/4.3.4:../libexec/gcc/i386-pc-solaris2.11/4.3.4")
+      Path_assembler => DracoSystem.Set_DefPath ("/usr/bin/as"),
+      Path_libexec   => DracoSystem.Set_DefPath ("/export/home/opt/ada/fsf444/libexec/gcc/i386-pc-solaris2.11/4.4.4:../libexec/gcc/i386-pc-solaris2.11/4.4.4")
    );
 
 end DracoSystemSpecs;

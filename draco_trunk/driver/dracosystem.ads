@@ -64,7 +64,7 @@ package DracoSystem is
       Dash_For_Pipe  : Boolean;
       CPU_AutoDetect : Boolean;
       CC_Flags       : CC1_SPEC;
-      Path_lib       : TDefPath;
+      Path_assembler : TDefPath;
       Path_libexec   : TDefPath;
    end record;
 

@@ -94,10 +94,10 @@ package body DracoSystem is
       result : TDefPath := (others => ' ');
    begin
       Ada.Strings.Fixed.Move (
-         source => value,
-         target => result,
+         Source => value,
+         Target => result,
          Drop   => Ada.Strings.Right,
-         pad    => ':'
+         Pad    => ':'
       );
       return result;
    end Set_DefPath;

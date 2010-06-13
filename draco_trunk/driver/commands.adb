@@ -21,11 +21,52 @@
 
 with DracoSystemSpecs;
 with Ada.Strings.Fixed;
+with Ada.Directories;
 
 package body Commands is
 
-   Path_Lib        : Commands.TBinPath;
+   Path_Assembler  : Commands.TBinPath;
    Path_Libexec    : Commands.TBinPath;
+
+
+   ----------------------------
+   --  Full_Assembler_Path  --
+   ----------------------------
+
+   function Full_Assembler_Path return String is
+   begin
+      return Directory (Path_Assembler, 1);
+   end Full_Assembler_Path;
+
+
+   ---------------------------
+   --  Complete_Gnat1_Path  --
+   ---------------------------
+
+   function Complete_Gnat1_Path return String is
+      nd_libexec : Natural;
+      x          : Positive := 1;
+   begin
+      nd_libexec := Number_Of_Directories (Path_Libexec);
+      if nd_libexec = 0 then
+         return "";
+      end if;
+
+      search :
+         loop
+            declare
+               testfile : constant String :=
+                          Directory (Path_Libexec, x) & "/gnat1";
+            begin
+               if (Ada.Directories.Exists (testfile)) then
+                  return testfile;
+               end if;
+            end;
+            exit search when x = nd_libexec;
+            x := x + 1;
+         end loop search;
+      return "";
+   end Complete_Gnat1_Path;
 
 
    -------------------------
@@ -33,24 +74,18 @@ package body Commands is
    -------------------------
 
    procedure Print_Search_Dirs is
-      nd_lib:     Natural;
-      nd_libexec: Natural;
+      nd_libexec : Natural;
    begin
-      nd_lib     := Number_Of_Directories (Path_Lib);
       nd_libexec := Number_Of_Directories (Path_Libexec);
-      TIO.Put_Line ("Programs:");
-      if nd_lib > 0 then
-         for x in Positive range 1 .. nd_lib loop
-            TIO.Put_Line ("  " & Directory (Path_Lib, x));
-         end loop;
-      end if;
-      TIO.Put_Line ("");
-      TIO.Put_Line ("Libraries:");
+      TIO.Put_Line ("Executables:");
       if nd_libexec > 0 then
          for x in Positive range 1 .. nd_libexec loop
             TIO.Put_Line ("  " & Directory (Path_Libexec, x));
          end loop;
       end if;
+      TIO.Put_Line ("");
+      TIO.Put_Line ("Assember:");
+      TIO.Put_Line ("  " & Directory (Path_Assembler, 1));
    end Print_Search_Dirs;
 
 
@@ -58,25 +93,25 @@ package body Commands is
    --  Directory [private]  --
    ---------------------------
 
-   function Directory (path: TBinPath; index: Positive) return String is
+   function Directory (path : TBinPath; index : Positive) return String is
 
       head    : TPathLen := 1;
       tail    : TPathLen := 1;
       arrow   : TPathLen := 1;
       current : Natural  := 0;
-      waiting : Boolean := true;
+      waiting : Boolean := True;
       aborted : Boolean;
    begin
-      counter:
+      counter :
          loop
             aborted := waiting and (path (arrow) = ':');
             exit counter when aborted;
 
             if (path (arrow) = ':') then
-               waiting := true;
+               waiting := True;
             else
                if waiting then
-                  waiting := false;
+                  waiting := False;
                   current := current + 1;
                   if current = index then
                      head    := arrow;
@@ -95,29 +130,29 @@ package body Commands is
       else
          return "";
       end if;
-   end;
+   end Directory;
 
 
    ---------------------------------------
    --  Number_Of_Directories [private]  --
    ---------------------------------------
 
-   function Number_Of_Directories (path: TBinPath) return Natural is
+   function Number_Of_Directories (path : TBinPath) return Natural is
       result  : Natural  := 0;
       arrow   : TPathLen := 1;
-      waiting : Boolean := true;
+      waiting : Boolean := True;
       aborted : Boolean;
    begin
-      counter:
+      counter :
          loop
             aborted := waiting and (path (arrow) = ':');
             exit counter when aborted;
 
             if (path (arrow) = ':') then
-               waiting := true;
+               waiting := True;
             else
                if waiting then
-                  waiting := false;
+                  waiting := False;
                   result  := result + 1;
                end if;
             end if;
@@ -125,7 +160,7 @@ package body Commands is
             arrow := arrow + 1;
          end loop counter;
       return result;
-   end;
+   end Number_Of_Directories;
 
 
    ------------------------
@@ -135,16 +170,16 @@ package body Commands is
    procedure Initialize_Paths is
    begin
       Ada.Strings.Fixed.Move (
-         source => DracoSystemSpecs.Native_System.Path_lib,
-         target => Path_Lib,
+         Source => DracoSystemSpecs.Native_System.Path_assembler,
+         Target => Path_Assembler,
          Drop   => Ada.Strings.Right,
-         pad    => ':'
+         Pad    => ':'
       );
       Ada.Strings.Fixed.Move (
-         source => DracoSystemSpecs.Native_System.Path_libexec,
-         target => Path_Libexec,
+         Source => DracoSystemSpecs.Native_System.Path_libexec,
+         Target => Path_Libexec,
          Drop   => Ada.Strings.Right,
-         pad    => ':'
+         Pad    => ':'
       );
    end Initialize_Paths;
 
@@ -157,7 +192,8 @@ package body Commands is
       prefix : constant String := "DRACO error: ";
    begin
       case Error is
-         when NoInputFiles => TIO.Put_Line (prefix & msg0);
+         when NoInputFiles    => TIO.Put_Line (prefix & msg0);
+         when GNAT1_Not_Found => TIO.Put_Line (prefix & msg1);
       end case;
    end Display_Error;
 

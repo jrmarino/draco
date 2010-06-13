@@ -25,10 +25,11 @@ package Commands is
 
    package TIO renames Ada.Text_IO;
 
-   type TError is (NoInputFiles);
+   type TError is (NoInputFiles, GNAT1_Not_Found);
    subtype TBinPath is String (1 .. 1000);
    subtype TPathLen is Positive range 1 .. TBinPath'Length;
    msg0 : constant String := "No input file paths were provided.";
+   msg1 : constant String := "The GNAT1 compiler is not in search path.";
 
    procedure Display_Error (Error : TError);
    --  Given an error code, this procedure displays the appropriate message.
@@ -45,16 +46,25 @@ package Commands is
    procedure Print_Search_Dirs;
    --  This displays the current paths for the library and libexec directories
 
+   function Complete_Gnat1_Path return String;
+   --  This function searches the known program search path for the gnat1
+   --  program, which it will return.  If the gnat1 program is not found,
+   --  an empty string is returned.
+
+   function Full_Assembler_Path return String;
+   --  This function returns the first (and only) directory stored in the
+   --  internal Path_Assembler variable.
+
 private
 
-   function Number_Of_Directories (path: TBinPath) return Natural;
+   function Number_Of_Directories (path : TBinPath) return Natural;
    --  This helper function looks for directory separator characters to
    --  determine how many directories are currently in the search path.
    --  If separator (:) appears consecutively, then the search will stop.
    --  The dracosystem constant must be correctly formatted as no validation
    --  is done here.
 
-   function Directory (path: TBinPath; index: Positive) return String;
+   function Directory (path : TBinPath; index : Positive) return String;
    --  This helper function will return a substring of the path given the
    --  index (1,2,3...)
 

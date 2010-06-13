@@ -110,7 +110,8 @@ package body DriverSwitch is
    procedure Build_Arguments (
        source_file     : in  SU.Unbounded_String;
        compiler_flags  : out SU.Unbounded_String;
-       assembler_flags : out SU.Unbounded_String
+       assembler_flags : out SU.Unbounded_String;
+       temporary_file  : out SU.Unbounded_String
    ) is
       src_components : PathInfo.RecPathInfo;
       random_s_file  : SU.Unbounded_String;
@@ -149,7 +150,7 @@ package body DriverSwitch is
       begin
          workstr := SU.To_Unbounded_String ("-auxbase ");
          Append (workstr, src_components.basename);
-         TackOn (compiler_flags, workstr);
+--         TackOn (compiler_flags, workstr);
       end Add_Auxbase;
 
       function Random_Assembly_Srcfile return SU.Unbounded_String is
@@ -174,13 +175,13 @@ package body DriverSwitch is
          end if;
 
          declare
-            k : Natural := 0;
+            k : Natural := 1;
          begin
             loop
-               k := k + 1;
                exit when (NameStr (k) = ASCII.NUL) or (k = maxlen);
+               k := k + 1;
             end loop;
-            result := SU.To_Unbounded_String (NameStr (1 .. k) & ".s");
+            result := SU.To_Unbounded_String (NameStr (1 .. k - 1) & ".s");
          end;
 
          return result;
@@ -211,6 +212,7 @@ package body DriverSwitch is
             invoke_as := True;
          else
             Append (workstr, s_file);
+            temporary_file := s_file;
             invoke_as := True;
          end if;
          TackOn (compiler_flags, workstr);
@@ -243,6 +245,7 @@ package body DriverSwitch is
       FlagIndex       := 0;
       compiler_flags  := SU.Null_Unbounded_String;
       assembler_flags := SU.Null_Unbounded_String;
+      temporary_file  := SU.Null_Unbounded_String;
       src_components  := PathInfo.Info (source_file);
       random_s_file   := Random_Assembly_Srcfile;
       S_exists        := Switch_Already_Set ("-S");
@@ -279,7 +282,7 @@ package body DriverSwitch is
       end if;
 
       FlagIndex := 0;
-      TackOn (assembler_flags, SU.To_Unbounded_String ("as"));
+      --  TackOn (assembler_flags, SU.To_Unbounded_String ("as"));
       if DracoSystemSpecs.Native_System.Have_GNU_AS then
          Append (assembler_flags, Dump_Flags ("-v", False));
          if Switch_Already_Set ("-w") then

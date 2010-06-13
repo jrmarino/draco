@@ -58,7 +58,8 @@ package DriverSwitch is
    procedure Build_Arguments (
        source_file     : in  SU.Unbounded_String;
        compiler_flags  : out SU.Unbounded_String;
-       assembler_flags : out SU.Unbounded_String
+       assembler_flags : out SU.Unbounded_String;
+       temporary_file  : out SU.Unbounded_String
    );
    --  This key procedure builds the switches for the compiler and also for
    --  the assembler.  They are separate because this driver spawns both

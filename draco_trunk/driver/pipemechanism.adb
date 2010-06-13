@@ -77,17 +77,17 @@ package body PipeMechanism is
    ------------
 
    procedure Pipe (
-      program_1   : in String;
-      arg_string1 : in String;
-      program_2   : in String;
-      arg_string2 : in String;
+      program_1   : in  String;
+      arg_string1 : in  String;
+      program_2   : in  String;
+      arg_string2 : in  String;
       success     : out Boolean
    ) is
       args1       : GNAT.OS_Lib.Argument_List_Access;
       args2       : GNAT.OS_Lib.Argument_List_Access;
       stdin_save  : GNAT.OS_Lib.File_Descriptor;
       datapipe    : aliased Pipe_Type;
-      retcode     : integer;
+      retcode     : Integer;
    begin
       success := False;
 
@@ -139,7 +139,7 @@ package body PipeMechanism is
       if retcode = 0 then
          success := True;
       end if;
-   end pipe;
+   end Pipe;
 
 
 end PipeMechanism;
