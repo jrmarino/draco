@@ -22,7 +22,7 @@
 with SwitchMap;
 with DriverSwitch;
 with Commands;
-with Ada.Strings.Unbounded;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Text_IO;
 with Ada.Directories;
 with PipeMechanism;
@@ -55,6 +55,11 @@ begin
 
    DriverCom := DriverSwitch.Commands;
 
+   if DriverCom.binsearch /= SU.Null_Unbounded_String then
+      Commands.Override_Default_Search_Path (
+         SU.To_String (DriverCom.binsearch)
+      );
+   end if;
    if DriverCom.dumpmachine then
       Did_Something := True;
       ProcessFiles  := False;
@@ -91,7 +96,7 @@ begin
             else
                if DriverCom.verbose then
                   TIO.Put_Line ("COMPILER_PATH=" & gnat1_fullpath);
-                  TIO.Put_Line ("ASSEMBLER_PATH=" & assy_fullpath);
+                  TIO.Put_Line ("ASSEMBLR_PATH=" & assy_fullpath);
                end if;
 
                for n in Positive range FileList'First .. FileList'Last loop
@@ -114,7 +119,7 @@ begin
 
                            if DriverCom.verbose then
                               TIO.Put_Line ("{DRAC} " & str_compiler_flags &
-                                            " | {ASSY} " & str_assembler_flags);
+                                         " | {ASSY} " & str_assembler_flags);
                            end if;
                            PipeMechanism.Pipe (
                               gnat1_fullpath,
@@ -156,7 +161,8 @@ begin
                               args2 := GNAT.OS_Lib.Argument_String_To_List
                                        (str_assembler_flags);
                               if DriverCom.verbose then
-                                 TIO.Put_Line ("{ASSY} " & str_assembler_flags);
+                                 TIO.Put_Line ("{ASSY} " &
+                                                str_assembler_flags);
                               end if;
                               GNAT.OS_Lib.Spawn (
                                 Program_Name => assy_fullpath,

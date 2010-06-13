@@ -29,9 +29,24 @@ package body Commands is
    Path_Libexec    : Commands.TBinPath;
 
 
-   ----------------------------
+   ------------------------------------
+   --  Override_Default_Search_Path  --
+   ------------------------------------
+
+   procedure Override_Default_Search_Path (new_path : in String) is
+   begin
+      Ada.Strings.Fixed.Move (
+         Source => new_path,
+         Target => Path_Libexec,
+         Drop   => Ada.Strings.Right,
+         Pad    => ':'
+      );
+   end Override_Default_Search_Path;
+
+
+   ---------------------------
    --  Full_Assembler_Path  --
-   ----------------------------
+   ---------------------------
 
    function Full_Assembler_Path return String is
    begin

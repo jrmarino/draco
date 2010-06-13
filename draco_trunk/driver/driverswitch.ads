@@ -48,6 +48,7 @@ package DriverSwitch is
       dumpversion : Boolean := False;
       save_temps  : Boolean := False;
       psearchdir  : Boolean := False;
+      binsearch   : SU.Unbounded_String := SU.Null_Unbounded_String;
    end record;
 
    function Commands return RecDriverCommands;
@@ -56,10 +57,10 @@ package DriverSwitch is
    --  this function provides that information publically.
 
    procedure Build_Arguments (
-       source_file     : in  SU.Unbounded_String;
-       compiler_flags  : out SU.Unbounded_String;
-       assembler_flags : out SU.Unbounded_String;
-       temporary_file  : out SU.Unbounded_String
+      source_file     : in  SU.Unbounded_String;
+      compiler_flags  : out SU.Unbounded_String;
+      assembler_flags : out SU.Unbounded_String;
+      temporary_file  : out SU.Unbounded_String
    );
    --  This key procedure builds the switches for the compiler and also for
    --  the assembler.  They are separate because this driver spawns both
@@ -86,6 +87,10 @@ package DriverSwitch is
    --  previously.  It will also set the go/no go flag.
 
 private
+
+   procedure Append_Binary_Search_Path (Switch_Chars : in String);
+   --  This procedure will build up a search path string separated by ":"
+   --  characters which will replace the default libexec search path elsewhere.
 
    function Detect_Local_CPU (DetectMethod : in TDetectMethod)
    return SU.Unbounded_String;

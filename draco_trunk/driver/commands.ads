@@ -55,6 +55,11 @@ package Commands is
    --  This function returns the first (and only) directory stored in the
    --  internal Path_Assembler variable.
 
+   procedure Override_Default_Search_Path (new_path : in String);
+   --  This procedure accepts a string which is a colon delimited
+   --  search path, defined by the "-B" command line option.  The input will
+   --  write over the Path_Libexec variable.
+
 private
 
    function Number_Of_Directories (path : TBinPath) return Natural;

@@ -39,6 +39,18 @@ package body DriverSwitch is
    Ass_options : SU.Unbounded_String := SU.Null_Unbounded_String;
 
 
+   -------------------------------------------
+   --  Append_Binary_Search_Path [Private]  --
+   -------------------------------------------
+
+   procedure Append_Binary_Search_Path (Switch_Chars : in String) is
+   begin
+      if DriverCom.binsearch /= SU.Null_Unbounded_String then
+         Append (DriverCom.binsearch, ":");
+      end if;
+      Append (DriverCom.binsearch, Switch_Chars
+             (Switch_Chars'First + 2 .. Switch_Chars'Last));
+   end Append_Binary_Search_Path;
 
    ----------------------------------
    --  Detect_Local_CPU [Private]  --
@@ -78,6 +90,10 @@ package body DriverSwitch is
 --  work is planned to be removed over time, it's not worth it.  For now
 --  just return a blank.
 
+      if DetectMethod = TUNE then
+         return SU.To_Unbounded_String ("delete-me-soon");
+      end if;
+
       return SU.Null_Unbounded_String;
 
    end Detect_Local_CPU;
@@ -108,10 +124,10 @@ package body DriverSwitch is
    -----------------------
 
    procedure Build_Arguments (
-       source_file     : in  SU.Unbounded_String;
-       compiler_flags  : out SU.Unbounded_String;
-       assembler_flags : out SU.Unbounded_String;
-       temporary_file  : out SU.Unbounded_String
+      source_file     : in  SU.Unbounded_String;
+      compiler_flags  : out SU.Unbounded_String;
+      assembler_flags : out SU.Unbounded_String;
+      temporary_file  : out SU.Unbounded_String
    ) is
       src_components : PathInfo.RecPathInfo;
       random_s_file  : SU.Unbounded_String;
@@ -565,6 +581,10 @@ package body DriverSwitch is
          when others =>
             null;
       end case;
+
+      if KeyChar = 'B' then
+         Append_Binary_Search_Path (Switch_Chars);
+      end if;
 
 
    end Set_Switch;
