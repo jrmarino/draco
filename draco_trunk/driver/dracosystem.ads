@@ -3,7 +3,7 @@
 --  DRIVER COMPONENT
 --
 --
---  Copyright (c) 2010, AuroraUX (www.auroraux.org)
+--  Copyright (c) 2010, John Marino (www.auroraux.org)
 --  All rights reserved.
 --
 --  Permission to use, copy, modify, and/or distribute this software for any
@@ -27,6 +27,7 @@ package DracoSystem is
    subtype TOSName  is String (1 .. 25);
    subtype TTarget  is String (1 .. 50);
    subtype TVersion is String (1 .. 14);
+   subtype TDefPath is String (1 .. 250);
    type CC1_SPEC is (
       blank,     --  default (includes %{profile:-p})
       g_star,    --  %{G*} alpha/elf.h ia64/ia64.h ia64/linux
@@ -54,6 +55,7 @@ package DracoSystem is
       Null_File_Type : BitBucket_Variations;
       Backend        : BackendTargets;
       Draco_Version  : TVersion;
+      Gnat_Version   : TVersion;
       MachineTarget  : TTarget;
       Architecture   : TArch;
       OS_Name        : TOSName;
@@ -62,10 +64,8 @@ package DracoSystem is
       Dash_For_Pipe  : Boolean;
       CPU_AutoDetect : Boolean;
       CC_Flags       : CC1_SPEC;
-      --  Draco Version
-      --  GNAT Version
-      --  Libexec Search Dir
-      --  Library Search Dir?
+      Path_lib       : TDefPath;
+      Path_libexec   : TDefPath;
    end record;
 
    function Host_Bit_Bucket (Variation : in BitBucket_Variations)
@@ -77,6 +77,7 @@ package DracoSystem is
    function Set_OSName  (value : String) return TOSName;
    function Set_Target  (value : String) return TTarget;
    function Set_Version (value : String) return TVersion;
+   function Set_DefPath (value : String) return TDefPath;
    --  These functions essentially right-pad the unused characters with spaces
 
 

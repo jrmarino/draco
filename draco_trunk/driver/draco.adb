@@ -3,7 +3,7 @@
 --  DRIVER COMPONENT
 --
 --
---  Copyright (c) 2010, AuroraUX (www.auroraux.org)
+--  Copyright (c) 2010, John Marino (www.auroraux.org)
 --  All rights reserved.
 --
 --  Permission to use, copy, modify, and/or distribute this software for any
@@ -35,6 +35,7 @@ procedure Draco is
    ProcessFiles    : Boolean := True;
    Did_Something   : Boolean := False;
 begin
+   Commands.Initialize_Paths;
    SwitchMap.Analyze_Command_Line;
    if SwitchMap.File_Count = 0 then
       ProcessFiles := False;
@@ -59,8 +60,13 @@ begin
    end if;
    if DriverCom.dumpversion then
       Did_Something := True;
-      ProcessFiles := False;
+      ProcessFiles  := False;
       Commands.Dump_Version;
+   end if;
+   if DriverCom.psearchdir then
+      Did_Something := True;
+      ProcessFiles  := False;
+      Commands.Print_Search_Dirs;
    end if;
 
    if ProcessFiles then

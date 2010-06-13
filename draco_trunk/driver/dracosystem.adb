@@ -3,7 +3,7 @@
 --  DRIVER COMPONENT
 --
 --
---  Copyright (c) 2010, AuroraUX (www.auroraux.org)
+--  Copyright (c) 2010, John Marino (www.auroraux.org)
 --  All rights reserved.
 --
 --  Permission to use, copy, modify, and/or distribute this software for any
@@ -84,6 +84,23 @@ package body DracoSystem is
       Ada.Strings.Fixed.Move (value, result, Drop => Ada.Strings.Right);
       return result;
    end Set_Version;
+
+
+   -------------------
+   --  Set_DefPath  --
+   -------------------
+
+   function Set_DefPath (value : String) return TDefPath is
+      result : TDefPath := (others => ' ');
+   begin
+      Ada.Strings.Fixed.Move (
+         source => value,
+         target => result,
+         Drop   => Ada.Strings.Right,
+         pad    => ':'
+      );
+      return result;
+   end Set_DefPath;
 
 end DracoSystem;
 

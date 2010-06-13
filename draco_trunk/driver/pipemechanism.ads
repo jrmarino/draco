@@ -3,7 +3,7 @@
 --  DRIVER COMPONENT
 --
 --
---  Copyright (c) 2010, AuroraUX (www.auroraux.org)
+--  Copyright (c) 2010, John Marino (www.auroraux.org)
 --  All rights reserved.
 --
 --  Permission to use, copy, modify, and/or distribute this software for any
