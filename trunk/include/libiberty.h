@@ -2,7 +2,7 @@
 
    Copyright 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
    2006, 2007, 2008, 2009 Free Software Foundation, Inc.
-   Copyright 2010 AuroraUX (www.auroraux.org)
+   Copyright 2010 John Marino (www.auroraux.org)
    
    Note - certain prototypes declared in this header file are for
    functions whoes implementation copyright does not belong to the
@@ -119,6 +119,17 @@ extern char *basename (const char *);
 /* A well-defined basename () that is always compiled in.  */
 
 extern const char *lbasename (const char *);
+
+/* Same, but assumes DOS semantics (drive name, backslash is also a
+   dir separator) regardless of host.  */
+
+extern const char *dos_lbasename (const char *);
+
+/* Same, but assumes Unix semantics (absolute paths always start with
+   a slash, only forward slash is accepted as dir separator)
+   regardless of host.  */
+
+extern const char *unix_lbasename (const char *);
 
 /* A well-defined realpath () that is always compiled in.  */
 
