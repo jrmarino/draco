@@ -135,6 +135,9 @@ static tree gnat_eh_personality		(void);
 
 struct lang_hooks lang_hooks = LANG_HOOKS_INITIALIZER;
 
+/* This symbol needs to be defined for the front-end.  */
+void *callgraph_info_file = NULL;
+
 /* How much we want of our DWARF extensions.  Some of our dwarf+ extensions
    are incompatible with regular GDB versions, so we must make sure to only
    produce them on explicit request.  This is eventually reflected into the
@@ -574,7 +577,7 @@ static const char *
 gnat_printable_name (tree decl, int verbosity)
 {
   const char *coded_name = IDENTIFIER_POINTER (DECL_NAME (decl));
-  char *ada_name = (char *) ggc_alloc (strlen (coded_name) * 2 + 60);
+  char *ada_name = (char *) ggc_alloc_atomic (strlen (coded_name) * 2 + 60);
 
   __gnat_decode (coded_name, ada_name, 0);
 
