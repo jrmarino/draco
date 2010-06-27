@@ -787,6 +787,24 @@ package body GNAT.Expect is
         (Descriptor.Last_Match_Start .. Descriptor.Last_Match_End);
    end Expect_Out_Match;
 
+   ------------------------
+   -- First_Dead_Process --
+   ------------------------
+
+   function First_Dead_Process
+     (Regexp : Multiprocess_Regexp_Array) return Natural is
+   begin
+      for R in Regexp'Range loop
+         if Regexp (R).Descriptor /= null
+           and then Regexp (R).Descriptor.Input_Fd = GNAT.OS_Lib.Invalid_FD
+         then
+            return R;
+         end if;
+      end loop;
+
+      return 0;
+   end First_Dead_Process;
+
    -----------
    -- Flush --
    -----------
@@ -841,6 +859,18 @@ package body GNAT.Expect is
          end case;
       end loop;
    end Flush;
+
+   ----------
+   -- Free --
+   ----------
+
+   procedure Free (Regexp : in out Multiprocess_Regexp) is
+      procedure Unchecked_Free is new Ada.Unchecked_Deallocation
+        (Process_Descriptor'Class, Process_Descriptor_Access);
+   begin
+      Unchecked_Free (Regexp.Descriptor);
+      Free (Regexp.Regexp);
+   end Free;
 
    ------------------------
    -- Get_Command_Output --
@@ -971,6 +1001,15 @@ package body GNAT.Expect is
    begin
       return Descriptor.Pid;
    end Get_Pid;
+
+   -----------------
+   -- Has_Process --
+   -----------------
+
+   function Has_Process (Regexp : Multiprocess_Regexp_Array) return Boolean is
+   begin
+      return Regexp /= (Regexp'Range => (null, null));
+   end Has_Process;
 
    ---------------
    -- Interrupt --
