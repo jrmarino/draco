@@ -2,7 +2,7 @@
 # If you want to build C++, change BUILD_CPP to "YES"
 
 GCC_VERSION=4.6.0
-SNAPSHOT=4.6-20100605
+SNAPSHOT=4.6-20100626
 NATIVE_HOST=i386-portbld-freebsd8.0
 OS_LABEL4VERS="[FreeBSD]"
 PREFIX=/usr/local
@@ -58,7 +58,7 @@ echo "$NEWREV" > $GCC_WRKSRC/gcc/REVISION
 cd $GCC_WRKSRC; contrib/gcc_update --touch
 rm -f $GCC_WRKSRC/gcc/*/*.info*
 touch $GCC_WRKSRC/gcc/cstamp-h.in
-echo "STARTING CONFIGURATION:" 
+echo "STARTING CONFIGURATION:"
 
 mkdir -p $WRKSRC
 (	cd $WRKSRC && \
