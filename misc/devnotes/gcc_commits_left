@@ -1,7 +1,0 @@
-This is a running list of revisions to GCC which have not yet been
-incorporated into draco.  The most likely reason is that it breaks
-compatibility with gcc 4.5, or rather relies on changes to the c language
-that isn't present in the 4.5 branch yet.  An asterisk means it can be
-incorporated into the current trunk.
-
-(currently synchronized)
