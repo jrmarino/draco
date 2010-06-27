@@ -1,0 +1,146 @@
+# This is the cmake script for libgcc_s.so
+
+
+# Define the functions that must be built.  This is a hardcoded list.  The original
+# libgcc make script is much more complex, but we only need a generic verson good
+# enough to get us by until it can be removed entirely.  It's currently part of
+# gnat1 and collect2.
+
+set (libgcc_object_list
+   _muldi3.o
+   _negdi2.o
+   _lshrdi3.o
+   _ashldi3.o
+   _ashrdi3.o
+   _cmpdi2.o
+   _ucmpdi2.o
+   _clear_cache.o
+   _enable_execute_stack.o
+   _trampoline.o
+   __main.o
+   _absvsi2.o
+   _absvdi2.o
+   _addvsi3.o
+   _addvdi3.o
+   _subvsi3.o
+   _subvdi3.o
+   _mulvsi3.o
+   _mulvdi3.o
+   _negvsi2.o
+   _negvdi2.o
+   _ctors.o
+   _ffssi2.o
+   _ffsdi2.o
+   _clz.o
+   _clzsi2.o
+   _clzdi2.o
+   _ctzsi2.o
+   _ctzdi2.o
+   _popcount_tab.o
+   _popcountsi2.o
+   _popcountdi2.o
+   _paritysi2.o
+   _paritydi2.o
+   _powisf2.o
+   _powidf2.o
+   _powixf2.o
+   _powitf2.o
+   _mulsc3.o
+   _muldc3.o
+   _mulxc3.o
+   _multc3.o
+   _divsc3.o
+   _divdc3.o
+   _divxc3.o
+   _divtc3.o
+   _bswapsi2.o
+   _bswapdi2.o
+   _fixunssfsi.o
+   _fixunsdfsi.o
+   _fixunsxfsi.o
+   _fixsfdi.o
+   _fixdfdi.o
+   _fixxfdi.o
+   _fixtfdi.o
+   _fixunssfdi.o
+   _fixunsdfdi.o
+   _fixunsxfdi.o
+   _fixunstfdi.o
+   _floatdisf.o
+   _floatdidf.o
+   _floatdixf.o
+   _floatditf.o
+   _floatundisf.o
+   _floatundidf.o
+   _floatundixf.o
+   _floatunditf.o
+   _eprintf.o
+   __gcc_bcmp.o
+   _divdi3.o
+   _moddi3.o
+   _udivdi3.o
+   _umoddi3.o
+   _udiv_w_sdiv.o
+   _udivmoddi4.o
+)
+
+
+
+# Tell CMAKE where to build the library
+set (LIBRARY_OUTPUT_PATH ${DIR_C_OBJS}/libgcc)
+
+
+add_definitions (
+   -g
+   -O2
+   -DIN_GCC
+   -W
+   -Wall
+   -Wwrite-strings
+   -Wcast-qual
+   -Wstrict-prototypes
+   -Wmissing-prototypes
+   -Wold-style-definition
+   -fPIC
+   -pthread
+   -DHAVE_GTHR_DEFAULT
+   -DIN_LIBGCC2
+   -D__GCC_FLOAT_NOT_NEEDED
+   -DHAVE_CC_TLS
+)
+include_directories (${DIR_REMNANTS}/gcc ${DIR_REMNANTS}/include)
+add_library (gcc_draco SHARED ${DIR_REMNANTS}/gcc/libgcc2.c)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
