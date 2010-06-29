@@ -1,88 +1,93 @@
-# This is the cmake script for libgcc_s.so
+# This is the cmake script for libgcc_draco.a
 
 
-# Define the functions that must be built.  This is a hardcoded list.  The original
-# libgcc make script is much more complex, but we only need a generic verson good
-# enough to get us by until it can be removed entirely.  It's currently part of
-# gnat1 and collect2.
+# We need a static version of the libgcc library, and we don't need the "intrinsic"
+# math functions.  GCC builds each function separately as an object file rather
+# monolithicly.  This avoids function overloading and other issues, but makes
+# the library build a lot more complicated.  Luckily we can just comment all these
+# functions out (which can be manually requested via macro definition) and just
+# not worry about them.
 
-set (libgcc_object_list
-   _muldi3.o
-   _negdi2.o
-   _lshrdi3.o
-   _ashldi3.o
-   _ashrdi3.o
-   _cmpdi2.o
-   _ucmpdi2.o
-   _clear_cache.o
-   _enable_execute_stack.o
-   _trampoline.o
-   __main.o
-   _absvsi2.o
-   _absvdi2.o
-   _addvsi3.o
-   _addvdi3.o
-   _subvsi3.o
-   _subvdi3.o
-   _mulvsi3.o
-   _mulvdi3.o
-   _negvsi2.o
-   _negvdi2.o
-   _ctors.o
-   _ffssi2.o
-   _ffsdi2.o
-   _clz.o
-   _clzsi2.o
-   _clzdi2.o
-   _ctzsi2.o
-   _ctzdi2.o
-   _popcount_tab.o
-   _popcountsi2.o
-   _popcountdi2.o
-   _paritysi2.o
-   _paritydi2.o
-   _powisf2.o
-   _powidf2.o
-   _powixf2.o
-   _powitf2.o
-   _mulsc3.o
-   _muldc3.o
-   _mulxc3.o
-   _multc3.o
-   _divsc3.o
-   _divdc3.o
-   _divxc3.o
-   _divtc3.o
-   _bswapsi2.o
-   _bswapdi2.o
-   _fixunssfsi.o
-   _fixunsdfsi.o
-   _fixunsxfsi.o
-   _fixsfdi.o
-   _fixdfdi.o
-   _fixxfdi.o
-   _fixtfdi.o
-   _fixunssfdi.o
-   _fixunsdfdi.o
-   _fixunsxfdi.o
-   _fixunstfdi.o
-   _floatdisf.o
-   _floatdidf.o
-   _floatdixf.o
-   _floatditf.o
-   _floatundisf.o
-   _floatundidf.o
-   _floatundixf.o
-   _floatunditf.o
-   _eprintf.o
-   __gcc_bcmp.o
-   _divdi3.o
-   _moddi3.o
-   _udivdi3.o
-   _umoddi3.o
-   _udiv_w_sdiv.o
-   _udivmoddi4.o
+
+set (libgcc_definitions_list
+#   -DL_negdi2
+#   -DL_udiv_w_sdiv
+#   -DL_addvsi3
+#   -DL_addvdi3
+#   -DL_subvsi3
+#   -DL_subvdi3
+#   -DL_mulvsi3
+#   -DL_negvsi2
+#   -DL_negvdi2
+#   -DL_absvsi2
+#   -DL_absvdi2
+#   -DL_mulvdi3
+#   -DL_lshrdi3
+#   -DL_ashldi3
+#   -DL_ashrdi3
+#   -DL_bswapsi2
+#   -DL_bswapdi2
+#   -DL_ffssi2
+#   -DL_ffsdi2
+#   -DL_muldi3
+#   -DL_divdi3
+#   -DL_moddi3
+#   -DL_udivdi3
+#   -DL_umoddi3
+#   -DL_clz
+#   -DL_clzsi2
+#   -DL_clzdi2
+#   -DL_ctzsi2
+#   -DL_ctzdi2
+#   -DL_popcount_tab
+#   -DL_popcountsi2
+#   -DL_popcountdi2
+#   -DL_paritysi2
+#   -DL_paritydi2
+#   -DL_cmpdi2
+#   -DL_ucmpdi2
+#   -DL_fixunstfdi
+#   -DL_fixtfdi
+#   -DL_fixunsxfdi
+#   -DL_fixxfdi
+#   -DL_fixunsdfdi
+#   -DL_fixdfdi
+#   -DL_fixunssfdi
+#   -DL_fixsfdi
+#   -DL_floatdixf
+#   -DL_floatundixf
+#   -DL_floatditf
+#   -DL_floatunditf
+#   -DL_floatdisf
+#   -DL_floatdidf
+#   -DL_floatundisf
+#   -DL_floatundidf
+#   -DL_fixunsxfsi
+#   -DL_fixunsdfsi
+#   -DL_fixunssfsi
+#   -DL_powisf2
+#   -DL_powidf2
+#   -DL_powixf2
+#   -DL_powitf2
+#   -DL_mulsc3
+#   -DL_muldc3
+#   -DL_mulxc3
+#   -DL_multc3
+#   -DL_divsc3
+#   -DL_divdc3
+#   -DL_divxc3
+#   -DL_divtc3
+
+
+   -DL__gcc_bcmp
+   -DL_eprintf
+   -DL_clear_cache
+   -DL_enable_execute_stack
+   -DL_trampoline
+   -DL__main
+   -DL_ctors
 )
+
 
 
 
@@ -90,10 +95,9 @@ set (libgcc_object_list
 set (LIBRARY_OUTPUT_PATH ${DIR_C_OBJS}/libgcc)
 
 
-add_definitions (
+set (libgcc_compilation_flags
    -g
    -O2
-   -DIN_GCC
    -W
    -Wall
    -Wwrite-strings
@@ -104,12 +108,36 @@ add_definitions (
    -fPIC
    -pthread
    -DHAVE_GTHR_DEFAULT
+   -DIN_GCC
    -DIN_LIBGCC2
    -D__GCC_FLOAT_NOT_NEEDED
    -DHAVE_CC_TLS
+   -fexceptions
+   -fnon-call-exceptions
+   -fvisibility=hidden
+   -DHIDE_EXPORTS
 )
+
+# change gthr-gnat.c to gthr-posix.c
+set (libgcc_source_files
+   ${DIR_REMNANTS}/gcc/libgcc2.c
+   ${DIR_REMNANTS}/gcc/unwind-dw2.c
+   ${DIR_REMNANTS}/gcc/unwind-dw2-fde.c
+   ${DIR_REMNANTS}/gcc/unwind-sjlj.c
+   ${DIR_REMNANTS}/gcc/unwind-c.c
+   ${DIR_REMNANTS}/gcc/gthr-gnat.c
+   ${DIR_REMNANTS}/gcc/emutls.c
+)
+
+
+add_definitions (${libgcc_definitions_list})
+add_definitions (${libgcc_compilation_flags})
+
 include_directories (${DIR_REMNANTS}/gcc ${DIR_REMNANTS}/include)
-add_library (gcc_draco SHARED ${DIR_REMNANTS}/gcc/libgcc2.c)
+add_library (gcc_draco STATIC ${libgcc_source_files})
+
+add_definitions (${libgcc_compilation_flags})
+remove_definitions (${libgcc_definitions_list})
 
 
 
