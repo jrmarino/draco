@@ -25,6 +25,11 @@ endif ()
 
 
 
+# Retrieve the HOST machine triplet information
+include (${DIR_CONSTRUCTS}/CMakeLists_configure.txt)
+
+
+
 # set up build directories
 file (MAKE_DIRECTORY
       ${DIR_STAGE_1}

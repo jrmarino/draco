@@ -1,4 +1,252 @@
-# system specific handling
+# This script determines the host triplet that is compatible with gcc.
+# The following variables will be defined.
+#
+#   HOST_CPU
+#   HOST_OPSYS
+#   HOST_OSVER
+#   HOST_VENDOR
+#   HOST_TRIPLET
+#
+# If the triplet is provided during cmake configuration, that will be used,
+# Otherwise this script will try to determine it.
+#
+#
+#  =======================
+#  =  Supported Systems  =
+#  =======================
+#
+#  Since Draco will ultimately target LLVM, only the processors that have
+#  LLVM backend support will be permitted.  The operating systems will be
+#  limited to those that have GNAT available to them already (required for
+#  the first bootstrap).  Technically LLVM can support IA64 and Alpha to
+#  some degree, but these are dead/dying platforms so no effort is being
+#  made to port Draco to these systems, at least initially.  The symbol
+#  "[]" means a port should be possible, so a scar will be made for it.
+#
+#
+#  System        x86  x86_64   ARM   MIPS32  Sparc32   PPC
+#  ======================================================================
+#  GNU/Linux      X       X     []             []       []
+#  [Open]Solaris  X       X                    []
+#  FreeBSD        X       X                             []
+#  DragonflyBSD   X       X
+#  NetBSD         X       X     []     []      []       []
+#  OpenBSD        X       X     []             []       []
+#  Mac OSX        []      []    []                      []
+#  Windows        []      []
+#  AIX                                                  []
 
-if (${UNIX})
+if ("${host}" STREQUAL "")
+
+   set (valid_host_systems
+         FreeBSD
+         DragonFlyBSD
+         OpenBSD
+         NetBSD
+         Linux
+         SunOS
+         Darwin
+         AIX
+         Windows
+   )
+   list (FIND valid_host_systems ${CMAKE_SYSTEM_NAME} list_index)
+   if (${list_index} EQUAL -1)
+      message (FATAL_ERROR "Sorry, this system <${CMAKE_SYSTEM_NAME}> is not a suitable host machine.")
+   elseif (${WIN32})
+      message (FATAL_ERROR "Sorry, we haven't gotten around to implementing Windows autofconf yet.")
+   else ()
+      execute_process(
+         COMMAND uname -p
+         OUTPUT_VARIABLE UNAME_PROCESSOR
+         ERROR_QUIET
+         OUTPUT_STRIP_TRAILING_WHITESPACE)
+      execute_process(
+         COMMAND uname -r
+         OUTPUT_VARIABLE UNAME_RELEASE
+         ERROR_QUIET
+         OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+      if ("${UNAME_PROCESSOR}" STREQUAL "amd64")
+         set (UNAME_PROCESSOR, "x86_64")
+      endif ()
+      string (TOLOWER ${CMAKE_SYSTEM_NAME} lowercase_os)
+      set (tmp_arch   "---")
+      set (tmp_vendor "unknown")
+      set (tmp_os     ${lowercase_os})
+      set (tmp_osver  ${UNAME_RELEASE})
+
+      if ("${CMAKE_SYSTEM_NAME}" STREQUAL "NetBSD")
+
+         #### HEAD: NetBSD ####
+         if (   "${UNAME_PROCESSOR}" STREQUAL "i386"
+             OR "${UNAME_PROCESSOR}" STREQUAL "x86_64"
+             OR "${UNAME_PROCESSOR}" STREQUAL "sparc")
+            set (tmp_arch "${UNAME_PROCESSOR}")
+         elseif ("${UNAME_PROCESSOR}" STREQUAL "hpcarm"
+              OR "${UNAME_PROCESSOR}" STREQUAL "shark"
+              OR "${UNAME_PROCESSOR}" STREQUAL "evbarm")
+            set (tmp_arch "arm")
+         elseif ("${UNAME_PROCESSOR}" STREQUAL "rs6000"
+              OR "${UNAME_PROCESSOR}" STREQUAL "macppc")
+            set (tmp_arch "powerpc")
+         elseif ("${UNAME_PROCESSOR}" STREQUAL "evbmips"
+              OR "${UNAME_PROCESSOR}" STREQUAL "arc")
+            set (tmp_arch "mips")
+         endif ()
+         #### TAIL: NetBSD ####
+
+      elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "OpenBSD")
+
+         #### HEAD: OpenBSD ####
+         if (   "${UNAME_PROCESSOR}" STREQUAL "i386"
+             OR "${UNAME_PROCESSOR}" STREQUAL "x86_64"
+             OR "${UNAME_PROCESSOR}" STREQUAL "sparc")
+            set (tmp_arch "${UNAME_PROCESSOR}")
+         elseif ("${UNAME_PROCESSOR}" STREQUAL "armish")
+            set (tmp_arch "arm")
+         elseif ("${UNAME_PROCESSOR}" STREQUAL "socppc"
+              OR "${UNAME_PROCESSOR}" STREQUAL "macppc")
+            set (tmp_arch "powerpc")
+         endif ()
+         #### TAIL: OpenBSD ####
+
+      elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "FreeBSD")
+
+         #### HEAD: FreeBSD ####
+         if (   "${UNAME_PROCESSOR}" STREQUAL "i386"
+             OR "${UNAME_PROCESSOR}" STREQUAL "x86_64"
+             OR "${UNAME_PROCESSOR}" STREQUAL "powerpc")
+            string (REGEX REPLACE "^([0-9.]+).*$" "\\1" justversion ${UNAME_RELEASE})
+            set (tmp_arch  "${UNAME_PROCESSOR}")
+            set (tmp_osver "${justversion}")
+         endif ()
+         #### TAIL: FreeBSD ####
+
+      elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "DragonFlyBSD")
+
+         #### HEAD: DragonFlyBSD ####
+         if (   "${UNAME_PROCESSOR}" STREQUAL "i386"
+             OR "${UNAME_PROCESSOR}" STREQUAL "x86_64")
+            string (REGEX REPLACE "^([0-9.]+).*$" "\\1" justversion ${UNAME_RELEASE})
+            set (tmp_arch   "${UNAME_PROCESSOR}")
+            set (tmp_vendor "backplane")
+            set (tmp_osver  "${justversion}")
+         endif ()
+         #### TAIL: DragonFlyBSD ####
+
+      elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "SunOS")
+
+         #### HEAD: SunOS ####
+         string (REGEX REPLACE "^([0-9]+)[.][0-9]+$" "\\1" majorversion ${UNAME_RELEASE})
+         string (REGEX REPLACE "^[0-9]+[.]([0-9]+)$" "\\1" minorversion ${UNAME_RELEASE})
+         math (EXPR solvers "${majorversion} - 3")
+         set (tmp_os     "solaris${solvers}.")
+         set (tmp_osver  ${minorversion})
+         if (   "${UNAME_PROCESSOR}" STREQUAL "i386"
+             OR "${UNAME_PROCESSOR}" STREQUAL "x86_64")
+            set (tmp_arch    "${UNAME_PROCESSOR}")
+            set (tmp_vendor  "pc")
+         elseif ("${UNAME_PROCESSOR}" STREQUAL "sun4u")
+            set (tmp_arch    "sparc")
+            set (tmp_vendor  "sun")
+         endif ()
+         #### TAIL: SunOS ####
+
+      elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "AIX")
+
+         #### HEAD: AIX ####
+         if ("${UNAME_PROCESSOR}" STREQUAL "powerpc")
+            set (tmp_arch   "powerpc")
+            set (tmp_vendor "ibm")
+         endif ()
+         #### TAIL: AIX ####
+
+      elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
+
+         #### HEAD: Mac OSX ####
+         if (   "${UNAME_PROCESSOR}" STREQUAL "i386"
+             OR "${UNAME_PROCESSOR}" STREQUAL "x86_64")
+            set (tmp_arch   "${UNAME_PROCESSOR}")
+            set (tmp_vendor "apple")
+         endif ()
+         #### TAIL: Mac OSX ####
+
+      elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+
+         #### HEAD: Linux ####
+         set (tmp_os     "linux-gnu")
+         set (tmp_osver  "")
+         if (   "${UNAME_PROCESSOR}" STREQUAL "i386"
+             OR "${UNAME_PROCESSOR}" STREQUAL "i486"
+             OR "${UNAME_PROCESSOR}" STREQUAL "i586"
+             OR "${UNAME_PROCESSOR}" STREQUAL "i686"
+             OR "${UNAME_PROCESSOR}" STREQUAL "x86_64"
+             OR "${UNAME_PROCESSOR}" STREQUAL "armeb"
+             OR "${UNAME_PROCESSOR}" STREQUAL "sparc")
+            set (tmp_arch   "${UNAME_PROCESSOR}")
+         elseif ("${UNAME_PROCESSOR}" STREQUAL "ppc")
+            set (tmp_arch   "powerpc")
+         elseif ("${UNAME_PROCESSOR}" STREQUAL "armel")
+            set (tmp_arch   "armel")
+            set (tmp_os     "linux-gnueabi")
+         endif ()
+         #### TAIL: Linux ####
+
+      endif ()
+
+      if (NOT "{${tmp_arch}" STREQUAL "---")
+         set (HOST_CPU    ${tmp_arch}   CACHE STRING
+            "Host CPU (deduced)" FORCE)
+         set (HOST_VENDOR ${tmp_vendor} CACHE STRING
+            "OS Vendor (deduced)" FORCE)
+         set (HOST_OPSYS ${tmp_os} CACHE STRING
+             "Operating System (deduced)" FORCE)
+         set (HOST_OSVER ${tmp_osver} CACHE STRING
+             "Operating System Version (deduced)" FORCE)
+         set (HOST_TRIPLET "${tmp_arch}-${tmp_vendor}-${tmp_os}${tmp_osver}"
+            CACHE STRING "Host machine triplet identifier (deduced)" FORCE)
+      endif ()
+
+
+   endif ()
+
+
+
+else ()
+
+   #  The script was configured with the {host} variable provided, so use it.
+
+   set (triplet_pattern "^(..+)-(.+)-(..+)$")
+   set (os_vers_pattern "^([^0-9]+)([0-9].*)$")
+   string (REGEX MATCH ${triplet_pattern} match_result ${host})
+   if (NOT "${match_result}" STREQUAL "")
+      set (HOST_TRIPLET ${host} CACHE STRING
+          "Host machine triplet identifier (via command-line)" FORCE)
+      string (REGEX REPLACE ${triplet_pattern} "\\1" res1 ${host})
+      string (REGEX REPLACE ${triplet_pattern} "\\2" res2 ${host})
+      string (REGEX REPLACE ${triplet_pattern} "\\3" res3 ${host})
+      set (HOST_CPU    ${res1} CACHE STRING
+          "Host CPU (via command-line)" FORCE)
+      set (HOST_VENDOR ${res2} CACHE STRING
+          "OS Vendor (via command-line)" FORCE)
+      string (REGEX MATCH ${os_vers_pattern} match_result ${res3})
+      if (NOT "${match_result}" STREQUAL "")
+         string (REGEX REPLACE ${os_vers_pattern} "\\1" res3A ${res3})
+         string (REGEX REPLACE ${os_vers_pattern} "\\2" res3B ${res3})
+         set (HOST_OPSYS ${res3A} CACHE STRING
+             "Operating System (via command line)" FORCE)
+         set (HOST_OSVER ${res3B} CACHE STRING
+             "Operating System Version (via command line)" FORCE)
+      else ()
+         set (HOST_OPSYS ${res3}  CACHE STRING
+             "Operating System (via command line)" FORCE)
+         set (HOST_OSVER ""       CACHE STRING
+             "Operating System Version" FORCE)
+      endif ()
+   else ()
+      message (FATAL_ERROR "Provided <host> value is not in proper triplet form: ${host}")
+   endif ()
+
+endif ()
+
 
