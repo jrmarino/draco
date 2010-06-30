@@ -1,0 +1,194 @@
+##
+##  DRACO ADA COMPILER
+##  CMAKE BUILD SCRIPT - HOST SPECIFIC CONFIGURATION
+##
+##
+##  Copyright (c) 2010, John Marino (www.auroraux.org)
+##  All rights reserved.
+##
+##  Permission to use, copy, modify, and/or distribute this software for any
+##  purpose with or without fee is hereby granted, provided that the above
+##  copyright notice and this permission notice appear in all copies.
+##
+##  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+##  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+##  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+##  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+##  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+##  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+##  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+##
+
+
+#TO DO:
+#---define CONFIG_H
+#---define SYSTEM_H
+#---define HOOKS_H
+#---define DIAGNOSTIC_H
+#---define HOSTHOOKS_DEF_H
+#---define TM_H
+
+
+# Default settings.
+set (host_xm_file "")
+set (host_xm_defines "")
+set (host_xmake_file "")
+set (host_exeext "")
+set (host_extra_objs "")
+set (host_extra_gcc_objs "")
+set (out_host_hook_obj "host-default.o")
+set (host_can_use_collect2 "yes")
+set (use_long_long_for_widest_fast_int "no")
+set (result_xmake_files "")
+
+
+
+# Common parts for widely ported systems.
+    if (${HOST_TRIPLET} MATCHES "^(.+)-(.+)-darwin(.*)$")    #  *-darwin*
+
+   set (out_host_hook_obj "host-darwin.o")
+   list (APPEND host_xmake_file "x-darwin")
+
+elseif (${HOST_TRIPLET} MATCHES "^i[34567]86-(.+)-(.+)$"     # i[34567]86-*-*
+    OR  ${HOST_TRIPLET} MATCHES     "^x86_64-(.+)-(.+)$")    # x86_64-*-*
+
+   if (   ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-(.+)$"     # i[34567]86-*-*
+       OR ${TARGET_TRIPLET} MATCHES     "^x86_64-(.+)-(.+)$")    # x86_64-*-*
+       set (host_extra_gcc_objs "driver-i386.o")
+       list (APPEND host_xmake_file "i386/x-i386")
+   endif ()
+
+elseif (${HOST_TRIPLET} MATCHES    "^powerpc-(.+)-(.+)$")    # powerpc-*-*
+
+   if (   ${TARGET_TRIPLET} MATCHES "^powerpc-(.+)-(.+)$")   # powerpc-*-*
+       set (host_extra_gcc_objs "driver-rs6000.o")
+       list (APPEND host_xmake_file "rs6000/x-rs6000")
+   endif ()
+   #if (   ${HOST_TRIPLET} MATCHES "^(.+)-(.+)-linux(.*)$"      #  *-*-linux*
+   #    OR ${HOST_TRIPLET} MATCHES "^(.+)-(.+)-freebsd(.*)$" )  #  *-*-freebsd*
+   #    Too complicated.  Skip this ppc host for now.
+
+endif ()
+
+
+
+# Machine-specific settings.
+# powerpc-ibm-aix* omitted because rs6000/x-aix isn't interesting
+
+    if (${HOST_TRIPLET} MATCHES "^(.+)-(.+)-solaris2(.+)$")          #i[34567]86-*-solaris2* | *-*-solaris2*
+
+   set (out_host_hook_obj "host-solaris.o")
+   list (APPEND host_xmake_file "x-solaris")
+
+elseif (${HOST_TRIPLET} MATCHES "^i[34567]86-(.+)-darwin(.+)$"       # i[34567]86-*-darwin*
+    OR  ${HOST_TRIPLET} MATCHES     "^x86_64-(.+)-darwin(.+)$")      # x86_64-*-darwin*
+
+   set (out_host_hook_obj "host-i386-darwin.o")
+   list (APPEND host_xmake_file "i386/x-darwin")
+
+elseif (${HOST_TRIPLET} MATCHES    "^powerpc-(.+)-darwin(.+)$")      # powerpc-*-darwin*
+
+   set (out_host_hook_obj "host-ppc-darwin.o")
+   list (APPEND host_xmake_file "rs6000/x-darwin")
+
+elseif (${HOST_TRIPLET} MATCHES "^(.+)-(.+)-linux(.*)$")             # *-*-linux*
+
+   set (out_host_hook_obj "host-linux.o")
+   list (APPEND host_xmake_file "x-linux")
+
+endif ()
+
+
+
+
+
+# This function creates a list of object files given an index
+# The list is placed in the variable {result_xmake_files}
+function (xmake_file_contents file_index)
+
+   if ("${file_index}" STREQUAL "i386/x-i386")
+
+      set (result_xmake_files
+         ${DIR_REMNANTS}/gcc/config/i386/driver-i386.c
+         ${DIR_REMNANTS}/gcc/config/i386/cpuid.h
+         ${CONFIG_H}
+         ${SYSTEM_H}
+         ${TM_H}
+         coretypes.h
+      )
+
+   elseif ("${file_index}" STREQUAL "rs6000/x-rs6000")
+
+      set (result_xmake_files
+         ${DIR_REMNANTS}/gcc/config/rs6000/driver-rs6000.c
+         ${CONFIG_H}
+         ${SYSTEM_H}
+         ${TM_H}
+         coretypes.h
+      )
+
+   elseif ("${file_index}" STREQUAL "x-linux")
+
+      set (result_xmake_files
+         ${DIR_REMNANTS}/gcc/config/host-linux.c
+         ${CONFIG_H}
+         ${SYSTEM_H}
+         coretypes.h
+         hosthooks.h
+         hosthooks-def.h
+         ${HOOKS_H}
+      )
+
+   elseif ("${file_index}" STREQUAL "i386/x-darwin")
+
+      set (result_xmake_files
+         ${DIR_REMNANTS}/gcc/config/i386/host-i386-darwin.c
+         ${CONFIG_H}
+         ${SYSTEM_H}
+         coretypes.h
+         hosthooks.h
+         ${HOSTHOOKS_DEF_H}
+      )
+
+   elseif ("${file_index}" STREQUAL "rs6000/x-darwin")
+
+      set (result_xmake_files
+         ${DIR_REMNANTS}/gcc/config/rs6000/host-darwin.c
+         ${CONFIG_H}
+         ${SYSTEM_H}
+         coretypes.h
+         hosthooks.h
+         ${HOSTHOOKS_DEF_H}
+         toplev.h
+         ${DIR_REMNANTS}/gcc/config/host-darwin.h
+         ${DIAGNOSTIC_H}
+      )
+
+   elseif ("${file_index}" STREQUAL "x-solaris")
+
+      set (result_xmake_files
+         ${DIR_REMNANTS}/gcc/config/host-solaris.c
+         ${CONFIG_H}
+         ${SYSTEM_H}
+         coretypes.h
+         hosthooks.h
+         hosthooks-def.h
+         ${HOOKS_H}
+      )
+
+   elseif ("${file_index}" STREQUAL "x-darwin")
+
+      set (result_xmake_files
+         ${DIR_REMNANTS}/gcc/config/host-darwin.c
+         ${CONFIG_H}
+         ${SYSTEM_H}
+         coretypes.h
+         toplev.h
+         ${DIR_REMNANTS}/gcc/config/host-darwin.h
+      )
+
+   endif ()
+
+endfunction (xmake_file_contents)
+
+

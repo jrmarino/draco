@@ -48,6 +48,7 @@ endif ()
 
 # Retrieve the HOST machine triplet information
 include (${DIR_CONSTRUCTS}/cm_triplets.txt)
+include (${DIR_CONSTRUCTS}/cm_host_specific.txt)
 
 
 

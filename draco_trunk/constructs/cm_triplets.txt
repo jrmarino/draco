@@ -195,7 +195,8 @@ if ("${host}" STREQUAL "")
       elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "AIX")
 
          #### HEAD: AIX ####
-         if ("${UNAME_PROCESSOR}" STREQUAL "powerpc")
+         if ("${UNAME_PROCESSOR}" STREQUAL "powerpc"
+          OR "${UNAME_PROCESSOR}" STREQUAL "rs6000")
             set (tmp_arch   "powerpc")
             set (tmp_vendor "ibm")
          endif ()
