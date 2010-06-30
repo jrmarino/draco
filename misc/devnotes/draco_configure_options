@@ -26,21 +26,21 @@ xeno-tools      : Stage 2 tools built from S1 cross-compiler
 
 B) temporarily required libraries (options to be removed later)
 ==============================================================================================
-with-mpc=[pathname]   : optional.  Allows specification of MPC library location if it's not
+with_mpc=[pathname]   : optional.  Allows specification of MPC library location if it's not
                                    in a standard dir (e.g. /usr/local)
-with-mpfr=[pathname]  : optional.  Allows specification of MPFR library location if it's not
+with_mpfr=[pathname]  : optional.  Allows specification of MPFR library location if it's not
                                    in a standard dir (e.g. /usr/local)
-with-gmp=[pathname]   : optional.  Allows specification of GMP library location if it's not
+with_gmp=[pathname]   : optional.  Allows specification of GMP library location if it's not
                                    in a standard dir (e.g. /usr/local)
-with-iconv=[pathname] : optional.  Allows specification of iconv library location if it's not
+with_iconv=[pathname] : optional.  Allows specification of iconv library location if it's not
                                    in a standard dir (e.g. /usr/local).  Likely to remain.
 
 C) Assembler and linker options
 ==============================================================================================
-with-gnu-as           : optional.  same as gcc.
-with-as=[pathname]    : optional.  same as gcc
-with-gnu-ld           : optional.  same as gcc.
-with-ld=[pathname]    : optional.  same as gcc
+with_gnu_as           : optional.  same as gcc.
+with_as=[pathname]    : optional.  same as gcc
+with_gnu_ld           : optional.  same as gcc.
+with_ld=[pathname]    : optional.  same as gcc
 
 
 D) directory options
@@ -51,10 +51,10 @@ prefix=[pathname]     : optional.  same as gcc
 
 E) remaining options
 ==============================================================================================
-driver-suffix=[suffix] : optional.  Appends suffix to driver, which is normally "draco"
+driver_suffix=[suffix] : optional.  Appends suffix to driver, which is normally "draco"
                                     gnat programs are not affected.
-enable-nls             : optional.  NLS disabled if this option is not explicitly issued.
-with-clang=[pathname]  : optional.  gcc will be used by default, but if clang is to be used,
+enable_nls             : optional.  NLS disabled if this option is not explicitly issued.
+with_clang=[pathname]  : optional.  gcc will be used by default, but if clang is to be used,
                                     then provide "clang" or the full path to clang here.
 host=[triplet]         : optional.  Normally determined automatically, triplet can be
                                     manually provided here.  "Build" considered same as host.
@@ -63,6 +63,6 @@ host=[triplet]         : optional.  Normally determined automatically, triplet c
 
 F) cross-compiler options (required for cross- and xeno- profiles
 ==============================================================================================
-with-sysroot=[dir]    : same as gcc
+with_sysroot=[dir]    : same as gcc
 target=[triplet]      : this is the triple of the foreign platform (cross & xeno)
 

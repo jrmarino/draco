@@ -26,7 +26,7 @@ endif ()
 
 
 # Retrieve the HOST machine triplet information
-include (${DIR_CONSTRUCTS}/CMakeLists_configure.txt)
+include (${DIR_CONSTRUCTS}/cm_triplets.txt)
 
 
 
@@ -59,10 +59,11 @@ file (MAKE_DIRECTORY
 # The exception might be iconv, which will remain even with the DLC replacement of GiGi, so we
 # might need to support non-standard header locations at that point in time.
 
-function (find_required_library LIBNAME SHORTNAME)
+function (find_required_library LIBNAME)
+   string (TOUPPER ${LIBNAME} SHORTNAME)
    set (REQLIB_NAME "REQLIB_${SHORTNAME}")
    set (HEADER_NAME "HEADER_${SHORTNAME}")
-   set (WITH_NAME   "WITH_${SHORTNAME}")
+   set (WITH_NAME   "with_${LIBNAME}")
 
    if ("${${WITH_NAME}}" STREQUAL "")
       find_library (${REQLIB_NAME} ${LIBNAME})
@@ -75,7 +76,7 @@ function (find_required_library LIBNAME SHORTNAME)
    else ()
       get_filename_component (LFOLDER ${${REQLIB_NAME}} PATH)
       get_filename_component (IFOLDER ${LFOLDER}/../include ABSOLUTE)
-      set (${HEADER_NAME} ${IFOLDER} CACHE STRING dummy)
+      set (${HEADER_NAME} ${IFOLDER} CACHE STRING "Full path of the ${SHORTNAME} library")
    endif ()
 endfunction (find_required_library)
 
@@ -84,16 +85,16 @@ endfunction (find_required_library)
 # Stage 1 build for compilers where {BUILD} = {HOST} = {TARGET}
 # All non-cross compiler builds need to do this step.
 
-if ("${PROFILE}" STREQUAL "standard"       OR
-    "${PROFILE}" STREQUAL "standard-base"  OR
-    "${PROFILE}" STREQUAL "bootstrap"      OR
-    "${PROFILE}" STREQUAL "bootstrap-base" OR
-    "${PROFILE}" STREQUAL "")
+if ("${profile}" STREQUAL "standard"       OR
+    "${profile}" STREQUAL "standard-base"  OR
+    "${profile}" STREQUAL "bootstrap"      OR
+    "${profile}" STREQUAL "bootstrap-base" OR
+    "${profile}" STREQUAL "")
 
-   find_required_library ("mpc"   "MPC")
-   find_required_library ("gmp"   "GMP")
-   find_required_library ("mpfr"  "MPFR")
-   find_required_library ("iconv" "ICONV")
+   find_required_library ("mpc")
+   find_required_library ("gmp")
+   find_required_library ("mpfr")
+   find_required_library ("iconv")
 
    include (${DIR_CONSTRUCTS}/CMakeLists_libgcc.txt)
 

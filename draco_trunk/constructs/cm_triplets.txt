@@ -1,11 +1,8 @@
 # This script determines the host triplet that is compatible with gcc.
-# The following variables will be defined.
+# The following variables will be defined in the cache
 #
-#   HOST_CPU
-#   HOST_OPSYS
-#   HOST_OSVER
-#   HOST_VENDOR
 #   HOST_TRIPLET
+#   TARGET_TRIPLET
 #
 # If the triplet is provided during cmake configuration, that will be used,
 # Otherwise this script will try to determine it.
@@ -35,6 +32,26 @@
 #  Mac OSX        []      []    []                      []
 #  Windows        []      []
 #  AIX                                                  []
+
+
+
+function (verify_triplet TRIP_CANDIDATE MACHTYPE)
+
+   string (TOUPPER "${MACHTYPE}_TRIPLET" cached_varname)
+   set (triplet_pattern "^(..+)-(.+)-(..+)$")
+   string (REGEX MATCH ${triplet_pattern} match_result ${TRIP_CANDIDATE})
+   if (NOT "${match_result}" STREQUAL "")
+      set (${cached_varname} ${TRIP_CANDIDATE} CACHE STRING
+         "${MACHTYPE} machine triplet identifier (command-line)" FORCE)
+   else ()
+      message (FATAL_ERROR 
+	"${MACHTYPE} triplet (${TRIP_CANDIDATE}) is formatted illegally")
+   endif ()
+
+endfunction (verify_triplet)
+
+
+
 
 if ("${host}" STREQUAL "")
 
@@ -181,28 +198,25 @@ if ("${host}" STREQUAL "")
              OR "${UNAME_PROCESSOR}" STREQUAL "i586"
              OR "${UNAME_PROCESSOR}" STREQUAL "i686"
              OR "${UNAME_PROCESSOR}" STREQUAL "x86_64"
-             OR "${UNAME_PROCESSOR}" STREQUAL "armeb"
              OR "${UNAME_PROCESSOR}" STREQUAL "sparc")
             set (tmp_arch   "${UNAME_PROCESSOR}")
          elseif ("${UNAME_PROCESSOR}" STREQUAL "ppc")
             set (tmp_arch   "powerpc")
+         elseif ("${UNAME_PROCESSOR}" STREQUAL "armeb")
+            set (tmp_arch   "arm")
          elseif ("${UNAME_PROCESSOR}" STREQUAL "armel")
-            set (tmp_arch   "armel")
+            set (tmp_arch   "arm")
             set (tmp_os     "linux-gnueabi")
          endif ()
          #### TAIL: Linux ####
 
       endif ()
 
-      if (NOT "{${tmp_arch}" STREQUAL "---")
-         set (HOST_CPU    ${tmp_arch}   CACHE STRING
-            "Host CPU (deduced)" FORCE)
-         set (HOST_VENDOR ${tmp_vendor} CACHE STRING
-            "OS Vendor (deduced)" FORCE)
-         set (HOST_OPSYS ${tmp_os} CACHE STRING
-             "Operating System (deduced)" FORCE)
-         set (HOST_OSVER ${tmp_osver} CACHE STRING
-             "Operating System Version (deduced)" FORCE)
+      if ("{${tmp_arch}" STREQUAL "---")
+         message (FATAL_ERROR "This host machine was not recognized: 
+CPU: ${UNAME_PROCESSOR} 
+SYS: ${CMAKE_SYSTEM}")
+      else ()
          set (HOST_TRIPLET "${tmp_arch}-${tmp_vendor}-${tmp_os}${tmp_osver}"
             CACHE STRING "Host machine triplet identifier (deduced)" FORCE)
       endif ()
@@ -210,43 +224,44 @@ if ("${host}" STREQUAL "")
 
    endif ()
 
-
-
 else ()
 
    #  The script was configured with the {host} variable provided, so use it.
-
-   set (triplet_pattern "^(..+)-(.+)-(..+)$")
-   set (os_vers_pattern "^([^0-9]+)([0-9].*)$")
-   string (REGEX MATCH ${triplet_pattern} match_result ${host})
-   if (NOT "${match_result}" STREQUAL "")
-      set (HOST_TRIPLET ${host} CACHE STRING
-          "Host machine triplet identifier (via command-line)" FORCE)
-      string (REGEX REPLACE ${triplet_pattern} "\\1" res1 ${host})
-      string (REGEX REPLACE ${triplet_pattern} "\\2" res2 ${host})
-      string (REGEX REPLACE ${triplet_pattern} "\\3" res3 ${host})
-      set (HOST_CPU    ${res1} CACHE STRING
-          "Host CPU (via command-line)" FORCE)
-      set (HOST_VENDOR ${res2} CACHE STRING
-          "OS Vendor (via command-line)" FORCE)
-      string (REGEX MATCH ${os_vers_pattern} match_result ${res3})
-      if (NOT "${match_result}" STREQUAL "")
-         string (REGEX REPLACE ${os_vers_pattern} "\\1" res3A ${res3})
-         string (REGEX REPLACE ${os_vers_pattern} "\\2" res3B ${res3})
-         set (HOST_OPSYS ${res3A} CACHE STRING
-             "Operating System (via command line)" FORCE)
-         set (HOST_OSVER ${res3B} CACHE STRING
-             "Operating System Version (via command line)" FORCE)
-      else ()
-         set (HOST_OPSYS ${res3}  CACHE STRING
-             "Operating System (via command line)" FORCE)
-         set (HOST_OSVER ""       CACHE STRING
-             "Operating System Version" FORCE)
-      endif ()
-   else ()
-      message (FATAL_ERROR "Provided <host> value is not in proper triplet form: ${host}")
-   endif ()
+   verify_triplet (${host} "Host")
 
 endif ()
 
 
+# cross-compiler and xeno-compiler require a target to be defined.
+# an fatal error will be thrown if the profile doesn't match
+# e.g. no target provided when expected or target provide when not expected.
+
+set (profiles_requiring_target 
+   cross cross-base cross-lib cross-tools
+   xeno   xeno-base  xeno-lib  xeno-tools
+)
+
+list (FIND profiles_requiring_target "${profile}" list_index)
+if (${list_index} EQUAL -1)
+
+   # This profile is asking for a native build, so we don't want a target
+   if ("${target}" STREQUAL "")
+      set (TARGET_TRIPLET ${HOST_TRIPLET} CACHE STRING 
+          "Target machine triplet identifier (native build)" FORCE)      
+   else ()
+      message (FATAL_ERROR 
+      "A native build profile has been requested.  Either change to a cross- or xeno-compiler profile, or rescind the <target> definition.")
+   endif ()
+
+else ()
+
+   # This is a cross- or xeno-compiler profile which requires a target
+   if ("${target}" STREQUAL "")
+      message (FATAL_ERROR
+      "A cross- or xeno-compiler profile has been requested without specifying a target.  Please add the <target> definition when invoking CMake.")
+   else ()
+      verify_triplet (${target} "Target")
+   endif ()
+
+endif ()
+ 
