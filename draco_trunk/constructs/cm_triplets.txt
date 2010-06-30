@@ -1,3 +1,25 @@
+##
+##  DRACO ADA COMPILER
+##  CMAKE BUILD SCRIPT - TRIPLET DEFINITION
+##
+##
+##  Copyright (c) 2010, John Marino (www.auroraux.org)
+##  All rights reserved.
+##
+##  Permission to use, copy, modify, and/or distribute this software for any
+##  purpose with or without fee is hereby granted, provided that the above
+##  copyright notice and this permission notice appear in all copies.
+##
+##  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+##  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+##  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+##  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+##  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+##  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+##  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+##
+#
+#
 # This script determines the host triplet that is compatible with gcc.
 # The following variables will be defined in the cache
 #
@@ -32,7 +54,8 @@
 #  Mac OSX        []      []    []                      []
 #  Windows        []      []
 #  AIX                                                  []
-
+#
+#
 
 
 function (verify_triplet TRIP_CANDIDATE MACHTYPE)
@@ -44,7 +67,7 @@ function (verify_triplet TRIP_CANDIDATE MACHTYPE)
       set (${cached_varname} ${TRIP_CANDIDATE} CACHE STRING
          "${MACHTYPE} machine triplet identifier (command-line)" FORCE)
    else ()
-      message (FATAL_ERROR 
+      message (FATAL_ERROR
 	"${MACHTYPE} triplet (${TRIP_CANDIDATE}) is formatted illegally")
    endif ()
 
@@ -213,8 +236,8 @@ if ("${host}" STREQUAL "")
       endif ()
 
       if ("{${tmp_arch}" STREQUAL "---")
-         message (FATAL_ERROR "This host machine was not recognized: 
-CPU: ${UNAME_PROCESSOR} 
+         message (FATAL_ERROR "This host machine was not recognized:
+CPU: ${UNAME_PROCESSOR}
 SYS: ${CMAKE_SYSTEM}")
       else ()
          set (HOST_TRIPLET "${tmp_arch}-${tmp_vendor}-${tmp_os}${tmp_osver}"
@@ -236,7 +259,7 @@ endif ()
 # an fatal error will be thrown if the profile doesn't match
 # e.g. no target provided when expected or target provide when not expected.
 
-set (profiles_requiring_target 
+set (profiles_requiring_target
    cross cross-base cross-lib cross-tools
    xeno   xeno-base  xeno-lib  xeno-tools
 )
@@ -246,11 +269,10 @@ if (${list_index} EQUAL -1)
 
    # This profile is asking for a native build, so we don't want a target
    if ("${target}" STREQUAL "")
-      set (TARGET_TRIPLET ${HOST_TRIPLET} CACHE STRING 
-          "Target machine triplet identifier (native build)" FORCE)      
+      set (TARGET_TRIPLET ${HOST_TRIPLET} CACHE STRING
+          "Target machine triplet identifier (native build)" FORCE)
    else ()
-      message (FATAL_ERROR 
-      "A native build profile has been requested.  Either change to a cross- or xeno-compiler profile, or rescind the <target> definition.")
+      message (FATAL_ERROR "A native build profile has been requested.  Either change to a cross- or xeno-compiler profile, or rescind the <target> definition.")
    endif ()
 
 else ()
@@ -263,5 +285,14 @@ else ()
       verify_triplet (${target} "Target")
    endif ()
 
+   # Since we are here, we might as well test for a valid required sysroot
+   if ("${with_sysroot}" STREQUAL "")
+      message (FATAL_ERROR "A cross- or xeno-compiler profile has been requested without specifying the system root of the other system.  Please add the <with_sysroot> definition when invoking CMake.")
+   else ()
+      if (NOT IS_DIRECTORY ${with_sysroot})
+         message (FATAL_ERROR "The provided sysroot (${with_sysroot}) is not a valid directory")
+      endif ()
+   endif ()
+
 endif ()
- 
+
