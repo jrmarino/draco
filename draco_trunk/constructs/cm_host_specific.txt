@@ -20,13 +20,19 @@
 ##
 
 
-#TO DO:
-#---define CONFIG_H
-#---define SYSTEM_H
-#---define HOOKS_H
-#---define DIAGNOSTIC_H
-#---define HOSTHOOKS_DEF_H
-#---define TM_H
+set (CONFIG_H  config.h auto-host.h ansidecl.h)
+set (TM_H      tm.h options.h defaults.h insn-constants.h insn-flags.h options.h)
+set (HOOKS_H   hooks.h machmode.h mode-classes.def insn-modes.h)
+set (HOSTHOOKS_DEF_H hosthooks-def.h ${HOOKS_H})
+set (DIAGNOSTIC_H    diagnostic.h diagnostic-core.h input.h diagnostic.def
+                     pretty-print.h input.h ${DIR_REMNANTS}/include/obstack.h)
+set (SYSTEM_H  system.h
+               hwint.h
+               ${DIR_REMNANTS}/include/libiberty.h
+	            ${DIR_REMNANTS}/include/safe-ctype.h
+               ${DIR_REMNANTS}/include/filenames.h)
+
+
 
 
 # Default settings.
