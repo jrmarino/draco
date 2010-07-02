@@ -21,7 +21,7 @@
 
 
 set (CONFIG_H  config.h auto-host.h ansidecl.h)
-set (TM_H      tm.h options.h defaults.h insn-constants.h insn-flags.h options.h)
+set (TM_H      tm.h options.h insn-flags.h defaults.h)  #insn-constants.h deleted?
 set (HOOKS_H   hooks.h machmode.h mode-classes.def insn-modes.h)
 set (HOSTHOOKS_DEF_H hosthooks-def.h ${HOOKS_H})
 set (DIAGNOSTIC_H    diagnostic.h diagnostic-core.h input.h diagnostic.def
@@ -40,8 +40,6 @@ set (host_xm_file "")
 set (host_xm_defines "")
 set (host_xmake_file "")
 set (host_exeext "")
-set (host_extra_objs "")
-set (host_extra_gcc_objs "")
 set (out_host_hook_obj "host-default.o")
 set (host_can_use_collect2 "yes")
 set (use_long_long_for_widest_fast_int "no")

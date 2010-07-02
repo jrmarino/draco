@@ -1,38 +1,159 @@
+##
+##  DRACO ADA COMPILER
+##  CMAKE BUILD SCRIPT - TARGET SPECIFIC CONFIGURATION
+##
+##
+##  Copyright (c) 2010, John Marino (www.auroraux.org)
+##  All rights reserved.
+##
+##  Permission to use, copy, modify, and/or distribute this software for any
+##  purpose with or without fee is hereby granted, provided that the above
+##  copyright notice and this permission notice appear in all copies.
+##
+##  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+##  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+##  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+##  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+##  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+##  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+##  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+##
 
-   #  The script was configured with the {host} variable provided, so use it.
 
-   set (triplet_pattern "^(..+)-(.+)-(..+)$")
-   set (os_vers_pattern "^([^0-9]+)([0-9].*)$")
-   string (REGEX MATCH ${triplet_pattern} match_result ${host})
-   if (NOT "${match_result}" STREQUAL "")
-      set (HOST_TRIPLET ${host} CACHE STRING
-          "Host machine triplet identifier (via command-line)" FORCE)
-      string (REGEX REPLACE ${triplet_pattern} "\\1" res1 ${host})
-      string (REGEX REPLACE ${triplet_pattern} "\\2" res2 ${host})
-      string (REGEX REPLACE ${triplet_pattern} "\\3" res3 ${host})
-      set (HOST_CPU    ${res1} CACHE STRING
-          "Host CPU (via command-line)" FORCE)
-      set (HOST_VENDOR ${res2} CACHE STRING
-          "OS Vendor (via command-line)" FORCE)
-      string (REGEX MATCH ${os_vers_pattern} match_result ${res3})
-      if (NOT "${match_result}" STREQUAL "")
-         string (REGEX REPLACE ${os_vers_pattern} "\\1" res3A ${res3})
-         string (REGEX REPLACE ${os_vers_pattern} "\\2" res3B ${res3})
-         set (HOST_OPSYS ${res3A} CACHE STRING
-             "Operating System (via command line)" FORCE)
-         set (HOST_OSVER ${res3B} CACHE STRING
-             "Operating System Version (via command line)" FORCE)
-      else ()
-         set (HOST_OPSYS ${res3}  CACHE STRING
-             "Operating System (via command line)" FORCE)
-         set (HOST_OSVER ""       CACHE STRING
-             "Operating System Version" FORCE)
-      endif ()
-   else ()
-      message (FATAL_ERROR "Provided <host> value is not in proper triplet form: ${host}")
+set (thread_file        "posix")
+set (use_gcc_stdint     "none")
+set (gnu_ld             "no")
+set (gas                "no")
+set (tm_defines         "")
+set (tm_file            "")
+set (TARGET_CPU_DEFAULT "")
+set (need_64bit_hwint   "")
+set (need_64bit_isa     "")
+set (extra_headers      "")
+set (extra_options      "")
+set (extra_modes        "")
+set (extra_parts        "")
+set (target_gtfiles     "")
+set (with_cpu           "")
+set (need_collect2      "")
+
+if (DEFINED with_gnu_as)
+   set (gas    "yes")
+endif ()
+if (DEFINED with_gnu_ld)
+   set (gnu_ld "yes")
+endif ()
+
+
+
+# defines gth-default.h in the both c folders of the build directory
+function (define_file_gthr_default_h)
+
+   set  (gthread_flags "-DHAVE_GTHR_DEFAULT" PARENT_SCOPE)
+   file (COPY        ${DIR_REMNANTS}/gcc/gthr-${thread_file}.h
+         DESTINATION ${DIR_C_OBJS}/gthr-default.h)
+   file (COPY        ${DIR_REMNANTS}/gcc/gthr-${thread_file}.h
+         DESTINATION ${DIR_C_XENO}/gthr-default.h)
+
+endfunction (define_file_gthr_default_h)
+
+
+
+# defines tconfig.h in both c folders of the build directory
+function (define_file_tconfig_h)
+
+   set  (t_file ${DIR_C_OBJS}/tconfig.h)
+   set  (DEFINE_LIST USED_FOR_TARGET ${tm_defines})
+
+   file (WRITE  ${t_file} "#ifndef GCC_TCONFIG_H")
+   file (APPEND ${t_file} "#define GCC_TCONFIG_H")
+
+   # Define TARGET_CPU_DEFAULT if the system wants one.
+   # This substitutes for lots of *.h files.
+   if (NOT ${TARGET_CPU_DEFAULT} STREQUAL "")
+      file (APPEND ${t_file} "#define TARGET_CPU_DEFAULT (${TARGET_CPU_DEFAULT})")
    endif ()
 
-#endif ()
+
+   foreach (definition ${DEFINE_LIST})
+      file (APPEND ${t_file} "#ifndef ${definition}")
+      file (APPEND ${t_file} "# define ${definition}")
+      file (APPEND ${t_file} "#endif")
+   endforeach ()
+
+
+   # The first entry in HEADERS may be auto-FOO.h ;
+   # it wants to be included even when not -DIN_GCC.
+   # Postpone including defaults.h until after the insn-*
+   # headers, so that the HAVE_* flags are available
+   # when defaults.h gets included.
+
+   file (APPEND ${t_file} "#include \"auto-host\"")
+   file (APPEND ${t_file} "#ifdef IN_GCC")
+   file (APPEND ${t_file} "# include \""ansidecl.h\"")
+   foreach (config_header ${tm_file})
+      file (APPEND ${t_file} "# include \"config/${config_header}\"")
+   endforeach ()
+   file (APPEND ${t_file} "#endif")
+   file (APPEND ${t_file} "#endif /* GCC_TCONFIG_H */")
+
+   file (COPY        ${t_file}
+         DESTINATION ${DIR_C_XENO}/tconfig.h)
+
+endfunction (define_file_tconfig_h)
+
+
+
+# defines tm.h in both c folders of the build directory
+function (define_file_tm_h)
+
+   set  (t_file ${DIR_C_OBJS}/tm.h)
+   set  (DEFINE_LIST  ${tm_defines})
+
+   file (WRITE  ${t_file} "#ifndef GCC_TM_H")
+   file (APPEND ${t_file} "#define GCC_TM_H")
+
+   # Define TARGET_CPU_DEFAULT if the system wants one.
+   # This substitutes for lots of *.h files.
+   if (NOT ${TARGET_CPU_DEFAULT} STREQUAL "")
+      file (APPEND ${t_file} "#define TARGET_CPU_DEFAULT (${TARGET_CPU_DEFAULT})")
+   endif ()
+
+   foreach (definition ${DEFINE_LIST})
+      file (APPEND ${t_file} "#ifndef ${definition}")
+      file (APPEND ${t_file} "# define ${definition}")
+      file (APPEND ${t_file} "#endif")
+   endforeach ()
+
+
+   # The first entry in HEADERS may be auto-FOO.h ;
+   # it wants to be included even when not -DIN_GCC.
+   # Postpone including defaults.h until after the insn-*
+   # headers, so that the HAVE_* flags are available
+   # when defaults.h gets included.
+
+   file (APPEND ${t_file} "#ifdef IN_GCC")
+   file (APPEND ${t_file} "# include \"options.h\"")
+   foreach (config_header ${tm_file})
+      file (APPEND ${t_file} "# include \"config/${config_header}\"")
+   endforeach ()
+   file (APPEND ${t_file} "#endif")
+
+   file (APPEND ${t_file} "#if defined IN_GCC && !defined GENERATOR_FILE && !defined USED_FOR_TARGET")
+   file (APPEND ${t_file} "# include \"insn-flags.h\"")
+   file (APPEND ${t_file} "#endif")
+   file (APPEND ${t_file} "# include \"defaults.h\"")
+   file (APPEND ${t_file} "#endif /* GCC_TM_H */")
+
+   file (COPY        ${t_file}
+         DESTINATION ${DIR_C_XENO}/tm.h)
+
+endfunction (define_file_tm_h)
+
+# POSSIBLE TO DO:
+# function define_config_h
+# function define_bconfig_h
+# function define_tm_p_h
 
 
 
@@ -41,9 +162,7 @@
 # machines.  This mirrors the config.gcc functionality. If an entry is not
 # found, we assume the passed <host> variable is the culprit
 
-set (need_64bit_hwint "")
-
-if ("${HOST_CPU}" STREQUAL "arm")
+if (${TARGET_TRIPLET} MATCHES "^arm(.*)-(.+)-(.+)$")    #  arm*-*-*
 
    set (cpu_type "arm")
    set (extra_headers
@@ -51,11 +170,8 @@ if ("${HOST_CPU}" STREQUAL "arm")
          arm_neon.h
    )
 
-elseif ("${HOST_CPU}" STREQUAL "i386"
-     OR "${HOST_CPU}" STREQUAL "i486"
-     OR "${HOST_CPU}" STREQUAL "i486"
-     OR "${HOST_CPU}" STREQUAL "i486"
-     OR "${HOST_CPU}" STREQUAL "x86_64")
+elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-(.+)$"  # i[34567]86-*-*
+     OR ${TARGET_TRIPLET} MATCHES "^x86_64-(.+)$")          # x86_64-*-*)
 
    set (cpu_type "i386")
    set (extra_headers
@@ -82,17 +198,23 @@ elseif ("${HOST_CPU}" STREQUAL "i386"
          popcntintrin.h
 		   abmintrin.h
    )
-   if ("${HOST_CPU}" STREQUAL "x86_64")
+   if (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)$")
       set (need_64bit_hwint "yes")
    endif ()
 
-elseif ("${HOST_CPU}" STREQUAL "mips")
+elseif (${TARGET_TRIPLET} MATCHES "^ia64-(.+)-(.+)$")    #  ia64-*-*
+
+   set (cpu_type "ia64")
+   set (extra_headers ia64intrin.h)
+   set (need_64bit_hwint "yes")
+
+elseif (${TARGET_TRIPLET} MATCHES "^mips(.*)-(.+)-(.+)$")    #  mips*-*-*
 
    set (cpu_type "mips")
-   set (need_64bit_hwint "yes")
    set (extra_headers loongson.h)
+   set (need_64bit_hwint "yes")
 
-elseif ("${HOST_CPU}" STREQUAL "powerpc")
+elseif (${TARGET_TRIPLET} MATCHES "^powerpc(.*)-(.+)-(.+)$")  #  powerpc*-*-*)
 
    set (cpu_type "rs6000")
    set (extra_headers
@@ -107,21 +229,24 @@ elseif ("${HOST_CPU}" STREQUAL "powerpc")
    )
    set (need_64bit_hwint "yes")
 
-elseif ("${HOST_CPU}" STREQUAL "sparc")
+elseif (${TARGET_TRIPLET} MATCHES "^rs6000(.*)-(.+)-(.+)$")  #  rs6000*-*-*)
+
+   set (cpu_type "rs6000")
+   set (need_64bit_hwint "yes")
+
+elseif (${TARGET_TRIPLET} MATCHES "^sparc(.*)-(.+)-(.+)$")  #  sparc*-*-*)
 
    set (cpu_type "sparc")
    set (need_64bit_hwint "yes")
-   set (extra_headers "")
+
 
 endif ()
 
 
-# this starts the tm_file list definition
 
+# this starts the tm_file list definition
 set (tm_p_file "")
-set (extra_modes "")
-set (extra_options "")
-set (tm_file "${cpu_type}/${cpu_type}.h")
+set (tm_file   "${cpu_type}/${cpu_type}.h")
 
 if (EXISTS "${DIR_REMNANTS}/gcc/config/${cpu_type}/${cpu_type}-protos.h")
    set (tm_p_file "${cpu_type}/${cpu_type}-protos.h")
@@ -136,57 +261,545 @@ if (EXISTS "${DIR_REMNANTS}/gcc/config/${cpu_type}/${cpu_type}.opt")
 endif ()
 
 
-if ("${HOST_CPU}" STREQUAL "x86_64")
-   list (APPEND tm_file "i386/biarch64.h")
-endif ()
-if ("${cpu_type}" STREQUAL "i386")
-   list (APPEND tm_file "vxworks-dummy.h")
+if (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-(.+)$")  # i[34567]86-*-*
+
+   list (APPEND tm_file vxworks-dummy.h)
+   if ("${enable_cld}" STREQUAL "yes")
+      list (APPEND tm_defines USE_IX86_CLD=1)
+   endif ()
+
+elseif ${TARGET_TRIPLET} MATCHES "^x86_64-(.+)$")   # x86_64-*-*)
+
+   list (APPEND tm_file vxworks-dummy.h i386/biarch64.h)
+   if ("${enable_cld}" STREQUAL "yes")
+      list (APPEND tm_defines USE_IX86_CLD=1)
+   endif ()
+
 endif ()
 
 
-# Mac OS X
-if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
+
+
+# Common parts for widely ported systems.
+if (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-darwin(.+)$")    #  *-*-darwin*)
+
+# TO-DO: TMAKE  t-darwin
+
+
+   list (APPEND tm_file darwin.h)
+       if (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-darwin9(.*)$")          #  *-*-darwin*)
+         list (APPEND tm_file darwin9.h)
+   elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-darwin[12][0-9](.*)$")  #  *-*-darwin[12][0-9]*)
+         list (APPEND tm_file darwin9.h darwin10.h)
+   endif ()
+   list (APPEND tm_file        "${cpu_type}/darwin.h")
+   list (APPEND tm_p_file      darwin-protos.h)
+   list (APPEND extra_options  darwin.opt)
+   list (APPEND target_gtfiles "${DIR_REMNANTS}/gcc/config/darwin.c")
+   set  (use_gcc_stdint "wrap")
+
+
+elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-freebsd(.+)$")    #  *-*-freebsd*)
+
+
+# TO-DO: TMAKE  "t-slibgcc-elf-ver | t-freebsd | t-freebsd-thread
+   set (gas    "yes")
+   set (gnu_ld "yes")
+
+   set (extra_parts crtbegin.o crtend.o crtbeginS.o crtendS.o)
+   string (REGEX REPLACE "^(.+)freebsd([0-9]+)[.][0-9]+$" "\\2" fbsd_major ${TARGET_TRIPLET})
+   list (APPEND tm_defines "FBSD_MAJOR=${fbsd_major}")
+   set  (fbsd_tm_file      freebsd-spec.h freebsd.h freebsd-stdint.h)
+   set  (use_gcc_stdint    "wrap")
+
+
+elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-dragonfly(.+)$")    #  *-*-dragonfly*)
+
+
+# TO-DO: TMAKE  "t-slibgcc-elf-ver t-dragonfly | t-dragonfly-thread
+   set (gas    "yes")
+   set (gnu_ld "yes")
+
+   set (extra_parts crtbegin.o crtend.o crtbeginS.o crtendS.o)
+   string (REGEX REPLACE "^(.+)dragonfly([0-9]+)[.][0-9]+$" "\\2" dfbsd_major ${TARGET_TRIPLET})
+   list (APPEND tm_defines "DFBSD_MAJOR=${dfbsd_major}")
+   set  (dfbsd_tm_file     dragonfly-spec.h dragonfly.h)
+   set  (use_gcc_stdint    "wrap")
+
+
+elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-netbsd(.+)$")    #  *-*-netbsd*)
+
+
+# TO-DO: TMAKE  "t-slibgcc-elf-ver t-libc-ok t-netbsd t-libgcc-pic
+   set (gas    "yes")
+   set (gnu_ld "yes")
+
+   list (APPEND tm_defines NETBSD_ENABLE_PTHREADS)
+   set (extra_parts crtbegin.o crtend.o crtbeginS.o crtendS.o crtbeginT.o)
+
+
+elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-openbsd(.+)$")    #  *-*-openbsd*)
+
+
+# TO-DO: TMAKE  "t-libc-ok t-openbsd t-libgcc-pic  t-openbsd-thread"
+
+   if (  ${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-openbsd2[.](.+)$"    #  *-*-openbsd2.*
+      OR ${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-openbsd3[.][012]$")  #  *-*-openbsd3.[012])
+      list (APPEND tm_defines HAS_LIBC_R=1)
+   endif ()
+
+
+elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-rtems(.+)$")    #  *-*-rtems*)
+
+
+   set (thread_file    "rtems")
+   set (use_gcc_stdint "wrap")
+
+
+elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-vxworks(.+)$")    #  *-*-vxworks*)
+
+
+# TO-DO  TMAKE "t-vxworks"
+
+   list (APPEND tm_defines POSIX)
+   list (APPEND extra_options  vxworks.opt)
+   set  (thread_file  "vxworks")
+
+
+elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-uclinux(.+)$")    #  *-*-uclinux*)
+
+
+   set (use_gcc_stdint "wrap")
+
+
+elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-elf(.+)$")    #  *-*-elf*)
+
+
+   set (use_gcc_stdint "wrap")
+
+
+endif ()
+
+
+
+# Support site-specific machine types.
+
+# alpha*-*-linux*)
+# alpha*-*-gnu*)
+# alpha*-*-freebsd*)
+# alpha*-*-netbsd*)
+# alpha*-*-openbsd*)
+# alpha*-dec-osf5.1*)
+# alpha64-dec-*vms*)
+# alpha*-dec-*vms*)
+# arm-wrs-vxworks)
+# arm*-*-freebsd*)
+# arm*-*-netbsdelf*)
+# arm*-*-netbsd*)
+# arm*-*-linux*)			# ARM GNU/Linux with ELF
+# arm*-*-uclinux*)		# ARM ucLinux
+# arm*-*-ecos-elf)
+# arm*-*-eabi*
+# arm*-*-symbianelf* )
+# arm*-*-rtems*)
+# arm*-*-elf)
+# arm*-wince-pe*)
+# arm-*-pe*)
+# i[34567]86-pc-msdosdjgpp*)
+# i[34567]86-*-lynxos*)
+# i[3456x]86-*-netware*)
+# i[34567]86-*-nto-qnx*)
+# i[34567]86-*-rtems*)
+# i[34567]86-*-kfreebsd*-gnu
+# i[34567]86-*-knetbsd*-gnu
+# i[34567]86-*-kopensolaris*-gnu)
+# x86_64-*-kfreebsd*-gnu
+# x86_64-*-knetbsd*-gnu)
+# i[4567]86-wrs-vxworks|i[4567]86-wrs-vxworksae)
+# i[34567]86-*-pe | i[34567]86-*-cygwin*)
+# i[34567]86-*-mingw* | x86_64-*-mingw*)
+# i[34567]86-*-interix3*)
+# ia64*-*-elf*)
+# ia64*-*-freebsd*)
+# ia64*-*-linux*)
+# ia64*-*-hpux*)
+# ia64-hp-*vms*)
+# mips-sgi-irix6.5*)
+# mips*-*-netbsd*)			# NetBSD/mips, either endian.
+# mips64*-*-linux*
+# mipsisa64*-*-linux*)
+# mips*-*-linux*)				# Linux MIPS, either endian.
+# mips*-*-openbsd*)
+# mips*-sde-elf*)
+# mipsisa32-*-elf* | mipsisa32el-*-elf* | \
+# mipsisa32r2-*-elf* | mipsisa32r2el-*-elf* | \
+# mipsisa64-*-elf* | mipsisa64el-*-elf* | \
+# mipsisa64r2-*-elf* | mipsisa64r2el-*-elf*)
+# mipsisa64sr71k-*-elf*)
+# mipsisa64sb1-*-elf* | mipsisa64sb1el-*-elf*)
+# mips-*-elf* | mipsel-*-elf*)
+# mips64-*-elf* | mips64el-*-elf*)
+# mips64vr-*-elf* | mips64vrel-*-elf*)
+# mips64orion-*-elf* | mips64orionel-*-elf*)
+# mips*-*-rtems*)
+# mips-wrs-vxworks)
+# mipstx39-*-elf* | mipstx39el-*-elf*)
+# powerpc-*-darwin*)
+# powerpc64-*-darwin*)
+# powerpc*-*-freebsd*)
+# powerpc-*-netbsd*)
+# powerpc-*-eabispe*)
+# powerpc-*-eabisimaltivec*)
+# powerpc-*-eabisim*)
+# powerpc-*-elf*)
+# powerpc-*-eabialtivec*)
+# powerpc-xilinx-eabi*)
+# powerpc-*-eabi*)
+# powerpc-*-rtems*)
+# powerpc-*-linux* | powerpc64-*-linux*)
+# powerpc64-*-gnu*)
+# powerpc-*-gnu-gnualtivec*)
+# powerpc-*-gnu*)
+# powerpc-wrs-vxworks|powerpc-wrs-vxworksae)
+# powerpc-*-lynxos*)
+# powerpcle-*-elf*)
+# powerpcle-*-eabisim*)
+# powerpcle-*-eabi*)
+# rs6000-ibm-aix4.[3456789]* | powerpc-ibm-aix4.[3456789]*)
+# rs6000-ibm-aix5.1.* | powerpc-ibm-aix5.1.*)
+# rs6000-ibm-aix5.2.* | powerpc-ibm-aix5.2.*)
+# rs6000-ibm-aix5.3.* | powerpc-ibm-aix5.3.*)
+# rs6000-ibm-aix[6789].* | powerpc-ibm-aix[6789].*)
+# sparc-*-netbsdelf*)
+# sparc-*-elf*)
+# sparc-*-linux*)		# SPARC's running GNU/Linux, libc6
+# sparc-*-rtems*)
+# sparc*-*-solaris2*)
+# sparc-wrs-vxworks)
+
+
+if (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-darwin(.+)$")    #  i[34567]86-*-darwin*)
+
+# TO-DO  TMAKE "t-slibgcc-darwin i386/t-crtpc i386/t-crtfm"
+
+   set (need_64bit_hwint "yes")
+   set (need_64bit_isa   "yes")
+
+	# This is so that '.../configure && make' doesn't fail due to
+	# config.guess deciding that the configuration is i386-*-darwin* and
+	# then this file using that to set --with-cpu=i386 which has no -m64 support.
+	#with_cpu=${with_cpu:-generic}
+	#lto_binary_reader=lto-macho
+
+elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-darwin(.+)$")    #  x86_64-*-darwin*)
+
+# TO-DO  TMAKE ${cpu_type}/t-darwin64 t-slibgcc-darwin i386/t-crtpc i386/t-crtfm"
+
+   list (APPEND tm_file "${cpu_type}/darwin64.h")
+	#with_cpu=${with_cpu:-generic}
+	#lto_binary_reader=lto-macho
+
+
+elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-elf(.+)$")    #  i[34567]86-*-elf*)
+
+# TO-DO  TMAKE  "i386/t-i386elf t-svr4"
+
    list (APPEND tm_file
-         darwin.h
-         darwin9.h
-         darwin10.h
-         "${cpu_type}/darwin.h"
+            i386/unix.h
+            i386/att.h
+            dbxelf.h
+            elfos.h
+            newlib-stdint.h
+            i386/i386elf.h
    )
-   list (APPEND tm_p_file "darwin-protos.h")
-   LIST (APPEND extra_options "darwin.opt")
 
-   #thread_file='posix'
-endif ()
+elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-elf(.+)$")    #  x86_64-*-elf*)
 
+# TO-DO  TMAKE  "i386/t-i386elf t-svr4"
 
-case ${target} in
-*-*-darwin*)
-  tmake_file="t-darwin ${cpu_type}/t-darwin"
-  tm_file="${tm_file} darwin.h"
-  case ${target} in
-  *-*-darwin9*)
-    tm_file="${tm_file} darwin9.h"
-    ;;
-  *-*-darwin[12][0-9]*)
-    tm_file="${tm_file} darwin9.h darwin10.h"
-    ;;
-  esac
-  tm_file="${tm_file} ${cpu_type}/darwin.h"
-  tm_p_file="${tm_p_file} darwin-protos.h"
+   list (APPEND tm_file
+            i386/unix.h
+            i386/att.h
+            dbxelf.h
+            elfos.h
+            newlib-stdint.h
+            i386/i386elf.h
+            i386/x86-64.h
+   )
 
-  target_gtfiles="\$(srcdir)/config/darwin.c"
-  extra_options="${extra_options} darwin.opt"
-  c_target_objs="${c_target_objs} darwin-c.o"
-  cxx_target_objs="${cxx_target_objs} darwin-c.o"
-  fortran_target_objs="darwin-f.o"
-  extra_objs="darwin.o"
-  extra_gcc_objs="darwin-driver.o"
-  default_use_cxa_atexit=yes
-  use_gcc_stdint=wrap
-  case ${enable_threads} in
-    "" | yes | posix) thread_file='posix' ;;
-  esac
+elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-freebsd(.+)$")    #  i[34567]86-*-freebsd*)
+
+   list (APPEND tm_file
+            i386/unix.h
+            i386/att.h
+            dbxelf.h
+            elfos.h
+            ${fbsd_tm_file}
+            i386/freebsd.h
+   )
+
+elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-freebsd(.+)$")    #  x86_64-*-freebsd*)
 
 
+# TO-DO  TMAKE  "i386/t-crtstuff"
+
+   list (APPEND tm_file
+            i386/unix.h
+            i386/att.h
+            dbxelf.h
+            elfos.h
+            ${fbsd_tm_file}
+            i386/x86-64.h
+            i386/freebsd.h
+            i386/freebsd64.h
+   )
+
+elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-dragonfly(.+)$")    #  i[34567]86-*-dragonfly*)
+
+   list (APPEND tm_file
+            i386/unix.h
+            i386/att.h
+            dbxelf.h
+            elfos.h
+            ${dfbsd_tm_file}
+            i386/dragonfly.h
+   )
+
+elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-dragonfly(.+)$")    #  x86_64-*-dragonfly*)
+
+   list (APPEND tm_file
+            i386/unix.h
+            i386/att.h
+            dbxelf.h
+            elfos.h
+            ${dfbsd_tm_file}
+            i386/x86-64.h
+            i386/dragonfly.h
+   )
+
+elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-netbsdelf(.+)$")    #  i[34567]86-*-netbsdelf*)
+
+   list (APPEND tm_file
+            i386/unix.h
+            i386/att.h
+            dbxelf.h
+            elfos.h
+            netbsd.h
+            netbsd-elf.h
+            i386/netbsd-elf.h
+   )
+
+elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-netbsd(.+)$")    #  i[34567]86-*-netbsd*)
+
+# TO-DO  TMAKE  "t-netbsd"
+
+   list (APPEND tm_file
+            i386/unix.h
+            i386/bsd.h
+            i386/gas.h
+            i386/gstabs.h
+            netbsd.h
+            netbsd-aout.h
+            i386/netbsd.h
+   )
+   set (extra_parts   "")
+   set (need_collect2 "yes")
+
+elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-netbsd(.+)$")    # x86_64-*-netbsd*)
+
+# TO-DO  TMAKE  "i386/t-crtstuff"
+
+   list (APPEND tm_file
+            i386/unix.h
+            i386/att.h
+            dbxelf.h
+            elfos.h
+            netbsd.h
+            netbsd-elf.h
+            i386/x86-64.h
+            i386/netbsd64.h
+   )
+
+elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-openbsd2[.](.+)$"    #  i[34567]86-*-openbsd2.*
+       OR ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-openbsd3[.][0123]$")  #  *-*-openbsd3.[0123])
+
+# TO-DO  TMAKE  "t-libc-ok t-openbsd i386/t-openbsd"
+
+   set (tm_file
+            i386/i386.h
+            i386/unix.h
+            i386/bsd.h
+            i386/gas.h
+            i386/gstabs.h
+            openbsd-oldgas.h
+            openbsd.h
+            i386/openbsd.h
+   )
+   set (need_collect2 "yes")
+
+elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-openbsd(.+)$")    #  i[34567]86-*-openbsd*)
+
+   set (gas    "yes")
+   set (gnu_ld "yes")
+
+   list (APPEND tm_file
+            i386/unix.h
+            i386/att.h
+            dbxelf.h
+            elfos.h
+            openbsd.h
+            openbsd-stdint.h
+            openbsd-libpthread.h
+            i386/openbsdelf.h
+   )
+
+elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-linux(.+)$")  #  i[34567]86-*-linux*)
+
+   list (APPEND tm_file
+            i386/unix.h
+            i386/att.h
+            dbxelf.h
+            elfos.h
+            svr4.h
+            linux.h
+            glibc-stdint.h
+
+   )
+   if (${enable_targets}" STREQUAL "all")
+
+      # TO-DO TMAKE tmake_file="${tmake_file} i386/t-linux64"
+
+      list (APPEND tm_file    i386/x86-64.h i386/linux64.h)
+      list (APPEND tm_defines TARGET_BI_ARCH=1)
+      set  (need_64bit_hwint "yes")
+      set  (need_64bit_isa   "yes")
+
+          if ("${with_cpu}" STREQUAL "")
+            set (with_cpu_64 "generic")
+      elseif (NOT ${with_cpu} MATCHES "^(Xgeneric|Xatom|Xcore2|Xnocona|Xx86-64|Xbdver1|Xamdfam10|Xbarcelona|Xk8|Xopteron|Xathlon64|Xathlon-fx|Xathlon64-sse3|Xk8-sse3|Xopteron-sse3)$")
+            message (STATUS_MESSAGE "Unsupported CPU used in --with-cpu=$with_cpu,")
+            message (FATAL_ERROR    "Supported values: generic atom core2 nocona x86-64 bdver1 amdfam10 barcelona k8 opteron athlon64 athlon-fx athlon64-sse3 k8-sse3 opteron-sse3")
+      endif ()
+   else ()
+      list (APPEND tm_file    i386/linux.h)
+   endif ()
+
+   # TO-DO tmake_file="${tmake_file} i386/t-crtstuff i386/t-crtpc i386/t-crtfm t-dfprules"
+
+
+elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-gnu(.+)$"  #  i[34567]86-*-gnu*)
+
+   # TO-DO tmake_file="${tmake_file} i386/t-crtstuff i386/t-crtpc i386/t-crtfm t-dfprules"
+
+   list (APPEND tm_file
+            i386/unix.h
+            i386/att.h
+            dbxelf.h
+            elfos.h
+            svr4.h
+            linux.h
+            glibc-stdint.h
+            i386/linux.h
+            gnu.h
+            i386/gnu.h
+   )
+
+elseif (  ${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-linux(.+)$")  #  x86_64-*-linux*
+
+# TO-DO tmake_file="${tmake_file} i386/t-linux64 i386/t-crtstuff i386/t-crtpc i386/t-crtfm t-dfprules"
+
+   list (APPEND tm_file
+            i386/unix.h
+            i386/att.h
+            dbxelf.h
+            elfos.h
+            svr4.h
+            linux.h
+            glibc-stdint.h
+		      i386/x86-64.h
+            i386/linux64.h
+   )
+
+elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-solaris(.+)$"  #  i[34567]86-*-solaris2*)
+
+   list (APPEND tm_file
+            i386/unix.h
+            i386/att.h
+            dbxelf.h
+            elfos.h
+            svr4.h
+            i386/sysv4.h
+            sol2.h
+   )
+   set (with_arch_32 ${with_arch_32:-pentium4})
+   set )with_tune_32 ${with_tune_32:-generic})
+   if (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-solaris2.1[0-9](.*)$"  # *-*-solaris2.1[0-9]*)
+      list (APPEND tm_file sol2-10.h)
+   endif ()
+   list (APPEND tm_file i386/sol2.h)
+   if ("${gnu_ld} STREQUAL "yes")
+      list (APPEND tm_file sol2-gld.h)
+   endif ()
+   if ("${gas} STREQUAL "yes")
+      list (APPEND tm_file i386/sol2-gas.h)
+   endif ()
+   # TO-DO tmake_file="${tmake_file} t-sol2 t-svr4"
+   list (APPEND tm_p_file sol2-protos.h)
+   if ("${gnu_ld} STREQUAL "yes")
+      list (APPEND tm_defines TARGET_GNU_LD=1)
+      # TO-DO IF gnu-ld tmake_file="$tmake_file t-slibgcc-elf-ver"
+   else
+      # TODO tmake_file="$tmake_file t-slibgcc-sld"
+   endif ()
+   if ("${gas} STREQUAL "yes")
+      list (INSERT tm_file 0 usegas.h)
+   endif ()
+   list (APPEND tm_file tm-dwarf2.h)
+
+
+   if (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-solaris2.1[0-9](.*)$"  # *-*-solaris2.1[0-9]*)
+      list (APPEND tm_file i386/x86-64.h i386/sol2-10.h)
+      list (APPEND tm_defines TARGET_BI_ARCH=1)
+      #TO-DO tmake_file="$tmake_file i386/t-sol2-10"
+      set  (need_64bit_hwint "yes")
+      set  (need_64bit_isa   "yes")
+      set  (use_gcc_stdint   "wrap")
+
+          if ("${with_cpu}" STREQUAL "")
+            if ("${with_cpu_64}" STREQUAL "")
+               set (with_cpu_64 "generic")
+            endif ()
+      elseif (NOT ${with_cpu} MATCHES "^(Xgeneric|Xatom|Xcore2|Xnocona|Xx86-64|Xbdver1|Xamdfam10|Xbarcelona|Xk8|Xopteron|Xathlon64|Xathlon-fx|Xathlon64-sse3|Xk8-sse3|Xopteron-sse3)$")
+            message (STATUS_MESSAGE "Unsupported CPU used in --with-cpu=$with_cpu,")
+            message (FATAL_ERROR    "Supported values: generic atom core2 nocona x86-64 bdver1 amdfam10 barcelona k8 opteron athlon64 athlon-fx athlon64-sse3 k8-sse3 opteron-sse3")
+      endif ()
+   else ()
+      set  (use_gcc_stdint   "provide")
+   endif ()
+   if (${have_thread_h})
+      set (thread_file "solaris")
+   endif ()
+
+
+
+
+end if()
+
+
+
+#  c_target_objs="${c_target_objs} darwin-c.o"
+#  cxx_target_objs="${cxx_target_objs} darwin-c.o"
+#  fortran_target_objs="darwin-f.o"
+#  extra_objs="darwin.o"
+#  extra_gcc_objs="darwin-driver.o"
+#  default_use_cxa_atexit=yes
+
+
+
+##########################################
+
+define_file_gthr_default_h ()
+define_file_tconfig_h ()
+define_file_tm_h ()
 
 
