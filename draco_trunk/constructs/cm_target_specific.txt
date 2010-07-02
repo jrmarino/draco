@@ -22,10 +22,8 @@
 
 set (thread_file        "posix")
 set (use_gcc_stdint     "none")
-set (gnu_ld             "no")
-set (gas                "no")
-set (tm_defines         "")
-set (tm_file            "")
+set (gnu_ld             "yes")
+set (gas                "yes")
 set (TARGET_CPU_DEFAULT "")
 set (need_64bit_hwint   "")
 set (need_64bit_isa     "")
@@ -36,13 +34,23 @@ set (extra_parts        "")
 set (target_gtfiles     "")
 set (with_cpu           "")
 set (need_collect2      "")
+set (tm_defines         "")
+set (xm_defines         "")
+set (host_xm_defines    "")
+set (build_xm_defines   "")
+set (tm_inc_list        "")
+set (xm_inc_list        "")
+set (host_xm_inc_list   "")
+set (build_xm_inc_list  "")
 
-if (DEFINED with_gnu_as)
-   set (gas    "yes")
+
+if (DEFINED non_gnu_as)
+   set (gas    "no")
 endif ()
-if (DEFINED with_gnu_ld)
-   set (gnu_ld "yes")
+if (DEFINED non_gnu_ld)
+   set (gnu_ld "no")
 endif ()
+
 
 
 
@@ -51,9 +59,11 @@ function (define_file_gthr_default_h)
 
    set  (gthread_flags "-DHAVE_GTHR_DEFAULT" PARENT_SCOPE)
    file (COPY        ${DIR_REMNANTS}/gcc/gthr-${thread_file}.h
-         DESTINATION ${DIR_C_OBJS}/gthr-default.h)
-   file (COPY        ${DIR_REMNANTS}/gcc/gthr-${thread_file}.h
-         DESTINATION ${DIR_C_XENO}/gthr-default.h)
+         DESTINATION ${DIR_C_OBJS})
+   file (RENAME      ${DIR_C_OBJS}/gthr-${thread_file}.h
+                     ${DIR_C_OBJS}/gthr-default.h)	
+   file (COPY        ${DIR_C_OBJS}/gthr-default.h
+         DESTINATION ${DIR_C_XENO})
 
 endfunction (define_file_gthr_default_h)
 
@@ -63,10 +73,10 @@ endfunction (define_file_gthr_default_h)
 function (define_file_tconfig_h)
 
    set  (t_file ${DIR_C_OBJS}/tconfig.h)
-   set  (DEFINE_LIST USED_FOR_TARGET ${tm_defines})
+   set  (DEFINE_LIST USED_FOR_TARGET ${xm_defines})
 
-   file (WRITE  ${t_file} "#ifndef GCC_TCONFIG_H")
-   file (APPEND ${t_file} "#define GCC_TCONFIG_H")
+   file (WRITE  ${t_file} "#ifndef GCC_TCONFIG_H\n")
+   file (APPEND ${t_file} "#define GCC_TCONFIG_H\n")
 
    # Define TARGET_CPU_DEFAULT if the system wants one.
    # This substitutes for lots of *.h files.
@@ -76,9 +86,11 @@ function (define_file_tconfig_h)
 
 
    foreach (definition ${DEFINE_LIST})
-      file (APPEND ${t_file} "#ifndef ${definition}")
-      file (APPEND ${t_file} "# define ${definition}")
-      file (APPEND ${t_file} "#endif")
+      string (REPLACE "=" " " splitdef ${definition})	
+      string (REGEX REPLACE "^(.[^=]+)(=.*)?$" "\\1" term1 "${definition}") 
+      file (APPEND ${t_file} "#ifndef ${term1}\n")
+      file (APPEND ${t_file} "# define ${splitdef}\n")
+      file (APPEND ${t_file} "#endif\n")
    endforeach ()
 
 
@@ -88,17 +100,17 @@ function (define_file_tconfig_h)
    # headers, so that the HAVE_* flags are available
    # when defaults.h gets included.
 
-   file (APPEND ${t_file} "#include \"auto-host\"")
-   file (APPEND ${t_file} "#ifdef IN_GCC")
-   file (APPEND ${t_file} "# include \""ansidecl.h\"")
-   foreach (config_header ${tm_file})
-      file (APPEND ${t_file} "# include \"config/${config_header}\"")
+   file (APPEND ${t_file} "#include \"auto-host.h\"\n")
+   file (APPEND ${t_file} "#ifdef IN_GCC\n")
+   file (APPEND ${t_file} "# include \"ansidecl.h\"\n")
+   foreach (config_header ${xm_inc_list})
+      file (APPEND ${t_file} "# include \"config/${config_header}\"\n")
    endforeach ()
-   file (APPEND ${t_file} "#endif")
-   file (APPEND ${t_file} "#endif /* GCC_TCONFIG_H */")
+   file (APPEND ${t_file} "#endif\n")
+   file (APPEND ${t_file} "#endif /* GCC_TCONFIG_H */\n")
 
    file (COPY        ${t_file}
-         DESTINATION ${DIR_C_XENO}/tconfig.h)
+         DESTINATION ${DIR_C_XENO})
 
 endfunction (define_file_tconfig_h)
 
@@ -110,8 +122,8 @@ function (define_file_tm_h)
    set  (t_file ${DIR_C_OBJS}/tm.h)
    set  (DEFINE_LIST  ${tm_defines})
 
-   file (WRITE  ${t_file} "#ifndef GCC_TM_H")
-   file (APPEND ${t_file} "#define GCC_TM_H")
+   file (WRITE  ${t_file} "#ifndef GCC_TM_H\n")
+   file (APPEND ${t_file} "#define GCC_TM_H\n")
 
    # Define TARGET_CPU_DEFAULT if the system wants one.
    # This substitutes for lots of *.h files.
@@ -120,9 +132,11 @@ function (define_file_tm_h)
    endif ()
 
    foreach (definition ${DEFINE_LIST})
-      file (APPEND ${t_file} "#ifndef ${definition}")
-      file (APPEND ${t_file} "# define ${definition}")
-      file (APPEND ${t_file} "#endif")
+      string (REPLACE "=" " " splitdef ${definition})
+      string (REGEX REPLACE "^(.[^=]+)(=.*)?$" "\\1" term1 "${definition}") 
+      file (APPEND ${t_file} "#ifndef ${term1}\n")
+      file (APPEND ${t_file} "# define ${splitdef}\n")
+      file (APPEND ${t_file} "#endif\n")
    endforeach ()
 
 
@@ -132,21 +146,21 @@ function (define_file_tm_h)
    # headers, so that the HAVE_* flags are available
    # when defaults.h gets included.
 
-   file (APPEND ${t_file} "#ifdef IN_GCC")
-   file (APPEND ${t_file} "# include \"options.h\"")
-   foreach (config_header ${tm_file})
-      file (APPEND ${t_file} "# include \"config/${config_header}\"")
+   file (APPEND ${t_file} "#ifdef IN_GCC\n")
+   file (APPEND ${t_file} "# include \"options.h\"\n")
+   foreach (config_header ${tm_inc_list})
+      file (APPEND ${t_file} "# include \"config/${config_header}\"\n")
    endforeach ()
-   file (APPEND ${t_file} "#endif")
+   file (APPEND ${t_file} "#endif\n")
 
-   file (APPEND ${t_file} "#if defined IN_GCC && !defined GENERATOR_FILE && !defined USED_FOR_TARGET")
-   file (APPEND ${t_file} "# include \"insn-flags.h\"")
-   file (APPEND ${t_file} "#endif")
-   file (APPEND ${t_file} "# include \"defaults.h\"")
-   file (APPEND ${t_file} "#endif /* GCC_TM_H */")
+   file (APPEND ${t_file} "#if defined IN_GCC && !defined GENERATOR_FILE && !defined USED_FOR_TARGET\n")
+   file (APPEND ${t_file} "# include \"insn-flags.h\"\n")
+   file (APPEND ${t_file} "#endif\n")
+   file (APPEND ${t_file} "# include \"defaults.h\"\n")
+   file (APPEND ${t_file} "#endif /* GCC_TM_H */\n")
 
    file (COPY        ${t_file}
-         DESTINATION ${DIR_C_XENO}/tm.h)
+         DESTINATION ${DIR_C_XENO})
 
 endfunction (define_file_tm_h)
 
@@ -157,13 +171,13 @@ endfunction (define_file_tm_h)
 
 
 
-# Set default cpu_type, tm_file, tm_p_file and xm_file so it can be
+# Set default cpu_type and extra headers so it can be
 # updated in each machine entry.  Also set default extra_headers for some
 # machines.  This mirrors the config.gcc functionality. If an entry is not
 # found, we assume the passed <host> variable is the culprit
 
 if (${TARGET_TRIPLET} MATCHES "^arm(.*)-(.+)-(.+)$")    #  arm*-*-*
-
+   
    set (cpu_type "arm")
    set (extra_headers
          mmintrin.h
@@ -188,15 +202,15 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-(.+)$"  # i[34567]86-*-*
          bmmintrin.h
          fma4intrin.h
          wmmintrin.h
-		   immintrin.h
+         immintrin.h
          x86intrin.h
          avxintrin.h
          xopintrin.h
-		   ia32intrin.h
+	 ia32intrin.h
          cross-stdarg.h
          lwpintrin.h
          popcntintrin.h
-		   abmintrin.h
+	 abmintrin.h
    )
    if (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)$")
       set (need_64bit_hwint "yes")
@@ -244,9 +258,10 @@ endif ()
 
 
 
-# this starts the tm_file list definition
+
+# this starts the tm_inc_list definition
 set (tm_p_file "")
-set (tm_file   "${cpu_type}/${cpu_type}.h")
+list (APPEND tm_inc_list "${cpu_type}/${cpu_type}.h")
 
 if (EXISTS "${DIR_REMNANTS}/gcc/config/${cpu_type}/${cpu_type}-protos.h")
    set (tm_p_file "${cpu_type}/${cpu_type}-protos.h")
@@ -263,14 +278,14 @@ endif ()
 
 if (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-(.+)$")  # i[34567]86-*-*
 
-   list (APPEND tm_file vxworks-dummy.h)
+   list (APPEND tm_inc_list vxworks-dummy.h)
    if ("${enable_cld}" STREQUAL "yes")
       list (APPEND tm_defines USE_IX86_CLD=1)
    endif ()
 
-elseif ${TARGET_TRIPLET} MATCHES "^x86_64-(.+)$")   # x86_64-*-*)
+elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)$")   # x86_64-*-*)
 
-   list (APPEND tm_file vxworks-dummy.h i386/biarch64.h)
+   list (APPEND tm_inc_list vxworks-dummy.h i386/biarch64.h)
    if ("${enable_cld}" STREQUAL "yes")
       list (APPEND tm_defines USE_IX86_CLD=1)
    endif ()
@@ -285,14 +300,13 @@ if (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-darwin(.+)$")    #  *-*-darwin*)
 
 # TO-DO: TMAKE  t-darwin
 
-
-   list (APPEND tm_file darwin.h)
+   list (APPEND tm_inc_list darwin.h)
        if (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-darwin9(.*)$")          #  *-*-darwin*)
-         list (APPEND tm_file darwin9.h)
+         list (APPEND tm_inc_list darwin9.h)
    elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-darwin[12][0-9](.*)$")  #  *-*-darwin[12][0-9]*)
-         list (APPEND tm_file darwin9.h darwin10.h)
+         list (APPEND tm_inc_list darwin9.h darwin10.h)
    endif ()
-   list (APPEND tm_file        "${cpu_type}/darwin.h")
+   list (APPEND tm_inc_list    "${cpu_type}/darwin.h")
    list (APPEND tm_p_file      darwin-protos.h)
    list (APPEND extra_options  darwin.opt)
    list (APPEND target_gtfiles "${DIR_REMNANTS}/gcc/config/darwin.c")
@@ -303,8 +317,6 @@ elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-freebsd(.+)$")    #  *-*-freebsd*)
 
 
 # TO-DO: TMAKE  "t-slibgcc-elf-ver | t-freebsd | t-freebsd-thread
-   set (gas    "yes")
-   set (gnu_ld "yes")
 
    set (extra_parts crtbegin.o crtend.o crtbeginS.o crtendS.o)
    string (REGEX REPLACE "^(.+)freebsd([0-9]+)[.][0-9]+$" "\\2" fbsd_major ${TARGET_TRIPLET})
@@ -317,8 +329,6 @@ elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-dragonfly(.+)$")    #  *-*-dragonf
 
 
 # TO-DO: TMAKE  "t-slibgcc-elf-ver t-dragonfly | t-dragonfly-thread
-   set (gas    "yes")
-   set (gnu_ld "yes")
 
    set (extra_parts crtbegin.o crtend.o crtbeginS.o crtendS.o)
    string (REGEX REPLACE "^(.+)dragonfly([0-9]+)[.][0-9]+$" "\\2" dfbsd_major ${TARGET_TRIPLET})
@@ -331,8 +341,6 @@ elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-netbsd(.+)$")    #  *-*-netbsd*)
 
 
 # TO-DO: TMAKE  "t-slibgcc-elf-ver t-libc-ok t-netbsd t-libgcc-pic
-   set (gas    "yes")
-   set (gnu_ld "yes")
 
    list (APPEND tm_defines NETBSD_ENABLE_PTHREADS)
    set (extra_parts crtbegin.o crtend.o crtbeginS.o crtendS.o crtbeginT.o)
@@ -480,7 +488,7 @@ endif ()
 
 if (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-darwin(.+)$")    #  i[34567]86-*-darwin*)
 
-# TO-DO  TMAKE "t-slibgcc-darwin i386/t-crtpc i386/t-crtfm"
+   # TO-DO  TMAKE "t-slibgcc-darwin i386/t-crtpc i386/t-crtfm"
 
    set (need_64bit_hwint "yes")
    set (need_64bit_isa   "yes")
@@ -493,18 +501,18 @@ if (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-darwin(.+)$")    #  i[34567]86-*
 
 elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-darwin(.+)$")    #  x86_64-*-darwin*)
 
-# TO-DO  TMAKE ${cpu_type}/t-darwin64 t-slibgcc-darwin i386/t-crtpc i386/t-crtfm"
+   # TO-DO  TMAKE ${cpu_type}/t-darwin64 t-slibgcc-darwin i386/t-crtpc i386/t-crtfm"
 
-   list (APPEND tm_file "${cpu_type}/darwin64.h")
+   list (APPEND tm_inc_list "${cpu_type}/darwin64.h")
 	#with_cpu=${with_cpu:-generic}
 	#lto_binary_reader=lto-macho
 
 
 elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-elf(.+)$")    #  i[34567]86-*-elf*)
 
-# TO-DO  TMAKE  "i386/t-i386elf t-svr4"
+   # TO-DO  TMAKE  "i386/t-i386elf t-svr4"
 
-   list (APPEND tm_file
+   list (APPEND tm_inc_list
             i386/unix.h
             i386/att.h
             dbxelf.h
@@ -515,9 +523,9 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-elf(.+)$")    #  i[34567]86-
 
 elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-elf(.+)$")    #  x86_64-*-elf*)
 
-# TO-DO  TMAKE  "i386/t-i386elf t-svr4"
+   # TO-DO  TMAKE  "i386/t-i386elf t-svr4"
 
-   list (APPEND tm_file
+   list (APPEND tm_inc_list
             i386/unix.h
             i386/att.h
             dbxelf.h
@@ -529,7 +537,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-elf(.+)$")    #  x86_64-*-elf*)
 
 elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-freebsd(.+)$")    #  i[34567]86-*-freebsd*)
 
-   list (APPEND tm_file
+   list (APPEND tm_inc_list
             i386/unix.h
             i386/att.h
             dbxelf.h
@@ -541,9 +549,9 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-freebsd(.+)$")    #  i[34567
 elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-freebsd(.+)$")    #  x86_64-*-freebsd*)
 
 
-# TO-DO  TMAKE  "i386/t-crtstuff"
+   # TO-DO  TMAKE  "i386/t-crtstuff"
 
-   list (APPEND tm_file
+   list (APPEND tm_inc_list
             i386/unix.h
             i386/att.h
             dbxelf.h
@@ -556,7 +564,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-freebsd(.+)$")    #  x86_64-*-fr
 
 elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-dragonfly(.+)$")    #  i[34567]86-*-dragonfly*)
 
-   list (APPEND tm_file
+   list (APPEND tm_inc_list
             i386/unix.h
             i386/att.h
             dbxelf.h
@@ -567,7 +575,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-dragonfly(.+)$")    #  i[345
 
 elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-dragonfly(.+)$")    #  x86_64-*-dragonfly*)
 
-   list (APPEND tm_file
+   list (APPEND tm_inc_list
             i386/unix.h
             i386/att.h
             dbxelf.h
@@ -579,7 +587,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-dragonfly(.+)$")    #  x86_64-*-
 
 elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-netbsdelf(.+)$")    #  i[34567]86-*-netbsdelf*)
 
-   list (APPEND tm_file
+   list (APPEND tm_inc_list
             i386/unix.h
             i386/att.h
             dbxelf.h
@@ -593,7 +601,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-netbsd(.+)$")    #  i[34567]
 
 # TO-DO  TMAKE  "t-netbsd"
 
-   list (APPEND tm_file
+   list (APPEND tm_inc_list
             i386/unix.h
             i386/bsd.h
             i386/gas.h
@@ -607,9 +615,9 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-netbsd(.+)$")    #  i[34567]
 
 elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-netbsd(.+)$")    # x86_64-*-netbsd*)
 
-# TO-DO  TMAKE  "i386/t-crtstuff"
+   # TO-DO  TMAKE  "i386/t-crtstuff"
 
-   list (APPEND tm_file
+   list (APPEND tm_inc_list
             i386/unix.h
             i386/att.h
             dbxelf.h
@@ -623,9 +631,9 @@ elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-netbsd(.+)$")    # x86_64-*-netb
 elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-openbsd2[.](.+)$"    #  i[34567]86-*-openbsd2.*
        OR ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-openbsd3[.][0123]$")  #  *-*-openbsd3.[0123])
 
-# TO-DO  TMAKE  "t-libc-ok t-openbsd i386/t-openbsd"
+   # TO-DO  TMAKE  "t-libc-ok t-openbsd i386/t-openbsd"
 
-   set (tm_file
+   set (tm_inc_list
             i386/i386.h
             i386/unix.h
             i386/bsd.h
@@ -637,12 +645,9 @@ elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-openbsd2[.](.+)$"    #  i[
    )
    set (need_collect2 "yes")
 
-elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-openbsd(.+)$")    #  i[34567]86-*-openbsd*)
+elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-openbsd(.+)$")    #  i[34567]86-*-openbsd*)
 
-   set (gas    "yes")
-   set (gnu_ld "yes")
-
-   list (APPEND tm_file
+   list (APPEND tm_inc_list
             i386/unix.h
             i386/att.h
             dbxelf.h
@@ -653,9 +658,9 @@ elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-openbsd(.+)$")    #  i[345
             i386/openbsdelf.h
    )
 
-elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-linux(.+)$")  #  i[34567]86-*-linux*)
+elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-linux(.+)$")  #  i[34567]86-*-linux*)
 
-   list (APPEND tm_file
+   list (APPEND tm_inc_list
             i386/unix.h
             i386/att.h
             dbxelf.h
@@ -665,33 +670,33 @@ elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-linux(.+)$")  #  i[34567]8
             glibc-stdint.h
 
    )
-   if (${enable_targets}" STREQUAL "all")
+   if ("${enable_targets}" STREQUAL "all")
 
-      # TO-DO TMAKE tmake_file="${tmake_file} i386/t-linux64"
+      # TO-DO TMAKE tmake_file=${tmake_file} i386/t-linux64
 
-      list (APPEND tm_file    i386/x86-64.h i386/linux64.h)
-      list (APPEND tm_defines TARGET_BI_ARCH=1)
-      set  (need_64bit_hwint "yes")
-      set  (need_64bit_isa   "yes")
+      list (APPEND tm_inc_list i386/x86-64.h i386/linux64.h)
+      list (APPEND tm_defines  TARGET_BI_ARCH=1)
+      set  (need_64bit_hwint   "yes")
+      set  (need_64bit_isa     "yes")
 
           if ("${with_cpu}" STREQUAL "")
             set (with_cpu_64 "generic")
       elseif (NOT ${with_cpu} MATCHES "^(Xgeneric|Xatom|Xcore2|Xnocona|Xx86-64|Xbdver1|Xamdfam10|Xbarcelona|Xk8|Xopteron|Xathlon64|Xathlon-fx|Xathlon64-sse3|Xk8-sse3|Xopteron-sse3)$")
-            message (STATUS_MESSAGE "Unsupported CPU used in --with-cpu=$with_cpu,")
+            message (STATUS_MESSAGE "Unsupported CPU used in with-cpu=${with_cpu},")
             message (FATAL_ERROR    "Supported values: generic atom core2 nocona x86-64 bdver1 amdfam10 barcelona k8 opteron athlon64 athlon-fx athlon64-sse3 k8-sse3 opteron-sse3")
       endif ()
    else ()
-      list (APPEND tm_file    i386/linux.h)
+      list (APPEND tm_inc_list i386/linux.h)
    endif ()
 
-   # TO-DO tmake_file="${tmake_file} i386/t-crtstuff i386/t-crtpc i386/t-crtfm t-dfprules"
+   # TO-DO tmake_file=${tmake_file} i386/t-crtstuff i386/t-crtpc i386/t-crtfm t-dfprules
 
 
-elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-gnu(.+)$"  #  i[34567]86-*-gnu*)
+elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-gnu(.+)$")  #  i[34567]86-*-gnu*)
 
-   # TO-DO tmake_file="${tmake_file} i386/t-crtstuff i386/t-crtpc i386/t-crtfm t-dfprules"
+   # TO-DO tmake_file=${tmake_file} i386/t-crtstuff i386/t-crtpc i386/t-crtfm t-dfprules
 
-   list (APPEND tm_file
+   list (APPEND tm_inc_list
             i386/unix.h
             i386/att.h
             dbxelf.h
@@ -704,11 +709,11 @@ elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-gnu(.+)$"  #  i[34567]86-*
             i386/gnu.h
    )
 
-elseif (  ${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-linux(.+)$")  #  x86_64-*-linux*
+elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-linux(.+)$")  #  x86_64-*-linux*
 
-# TO-DO tmake_file="${tmake_file} i386/t-linux64 i386/t-crtstuff i386/t-crtpc i386/t-crtfm t-dfprules"
+# TO-DO tmake_file=${tmake_file} i386/t-linux64 i386/t-crtstuff i386/t-crtpc i386/t-crtfm t-dfprules
 
-   list (APPEND tm_file
+   list (APPEND tm_inc_list
             i386/unix.h
             i386/att.h
             dbxelf.h
@@ -716,13 +721,13 @@ elseif (  ${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-linux(.+)$")  #  x86_64-*-linu
             svr4.h
             linux.h
             glibc-stdint.h
-		      i386/x86-64.h
+            i386/x86-64.h
             i386/linux64.h
    )
 
-elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-solaris(.+)$"  #  i[34567]86-*-solaris2*)
+elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-solaris2(.+)$")  #  i[34567]86-*-solaris2*)
 
-   list (APPEND tm_file
+   list (APPEND tm_inc_list
             i386/unix.h
             i386/att.h
             dbxelf.h
@@ -731,40 +736,38 @@ elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-solaris(.+)$"  #  i[34567]
             i386/sysv4.h
             sol2.h
    )
-   set (with_arch_32 ${with_arch_32:-pentium4})
-   set )with_tune_32 ${with_tune_32:-generic})
-   if (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-solaris2.1[0-9](.*)$"  # *-*-solaris2.1[0-9]*)
-      list (APPEND tm_file sol2-10.h)
+   set (with_arch_32 "${with_arch_32_pentium4}")
+   set (with_tune_32 "${with_tune_32_generic}")
+   if (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-solaris2.1[0-9](.*)$")  # *-*-solaris2.1[0-9]*)
+      list (APPEND tm_inc_list sol2-10.h)
    endif ()
-   list (APPEND tm_file i386/sol2.h)
-   if ("${gnu_ld} STREQUAL "yes")
-      list (APPEND tm_file sol2-gld.h)
+   list (APPEND tm_inc_list i386/sol2.h)
+   if ("${gnu_ld}" STREQUAL "yes")
+      list (APPEND tm_inc_list sol2-gld.h)
    endif ()
-   if ("${gas} STREQUAL "yes")
-      list (APPEND tm_file i386/sol2-gas.h)
+   if ("${gas}" STREQUAL "yes")
+      list (APPEND tm_inc_list i386/sol2-gas.h)
    endif ()
-   # TO-DO tmake_file="${tmake_file} t-sol2 t-svr4"
+   # TO-DO tmake_file=${tmake_file} t-sol2 t-svr4
    list (APPEND tm_p_file sol2-protos.h)
-   if ("${gnu_ld} STREQUAL "yes")
+   if ("${gnu_ld}" STREQUAL "yes")
       list (APPEND tm_defines TARGET_GNU_LD=1)
-      # TO-DO IF gnu-ld tmake_file="$tmake_file t-slibgcc-elf-ver"
-   else
-      # TODO tmake_file="$tmake_file t-slibgcc-sld"
+      # TO-DO IF gnu-ld tmake_file=$tmake_file t-slibgcc-elf-ver
+   else ()
+      # TODO tmake_file=$tmake_file t-slibgcc-sld
    endif ()
-   if ("${gas} STREQUAL "yes")
-      list (INSERT tm_file 0 usegas.h)
+   if ("${gas}" STREQUAL "yes")
+      list (INSERT tm_inc_list 0 usegas.h)
    endif ()
-   list (APPEND tm_file tm-dwarf2.h)
+   list (APPEND tm_inc_list tm-dwarf2.h)
 
-
-   if (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-solaris2.1[0-9](.*)$"  # *-*-solaris2.1[0-9]*)
-      list (APPEND tm_file i386/x86-64.h i386/sol2-10.h)
+   if (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-solaris2.1[0-9](.*)$")  # *-*-solaris2.1[0-9]*)
+      list (APPEND tm_inc_list i386/x86-64.h i386/sol2-10.h)
       list (APPEND tm_defines TARGET_BI_ARCH=1)
       #TO-DO tmake_file="$tmake_file i386/t-sol2-10"
       set  (need_64bit_hwint "yes")
       set  (need_64bit_isa   "yes")
       set  (use_gcc_stdint   "wrap")
-
           if ("${with_cpu}" STREQUAL "")
             if ("${with_cpu_64}" STREQUAL "")
                set (with_cpu_64 "generic")
@@ -781,9 +784,7 @@ elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-solaris(.+)$"  #  i[34567]
    endif ()
 
 
-
-
-end if()
+endif()
 
 
 
@@ -798,8 +799,7 @@ end if()
 
 ##########################################
 
+
 define_file_gthr_default_h ()
 define_file_tconfig_h ()
 define_file_tm_h ()
-
-

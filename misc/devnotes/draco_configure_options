@@ -37,10 +37,10 @@ with_iconv=[pathname] : optional.  Allows specification of iconv library locatio
 
 C) Assembler and linker options
 ==============================================================================================
-with_gnu_as           : optional.  same as gcc.
-with_as=[pathname]    : optional.  same as gcc
-with_gnu_ld           : optional.  same as gcc.
-with_ld=[pathname]    : optional.  same as gcc
+non_gnu_as           : optional.  like "without-gnu-as" of gcc
+with_as=[pathname]   : optional.  same as gcc
+non_gnu_ld           : optional.  like "without-gnu-ld" of gcc
+with_ld=[pathname]   : optional.  same as gcc
 
 
 D) directory options
