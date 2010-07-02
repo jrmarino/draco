@@ -36,6 +36,7 @@ set (DIR_C_OBJS     ${CMAKE_BINARY_DIR}/c_objs)
 set (DIR_C_XENO     ${CMAKE_BINARY_DIR}/c_xeno)
 set (DIR_CONSTRUCTS ${CMAKE_SOURCE_DIR}/constructs)
 set (DIR_REMNANTS   ${CMAKE_SOURCE_DIR}/gcc_remnants)
+set (DIR_GCCINT     ${CMAKE_SOURCE_DIR}/gcc_interface)
 
 
 
@@ -68,8 +69,8 @@ file (MAKE_DIRECTORY
       ${DIR_STAGE_3}/libexec
       ${DIR_C_XENO}
       ${DIR_C_OBJS}
-      ${DIR_C_XENO}/libgcc
-      ${DIR_C_OBJS}/libgcc
+      ${DIR_C_XENO}/lib
+      ${DIR_C_OBJS}/lib
 )
 
 
@@ -118,7 +119,7 @@ if ("${profile}" STREQUAL "standard"       OR
    find_required_library ("mpfr")
    find_required_library ("iconv")
 
-   include (${DIR_CONSTRUCTS}/CMakeLists_libgcc.txt)
+   include (${DIR_CONSTRUCTS}/cm_libgcc.txt)
 
 endif ()
 

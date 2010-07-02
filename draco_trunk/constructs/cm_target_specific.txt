@@ -42,6 +42,8 @@ set (tm_inc_list        "")
 set (xm_inc_list        "")
 set (host_xm_inc_list   "")
 set (build_xm_inc_list  "")
+set (option_list        ${DIR_GCCINT}/lang.opt
+                        ${DIR_REMNANTS}/gcc/common.opt)
 
 
 if (DEFINED non_gnu_as)
@@ -61,7 +63,7 @@ function (define_file_gthr_default_h)
    file (COPY        ${DIR_REMNANTS}/gcc/gthr-${thread_file}.h
          DESTINATION ${DIR_C_OBJS})
    file (RENAME      ${DIR_C_OBJS}/gthr-${thread_file}.h
-                     ${DIR_C_OBJS}/gthr-default.h)	
+                     ${DIR_C_OBJS}/gthr-default.h)
    file (COPY        ${DIR_C_OBJS}/gthr-default.h
          DESTINATION ${DIR_C_XENO})
 
@@ -86,8 +88,8 @@ function (define_file_tconfig_h)
 
 
    foreach (definition ${DEFINE_LIST})
-      string (REPLACE "=" " " splitdef ${definition})	
-      string (REGEX REPLACE "^(.[^=]+)(=.*)?$" "\\1" term1 "${definition}") 
+      string (REPLACE "=" " " splitdef ${definition})
+      string (REGEX REPLACE "^(.[^=]+)(=.*)?$" "\\1" term1 "${definition}")
       file (APPEND ${t_file} "#ifndef ${term1}\n")
       file (APPEND ${t_file} "# define ${splitdef}\n")
       file (APPEND ${t_file} "#endif\n")
@@ -133,7 +135,7 @@ function (define_file_tm_h)
 
    foreach (definition ${DEFINE_LIST})
       string (REPLACE "=" " " splitdef ${definition})
-      string (REGEX REPLACE "^(.[^=]+)(=.*)?$" "\\1" term1 "${definition}") 
+      string (REGEX REPLACE "^(.[^=]+)(=.*)?$" "\\1" term1 "${definition}")
       file (APPEND ${t_file} "#ifndef ${term1}\n")
       file (APPEND ${t_file} "# define ${splitdef}\n")
       file (APPEND ${t_file} "#endif\n")
@@ -155,6 +157,7 @@ function (define_file_tm_h)
 
    file (APPEND ${t_file} "#if defined IN_GCC && !defined GENERATOR_FILE && !defined USED_FOR_TARGET\n")
    file (APPEND ${t_file} "# include \"insn-flags.h\"\n")
+   file (APPEND ${t_file} "# include \"insn-constants.h\"\n")
    file (APPEND ${t_file} "#endif\n")
    file (APPEND ${t_file} "# include \"defaults.h\"\n")
    file (APPEND ${t_file} "#endif /* GCC_TM_H */\n")
@@ -163,6 +166,41 @@ function (define_file_tm_h)
          DESTINATION ${DIR_C_XENO})
 
 endfunction (define_file_tm_h)
+
+
+
+
+# This Awk script reads in the option records generated from
+# opt-gather.awk, combines the flags of duplicate options and generates a
+# C header file.
+#
+# This program uses functions from opt-functions.awk
+# Usage: awk -f opt-functions.awk -f opth-gen.awk < inputfile > options.h
+
+function (define_file_options_h)
+
+   set (optawk "${DIR_REMNANTS}/gcc/opt-gather.awk")
+   set (funawk "${DIR_REMNANTS}/gcc/opt-functions.awk")
+   set (gnhawk "${DIR_REMNANTS}/gcc/opth-gen.awk")
+   set (gncawk "${DIR_REMNANTS}/gcc/optc-gen.awk")
+   find_program (AWK NAMES gawk awk)
+   execute_process (
+      COMMAND ${AWK} -f ${optawk} ${option_list}
+      COMMAND ${AWK} -f ${funawk}
+                     -f ${gnhawk}
+                      OUTPUT_FILE ${DIR_C_OBJS}/options.h)
+
+   set (payload "header_name=\"config.h system.h coretypes.h tm.h\"")
+   execute_process (
+      COMMAND ${AWK} -f ${optawk} ${option_list}
+      COMMAND ${AWK} -f ${funawk}
+                     -f ${gncawk}
+                     -v ${payload}
+                     OUTPUT_FILE ${DIR_C_OBJS}/options.c)
+
+endfunction (define_file_options_h)
+
+
 
 # POSSIBLE TO DO:
 # function define_config_h
@@ -177,7 +215,7 @@ endfunction (define_file_tm_h)
 # found, we assume the passed <host> variable is the culprit
 
 if (${TARGET_TRIPLET} MATCHES "^arm(.*)-(.+)-(.+)$")    #  arm*-*-*
-   
+
    set (cpu_type "arm")
    set (extra_headers
          mmintrin.h
@@ -262,6 +300,7 @@ endif ()
 # this starts the tm_inc_list definition
 set (tm_p_file "")
 list (APPEND tm_inc_list "${cpu_type}/${cpu_type}.h")
+list (APPEND option_list "${DIR_REMNANTS}/gcc/config/${cpu_type}/${cpu_type}.opt")
 
 if (EXISTS "${DIR_REMNANTS}/gcc/config/${cpu_type}/${cpu_type}-protos.h")
    set (tm_p_file "${cpu_type}/${cpu_type}-protos.h")
@@ -803,3 +842,5 @@ endif()
 define_file_gthr_default_h ()
 define_file_tconfig_h ()
 define_file_tm_h ()
+define_file_options_h ()
+

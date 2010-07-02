@@ -116,8 +116,7 @@ function (xmake_file_contents file_index)
          ${DIR_REMNANTS}/gcc/config/i386/driver-i386.c
          ${DIR_REMNANTS}/gcc/config/i386/cpuid.h
          ${CONFIG_H}
-         ${SYSTEM_H}
-         ${TM_H}
+         ${SYSTEM_H}          ${TM_H}
          coretypes.h
       )
 
@@ -195,4 +194,188 @@ function (xmake_file_contents file_index)
 
 endfunction (xmake_file_contents)
 
+
+
+function (libgcc2_extra_parts stage triplet)
+
+   set (varname_parts "S${stage}_libgcc2_extras")
+   set (varname_cpu   "S${stage}_libgcc2_cpu")
+   set (tmp_cpu       "undefined")
+   set (tmp_parts     "")
+
+   # set the cpu type first
+   if (triplet MATCHES "^alpha(.*)-(.+)-(.+)$")
+
+      set (tmp_cpu "alpha")
+
+   elseif (triplet MATCHES "^arm(.*)-(.+)-(.+)$")
+
+      set (tmp_cpu "arm")
+
+   elseif (triplet MATCHES "^i[34567]86-(.+)-(.+)$")
+
+      set (tmp_cpu "i386")
+
+   elseif (triplet MATCHES "^x86_64-(.+)-(.+)$")
+
+      set (tmp_cpu "i386")
+
+   elseif (triplet MATCHES "^ia64-(.+)-(.+)$")
+
+      set (tmp_cpu "ia64")
+
+   elseif (triplet MATCHES "^mips(.*)-(.+)-(.+)$")
+
+      set (tmp_cpu "mips")
+
+   elseif (triplet MATCHES "^powerpc(.*)-(.+)-(.+)$")
+
+      set (tmp_cpu "rs6000")
+
+   elseif (triplet MATCHES "^rs6000(.*)-(.+)-(.+)$")
+
+      set (tmp_cpu "rs6000")
+
+   elseif (triplet MATCHES "^sparc(.*)-(.+)-(.+)$")
+
+      set (tmp_cpu "sparc")
+
+   endif ()
+
+   if ("${tmp_cpu}" STREQUAL "undefined")
+      message (FATAL_ERROR "libgcc_draco extra parts cpu not recognized from triplet ${triplet}")
+   endif ()
+
+   # *-*-darwin tmake t-darwin ${tmp_cpu}/t-darwin t-slibgcc-darwin
+   #  rs6000/t-darwin: SHLIB_VERPFX = <config>/rs6000/darwin-libgcc
+   #    i386/t-darwin: SHBLI_VERPFX = <config>/i386/darwin-libgcc
+   #         t-darwin: does not exist
+   # t-slibgcc-darwin: # Build a shared library with the darwin linker
+
+   # common parts for widely ported systems
+   if (triplet MATCHES "^(.+)-(.+)-linux(.*)$" OR
+       triplet MATCHES "^(.+)-(.+)-gnu(.*)$")
+
+      set (tmp_parts "crtbegin.o crtbeginS.o crtbeginT.o crtend.o crtendS.o")
+
+   endif ()
+
+   # special handling per system - no entry means nothing special
+   # unhandled systems (for now)
+   # i[34567]86-*-netware*
+   # i[34567]86-*-cygwin* | i[34567]86-*-mingw*
+   # ia64*-*-elf*
+   # ia64-*-linux*
+   # ia64-hp-*vms*
+   # mips64*-*-linux*
+   # mips*-*-linux*
+   # powerpc-*-linux* | powerpc64-*-linux*
+   # powerpc-*-gnualtivec*
+   # powerpc-*-gnu
+
+   if (triplet MATCHES "^alpha(.*)-(.+)-linux(.*)$" OR
+       triplet MATCHES "^alpha(.*)-(.+)-gnu(.*)$")
+
+      # list (APPEND extra_parts crtfastmath.o)
+      # append tmake alpha/t-crtfm
+      # skip this - it is unneeded math.
+
+   elseif (triplet MATCHES "^x86_64-(.+)-darwin(.+)$")
+
+      # TO-DO tmake = t-darwin $tmp_cpu/t-darwin64 t-slibgcc-darwin
+
+   elseif (triplet MATCHES "^i[34567]86-(.+)-linux(.*)$" OR
+           triplet MATCHES "^x86_64-(.+)-gnu(.*)$" OR
+           triplet MATCHES "^x86_64-(.+)-linux(.+)$")
+
+
+      # list (APPEND extra_parts
+      #         crtprec32.o
+      #         crtprec64.o
+      #         crtprec80.o
+      #         crtfastmath.o
+      # )
+      # append tmake i386/t-crtpc  i386/t-crtfm
+      # skip this - it is unneeded math
+
+   elseif (triplet MATCHES "^i[34567]86-(.+)-solaris2(.+)$")
+
+
+      if (triplet MATCHES "^(.+)-(.+)-solaris2.1[0-9](.*)$")
+
+         list (APPEND extra_parts gmon.o crtbegin.o crtend.o)
+
+      elseif ()
+
+         list (APPEND extra_parts
+                  crtl.o
+                  crti.o
+                  gcrtl.o
+                  gmon.o
+                  crtbegin.o
+                  crtend.o
+         )
+
+      endif ()
+
+# TO-DO append tmake i386/t-sol2
+
+   elseif (triplet MATCHES "^sparc-(.+)-linux(.+)$")
+
+      # list (APPEND extra_parts crtfastmath.o)
+      # append tmake sparc/t-crtfm
+      # skip - math
+
+   elseif (triplet MATCHES "^sparc64-(.+)-linux(.+)$")
+
+      # list (APPEND extra_parts crtfastmath.o)
+      # TO-DO append tmake sparc/t-crtfm
+      # skip - math
+
+   endif ()
+
+
+   # global thread local storage makefile
+   if (triplet MATCHES "^i[3-7]86-(.+)-(linux|gnu)(.*)$" OR
+       triplet MATCHES "^x86_64-(.+)-linux(.*)$")
+
+      # Parent Scope
+      list (append INTERNAL_CFLAGS "-DUSE_TLS")
+
+
+   endif ()
+
+
+
+   # global fprules makefile
+   # [DELETE - FLOATING POINT]
+   #
+   #if (triplet MATCHES "^i[3-7]86-(.+)-(linux|gnu|darwin|solaris2|cygwin|mingw)(.*)$" OR
+   #    triplet MATCHES "^x86_64-(.+)-(linux|darwin|mingw)(.*)$")
+   #
+   #   if ("${address}" STREQUAL "32")
+   #      # TO-DO append tmake t-softfp i386/32/t-fprules-softfp
+   #   endif ()
+   #
+   #endif ()
+
+
+   # linux binary mode
+   # [DELETE - FLOATING POINT]
+   #
+   #if (triplet MATCHES "^i[3-7]86-(.+)-linux(.*)$" OR
+   #    triplet MATCHES "^x86_64-(.+)-linux(.*)$")
+   #
+   #   if ("${address}" STREQUAL "64")
+   #      # TO-DO append tmake i386/64/t-softfp-compat
+   #   endif ()
+   #
+   #endif ()
+
+
+   set (${varname_cpu}   ${tmp_cpu})
+   set (${varname_parts} ${tmp_parts})
+
+
+endfunction (libgcc2_extra_parts)
 
