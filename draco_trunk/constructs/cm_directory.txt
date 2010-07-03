@@ -1,0 +1,93 @@
+##
+##  DRACO ADA COMPILER
+##  CMAKE BUILD SCRIPT - DIRECTORIES
+##
+##
+##  Copyright (c) 2010, John Marino (www.auroraux.org)
+##  All rights reserved.
+##
+##  Permission to use, copy, modify, and/or distribute this software for any
+##  purpose with or without fee is hereby granted, provided that the above
+##  copyright notice and this permission notice appear in all copies.
+##
+##  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+##  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+##  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+##  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+##  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+##  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+##  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+##
+
+
+
+# Set directory variables
+set (DIR_STAGE_1    ${CMAKE_BINARY_DIR}/stage_1)
+set (DIR_STAGE_2    ${CMAKE_BINARY_DIR}/stage_2)
+set (DIR_STAGE_3    ${CMAKE_BINARY_DIR}/stage_3)
+set (DIR_HEADERS    ${CMAKE_BINARY_DIR}/headers)
+set (DIR_REMNANTS   ${CMAKE_SOURCE_DIR}/gcc_remnants)
+set (DIR_GCCINT     ${CMAKE_SOURCE_DIR}/gcc_interface)
+
+
+
+############## copy_to_new_name ##############
+# To copy a few and give it a new name requires 2 steps in CMake, so I created
+# a little function to do that here.
+
+function (copy_to_new_name old_folder old_name new_folder new_name)
+
+   file (COPY        ${old_folder}/${old_name}
+         DESTINATION ${new_folder})
+   file (RENAME      ${new_folder}/${old_name}
+                     ${new_folder}/${new_name})
+
+endfunction (copy_to_new_name)
+
+
+
+############## build_stage ##############
+# THis function creates the stage directory skeleton
+#
+function (build_stage stage_path)
+
+   file (MAKE_DIRECTORY
+         ${stage_path}
+         ${stage_path}/sysroot
+         ${stage_path}/sysroot/bin
+         ${stage_path}/sysroot/lib
+         ${stage_path}/sysroot/libexec
+         ${stage_path}/libgcc
+         ${stage_path}/libgcc_eh
+         ${stage_path}/libgcov
+   )
+   copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcc_eh.txt ${stage_path}/libgcc_eh CMakeLists.txt)
+   copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcc.txt    ${stage_path}/libgcc    CMakeLists.txt)
+
+endfunction (build_stage)
+
+
+# build the proper number of identical stages based on the profile.
+if (${CROSSXENO})
+
+   build_stage (${DIR_STAGE_1})
+   build_stage (${DIR_STAGE_2})
+
+elseif ("${profile}" STREQUAL "bootstrap")
+
+   build_stage (${DIR_STAGE_1})
+   build_stage (${DIR_STAGE_2})
+   build_stage (${DIR_STAGE_3})
+
+else ()
+
+   build_stage (${DIR_STAGE_1})
+
+endif ()
+
+
+# Create the unique directories now
+   file (MAKE_DIRECTORY ${DIR_HEADERS})
+
+
+

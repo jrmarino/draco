@@ -260,40 +260,53 @@ endif ()
 # an fatal error will be thrown if the profile doesn't match
 # e.g. no target provided when expected or target provide when not expected.
 
-set (profiles_requiring_target
-   cross cross-base cross-lib cross-tools
-   xeno   xeno-base  xeno-lib  xeno-tools
-)
-
-list (FIND profiles_requiring_target "${profile}" list_index)
-if (${list_index} EQUAL -1)
-
-   # This profile is asking for a native build, so we don't want a target
-   if ("${target}" STREQUAL "")
-      set (TARGET_TRIPLET ${HOST_TRIPLET} CACHE STRING
-          "Target machine triplet identifier (native build)" FORCE)
-   else ()
-      message (FATAL_ERROR "A native build profile has been requested.  Either change to a cross- or xeno-compiler profile, or rescind the <target> definition.")
-   endif ()
-
+if ("${profile}" MATCHES "^(cross|xeno)$")
+   set (CROSSXENO true)
+elseif ("${profile}" MATCHES "^(|standard|bootstrap)$")
+   set (CROSSXENO false)
 else ()
+   set (P1 "The profile you have specified, `${profile}` is not one of the four valid options.")
+   message (FATAL_ERROR "${P1}")
+endif ()
+
+
+if (${CROSSXENO})
 
    # This is a cross- or xeno-compiler profile which requires a target
    if ("${target}" STREQUAL "")
-      message (FATAL_ERROR
-      "A cross- or xeno-compiler profile has been requested without specifying a target.  Please add the <target> definition when invoking CMake.")
+      set (P1 "A cross- or xeno-compiler profile has been requested without specifying a target.")
+      set (P2 "Please add the <target> definition when invoking CMake.")
+      message (FATAL_ERROR "${P1}  ${P2}")
    else ()
       verify_triplet (${target} "Target")
    endif ()
 
    # Since we are here, we might as well test for a valid required sysroot
    if ("${with_sysroot}" STREQUAL "")
-      message (FATAL_ERROR "A cross- or xeno-compiler profile has been requested without specifying the system root of the other system.  Please add the <with_sysroot> definition when invoking CMake.")
+      set (P1 "A cross- or xeno-compiler profile has been requested without specifying the system root of the other system.")
+      set (P2 "Please add the <with_sysroot> definition when invoking CMake.")
+      message (FATAL_ERROR "${P1}  ${P2}")
    else ()
       if (NOT IS_DIRECTORY ${with_sysroot})
          message (FATAL_ERROR "The provided sysroot (${with_sysroot}) is not a valid directory")
       endif ()
    endif ()
+
+else ()
+
+   # This profile is asking for a native build, so we don't want a target
+   if ("${target}" STREQUAL "")
+      set (TARGET_TRIPLET ${HOST_TRIPLET} CACHE STRING
+          "Target machine triplet identifier (native build)" FORCE)
+   else ()
+      set (P1 "A native build profile has been requested.")
+      set (P2 "Either change to a cross- or xeno-compiler profile, or rescind the <target> definition.")
+      message (FATAL_ERROR "${P1}  ${P2}")
+   endif ()
+
+else ()
+
+
 
 endif ()
 

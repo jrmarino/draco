@@ -1,0 +1,192 @@
+/* These are the items removed from config.in.
+   This file is for reference only, it is NOT used at all */
+
+
+
+/* Define to enable the use of a default assembler. */
+#ifndef USED_FOR_TARGET
+#undef DEFAULT_ASSEMBLER
+#endif
+
+
+/* Define to enable the use of a default linker. */
+#ifndef USED_FOR_TARGET
+#undef DEFAULT_LINKER
+#endif
+
+
+/* Define 0/1 if your assembler and linker support COMDAT groups. */
+#ifndef USED_FOR_TARGET
+#undef HAVE_COMDAT_GROUP
+#endif
+
+
+/* Define if you want assertions enabled. This is a cheap check. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_ASSERT_CHECKING
+#endif
+
+
+/* Define if you want more run-time sanity checks. This one gets a grab bag of
+   miscellaneous but relatively cheap checks. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_CHECKING
+#endif
+
+
+/* Define to 1 to enable decimal float extension to C. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_DECIMAL_FLOAT
+#endif
+
+
+/* Define if you want more run-time sanity checks for dataflow. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_DF_CHECKING
+#endif
+
+
+/* Define to 1 to enable fixed-point arithmetic extension to C. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_FIXED_POINT
+#endif
+
+
+/* Define if you want fold checked that it never destructs its argument. This
+   is quite expensive. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_FOLD_CHECKING
+#endif
+
+
+/* Define if you want the garbage collector to operate in maximally paranoid
+   mode, validating the entire heap and collecting garbage at every
+   opportunity. This is extremely expensive. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_GC_ALWAYS_COLLECT
+#endif
+
+
+/* Define if you want the garbage collector to do object poisoning and other
+   memory allocation checks. This is quite expensive. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_GC_CHECKING
+#endif
+
+
+
+
+/* Define to 1 to specify that we are using the BID decimal floating point
+   format instead of DPD */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_DECIMAL_BID_FORMAT
+#endif
+
+
+
+/* Define if you want operations on GIMPLE (the basic data structure of the
+   high-level optimizers) to be checked for dynamic type safety at runtime.
+   This is moderately expensive. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_GIMPLE_CHECKING
+#endif
+
+
+/* Define if gcc should always pass --build-id to linker. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_LD_BUILDID
+#endif
+
+
+/* Define to enable LTO support. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_LTO
+#endif
+
+
+/* Define to 1 if translation of program messages to the user's native
+   language is requested. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_NLS
+#endif
+
+
+/* Define to enable plugin support. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_PLUGIN
+#endif
+
+
+
+/* Define if you want all operations on RTL (the basic data structure of the
+   optimizer and back end) to be checked for dynamic type safety at runtime.
+   This is quite expensive. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_RTL_CHECKING
+#endif
+
+
+/* Define if you want RTL flag accesses to be checked against the RTL codes
+   that are supported for each access macro. This is relatively cheap. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_RTL_FLAG_CHECKING
+#endif
+
+
+/* Define if you want runtime assertions enabled. This is a cheap check. */
+#undef ENABLE_RUNTIME_CHECKING
+
+
+
+/* Define if you want all operations on trees (the basic data structure of the
+   front ends) to be checked for dynamic type safety at runtime. This is
+   moderately expensive. The tree browser debugging routines will also be
+   enabled by this option. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_TREE_CHECKING
+#endif
+
+
+/* Define if you want all gimple types to be verified after gimplifiation.
+   This is cheap. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_TYPES_CHECKING
+#endif
+
+
+/* Define if you want to run subprograms and generated programs through
+   valgrind (a memory checker). This is extremely expensive. */
+#ifndef USED_FOR_TARGET
+#undef ENABLE_VALGRIND_CHECKING
+#endif
+
+
+
+/* Define if using GNU as. */
+#ifndef USED_FOR_TARGET
+#undef HAVE_GNU_AS
+#endif
+
+
+/* Define if using GNU ld. */
+#ifndef USED_FOR_TARGET
+#undef HAVE_GNU_LD
+#endif
+
+
+/* Define if you have the iconv() function. */
+#ifndef USED_FOR_TARGET
+#undef HAVE_ICONV
+#endif
+
+
+/* Define to 1 if you have the <iconv.h> header file. */
+#ifndef USED_FOR_TARGET
+#undef HAVE_ICONV_H
+#endif
+
+
+/* Define as const if the declaration of iconv() needs const. */
+#ifndef USED_FOR_TARGET
+#undef ICONV_CONST
+#endif

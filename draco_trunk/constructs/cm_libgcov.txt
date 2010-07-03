@@ -1,0 +1,101 @@
+##
+##  DRACO ADA COMPILER
+##  CMAKE BUILD SCRIPT - STATIC LIBRARY LIBGCGOV
+##
+##
+##  Copyright (c) 2010, John Marino (www.auroraux.org)
+##  All rights reserved.
+##
+##  Permission to use, copy, modify, and/or distribute this software for any
+##  purpose with or without fee is hereby granted, provided that the above
+##  copyright notice and this permission notice appear in all copies.
+##
+##  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+##  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+##  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+##  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+##  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+##  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+##  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+##
+
+
+
+
+
+# Macro definitions.  These are same for native and xeno
+set (task_macros
+   -DIN_GCC
+   -DIN_LIBGCC2
+   -D__GCC_FLOAT_NOT_NEEDED
+   ${GTHREAD_FLAGS}
+)
+
+
+# Compiler flags.  Target values are constant,
+# even between native and xeno builds (only host and compiler varies)
+set (task_flags
+   -O2
+   ${CFLAGS_FOR_TARGET}
+   ${LOOSE_WARN}
+   ${C_LOOSE_WARN}
+   -Wold-style-definition
+   ${TARGET_LIBGCC2_CFLAGS}
+   -g
+)
+
+
+
+
+# defined include directories.  The c_objects needed to be removed later
+# for cross-compiler profiles
+include_directories (
+   ${DIR_REMNANTS}/include
+   ${DIR_REMNANTS}/gcc
+   ${STAGE_X_GCCLIB_DIRECTORY}
+)
+
+
+# base directory for gcc files
+set (base ${DIR_REMNANTS}/gcc)
+
+
+
+
+
+
+######################### HEAD: BUILD libgcov.a #########################
+
+file (MAKE_DIRECTORY ${STAGE_X_GCCLIB_DIRECTORY}/libgcc/gcov)
+set (LIBRARY_OUTPUT_PATH ${STAGE_X_GCCLIB_DIRECTORY}/libgcc/gcov)
+set (EXECUTABLE_OUTPUT_PATH ${STAGE_X_GCCLIB_DIRECTORY}/libgcc/gcov)
+
+set (libgcov_functions
+   -D_gcov
+   -D_gcov_merge_add
+   -D_gcov_merge_single
+   -D_gcov_merge_delta
+   -D_gcov_fork
+   -D_gcov_execl
+   -D_gcov_execlp
+   -D_gcov_execle
+   -D_gcov_execv
+   -D_gcov_execvp
+   -D_gcov_execve
+   -D_gcov_interval_profiler
+   -D_gcov_pow2_profiler
+   -D_gcov_one_value_profiler
+   -D_gcov_indirect_call_profiler
+   -D_gcov_average_profiler
+   -D_gcov_ior_profiler
+   -D_gcov_merge_ior
+)
+
+add_executable (gcov_h_generator ${base}/gcov-iov.c)
+
+
+add_definitions  (${task_macros} ${task_flags} ${libgcov_functions})
+#add_library (gcov STATIC ${base}/libgcov.c)
+
+
+######################### TAIL: BUILD libgcov.a #########################

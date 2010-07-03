@@ -1,0 +1,82 @@
+##
+##  DRACO ADA COMPILER
+##  CMAKE BUILD SCRIPT - STATIC LIBRARY LIBGCC_EH
+##
+##
+##  Copyright (c) 2010, John Marino (www.auroraux.org)
+##  All rights reserved.
+##
+##  Permission to use, copy, modify, and/or distribute this software for any
+##  purpose with or without fee is hereby granted, provided that the above
+##  copyright notice and this permission notice appear in all copies.
+##
+##  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+##  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+##  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+##  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+##  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+##  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+##  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+##
+
+
+
+
+# Macro definitions.  These are same for native and xeno
+set (task_macros
+   -DIN_GCC
+   -DIN_LIBGCC2
+   -D__GCC_FLOAT_NOT_NEEDED
+   ${GTHREAD_FLAGS}
+)
+
+# Compiler flags.  Target values are constant,
+# even between native and xeno builds (only host and compiler varies)
+set (task_flags
+   -O2
+   ${CFLAGS_FOR_TARGET}
+   ${LOOSE_WARN}
+   ${C_LOOSE_WARN}
+   -Wold-style-definition
+   ${TARGET_LIBGCC2_CFLAGS}
+   -g
+)
+
+# defined include directories.  The c_objects needed to be removed later
+# for cross-compiler profiles
+include_directories (
+   ${DIR_REMNANTS}/include
+   ${DIR_REMNANTS}/gcc
+   ${DIR_HEADERS}
+)
+
+# base directory for gcc files
+set (base ${DIR_REMNANTS}/gcc)
+
+
+
+# listed dependencies:
+#    unwind-pe.h
+#    unwind.inc
+#    unwind-dw2.h
+#    unwind-dw2-fde.h
+#    unwind-generic.h
+#    tconfig.h
+
+# Tell CMAKE where to build the library
+
+add_definitions  (${task_macros} ${task_flags})
+
+set (task_source
+   ${base}/gthr-gnat.c
+   ${base}/unwind-dw2.c
+   ${base}/unwind-dw2-fde.c
+   ${base}/unwind-sjlj.c
+   ${base}/unwind-c.c
+ )
+
+add_library (gcc_eh STATIC ${task_source})
+
+
+
+

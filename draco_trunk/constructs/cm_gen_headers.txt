@@ -1,0 +1,289 @@
+##
+##  DRACO ADA COMPILER
+##  CMAKE BUILD SCRIPT - GENERATE HEADERS
+##
+##
+##  Copyright (c) 2010, John Marino (www.auroraux.org)
+##  All rights reserved.
+##
+##  Permission to use, copy, modify, and/or distribute this software for any
+##  purpose with or without fee is hereby granted, provided that the above
+##  copyright notice and this permission notice appear in all copies.
+##
+##  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+##  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+##  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+##  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+##  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+##  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+##  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+##
+
+
+
+
+
+
+############## define_file_autohost_h ##############
+# auto-host.h is a huge m4-generated header file for GCC.  I thought it
+# would be possible to fudge it since hopefully it will go away when
+# GiGi is replaced by DLC, but there are too many machine/OS specific
+# settings in it.  The approach here is to create a new template file
+# that removes settings we want to control, and then use that file
+# to generate the remaining part of the auto-host.h automatically.  That
+# remainder will be concatenated to our specific part and if not found
+# the script will throw an error.  That means Draco can only be built
+# on system that have had this file pregenerated.
+
+function (define_file_autohost_h)
+
+   set  (t_file ${DIR_HEADERS}/auto-host.h)
+   file (WRITE  ${t_file} "/* auto-host.h.  Mixture of custom and pregenerated config.in */
+
+#define ENABLE_RUNTIME_CHECKING      1
+
+
+#ifndef USED_FOR_TARGET
+
+#define ENABLE_ASSERT_CHECKING       1
+#define ENABLE_CHECKING              1
+#define ENABLE_DECIMAL_BID_FORMAT    0
+#define ENABLE_DECIMAL_FLOAT         0
+#define ENABLE_FIXED_POINT           0
+#define ENABLE_GC_CHECKING           0
+#define ENABLE_GIMPLE_CHECKING       1
+#define ENABLE_LTO                   0
+#define ENABLE_RTL_FLAG_CHECKING     1
+#define ENABLE_TREE_CHECKING         1
+#define ENABLE_TYPES_CHECKING        1
+#define HAVE_ICONV                   1
+#define HAVE_ICONV_H                 1
+#define ICONV_CONST                  const
+")
+
+   if (DEFINED with_as)
+      if ("${with_as}" STREQUAL "" OR NOT EXISTS ${with_as})
+         message (FATAL_ERROR "Specified assembler does not exist.")
+      endif ()
+      file (APPEND ${t_file} "#define DEFAULT_ASSEMBLER            \"${with_as}\"\n")
+   endif ()
+   if (DEFINED with_ld)
+      if ("${with_ld}" STREQUAL "" OR NOT EXISTS ${with_ld})
+         message (FATAL_ERROR "Specified linker does not exist.")
+      endif ()
+      file (APPEND ${t_file} "#define DEFAULT_LINKER               \"${with_ld}\"\n")
+   endif ()
+
+   # There are lots of other linker/assembler questions that
+   # probably blow up if a non-gnu version is used.  Just forge on for now
+   # and ignore it.  We'll deal with it later.
+   if ("${gas}" STREQUAL "no" OR "${gnu_ld}" STREQUAL "no")
+      file (APPEND ${t_file} "#define HAVE_COMDAT_GROUP            0\n")
+   else ()
+      file (APPEND ${t_file} "#define HAVE_COMDAT_GROUP            1\n")
+   endif ()
+
+   if ("${gas}" STREQUAL "yes")
+      file (APPEND ${t_file} "#define HAVE_GNU_AS\n")
+   endif ()
+   if ("${gnu_ld}" STREQUAL "yes")
+      file (APPEND ${t_file} "#define HAVE_GNU_LD\n")
+   endif ()
+   if (DEFINED enable_nls)
+      file (APPEND ${t_file} "#define ENABLE_NLS\n")
+   endif ()
+
+   file (APPEND ${t_file} "\n#endif /* USED_FOR_TARGET */\n\n\n")
+
+   string (REGEX REPLACE
+            "^(.+)-(.+)-(freebsd|netbsd|openbsd|dragonflybsd|solaris2|linux|gnu)(.*)$"
+            "\\3"
+            opsys
+            ${TARGET_TRIPLET}
+   )
+
+   set (pregen_basefile "autohost_${cpu_type}_${opsys}.txt")
+   set (pregen_autoconf "${DIR_CONSTRUCTS}/${pregen_basefile}")
+   if (EXISTS ${pregen_autoconf})
+      file (READ ${pregen_autoconf} autoconf_contents)
+      file (APPEND ${t_file} ${autoconf_contents})
+   else ()
+      message (FATAL_ERROR "The pregenerated `${pregen_basefile}` required file does not exist.")
+   endif ()
+
+endfunction (define_file_autohost_h)
+
+
+
+
+
+############## define_file_options_set ##############
+# This Awk script reads in the option records generated from
+# opt-gather.awk, combines the flags of duplicate options and generates a
+# C header file.
+#
+# This program uses functions from opt-functions.awk
+# Usage: awk -f opt-functions.awk -f opth-gen.awk < inputfile > options.h
+
+function (define_file_options_set)
+
+   set (optawk "${DIR_REMNANTS}/gcc/opt-gather.awk")
+   set (funawk "${DIR_REMNANTS}/gcc/opt-functions.awk")
+   set (gnhawk "${DIR_REMNANTS}/gcc/opth-gen.awk")
+   set (gncawk "${DIR_REMNANTS}/gcc/optc-gen.awk")
+   find_program (AWK NAMES gawk awk)
+   execute_process (
+      COMMAND ${AWK} -f ${optawk} ${option_list}
+      COMMAND ${AWK} -f ${funawk}
+                     -f ${gnhawk}
+                      OUTPUT_FILE ${DIR_HEADERS}/options.h)
+
+   set (payload "header_name=\"config.h system.h coretypes.h tm.h\"")
+   execute_process (
+      COMMAND ${AWK} -f ${optawk} ${option_list}
+      COMMAND ${AWK} -f ${funawk}
+                     -f ${gncawk}
+                     -v ${payload}
+                     OUTPUT_FILE ${DIR_HEADERS}/options.c)
+
+endfunction (define_file_options_set)
+
+
+
+
+
+
+
+############## define_file_tm_h ##############
+# creates tm.h header and places it in the build directory
+
+function (define_file_tm_h)
+
+   set  (t_file ${DIR_HEADERS}/tm.h)
+   set  (DEFINE_LIST  ${tm_defines})
+
+   file (WRITE  ${t_file} "#ifndef GCC_TM_H\n")
+   file (APPEND ${t_file} "#define GCC_TM_H\n")
+
+   # Define TARGET_CPU_DEFAULT if the system wants one.
+   # This substitutes for lots of *.h files.
+   if (NOT ${TARGET_CPU_DEFAULT} STREQUAL "")
+      file (APPEND ${t_file} "#define TARGET_CPU_DEFAULT (${TARGET_CPU_DEFAULT})")
+   endif ()
+
+   foreach (definition ${DEFINE_LIST})
+      string (REPLACE "=" " " splitdef ${definition})
+      string (REGEX REPLACE "^(.[^=]+)(=.*)?$" "\\1" term1 "${definition}")
+      file (APPEND ${t_file} "#ifndef ${term1}\n")
+      file (APPEND ${t_file} "# define ${splitdef}\n")
+      file (APPEND ${t_file} "#endif\n")
+   endforeach ()
+
+
+   # The first entry in HEADERS may be auto-FOO.h ;
+   # it wants to be included even when not -DIN_GCC.
+   # Postpone including defaults.h until after the insn-*
+   # headers, so that the HAVE_* flags are available
+   # when defaults.h gets included.
+
+   file (APPEND ${t_file} "#ifdef IN_GCC\n")
+   file (APPEND ${t_file} "# include \"options.h\"\n")
+   foreach (config_header ${tm_inc_list})
+      file (APPEND ${t_file} "# include \"config/${config_header}\"\n")
+   endforeach ()
+   file (APPEND ${t_file} "#endif\n")
+
+   file (APPEND ${t_file} "#if defined IN_GCC && !defined GENERATOR_FILE && !defined USED_FOR_TARGET\n")
+   file (APPEND ${t_file} "# include \"insn-flags.h\"\n")
+   file (APPEND ${t_file} "# include \"insn-constants.h\"\n")
+   file (APPEND ${t_file} "#endif\n")
+   file (APPEND ${t_file} "# include \"defaults.h\"\n")
+   file (APPEND ${t_file} "#endif /* GCC_TM_H */\n")
+
+endfunction (define_file_tm_h)
+
+
+
+
+
+############## define_file_tconfig_h ##############
+# creates tconfig.h header and places it in the build directory
+
+function (define_file_tconfig_h)
+
+   set  (t_file ${DIR_HEADERS}/tconfig.h)
+   set  (DEFINE_LIST USED_FOR_TARGET ${xm_defines})
+
+   file (WRITE  ${t_file} "#ifndef GCC_TCONFIG_H\n")
+   file (APPEND ${t_file} "#define GCC_TCONFIG_H\n")
+
+   # Define TARGET_CPU_DEFAULT if the system wants one.
+   # This substitutes for lots of *.h files.
+   if (NOT ${TARGET_CPU_DEFAULT} STREQUAL "")
+      file (APPEND ${t_file} "#define TARGET_CPU_DEFAULT (${TARGET_CPU_DEFAULT})")
+   endif ()
+
+
+   foreach (definition ${DEFINE_LIST})
+      string (REPLACE "=" " " splitdef ${definition})
+      string (REGEX REPLACE "^(.[^=]+)(=.*)?$" "\\1" term1 "${definition}")
+      file (APPEND ${t_file} "#ifndef ${term1}\n")
+      file (APPEND ${t_file} "# define ${splitdef}\n")
+      file (APPEND ${t_file} "#endif\n")
+   endforeach ()
+
+
+   # The first entry in HEADERS may be auto-FOO.h ;
+   # it wants to be included even when not -DIN_GCC.
+   # Postpone including defaults.h until after the insn-*
+   # headers, so that the HAVE_* flags are available
+   # when defaults.h gets included.
+
+   file (APPEND ${t_file} "#include \"auto-host.h\"\n")
+   file (APPEND ${t_file} "#ifdef IN_GCC\n")
+   file (APPEND ${t_file} "# include \"ansidecl.h\"\n")
+   foreach (config_header ${xm_inc_list})
+      file (APPEND ${t_file} "# include \"config/${config_header}\"\n")
+   endforeach ()
+   file (APPEND ${t_file} "#endif\n")
+   file (APPEND ${t_file} "#endif /* GCC_TCONFIG_H */\n")
+
+endfunction (define_file_tconfig_h)
+
+
+
+
+
+############## define_file_gthr_default_h ##############
+# creates gth-default.h header and places it in the build directory
+
+function (define_file_gthr_default_h)
+
+   set  (GTHREAD_FLAGS "-DHAVE_GTHR_DEFAULT" PARENT_SCOPE)
+
+   copy_to_new_name (
+      ${DIR_REMNANTS}/gcc "gthr-${thread_file}.h"
+      ${DIR_HEADERS}      "gthr-default.h")
+
+
+endfunction (define_file_gthr_default_h)
+
+
+
+
+# POSSIBLE TO DO:
+# function define_config_h
+# function define_bconfig_h
+# function define_tm_p_h
+
+
+##########################################
+
+
+define_file_gthr_default_h ()
+define_file_tconfig_h ()
+define_file_tm_h ()
+define_file_options_set ()
+define_file_autohost_h ()
+
+

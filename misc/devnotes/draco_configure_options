@@ -2,26 +2,10 @@ Configuration Options for Draco CMake script:
 
 A) Build Profiles [profile=]
 ==============================================================================================
-standard        : default.  One stage build + lib + tools
-standard-base   : one stage build only
-standard-lib    : library built from S1 compiler (standard-base)
-standard-tools  : tools built from S1 compiler
-
-bootstrap       : Three stage build + lib + tools
-bootstrap-base  : Three stage build only
-bootstrap-lib   : library built from S3 compiler (bootstrap-base)
-bootstrap-tools : tools build
-
-cross           : One stage build with foreign GAS / linker + lib + tools
-cross-base      : One stage build with foreign GAS / linker only
-cross-lib       : library built from existing compiler with foreign GAS / linker
-cross-tools     : tools built from existing compiler with foreign GAS / linker
-
-xeno            : Native host/build/target compiler for foreign platform + lib + tools
-xeno-base       : Stage 2 foreign platform compiler built with cross-compiler from S1
-xeno-lib        : Stage 2 library built from S1 cross-compiler
-xeno-tools      : Stage 2 tools built from S1 cross-compiler
-
+standard         : default.  One stage native build + lib + tools
+bootstrap        : Three stage native build + lib + tools
+cross            : One stage build with foreign GAS / linker + lib + tools
+xeno             : Native host/build/target compiler for foreign platform + lib + tools
 
 
 B) temporarily required libraries (options to be removed later)

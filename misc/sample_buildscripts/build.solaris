@@ -80,6 +80,8 @@ mkdir -p $WRKSRC
 		--enable-threads=posix \
 		--disable-bootstrap \
 		--enable-shared \
+		--disable-libssp \
+		--disable-libgomp \
 		--disable-nls
 )
 

@@ -1,6 +1,6 @@
 ##
 ##  DRACO ADA COMPILER
-##  CMAKE BUILD SCRIPT - STATIC LIBRARY LIBGCC_DRACO.A
+##  CMAKE BUILD SCRIPT - STATIC LIBRARY LIBGCC
 ##
 ##
 ##  Copyright (c) 2010, John Marino (www.auroraux.org)
@@ -110,151 +110,53 @@ set (libgcc_definitions_list
 
 
 
-# Tell CMAKE where to build the library
-set (LIBRARY_OUTPUT_PATH ${DIR_C_OBJS}/lib)
 
 
-set (libgcc_compilation_flags
-   -g
-   -O2
-   -W
-   -Wall
-   -Wwrite-strings
-   -Wcast-qual
-   -Wstrict-prototypes
-   -Wmissing-prototypes
-   -Wold-style-definition
-   -fPIC
-   -pthread
-   -DHAVE_GTHR_DEFAULT
+
+
+# Macro definitions.  These are same for native and xeno
+set (task_macros
    -DIN_GCC
    -DIN_LIBGCC2
    -D__GCC_FLOAT_NOT_NEEDED
-   -DHAVE_CC_TLS
-   -fexceptions
-   -fnon-call-exceptions
-   -fvisibility=hidden
-   -DHIDE_EXPORTS
+   ${GTHREAD_FLAGS}
 )
 
-# change gthr-gnat.c to gthr-posix.c
-set (libgcc_source_files
-   ${DIR_REMNANTS}/gcc/libgcc2.c
-   ${DIR_REMNANTS}/gcc/unwind-dw2.c
-   ${DIR_REMNANTS}/gcc/unwind-dw2-fde.c
-   ${DIR_REMNANTS}/gcc/unwind-sjlj.c
-   ${DIR_REMNANTS}/gcc/unwind-c.c
-   ${DIR_REMNANTS}/gcc/gthr-gnat.c
-   ${DIR_REMNANTS}/gcc/emutls.c
+# Compiler flags.  Target values are constant,
+# even between native and xeno builds (only host and compiler varies)
+set (task_flags
+   -O2
+   ${CFLAGS_FOR_TARGET}
+   ${LOOSE_WARN}
+   ${C_LOOSE_WARN}
+   -Wold-style-definition
+   ${TARGET_LIBGCC2_CFLAGS}
+   -g
 )
 
+# defined include directories.  The c_objects needed to be removed later
+# for cross-compiler profiles
+include_directories (
+   ${DIR_REMNANTS}/include
+   ${DIR_REMNANTS}/gcc
+   ${DIR_HEADERS}
+)
 
-#add_definitions (${libgcc_definitions_list})
-add_definitions (${libgcc_compilation_flags})
-
-include_directories (${DIR_C_OBJS} ${DIR_REMNANTS}/gcc ${DIR_REMNANTS}/include)
-#add_library (gcc_draco STATIC ${libgcc_source_files})
-
-#add_definitions (${libgcc_compilation_flags})
-#remove_definitions (${libgcc_definitions_list})
-
-
-
-function (build_static_library libname dep_files src_files macros flags incldir_list)
-
-   add_definitions (${flags})
-   add_definitions (${macros})
-
-   include_directories (${DIR_C_OBJS} ${DIR_REMNANTS}/include ${DIR_REMNANTS}/gcc)
-
-   add_library (${libname} STATIC ${src_files})
-
-   remove_definitions (${macros})
-   remove_definitions (${flags})
-
-endfunction (build_static_library)
+# base directory for gcc files
+set (base ${DIR_REMNANTS}/gcc)
 
 
 
+# Tell CMAKE where to build the library
+
+add_definitions  (${task_macros} ${libgcc_definitions_list} ${task_flags})
+
+set (task_source
+   ${base}/libgcc2.c
+   ${base}/emutls.c
+ )
+
+add_library (gcc STATIC ${task_source})
 
 
-function (build_libgcc_eh)
-
-   set (base "${DIR_REMNANTS}/gcc")
-   set (task_dependencies
-      ${base}/unwind-pe.h
-      ${base}/unwind.inc
-      ${base}/unwind-dw2.h
-      ${base}/unwind-dw2-fde.h
-      ${base}/unwind-generic.h
-
-      ${DIR_C_OBJS}/tconfig.h
-   )
-   set (task_source_files
-      ${base}/gthr-gnat.c
-      ${base}/unwind-dw2.c
-      ${base}/unwind-dw2-fde.c
-      ${base}/unwind-sjlj.c
-      ${base}/unwind-c.c
-    )
-   set (test_macros
-      -DHAVE_GTHR_DEFAULT
-      -DIN_GCC
-      -DIN_LIBGCC2
-      -D__GCC_FLOAT_NOT_NEEDED
-      -DHAVE_CC_TLS
-      -DHIDE_EXPORTS
-   )
-   set (test_flags
-      -g
-      -O2
-      -W
-      -Wall
-      -Wwrite-strings
-      -Wcast-qual
-      -Wstrict-prototypes
-      -Wmissing-prototypes
-      -Wold-style-definition
-      -fPIC
-      -pthread
-      -fexceptions
-      -fnon-call-exceptions
-      -fvisibility=hidden
-   )
-
- #  build_static_library (libgcc_eh "${task_dependencies}" "${task_source_files}" "${test_macros}" "${test_flags}" ${base})
-
-   #add_definitions (${test_flags} ${test_macros})
-   #add_definitions (-DIN_GCC )
-
-   include_directories (${DIR_C_OBJS} ${DIR_REMNANTS}/include ${DIR_REMNANTS}/gcc)
-
-   add_library (libgcc_eh STATIC ${task_source_files})
-
-   remove_definitions (${test_macros} ${test_flags})
-
-endfunction (build_libgcc_eh)
-
-
-
-   set (base "${DIR_REMNANTS}/gcc")
-   set (task_dependencies
-      ${base}/unwind-pe.h
-      ${base}/unwind.inc
-      ${base}/unwind-dw2.h
-      ${base}/unwind-dw2-fde.h
-      ${base}/unwind-generic.h
-
-      ${DIR_C_OBJS}/tconfig.h
-   )
-   set (task_source_files
-      ${base}/gthr-gnat.c
-      ${base}/unwind-dw2.c
-      ${base}/unwind-dw2-fde.c
-      ${base}/unwind-sjlj.c
-      ${base}/unwind-c.c
-    )
-add_library (libgcc_eh STATIC ${task_source_files})
-
-#build_libgcc_eh ()
 

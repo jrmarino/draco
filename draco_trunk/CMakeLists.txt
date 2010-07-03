@@ -27,23 +27,16 @@ project ( DRACO C )
 set (DRACO_VERSION "2010-Q3")
 
 
-
-# Set directory variables
-set (DIR_STAGE_1    ${CMAKE_BINARY_DIR}/stage_1)
-set (DIR_STAGE_2    ${CMAKE_BINARY_DIR}/stage_2)
-set (DIR_STAGE_3    ${CMAKE_BINARY_DIR}/stage_3)
-set (DIR_C_OBJS     ${CMAKE_BINARY_DIR}/c_objs)
-set (DIR_C_XENO     ${CMAKE_BINARY_DIR}/c_xeno)
-set (DIR_CONSTRUCTS ${CMAKE_SOURCE_DIR}/constructs)
-set (DIR_REMNANTS   ${CMAKE_SOURCE_DIR}/gcc_remnants)
-set (DIR_GCCINT     ${CMAKE_SOURCE_DIR}/gcc_interface)
-
-
-
 # prevent in-source builds for the user's own good
 if ("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
    message (FATAL_ERROR "Attempted in-source build.  Please run cmake from the build directory.")
 endif ()
+
+
+
+# set up build directories
+set (DIR_CONSTRUCTS ${CMAKE_SOURCE_DIR}/constructs)
+include (${DIR_CONSTRUCTS}/cm_directory.txt)
 
 
 
@@ -53,25 +46,12 @@ include (${DIR_CONSTRUCTS}/cm_host_specific.txt)
 include (${DIR_CONSTRUCTS}/cm_target_specific.txt)
 
 
-# set up build directories
-file (MAKE_DIRECTORY
-      ${DIR_STAGE_1}
-      ${DIR_STAGE_1}/bin
-      ${DIR_STAGE_1}/lib
-      ${DIR_STAGE_1}/libexec
-      ${DIR_STAGE_2}
-      ${DIR_STAGE_2}/bin
-      ${DIR_STAGE_2}/lib
-      ${DIR_STAGE_2}/libexec
-      ${DIR_STAGE_3}
-      ${DIR_STAGE_3}/bin
-      ${DIR_STAGE_3}/lib
-      ${DIR_STAGE_3}/libexec
-      ${DIR_C_XENO}
-      ${DIR_C_OBJS}
-      ${DIR_C_XENO}/lib
-      ${DIR_C_OBJS}/lib
-)
+
+# Read in GCC version information
+file (READ ${DIR_REMNANTS}/gcc/BASE-VER BASEVER)
+file (READ ${DIR_REMNANTS}/gcc/DATESTAMP DATESTAMP)
+#file (READ ${DIR_REMNANTS}/gcc/DEV-PHASE DEVPHASE)
+#file (READ ${DIR_REMNANTS}/gcc/REVISION REVISION)
 
 
 
@@ -83,43 +63,77 @@ file (MAKE_DIRECTORY
 # might need to support non-standard header locations at that point in time.
 
 function (find_required_library LIBNAME)
+
    string (TOUPPER ${LIBNAME} SHORTNAME)
    set (REQLIB_NAME "REQLIB_${SHORTNAME}")
    set (HEADER_NAME "HEADER_${SHORTNAME}")
    set (WITH_NAME   "with_${LIBNAME}")
+   set (P1 "You can not specify the library paths with the cross or xeno profiles.")
+   set (P2 "The library must be located at ${with_sysroot}/lib directory.")
+   set (P3 "The required ${SHORTNAME} library was not found")
+   set (P4 "Try the -D WITH_${SHORTNAME}=[dir] option.")
 
    if ("${${WITH_NAME}}" STREQUAL "")
-      find_library (${REQLIB_NAME} ${LIBNAME})
+      if (${CROSSXENO})
+         find_library (${REQLIB_NAME} ${LIBNAME} PATHS ${with_sysroot}/lib NO_DEFAULT_PATH)
+      else ()
+         find_library (${REQLIB_NAME} ${LIBNAME})
+      endif ()
    else ()
-      find_library (${REQLIB_NAME} ${LIBNAME} PATHS ${${WITH_NAME}}/lib NO_DEFAULT_PATH)
+      if (${CROSSXENO})
+         message (FATAL_ERROR "${P1}\n${P2}")
+      else ()
+         find_library (${REQLIB_NAME} ${LIBNAME} PATHS ${${WITH_NAME}}/lib NO_DEFAULT_PATH)
+      endif ()
    endif()
 
    if ("${REQLIB_NAME}" STREQUAL "${REQLIB_NAME}-NOTFOUND")
-      message (FATAL_ERROR "The required ${SHORTNAME} library was not found.  Try the -D WITH_${SHORTNAME}=[dir] option.")
+      if (${CROSSXENO})
+         message (FATAL_ERROR "${P3}\n${P2}")
+      else ()
+         message (FATAL_ERROR "${P3}\n${P4}")
+      endif ()
    else ()
       get_filename_component (LFOLDER ${${REQLIB_NAME}} PATH)
       get_filename_component (IFOLDER ${LFOLDER}/../include ABSOLUTE)
       set (${HEADER_NAME} ${IFOLDER} CACHE STRING "Full path of the ${SHORTNAME} library")
    endif ()
+
 endfunction (find_required_library)
+
+
+
+# Due to how CMAKE works, we will need to load and use these libraries in all scenarios
+find_required_library ("mpc")
+find_required_library ("gmp")
+find_required_library ("mpfr")
+find_required_library ("iconv")
+
+
+# standard warning definitions
+set (LOOSE_WARN  -W -Wall -Wwrite-strings -Wcast-qual)
+set (C_LOOSE_WARN -Wstrict-prototypes -Wmissing-prototypes)
+
+
+# generate headers which is a function of the target
+include (${DIR_CONSTRUCTS}/cm_gen_headers.txt)
 
 
 
 # Stage 1 build for compilers where {BUILD} = {HOST} = {TARGET}
 # All non-cross compiler builds need to do this step.
 
-if ("${profile}" STREQUAL "standard"       OR
-    "${profile}" STREQUAL "standard-base"  OR
-    "${profile}" STREQUAL "bootstrap"      OR
-    "${profile}" STREQUAL "bootstrap-base" OR
-    "${profile}" STREQUAL "")
+if (NOT ${CROSSXENO})
 
-   find_required_library ("mpc")
-   find_required_library ("gmp")
-   find_required_library ("mpfr")
-   find_required_library ("iconv")
-
-   include (${DIR_CONSTRUCTS}/cm_libgcc.txt)
+   set (STAGE_X_GCCLIB_DIRECTORY ${DIR_C_OBJS})
+   add_subdirectory (${DIR_STAGE_1}/libgcc_eh ${DIR_STAGE_1}/libgcc_eh)
+   add_subdirectory (${DIR_STAGE_1}/libgcc    ${DIR_STAGE_1}/libgcc)
+   #include (${DIR_CONSTRUCTS}/cm_libgcc.txt)
 
 endif ()
+
+
+
+
+
 
