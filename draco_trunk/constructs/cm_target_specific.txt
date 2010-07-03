@@ -42,6 +42,8 @@ set (tm_inc_list        "")
 set (xm_inc_list        "")
 set (host_xm_inc_list   "")
 set (build_xm_inc_list  "")
+set (REVISION_BASIC     "-=> DRACO")
+set (REVISION           ${REVISION_BASIC})
 set (option_list        ${DIR_GCCINT}/lang.opt
                         ${DIR_REMNANTS}/gcc/common.opt)
 
@@ -200,7 +202,7 @@ if (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-darwin(.+)$")    #  *-*-darwin*)
    list (APPEND extra_options  darwin.opt)
    list (APPEND target_gtfiles "${DIR_REMNANTS}/gcc/config/darwin.c")
    set  (use_gcc_stdint "wrap")
-
+   set  (REVISION       "${REVISION_BASIC} [Mac OS]")
 
 elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-freebsd(.+)$")    #  *-*-freebsd*)
 
@@ -212,7 +214,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-freebsd(.+)$")    #  *-*-freebsd*)
    list (APPEND tm_defines "FBSD_MAJOR=${fbsd_major}")
    set  (fbsd_tm_file      freebsd-spec.h freebsd.h freebsd-stdint.h)
    set  (use_gcc_stdint    "wrap")
-
+   set  (REVISION          "${REVISION_BASIC} [FreeBSD]")
 
 elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-dragonfly(.+)$")    #  *-*-dragonfly*)
 
@@ -224,7 +226,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-dragonfly(.+)$")    #  *-*-dragonf
    list (APPEND tm_defines "DFBSD_MAJOR=${dfbsd_major}")
    set  (dfbsd_tm_file     dragonfly-spec.h dragonfly.h)
    set  (use_gcc_stdint    "wrap")
-
+   set  (REVISION          "${REVISION_BASIC} [DragonFlyBSD]")
 
 elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-netbsd(.+)$")    #  *-*-netbsd*)
 
@@ -244,16 +246,16 @@ elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-openbsd(.+)$")    #  *-*-openbsd*)
       OR ${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-openbsd3[.][012]$")  #  *-*-openbsd3.[012])
       list (APPEND tm_defines HAS_LIBC_R=1)
    endif ()
+   set (REVISION      "${REVISION_BASIC} [OpenBSD]")
 
-
-elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-rtems(.+)$")    #  *-*-rtems*)
+elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-rtems(.*)$")    #  *-*-rtems*)
 
 
    set (thread_file    "rtems")
    set (use_gcc_stdint "wrap")
+   set (REVISION       "${REVISION_BASIC} [RTEMS]")
 
-
-elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-vxworks(.+)$")    #  *-*-vxworks*)
+elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-vxworks(.*)$")    #  *-*-vxworks*)
 
 
 # TO-DO  TMAKE "t-vxworks"
@@ -261,19 +263,30 @@ elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-vxworks(.+)$")    #  *-*-vxworks*)
    list (APPEND tm_defines POSIX)
    list (APPEND extra_options  vxworks.opt)
    set  (thread_file  "vxworks")
+   set (REVISION      "${REVISION_BASIC} [VxWorks]")
 
-
-elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-uclinux(.+)$")    #  *-*-uclinux*)
-
-
-   set (use_gcc_stdint "wrap")
-
-
-elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-elf(.+)$")    #  *-*-elf*)
+elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-uclinux(.*)$")  #  *-*-uclinux*)
 
 
    set (use_gcc_stdint "wrap")
+   set (REVISION       "${REVISION_BASIC} [uC Linux]")
 
+
+elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-elf(.*)$")      #  *-*-elf*)
+
+   set (use_gcc_stdint "wrap")
+
+elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-netbsd(.*)$")   #  *-*-netbsd*)
+
+   set (REVISION       "${REVISION_BASIC} [NetBSD]")
+
+elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-linux(.*)$")    #  *-*-linux*)
+
+   set (REVISION       "${REVISION_BASIC} [Linux]")
+
+elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-solaris(.*)$")  #  *-*-solaris*)
+
+   set (REVISION       "${REVISION_BASIC} [Solaris]")
 
 endif ()
 

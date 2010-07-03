@@ -45,14 +45,12 @@ set (task_flags
 )
 
 
-
-
 # defined include directories.  The c_objects needed to be removed later
 # for cross-compiler profiles
 include_directories (
    ${DIR_REMNANTS}/include
    ${DIR_REMNANTS}/gcc
-   ${STAGE_X_GCCLIB_DIRECTORY}
+   ${DIR_HEADERS}
 )
 
 
@@ -60,42 +58,40 @@ include_directories (
 set (base ${DIR_REMNANTS}/gcc)
 
 
-
-
-
-
-######################### HEAD: BUILD libgcov.a #########################
-
-file (MAKE_DIRECTORY ${STAGE_X_GCCLIB_DIRECTORY}/libgcc/gcov)
-set (LIBRARY_OUTPUT_PATH ${STAGE_X_GCCLIB_DIRECTORY}/libgcc/gcov)
-set (EXECUTABLE_OUTPUT_PATH ${STAGE_X_GCCLIB_DIRECTORY}/libgcc/gcov)
-
 set (libgcov_functions
-   -D_gcov
-   -D_gcov_merge_add
-   -D_gcov_merge_single
-   -D_gcov_merge_delta
-   -D_gcov_fork
-   -D_gcov_execl
-   -D_gcov_execlp
-   -D_gcov_execle
-   -D_gcov_execv
-   -D_gcov_execvp
-   -D_gcov_execve
-   -D_gcov_interval_profiler
-   -D_gcov_pow2_profiler
-   -D_gcov_one_value_profiler
-   -D_gcov_indirect_call_profiler
-   -D_gcov_average_profiler
-   -D_gcov_ior_profiler
-   -D_gcov_merge_ior
+   -DL_gcov
+   -DL_gcov_merge_add
+   -DL_gcov_merge_single
+   -DL_gcov_merge_delta
+   -DL_gcov_fork
+   -DL_gcov_execl
+   -DL_gcov_execlp
+   -DL_gcov_execle
+   -DL_gcov_execv
+   -DL_gcov_execvp
+   -DL_gcov_execve
+   -DL_gcov_interval_profiler
+   -DL_gcov_pow2_profiler
+   -DL_gcov_one_value_profiler
+   -DL_gcov_indirect_call_profiler
+   -DL_gcov_average_profiler
+   -DL_gcov_ior_profiler
+   -DL_gcov_merge_ior
 )
 
-add_executable (gcov_h_generator ${base}/gcov-iov.c)
+add_executable (generator ${base}/gcov-iov.c)
+string (STRIP "${BASEVER}" S_BASEVER)
+string (STRIP "${DEVPHASE}" S_DEVPHASE)
 
+set (outfile ${DIR_HEADERS}/gcov-iov.h)
+add_custom_command (
+   OUTPUT ${outfile}
+   COMMAND generator '${S_BASEVER}' '${S_DEVPHASE}' > ${outfile}
+   DEPENDS generator ${base}/gcov-iov.c
+)
 
 add_definitions  (${task_macros} ${task_flags} ${libgcov_functions})
-#add_library (gcov STATIC ${base}/libgcov.c)
+add_library      (gcov STATIC ${base}/libgcov.c ${outfile})
 
 
-######################### TAIL: BUILD libgcov.a #########################
+

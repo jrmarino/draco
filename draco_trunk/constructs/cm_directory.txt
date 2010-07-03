@@ -63,6 +63,7 @@ function (build_stage stage_path)
    )
    copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcc_eh.txt ${stage_path}/libgcc_eh CMakeLists.txt)
    copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcc.txt    ${stage_path}/libgcc    CMakeLists.txt)
+   copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcov.txt   ${stage_path}/libgcov   CMakeLists.txt)
 
 endfunction (build_stage)
 

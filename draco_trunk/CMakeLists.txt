@@ -50,8 +50,7 @@ include (${DIR_CONSTRUCTS}/cm_target_specific.txt)
 # Read in GCC version information
 file (READ ${DIR_REMNANTS}/gcc/BASE-VER BASEVER)
 file (READ ${DIR_REMNANTS}/gcc/DATESTAMP DATESTAMP)
-#file (READ ${DIR_REMNANTS}/gcc/DEV-PHASE DEVPHASE)
-#file (READ ${DIR_REMNANTS}/gcc/REVISION REVISION)
+file (READ ${DIR_REMNANTS}/gcc/DEV-PHASE DEVPHASE)
 
 
 
@@ -126,9 +125,9 @@ include (${DIR_CONSTRUCTS}/cm_gen_headers.txt)
 if (NOT ${CROSSXENO})
 
    set (STAGE_X_GCCLIB_DIRECTORY ${DIR_C_OBJS})
-   add_subdirectory (${DIR_STAGE_1}/libgcc_eh ${DIR_STAGE_1}/libgcc_eh)
    add_subdirectory (${DIR_STAGE_1}/libgcc    ${DIR_STAGE_1}/libgcc)
-   #include (${DIR_CONSTRUCTS}/cm_libgcc.txt)
+   add_subdirectory (${DIR_STAGE_1}/libgcc_eh ${DIR_STAGE_1}/libgcc_eh)
+   add_subdirectory (${DIR_STAGE_1}/libgcov   ${DIR_STAGE_1}/libgcov)
 
 endif ()
 
