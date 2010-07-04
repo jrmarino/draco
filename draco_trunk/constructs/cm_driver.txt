@@ -80,7 +80,10 @@ function (construct_configuration)
             prefix
             host
             target
+            ada_boot
+            toolpath
             with_clang
+            c_cross
             with_as
             with_ld
             non_gnu_as
@@ -189,6 +192,69 @@ package DracoSystemSpecs is
 endfunction (create_driver_specification)
 
 
+
+
+############## define_gnat_tool_paths ##############
+# This function will check to see if the toolpaths option was issued and if so
+# it will check its validity.  Otherwise it will search for both gnatlink and
+# gnatbind in the default search path.  If both are not found, a fatal error
+# will be issued.  The paths will be stored in the cache.
+
+function (define_gnat_tool_paths)
+
+   if ("${toolpath}" STREQUAL "")
+      find_program (TOOL_BIND gnatbind)
+      find_program (TOOL_LINK gnatlink)
+   else ()
+      find_program (TOOL_BIND gnatbind PATHS "${toolpath}" NO_DEFAULT_PATH)
+      find_program (TOOL_LINK gnatlink PATHS "${toolpath}" NO_DEFAULT_PATH)
+   endif ()
+
+   if ("${TOOL_BIND}" STREQUAL "TOOL_BIND-NOTFOUND")
+      if (DEFINED toolpath)
+         message (FATAL_ERROR "The `gnatbind` program was not found in the `${toolpath}` directory.")
+      else ()
+         message (FATAL_ERROR "The `gnatbind` program was not found in the standard search path.")
+      endif ()
+   endif ()
+   if ("${TOOL_LINK}" STREQUAL "TOOL_LINK-NOTFOUND")
+      if (DEFINED toolpath)
+         message (FATAL_ERROR "The `gnatlink` program was not found in the `${toolpath}` directory.")
+      else ()
+         message (FATAL_ERROR "The `gnatlink` program was not found in the standard search path.")
+      endif ()
+   endif ()
+
+endfunction (define_gnat_tool_paths)
+
+
+
+
+############## define_external_ada_compiler ##############
+# This function will look for an Ada compiler named draco or gnatgcc.
+# If the parameter "ada_boot" is provided, then it will look in that exact
+# path and store it in the cache if successful.  If not, fatal error is thrown.
+
+function (define_external_ada_compiler)
+
+   if ("${ada_boot}" STREQUAL "")
+      find_program (EXTERNAL_ADA_COMPILER gnatgcc draco)
+      if ("${EXTERNAL_ADA_COMPILER}" STREQUAL "EXTERNAL_ADA_COMPILER-NOTFOUND")
+         message (FATAL_ERROR "The `draco` or `gnatgcc` compilers could not be found in the standard search path.")
+      endif ()
+   else ()
+      if (EXISTS "${ada_boot}")
+         set (EXTERNAL_ADA_COMPILER "${ada_boot}" CACHE FILEPATH "External Ada compiler provided via command-line" FORCE)
+      else ()
+         message (FATAL_ERROR "There was no file located at `${ada_boot}` (Ada compiler or otherwise).")
+      endif ()
+   endif ()
+
+endfunction (define_external_ada_compiler)
+
+
+
+
 # set location for draco system specification
 set (outfile "dracosystemspecs.ads")
 
@@ -212,4 +278,8 @@ endif ()
 
 
 create_driver_specification ()
+define_gnat_tool_paths ()
+define_external_ada_compiler ()
+
+
 

@@ -1,52 +1,72 @@
 Configuration Options for Draco CMake script:
 
-A) Build Profiles [profile=]
+A) Build Profiles []
 ==============================================================================================
-standard         : default.  One stage native build + lib + tools
-bootstrap        : Three stage native build + lib + tools
-cross            : One stage build with foreign GAS / linker + lib + tools
-xeno             : Native host/build/target compiler for foreign platform + lib + tools
+profile=standard       : default.  One stage native build + lib + tools
+profile=bootstrap      : Three stage native build + lib + tools
+profile=cross          : One stage build with foreign GAS / linker + lib + tools
+profile=xeno           : Native host/build/target compiler for foreign platform + lib + tools
 
 
 B) temporarily required libraries (options to be removed later)
 ==============================================================================================
-with_mpc=[pathname]   : optional.  Allows specification of MPC library location if it's not
-                                   in a standard dir (e.g. /usr/local)
-with_mpfr=[pathname]  : optional.  Allows specification of MPFR library location if it's not
-                                   in a standard dir (e.g. /usr/local)
-with_gmp=[pathname]   : optional.  Allows specification of GMP library location if it's not
-                                   in a standard dir (e.g. /usr/local)
-with_iconv=[pathname] : optional.  Allows specification of iconv library location if it's not
-                                   in a standard dir (e.g. /usr/local).  Likely to remain.
+with_mpc=[fullpath]    : optional.  Allows specification of MPC library location if it's not
+                                    in a standard dir (e.g. /usr/local)
+with_mpfr=[fullpath]   : optional.  Allows specification of MPFR library location if it's not
+                                    in a standard dir (e.g. /usr/local)
+with_gmp=[fullpath]    : optional.  Allows specification of GMP library location if it's not
+                                    in a standard dir (e.g. /usr/local)
+with_iconv=[fullpath]  : optional.  Allows specification of iconv library location if it's not
+                                    in a standard dir (e.g. /usr/local).  Likely to remain.
 
 C) Assembler and linker options
 ==============================================================================================
-non_gnu_as           : optional.  like "without-gnu-as" of gcc
-with_as=[pathname]   : optional.  same as gcc
-non_gnu_ld           : optional.  like "without-gnu-ld" of gcc
-with_ld=[pathname]   : optional.  same as gcc
+non_gnu_as=            : optional.  like "without-gnu-as" of gcc.
+                                    No expected value, presence of switch means "yes"
+with_as=[fullpath]     : optional.  same as gcc
+non_gnu_ld=            : optional.  like "without-gnu-ld" of gcc.
+                                    No expected value, presence of switch means "yes"
+with_ld=[fullpath]     : optional.  same as gcc
 
 
 D) directory options
 ==============================================================================================
-prefix=[pathname]     : optional.  same as gcc
-
+prefix=[pathname]      : optional.  same as gcc
+toolpath=[dir]         : optional-- Unless the gnatbind and gnatlink programs are not in the
+                                    default search path.  They are expected to be together,
+                                    the user can provide the override path here.
 
 
 E) remaining options
 ==============================================================================================
 driver_suffix=[suffix] : optional.  Appends suffix to driver, which is normally "draco"
                                     gnat programs are not affected.
-enable_nls             : optional.  NLS disabled if this option is not explicitly issued.
-with_clang=[pathname]  : optional.  gcc will be used by default, but if clang is to be used,
+enable_nls=            : optional.  NLS disabled if this option is not explicitly issued.
+                                    No expected value, presence of switch means "enable"
+with_clang=[fullpath]  : optional.  gcc will be used by default, but if clang is to be used,
                                     then provide "clang" or the full path to clang here.
 host=[triplet]         : optional.  Normally determined automatically, triplet can be
                                     manually provided here.  "Build" considered same as host.
 
 
-
 F) cross-compiler options (required for cross- and xeno- profiles
 ==============================================================================================
-with_sysroot=[dir]    : same as gcc
-target=[triplet]      : this is the triple of the foreign platform (cross & xeno)
+with_sysroot=[dir]     : same as gcc
+target=[triplet]       : this is the triple of the foreign platform (cross & xeno)
+
+
+
+G) required for Xeno only
+==============================================================================================
+c_cross=[fullpath]     : Draco can't build itself. When created a xeno compiler, it needs an
+                         external c cross-compiler to handle the c files.
+
+
+H) external Ada compiler
+==============================================================================================
+ada_boot=[fullpath]    : The script will look for a compiler called "draco" or "gnatgcc".  If
+                         these do not exist in the search path, or the user wants to override
+                         the search, then provide the path to the required external compiler.
+
+
 
