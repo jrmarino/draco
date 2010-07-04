@@ -1,6 +1,6 @@
 ##
 ##  DRACO ADA COMPILER
-##  CMAKE BUILD SCRIPT - STATIC LIBRARY LIBGCC_EH
+##  CMAKE BUILD SCRIPT - STATIC LIBRARY CRTSTUFF
 ##
 ##
 ##  Copyright (c) 2010, John Marino (www.auroraux.org)
@@ -22,13 +22,12 @@
 
 
 
+
 # Macro definitions.  These are same for native and xeno
 set (task_macros
    -DIN_GCC
-   -DIN_LIBGCC2
-   -D__GCC_FLOAT_NOT_NEEDED
-   ${GTHREAD_FLAGS}
 )
+
 
 # Compiler flags.  Target values are constant,
 # even between native and xeno builds (only host and compiler varies)
@@ -38,64 +37,65 @@ set (task_flags
    ${LOOSE_WARN}
    ${C_LOOSE_WARN}
    -Wold-style-definition
-   ${TARGET_LIBGCC2_CFLAGS}
-   -g
+   -g0
+   -fno-zero-initialized-in-bss
+   -fno-toplevel-reorder
+   -fno-tree-vectorize
 )
+
+
 
 # defined include directories.  The c_objects needed to be removed later
 # for cross-compiler profiles
-include_directories (
-   ${DIR_REMNANTS}/include
-   ${DIR_REMNANTS}/gcc
-   ${DIR_HEADERS}
+set (Idirs
+   -I${DIR_REMNANTS}/include
+   -I${DIR_REMNANTS}/gcc
+   -I${DIR_HEADERS}
 )
 
+
+
+
 # base directory for gcc files
-set (base ${DIR_REMNANTS}/gcc)
+#set (base ${DIR_REMNANTS}/gcc)
+
+set (outfile1 ${CMAKE_CURRENT_BINARY_DIR}/crtbegin.o)
+set (outfile2 ${CMAKE_CURRENT_BINARY_DIR}/crtend.o)
+set (infile   ${DIR_REMNANTS}/gcc/crtstuff.c)
 
 
 
-# listed dependencies:
-#    unwind-pe.h
-#    unwind.inc
-#    unwind-dw2.h
-#    unwind-dw2-fde.h
-#    unwind-generic.h
-#    tconfig.h
-
-# Tell CMAKE where to build the library
-
-add_definitions  (${task_macros} ${task_flags})
-
-set (task_source
-   ${base}/gthr-gnat.c
-   ${base}/unwind-dw2.c
-   ${base}/unwind-dw2-fde.c
-   ${base}/unwind-sjlj.c
-   ${base}/unwind-c.c
- )
-
-
-
-
+#Figure out which compiler to use
 if (${CURRENT_STAGE} EQUAL 1)
-
-   add_dependencies  (libgcc_stage1 gcc_eh)
-   add_library       (gcc_eh STATIC ${task_source})
-
+   set (DRCC ${CMAKE_C_COMPILER})
+   add_dependencies  (libgcc_stage1 crtstuff_stage1)
+   add_custom_target (crtstuff_stage1 DEPENDS ${outfile1} ${outfile2})
 elseif (${CURRENT_STAGE} EQUAL 2)
 
-   #so a bootstrap compiler will be statically linked to libgcc_eh2 rather than libgcc_eh
-   add_dependencies  (libgcc_stage2 gcc_eh2)
-   add_library       (gcc_eh2 STATIC ${task_source})
+   add_dependencies  (libgcc_stage2 crtstuff_stage2)
+   add_custom_target (crtstuff_stage2 DEPENDS ${outfile1} ${outfile2})
 
 else (${CURRENT_STAGE} EQUAL 3)
 
-   #so a bootstrap compiler will be statically linked to libgcc_eh3 rather than libgcc_eh
-   add_dependencies  (libgcc_stage3 gcc_eh3)
-   add_library       (gcc_eh3 STATIC ${task_source})
+   add_dependencies  (libgcc_stage3 crtstuff_stage3)
+   add_custom_target (crtstuff_stage2 DEPENDS ${outfile1} ${outfile2})
 
 endif ()
+
+
+
+add_custom_command (
+   OUTPUT ${outfile1}
+   COMMAND ${DRCC} ${task_macros} ${task_flags}
+            -DCRT_BEGIN ${Idirs}
+            -c ${infile} -o ${outfile1}
+)
+add_custom_command (
+   OUTPUT ${outfile2}
+   COMMAND ${DRCC} ${task_macros} ${task_flags}
+            -DCRT_END ${Idirs}
+            -c ${infile} -o ${outfile2}
+)
 
 
 

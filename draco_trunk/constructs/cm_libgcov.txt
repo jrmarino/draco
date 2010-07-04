@@ -79,19 +79,43 @@ set (libgcov_functions
    -DL_gcov_merge_ior
 )
 
-add_executable (generator ${base}/gcov-iov.c)
-string (STRIP "${BASEVER}" S_BASEVER)
-string (STRIP "${DEVPHASE}" S_DEVPHASE)
-
-set (outfile ${DIR_HEADERS}/gcov-iov.h)
-add_custom_command (
-   OUTPUT ${outfile}
-   COMMAND generator '${S_BASEVER}' '${S_DEVPHASE}' > ${outfile}
-   DEPENDS generator ${base}/gcov-iov.c
-)
-
 add_definitions  (${task_macros} ${task_flags} ${libgcov_functions})
-add_library      (gcov STATIC ${base}/libgcov.c ${outfile})
+
+if (${CURRENT_STAGE} EQUAL 1)
+
+   add_executable (generator ${base}/gcov-iov.c)
+   string (STRIP "${BASEVER}" S_BASEVER)
+   string (STRIP "${DEVPHASE}" S_DEVPHASE)
+
+   set (outfile ${DIR_HEADERS}/gcov-iov.h)
+   add_custom_command (
+      OUTPUT ${outfile}
+      COMMAND generator '${S_BASEVER}' '${S_DEVPHASE}' > ${outfile}
+      DEPENDS generator ${base}/gcov-iov.c
+   )
+
+
+   add_dependencies  (libgcc_stage1 gcov)
+   add_library       (gcov STATIC ${base}/libgcov.c ${outfile})
+
+elseif (${CURRENT_STAGE} EQUAL 2)
+
+   #so a bootstrap compiler will be statically linked to libgcov2 rather than libgcov
+   add_dependencies  (libgcc_stage2 gcov2)
+   add_library       (gcov2 STATIC ${base}/libgcov.c)
+
+else (${CURRENT_STAGE} EQUAL 3)
+
+   #so a bootstrap compiler will be statically linked to libgcov2 rather than libgcov
+   add_dependencies  (libgcc_stage3 gcov3)
+   add_library       (gcov3 STATIC ${base}/libgcov.c)
+
+endif ()
+
+
+
+
+
 
 
 

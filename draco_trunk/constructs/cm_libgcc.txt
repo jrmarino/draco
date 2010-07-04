@@ -156,7 +156,27 @@ set (task_source
    ${base}/emutls.c
  )
 
-add_library (gcc STATIC ${task_source})
+
+if (${CURRENT_STAGE} EQUAL 1)
+
+   add_dependencies  (libgcc_stage1 gcc)
+   add_library       (gcc STATIC ${task_source})
+
+elseif (${CURRENT_STAGE} EQUAL 2)
+
+   #so a bootstrap compiler will be statically linked to libgcc2 rather than libgcc
+   add_dependencies  (libgcc_stage2 gcc2)
+   add_library       (gcc2 STATIC ${task_source})
+
+else (${CURRENT_STAGE} EQUAL 3)
+
+   #so a bootstrap compiler will be statically linked to libgcc3 rather than libgcc
+   add_dependencies  (libgcc_stage3 gcc3)
+   add_library       (gcc3 STATIC ${task_source})
+
+endif ()
+
+
 
 
 

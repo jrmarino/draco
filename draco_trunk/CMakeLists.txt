@@ -122,14 +122,20 @@ include (${DIR_CONSTRUCTS}/cm_gen_headers.txt)
 # Stage 1 build for compilers where {BUILD} = {HOST} = {TARGET}
 # All non-cross compiler builds need to do this step.
 
+set (CURRENT_STAGE 1)
+add_custom_target (compiler ALL)
+
 if (NOT ${CROSSXENO})
 
-   set (STAGE_X_GCCLIB_DIRECTORY ${DIR_C_OBJS})
+   add_custom_target (libgcc_stage1)
    add_subdirectory (${DIR_STAGE_1}/libgcc    ${DIR_STAGE_1}/libgcc)
    add_subdirectory (${DIR_STAGE_1}/libgcc_eh ${DIR_STAGE_1}/libgcc_eh)
    add_subdirectory (${DIR_STAGE_1}/libgcov   ${DIR_STAGE_1}/libgcov)
+   add_subdirectory (${DIR_STAGE_1}/crtstuff  ${DIR_STAGE_1}/crtstuff)
 
+   add_dependencies  (compiler libgcc_stage1)
 endif ()
+
 
 
 
