@@ -28,6 +28,7 @@ set (DIR_STAGE_3    ${CMAKE_BINARY_DIR}/stage_3)
 set (DIR_HEADERS    ${CMAKE_BINARY_DIR}/headers)
 set (DIR_REMNANTS   ${CMAKE_SOURCE_DIR}/gcc_remnants)
 set (DIR_GCCINT     ${CMAKE_SOURCE_DIR}/gcc_interface)
+set (DIR_DRIVER     ${CMAKE_SOURCE_DIR}/driver)
 
 
 

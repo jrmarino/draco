@@ -255,31 +255,110 @@ endfunction (define_external_ada_compiler)
 
 
 
+############## compile_and_mark_objects ##############
+# This function is the major one.  It adds the object file dependencies to
+# the driver_stage_x target, and it compiles each file to an object file.
+# The bind and linking has to come at build time. (?)
+
+function (compile_and_mark_objects X ADA_COMPILER)
+
+   set (ali_files "")
+
+   foreach (encoded_name ${ordered_files})
+
+      string (REPLACE ":" ";" test ${encoded_name})
+
+      list (GET test 0 location)
+      list (GET test 1 extension)
+      list (GET test 2 basename)
+      list (APPEND ali_files ${basename}.ali)
+
+      if ("${location}" STREQUAL "R")
+         set (srcfile ${DIR_DRIVER}/${basename}.${extension})
+         set (incflag "-I${CMAKE_CURRENT_BINARY_DIR}")
+      else ()
+         set (srcfile ${basename}.${extension})
+         set (incflag "-I-;-I${DIR_DRIVER}")
+      endif ()
+
+      add_custom_command (
+         OUTPUT ${basename}.o ${basename}.ali
+         COMMAND ${ADA_COMPILER} ${incflag} -c ${srcfile}
+         DEPENDS ${srcfile}
+      )
+
+   endforeach()
+
+   add_custom_command (
+      OUTPUT b~draco.ads b~draco.adb
+      COMMAND ${TOOL_BIND} -x draco.ali
+      DEPENDS ${ali_files}
+   )
+
+   add_custom_command (
+      OUTPUT draco
+      COMMAND ${TOOL_LINK} draco.ali -o ${execloc}
+      DEPENDS b~draco.ads b~draco.adb
+   )
+
+endfunction (compile_and_mark_objects)
+
+
+
+
+
+
 # set location for draco system specification
 set (outfile "dracosystemspecs.ads")
 
 
-if (${CURRENT_STAGE} EQUAL 1)
+# these are the base file names for the .adb files that make up
+# the driver.  All have specification files except the
+# main "draco.adb" file and dracosystemspecs.ads has no body.
 
-   add_dependencies  (draco_stage1 driver_stage1)
-   add_custom_target (driver_stage1 DEPENDS ${outfile})
 
-elseif (${CURRENT_STAGE} EQUAL 2)
-
-   add_dependencies  (draco_stage2 driver_stage2)
-   add_custom_target (driver_stage2 DEPENDS ${outfile})
-
-else (${CURRENT_STAGE} EQUAL 3)
-
-   add_dependencies  (draco_stage3 driver_stage3)
-   add_custom_target (driver_stage3 DEPENDS ${outfile})
-
-endif ()
+set (ordered_files
+      R:adb:dracosystem
+      L:ads:dracosystemspecs
+      R:adb:pathinfo
+      R:adb:pipemechanism
+      R:adb:switchmap
+      R:adb:driverswitch
+      R:adb:commands
+      R:adb:draco
+)
 
 
 create_driver_specification ()
 define_gnat_tool_paths ()
 define_external_ada_compiler ()
+
+
+if (${CURRENT_STAGE} EQUAL 1)
+
+   set (pass_compiler ${EXTERNAL_ADA_COMPILER})
+   set (execloc       ${DIR_STAGE_1}/sysroot/bin/draco)
+   add_custom_target (driver_stage1 DEPENDS ${outfile} draco)
+   add_dependencies  (draco_stage1 driver_stage1)
+
+elseif (${CURRENT_STAGE} EQUAL 2)
+
+   set (pass_compiler ${DIR_STAGE_1}/sysroot/bin/draco)
+   set (execloc       ${DIR_STAGE_2}/sysroot/bin/draco)
+   add_custom_target (driver_stage2 DEPENDS ${outfile})
+   add_dependencies  (draco_stage2 driver_stage2)
+
+else (${CURRENT_STAGE} EQUAL 3)
+
+   set (pass_compiler ${DIR_STAGE_2}/sysroot/bin/draco)
+   set (execloc       ${DIR_STAGE_3}/sysroot/bin/draco)
+   add_custom_target (driver_stage3 DEPENDS ${outfile})
+   add_dependencies  (draco_stage3 driver_stage3)
+
+endif ()
+
+
+compile_and_mark_objects ("${CURRENT_STAGE}" "${pass_compiler}")
 
 
 
