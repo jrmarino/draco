@@ -56,16 +56,21 @@ function (build_stage stage_path)
          ${stage_path}/sysroot
          ${stage_path}/sysroot/bin
          ${stage_path}/sysroot/lib
+         ${stage_path}/sysroot/lib/draco-${DRACO_VERSION}
          ${stage_path}/sysroot/libexec
+         ${stage_path}/sysroot/libexec/draco-${DRACO_VERSION}
          ${stage_path}/libgcc
          ${stage_path}/libgcc_eh
          ${stage_path}/libgcov
          ${stage_path}/crtstuff
+         ${stage_path}/driver
    )
    copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcc_eh.txt ${stage_path}/libgcc_eh CMakeLists.txt)
    copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcc.txt    ${stage_path}/libgcc    CMakeLists.txt)
    copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcov.txt   ${stage_path}/libgcov   CMakeLists.txt)
    copy_to_new_name (${DIR_CONSTRUCTS} cm_crtstuff.txt  ${stage_path}/crtstuff  CMakeLists.txt)
+   copy_to_new_name (${DIR_CONSTRUCTS} cm_driver.txt    ${stage_path}/driver    CMakeLists.txt)
+
 
 endfunction (build_stage)
 

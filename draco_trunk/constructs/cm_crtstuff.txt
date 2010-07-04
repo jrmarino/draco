@@ -78,7 +78,7 @@ elseif (${CURRENT_STAGE} EQUAL 2)
 else (${CURRENT_STAGE} EQUAL 3)
 
    add_dependencies  (libgcc_stage3 crtstuff_stage3)
-   add_custom_target (crtstuff_stage2 DEPENDS ${outfile1} ${outfile2})
+   add_custom_target (crtstuff_stage3 DEPENDS ${outfile1} ${outfile2})
 
 endif ()
 

@@ -1,0 +1,215 @@
+##
+##  DRACO ADA COMPILER
+##  CMAKE BUILD SCRIPT - DRACO DRIVER
+##
+##
+##  Copyright (c) 2010, John Marino (www.auroraux.org)
+##  All rights reserved.
+##
+##  Permission to use, copy, modify, and/or distribute this software for any
+##  purpose with or without fee is hereby granted, provided that the above
+##  copyright notice and this permission notice appear in all copies.
+##
+##  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+##  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+##  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+##  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+##  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+##  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+##  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+##
+
+
+
+############## six_digit_os_version ##############
+# This function look for numbers at the end of the target triplet and
+# creates a zero padded version from that.  If no version is found
+# 000000 is passed back
+
+function (six_digit_os_version)
+
+   set (major "0")
+   set (minor "00")
+   set (third "000")
+   if (${TARGET_TRIPLET} MATCHES "^.*-.*-[^.]*[0-9]+([.][0-9]+)*$")
+
+      # try third first
+      if (${TARGET_TRIPLET} MATCHES "^.*-.*-[^.]*[0-9]+[.][0-9]+[.][0-9]+$")
+         string (REGEX      REPLACE "^.*-.*-[^.]*[0-9]+[.][0-9]+[.]([0-9]+)$" "\\1" teststr ${TARGET_TRIPLET})
+         string(LENGTH "${teststr}" strlen)
+         if (strlen LESS 2)
+            set (third "00${teststr}")
+         elseif (strlen LESS 3)
+            set (third "0${teststr}")
+         else ()
+            set (third ${teststr} )
+         endif ()
+      endif ()
+      # try minor now
+      if (${TARGET_TRIPLET} MATCHES "^.*-.*-[^.]*[0-9]+[.][0-9]+([.][0-9]+)?$")
+         string (REGEX      REPLACE "^.*-.*-[^.]*[0-9]+[.]([0-9]+)([.][0-9]+)?$" "\\1" teststr ${TARGET_TRIPLET})
+         string(LENGTH "${teststr}" strlen)
+         if (strlen LESS 2)
+            set (minor "0${teststr}")
+         else ()
+            set (minor ${teststr})
+         endif ()
+      endif ()
+      # try major now
+      if (${TARGET_TRIPLET} MATCHES "^.*-.*-[^.]*[0-9]+([.][0-9]+)*$")
+         string (REGEX      REPLACE "^.*-.*-[^.]*([0-9]+)([.][0-9]+)*$" "\\1" major ${TARGET_TRIPLET})
+      endif ()
+   endif ()
+
+   set (result_six_digits "${major}${minor}${third}" PARENT_SCOPE)
+
+endfunction (six_digit_os_version)
+
+
+
+
+
+############## construct_configuration ##############
+# This output of this function is to display which configuration options were requested
+# at configuration time.  These are the -D macro values passed to "cmake".
+
+function (construct_configuration)
+
+   set (list_of_options
+            profile
+            prefix
+            host
+            target
+            with_clang
+            with_as
+            with_ld
+            non_gnu_as
+            non_gnu_ld
+            enable_nls
+            with_gmp
+            with_mpc
+            with_mpfr
+            with_iconv
+            with_sysroot
+            driver_suffix
+   )
+   set (tmp_result "")
+   foreach (element ${list_of_options})
+
+      if (DEFINED ${element})
+            list (APPEND tmp_result "${element}=${${element}}")
+      endif ()
+
+   endforeach ()
+
+   if ("${tmp_result}" STREQUAL "")
+      set (result_config "No options were configured away from their defaults." PARENT_SCOPE)
+   else ()
+      string (REPLACE ";" " " clean_result "${tmp_result}")
+      set (result_config "${clean_result}" PARENT_SCOPE)
+   endif ()
+
+endfunction (construct_configuration)
+
+
+
+
+############## assembler_path ##############
+# If we are at this point, which is past the header generation, we know that our
+# with_as (if present) is a good value.  We can derive the full path.
+
+function (assembler_path)
+
+   if (DEFINED with_as)
+      set (draco_assembler "${with_as}" PARENT_SCOPE)
+   else ()
+      if ("${gas}" STREQUAL "yes")
+         set (stdname gas)
+      else ()
+         set (stdname as)
+      endif ()
+      find_path (as_path ${stdname})
+      if ("${as_path}" STREQUAL "as_path-NOTFOUND")
+         message (FATAL_ERROR "There is no assembler named `${stdname}` in the search path.")
+      else ()
+         set (draco_assembler "${as_path}/${stdname}" PARENT_SCOPE)
+      endif ()
+   endif ()
+
+endfunction (assembler_path)
+
+
+############## create_driver_specification ##############
+# This function creates a configuration file for building the DRACO driver
+# While the target information doesn't change, each stage needs a copy.
+# We could just copy from stage on on later stages, but if we implement a
+# "lean" build, it might not be available.  It's a cheap text file creation
+# operation, so for robustness, just build a new version each time.
+
+function (create_driver_specification)
+
+   string (STRIP "${DATESTAMP}" S_DATESTAMP)
+   string (STRIP "${BASEVER}"   S_BASEVER)
+   string (REGEX REPLACE "^([0-9]+[.][0-9]+)([.][0-9]+)?$" "\\1" SHORTVER ${S_BASEVER})
+   if (${gas} STREQUAL "yes")
+      set (GAS_OPTION "True")
+   else ()
+      set (GAS_OPTION "False")
+   endif ()
+   set (commpath "libexec/draco-${DRACO_VERSION}")
+   set (execpath "../${commpath}:${draco_prefix}/${commpath}")
+   six_digit_os_version ()
+   construct_configuration ()
+   assembler_path ()
+
+   file (WRITE ${outfile} "
+with DracoSystem;
+package DracoSystemSpecs is
+
+   Native_System : constant DracoSystem.RecSystem := (\n")
+
+   file (APPEND ${outfile} "      Null_File_Type => DracoSystem.${draco_bitbucket},\n")
+   file (APPEND ${outfile} "      Backend        => DracoSystem.${draco_backend},\n")
+   file (APPEND ${outfile} "      Draco_Version  => DracoSystem.Set_Version (\"${DRACO_VERSION}\"),\n")
+   file (APPEND ${outfile} "      Gnat_Version   => DracoSystem.Set_Version (\"${SHORTVER}.${S_DATESTAMP}\"),\n")
+   file (APPEND ${outfile} "      MachineTarget  => DracoSystem.Set_Target  (\"${TARGET_TRIPLET}\"),\n")
+   file (APPEND ${outfile} "      Architecture   => DracoSystem.Set_Arch    (\"${cpu_type}\"),\n")
+   file (APPEND ${outfile} "      OS_Name        => DracoSystem.Set_OSName  (\"${draco_osname}\"),\n")
+   file (APPEND ${outfile} "      OS_Version     => ${result_six_digits},\n")
+   file (APPEND ${outfile} "      Have_GNU_AS    => ${GAS_OPTION},\n")
+   file (APPEND ${outfile} "      Dash_For_Pipe  => ${draco_dash_pipe},\n")
+   file (APPEND ${outfile} "      CPU_AutoDetect => False,\n")
+   file (APPEND ${outfile} "      CC_Flags       => DracoSystem.${draco_cc1_spec},\n")
+   file (APPEND ${outfile} "      Path_assembler => DracoSystem.Set_DefPath (\"${draco_assembler}\"),\n")
+   file (APPEND ${outfile} "      Path_libexec   => DracoSystem.Set_DefPath (\"${execpath}\"),\n")
+   file (APPEND ${outfile} "      Config_options => DracoSystem.Set_Config  (\"${result_config}\")\n")
+
+   file (APPEND ${outfile} "   );\n\nend DracoSystemSpecs;\n\n")
+
+endfunction (create_driver_specification)
+
+
+# set location for draco system specification
+set (outfile "dracosystemspecs.ads")
+
+
+if (${CURRENT_STAGE} EQUAL 1)
+
+   add_dependencies  (draco_stage1 driver_stage1)
+   add_custom_target (driver_stage1 DEPENDS ${outfile})
+
+elseif (${CURRENT_STAGE} EQUAL 2)
+
+   add_dependencies  (draco_stage2 driver_stage2)
+   add_custom_target (driver_stage2 DEPENDS ${outfile})
+
+else (${CURRENT_STAGE} EQUAL 3)
+
+   add_dependencies  (draco_stage3 driver_stage3)
+   add_custom_target (driver_stage3 DEPENDS ${outfile})
+
+endif ()
+
+
+create_driver_specification ()
+

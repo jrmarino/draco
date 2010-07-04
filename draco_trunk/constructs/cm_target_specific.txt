@@ -21,6 +21,12 @@
 
 
 set (thread_file        "posix")
+set (draco_bitbucket    "POSIX")
+set (draco_backend      "undefined")
+set (draco_osname       "Generic")
+set (draco_cc1_spec     "blank")
+set (draco_prefix       "/usr/local")
+set (draco_dash_pipe    "True")
 set (use_gcc_stdint     "none")
 set (gnu_ld             "yes")
 set (gas                "yes")
@@ -54,8 +60,14 @@ endif ()
 if (DEFINED non_gnu_ld)
    set (gnu_ld "no")
 endif ()
-
-
+if (DEFINED prefix)
+   if (EXISTS (${prefix}))
+      set (draco_prefix  "${prefix}")
+   else ()
+      set (P1 "The provided installation prefix `${prefix}` is not a valid path.")
+      message (FATAL_ERROR "${P1}")
+   endif ()
+endif ()
 
 
 
@@ -69,6 +81,7 @@ endif ()
 if (${TARGET_TRIPLET} MATCHES "^arm(.*)-(.+)-(.+)$")    #  arm*-*-*
 
    set (cpu_type "arm")
+   set (draco_backend "ARM")
    set (extra_headers
          mmintrin.h
          arm_neon.h
@@ -78,6 +91,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-(.+)$"  # i[34567]86-*-*
      OR ${TARGET_TRIPLET} MATCHES "^x86_64-(.+)$")          # x86_64-*-*)
 
    set (cpu_type "i386")
+   set (draco_backend "X86")
    set (extra_headers
          cpuid.h
          mmintrin.h
@@ -109,18 +123,21 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-(.+)$"  # i[34567]86-*-*
 elseif (${TARGET_TRIPLET} MATCHES "^ia64-(.+)-(.+)$")    #  ia64-*-*
 
    set (cpu_type "ia64")
+   set (draco_backend  "IA64")
    set (extra_headers ia64intrin.h)
    set (need_64bit_hwint "yes")
 
 elseif (${TARGET_TRIPLET} MATCHES "^mips(.*)-(.+)-(.+)$")    #  mips*-*-*
 
    set (cpu_type "mips")
+   set (draco_backend  "MIPS")
    set (extra_headers loongson.h)
    set (need_64bit_hwint "yes")
 
 elseif (${TARGET_TRIPLET} MATCHES "^powerpc(.*)-(.+)-(.+)$")  #  powerpc*-*-*)
 
    set (cpu_type "rs6000")
+   set (draco_backend  "POWERPC")
    set (extra_headers
          ppc-asm.h
          altivec.h
@@ -136,16 +153,31 @@ elseif (${TARGET_TRIPLET} MATCHES "^powerpc(.*)-(.+)-(.+)$")  #  powerpc*-*-*)
 elseif (${TARGET_TRIPLET} MATCHES "^rs6000(.*)-(.+)-(.+)$")  #  rs6000*-*-*)
 
    set (cpu_type "rs6000")
+   set (draco_backend  "POWERPC")
    set (need_64bit_hwint "yes")
 
 elseif (${TARGET_TRIPLET} MATCHES "^sparc(.*)-(.+)-(.+)$")  #  sparc*-*-*)
 
    set (cpu_type "sparc")
+   set (draco_backend  "SPARC")
    set (need_64bit_hwint "yes")
 
+elseif (${TARGET_TRIPLET} MATCHES "^alpha(.*)-(.+)-(.+)$")    #  alpha*-*-*
+
+   set (cpu_type "alpha")
+   set (draco_backend  "ALPHA")
 
 endif ()
 
+
+# LLVM currently only supports 7 backends, so make sure the targets don't use
+# a CPU that's not supported at all
+
+if ("${draco_backend}" STREQUAL "undefined")
+
+   message (FATAL_MESSAGE "It does not appear the target machine `${TARGET_TRIPLET}` has a CPU supported by the LLVM backend.")
+
+endif ()
 
 
 
@@ -202,7 +234,7 @@ if (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-darwin(.+)$")    #  *-*-darwin*)
    list (APPEND extra_options  darwin.opt)
    list (APPEND target_gtfiles "${DIR_REMNANTS}/gcc/config/darwin.c")
    set  (use_gcc_stdint "wrap")
-   set  (REVISION       "${REVISION_BASIC} [Mac OS]")
+   set  (draco_osname   "Mac OS")
 
 elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-freebsd(.+)$")    #  *-*-freebsd*)
 
@@ -214,7 +246,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-freebsd(.+)$")    #  *-*-freebsd*)
    list (APPEND tm_defines "FBSD_MAJOR=${fbsd_major}")
    set  (fbsd_tm_file      freebsd-spec.h freebsd.h freebsd-stdint.h)
    set  (use_gcc_stdint    "wrap")
-   set  (REVISION          "${REVISION_BASIC} [FreeBSD]")
+   set  (draco_osname      "FreeBSD")
 
 elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-dragonfly(.+)$")    #  *-*-dragonfly*)
 
@@ -226,7 +258,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-dragonfly(.+)$")    #  *-*-dragonf
    list (APPEND tm_defines "DFBSD_MAJOR=${dfbsd_major}")
    set  (dfbsd_tm_file     dragonfly-spec.h dragonfly.h)
    set  (use_gcc_stdint    "wrap")
-   set  (REVISION          "${REVISION_BASIC} [DragonFlyBSD]")
+   set  (draco_osname      "DragonFlyBSD")
 
 elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-netbsd(.+)$")    #  *-*-netbsd*)
 
@@ -235,6 +267,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-netbsd(.+)$")    #  *-*-netbsd*)
 
    list (APPEND tm_defines NETBSD_ENABLE_PTHREADS)
    set (extra_parts crtbegin.o crtend.o crtbeginS.o crtendS.o crtbeginT.o)
+   set  (draco_osname      "NetBSD")
 
 
 elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-openbsd(.+)$")    #  *-*-openbsd*)
@@ -246,14 +279,14 @@ elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-openbsd(.+)$")    #  *-*-openbsd*)
       OR ${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-openbsd3[.][012]$")  #  *-*-openbsd3.[012])
       list (APPEND tm_defines HAS_LIBC_R=1)
    endif ()
-   set (REVISION      "${REVISION_BASIC} [OpenBSD]")
+   set  (draco_osname      "OpenBSD")
 
 elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-rtems(.*)$")    #  *-*-rtems*)
 
 
    set (thread_file    "rtems")
    set (use_gcc_stdint "wrap")
-   set (REVISION       "${REVISION_BASIC} [RTEMS]")
+   set (draco_osname   "RTEMS")
 
 elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-vxworks(.*)$")    #  *-*-vxworks*)
 
@@ -263,54 +296,54 @@ elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-vxworks(.*)$")    #  *-*-vxworks*)
    list (APPEND tm_defines POSIX)
    list (APPEND extra_options  vxworks.opt)
    set  (thread_file  "vxworks")
-   set (REVISION      "${REVISION_BASIC} [VxWorks]")
+   set  (draco_osname "VxWorks")
 
 elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-uclinux(.*)$")  #  *-*-uclinux*)
 
-
    set (use_gcc_stdint "wrap")
-   set (REVISION       "${REVISION_BASIC} [uC Linux]")
-
+   set (draco_osname   "uC Linux")
 
 elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-elf(.*)$")      #  *-*-elf*)
 
    set (use_gcc_stdint "wrap")
-
-elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-netbsd(.*)$")   #  *-*-netbsd*)
-
-   set (REVISION       "${REVISION_BASIC} [NetBSD]")
+   set (draco_osname   "ELF")
 
 elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-linux(.*)$")    #  *-*-linux*)
 
-   set (REVISION       "${REVISION_BASIC} [Linux]")
+   set (draco_osname   "Linux")
 
 elseif (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-solaris(.*)$")  #  *-*-solaris*)
 
-   set (REVISION       "${REVISION_BASIC} [Solaris]")
+   set (draco_osname   "Solaris")
+
+endif ()
+
+if (NOT "${draco_osname}" STREQUAL "Generic")
+
+   set  (REVISION       "${REVISION_BASIC} [${draco_osname}]")
 
 endif ()
 
 
-
 # Support site-specific machine types.
 
-# alpha*-*-linux*)
-# alpha*-*-gnu*)
+# alpha*-*-linux*)         #### draco_cc1_spec "g_star" ####
+# alpha*-*-gnu*)           #### draco_cc1_spec "g_star" ####
 # alpha*-*-freebsd*)
 # alpha*-*-netbsd*)
 # alpha*-*-openbsd*)
 # alpha*-dec-osf5.1*)
 # alpha64-dec-*vms*)
 # alpha*-dec-*vms*)
-# arm-wrs-vxworks)
+# arm-wrs-vxworks)        #### draco_cc1_spec "vxworks" ####
 # arm*-*-freebsd*)
 # arm*-*-netbsdelf*)
 # arm*-*-netbsd*)
 # arm*-*-linux*)			# ARM GNU/Linux with ELF
 # arm*-*-uclinux*)		# ARM ucLinux
 # arm*-*-ecos-elf)
-# arm*-*-eabi*
-# arm*-*-symbianelf* )
+# arm*-*-eabi*             #### draco_cc1_spec "android" ####
+# arm*-*-symbianelf* )     #### draco_cc1_spec "symbian" ####
 # arm*-*-rtems*)
 # arm*-*-elf)
 # arm*-wince-pe*)
@@ -327,17 +360,17 @@ endif ()
 # x86_64-*-knetbsd*-gnu)
 # i[4567]86-wrs-vxworks|i[4567]86-wrs-vxworksae)
 # i[34567]86-*-pe | i[34567]86-*-cygwin*)
-# i[34567]86-*-mingw* | x86_64-*-mingw*)
+# i[34567]86-*-mingw* | x86_64-*-mingw*)     #####  draco_bitbucket = "MINGW"  ####
 # i[34567]86-*-interix3*)
 # ia64*-*-elf*)
 # ia64*-*-freebsd*)
-# ia64*-*-linux*)
+# ia64*-*-linux*)           #### draco_cc1_spec "g_star" ####
 # ia64*-*-hpux*)
 # ia64-hp-*vms*)
 # mips-sgi-irix6.5*)
 # mips*-*-netbsd*)			# NetBSD/mips, either endian.
-# mips64*-*-linux*
-# mipsisa64*-*-linux*)
+# mips64*-*-linux*         #### draco_cc1_spec "stdmips" ####
+# mipsisa64*-*-linux*)     #### draco_cc1_spec "stdmips" ####
 # mips*-*-linux*)				# Linux MIPS, either endian.
 # mips*-*-openbsd*)
 # mips*-sde-elf*)
@@ -354,8 +387,8 @@ endif ()
 # mips*-*-rtems*)
 # mips-wrs-vxworks)
 # mipstx39-*-elf* | mipstx39el-*-elf*)
-# powerpc-*-darwin*)
-# powerpc64-*-darwin*)
+# powerpc-*-darwin*)        #### draco_cc1_spec "darwinppc" ####
+# powerpc64-*-darwin*)      #### draco_cc1_spec "darwinppc" ####
 # powerpc*-*-freebsd*)
 # powerpc-*-netbsd*)
 # powerpc-*-eabispe*)
@@ -370,22 +403,23 @@ endif ()
 # powerpc64-*-gnu*)
 # powerpc-*-gnu-gnualtivec*)
 # powerpc-*-gnu*)
-# powerpc-wrs-vxworks|powerpc-wrs-vxworksae)
-# powerpc-*-lynxos*)
+# powerpc-wrs-vxworks|powerpc-wrs-vxworksae)    #### draco_cc1_spec "vxppc" ####
+# powerpc-*-lynxos*)      #### draco_cc1_spec "lynxppc" ####
 # powerpcle-*-elf*)
 # powerpcle-*-eabisim*)
 # powerpcle-*-eabi*)
+#### draco_cc1_spec "stdppc" #### (5 below)
 # rs6000-ibm-aix4.[3456789]* | powerpc-ibm-aix4.[3456789]*)
 # rs6000-ibm-aix5.1.* | powerpc-ibm-aix5.1.*)
 # rs6000-ibm-aix5.2.* | powerpc-ibm-aix5.2.*)
 # rs6000-ibm-aix5.3.* | powerpc-ibm-aix5.3.*)
 # rs6000-ibm-aix[6789].* | powerpc-ibm-aix[6789].*)
-# sparc-*-netbsdelf*)
-# sparc-*-elf*)
-# sparc-*-linux*)		# SPARC's running GNU/Linux, libc6
-# sparc-*-rtems*)
-# sparc*-*-solaris2*)
-# sparc-wrs-vxworks)
+# sparc-*-netbsdelf*)                  #### draco_cc1_spec "spcnet" ####
+# sparc-*-elf*)                        #### draco_cc1_spec "sparc" ####
+# sparc-*-linux*)		                  #### draco_cc1_spec "spclinux" "spclin64 ####
+# sparc-*-rtems*)                      #### draco_cc1_spec "sparc" ####
+# sparc*-*-solaris2*)                  #### draco_cc1_spec "spcsol2" ####
+# sparc-wrs-vxworks)                   #### draco_cc1_spec "sparc" ####
 
 
 if (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-darwin(.+)$")    #  i[34567]86-*-darwin*)
@@ -394,6 +428,7 @@ if (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-darwin(.+)$")    #  i[34567]86-*
 
    set (need_64bit_hwint "yes")
    set (need_64bit_isa   "yes")
+   set (draco_cc1_spec   "darwin")
 
 	# This is so that '.../configure && make' doesn't fail due to
 	# config.guess deciding that the configuration is i386-*-darwin* and
@@ -406,6 +441,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-darwin(.+)$")    #  x86_64-*-dar
    # TO-DO  TMAKE ${cpu_type}/t-darwin64 t-slibgcc-darwin i386/t-crtpc i386/t-crtfm"
 
    list (APPEND tm_inc_list "${cpu_type}/darwin64.h")
+   set (draco_cc1_spec   "darwin")
 	#with_cpu=${with_cpu:-generic}
 	#lto_binary_reader=lto-macho
 
@@ -422,6 +458,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-elf(.+)$")    #  i[34567]86-
             newlib-stdint.h
             i386/i386elf.h
    )
+   set (draco_cc1_spec   "i386")
 
 elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-elf(.+)$")    #  x86_64-*-elf*)
 
@@ -436,6 +473,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-elf(.+)$")    #  x86_64-*-elf*)
             i386/i386elf.h
             i386/x86-64.h
    )
+   set (draco_cc1_spec   "i386")
 
 elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-freebsd(.+)$")    #  i[34567]86-*-freebsd*)
 
@@ -447,6 +485,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-freebsd(.+)$")    #  i[34567
             ${fbsd_tm_file}
             i386/freebsd.h
    )
+   set (draco_cc1_spec   "i386")
 
 elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-freebsd(.+)$")    #  x86_64-*-freebsd*)
 
@@ -463,6 +502,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-freebsd(.+)$")    #  x86_64-*-fr
             i386/freebsd.h
             i386/freebsd64.h
    )
+   set (draco_cc1_spec   "i386")
 
 elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-dragonfly(.+)$")    #  i[34567]86-*-dragonfly*)
 
@@ -474,6 +514,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-dragonfly(.+)$")    #  i[345
             ${dfbsd_tm_file}
             i386/dragonfly.h
    )
+   set (draco_cc1_spec   "i386")
 
 elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-dragonfly(.+)$")    #  x86_64-*-dragonfly*)
 
@@ -486,6 +527,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-dragonfly(.+)$")    #  x86_64-*-
             i386/x86-64.h
             i386/dragonfly.h
    )
+   set (draco_cc1_spec   "i386")
 
 elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-netbsdelf(.+)$")    #  i[34567]86-*-netbsdelf*)
 
@@ -498,6 +540,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-netbsdelf(.+)$")    #  i[345
             netbsd-elf.h
             i386/netbsd-elf.h
    )
+   set (draco_cc1_spec   "i386")
 
 elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-netbsd(.+)$")    #  i[34567]86-*-netbsd*)
 
@@ -512,8 +555,9 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-netbsd(.+)$")    #  i[34567]
             netbsd-aout.h
             i386/netbsd.h
    )
-   set (extra_parts   "")
-   set (need_collect2 "yes")
+   set (extra_parts      "")
+   set (need_collect2    "yes")
+   set (draco_cc1_spec   "i386")
 
 elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-netbsd(.+)$")    # x86_64-*-netbsd*)
 
@@ -529,6 +573,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-netbsd(.+)$")    # x86_64-*-netb
             i386/x86-64.h
             i386/netbsd64.h
    )
+   set (draco_cc1_spec   "i386")
 
 elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-openbsd2[.](.+)$"    #  i[34567]86-*-openbsd2.*
        OR ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-openbsd3[.][0123]$")  #  *-*-openbsd3.[0123])
@@ -545,7 +590,8 @@ elseif (  ${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-openbsd2[.](.+)$"    #  i[
             openbsd.h
             i386/openbsd.h
    )
-   set (need_collect2 "yes")
+   set (need_collect2    "yes")
+   set (draco_cc1_spec   "i386")
 
 elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-openbsd(.+)$")    #  i[34567]86-*-openbsd*)
 
@@ -559,6 +605,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-openbsd(.+)$")    #  i[34567
             openbsd-libpthread.h
             i386/openbsdelf.h
    )
+   set (draco_cc1_spec   "i386")
 
 elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-linux(.+)$")  #  i[34567]86-*-linux*)
 
@@ -572,6 +619,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-linux(.+)$")  #  i[34567]86-
             glibc-stdint.h
 
    )
+   set (draco_cc1_spec   "x86linux")
    if ("${enable_targets}" STREQUAL "all")
 
       # TO-DO TMAKE tmake_file=${tmake_file} i386/t-linux64
@@ -610,6 +658,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-gnu(.+)$")  #  i[34567]86-*-
             gnu.h
             i386/gnu.h
    )
+   set (draco_cc1_spec   "i386")
 
 elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-linux(.+)$")  #  x86_64-*-linux*
 
@@ -626,6 +675,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^x86_64-(.+)-linux(.+)$")  #  x86_64-*-linux*
             i386/x86-64.h
             i386/linux64.h
    )
+   set (draco_cc1_spec   "x86linux")
 
 elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-solaris2(.+)$")  #  i[34567]86-*-solaris2*)
 
@@ -638,6 +688,7 @@ elseif (${TARGET_TRIPLET} MATCHES "^i[34567]86-(.+)-solaris2(.+)$")  #  i[34567]
             i386/sysv4.h
             sol2.h
    )
+   set (draco_cc1_spec   "i386")
    set (with_arch_32 "${with_arch_32_pentium4}")
    set (with_tune_32 "${with_tune_32_generic}")
    if (${TARGET_TRIPLET} MATCHES "^(.+)-(.+)-solaris2.1[0-9](.*)$")  # *-*-solaris2.1[0-9]*)
