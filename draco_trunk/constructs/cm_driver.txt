@@ -260,7 +260,7 @@ endfunction (define_external_ada_compiler)
 # the driver_stage_x target, and it compiles each file to an object file.
 # The bind and linking has to come at build time. (?)
 
-function (compile_and_mark_objects X ADA_COMPILER)
+function (compile_and_mark_objects)
 
    set (ali_files "")
 
@@ -283,7 +283,7 @@ function (compile_and_mark_objects X ADA_COMPILER)
 
       add_custom_command (
          OUTPUT ${basename}.o ${basename}.ali
-         COMMAND ${ADA_COMPILER} ${incflag} -c ${srcfile}
+         COMMAND ${pass_compiler} ${incflag} -c ${srcfile}
          DEPENDS ${srcfile}
       )
 
@@ -291,13 +291,13 @@ function (compile_and_mark_objects X ADA_COMPILER)
 
    add_custom_command (
       OUTPUT b~draco.ads b~draco.adb
-      COMMAND ${TOOL_BIND} -x draco.ali
+      COMMAND ${pass_binder} -x draco.ali
       DEPENDS ${ali_files}
    )
 
    add_custom_command (
       OUTPUT draco
-      COMMAND ${TOOL_LINK} draco.ali -o ${execloc}
+      COMMAND ${pass_linker} draco.ali -o ${execloc}
       DEPENDS b~draco.ads b~draco.adb
    )
 
@@ -337,28 +337,34 @@ define_external_ada_compiler ()
 if (${CURRENT_STAGE} EQUAL 1)
 
    set (pass_compiler ${EXTERNAL_ADA_COMPILER})
+   set (pass_binder   ${TOOL_BIND})
+   set (pass_linker   ${TOOL_LINK})
    set (execloc       ${DIR_STAGE_1}/sysroot/bin/draco)
-   add_custom_target (driver_stage1 DEPENDS ${outfile} draco)
+   add_custom_target (driver_stage1 DEPENDS draco)
    add_dependencies  (draco_stage1 driver_stage1)
 
 elseif (${CURRENT_STAGE} EQUAL 2)
 
    set (pass_compiler ${DIR_STAGE_1}/sysroot/bin/draco)
+   set (pass_binder   ${DIR_STAGE_1}/sysroot/bin/gnatbind)
+   set (pass_linker   ${DIR_STAGE_1}/sysroot/bin/gnatlink)
    set (execloc       ${DIR_STAGE_2}/sysroot/bin/draco)
-   add_custom_target (driver_stage2 DEPENDS ${outfile})
+   add_custom_target (driver_stage2 DEPENDS draco)
    add_dependencies  (draco_stage2 driver_stage2)
 
 else (${CURRENT_STAGE} EQUAL 3)
 
    set (pass_compiler ${DIR_STAGE_2}/sysroot/bin/draco)
+   set (pass_binder   ${DIR_STAGE_2}/sysroot/bin/gnatbind)
+   set (pass_linker   ${DIR_STAGE_2}/sysroot/bin/gnatlink)
    set (execloc       ${DIR_STAGE_3}/sysroot/bin/draco)
-   add_custom_target (driver_stage3 DEPENDS ${outfile})
+   add_custom_target (driver_stage3 DEPENDS draco)
    add_dependencies  (draco_stage3 driver_stage3)
 
 endif ()
 
 
-compile_and_mark_objects ("${CURRENT_STAGE}" "${pass_compiler}")
+compile_and_mark_objects ()
 
 
 

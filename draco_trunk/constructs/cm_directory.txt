@@ -65,12 +65,16 @@ function (build_stage stage_path)
          ${stage_path}/libgcov
          ${stage_path}/crtstuff
          ${stage_path}/driver
+         ${stage_path}/gnatlink
+         ${stage_path}/gnatmake
    )
    copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcc_eh.txt ${stage_path}/libgcc_eh CMakeLists.txt)
    copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcc.txt    ${stage_path}/libgcc    CMakeLists.txt)
    copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcov.txt   ${stage_path}/libgcov   CMakeLists.txt)
    copy_to_new_name (${DIR_CONSTRUCTS} cm_crtstuff.txt  ${stage_path}/crtstuff  CMakeLists.txt)
    copy_to_new_name (${DIR_CONSTRUCTS} cm_driver.txt    ${stage_path}/driver    CMakeLists.txt)
+#   copy_to_new_name (${DIR_CONSTRUCTS} cm_gnatlink.txt    ${stage_path}/gnatlink    CMakeLists.txt)
+#   copy_to_new_name (${DIR_CONSTRUCTS} cm_gnatmake.txt    ${stage_path}/gnatmake    CMakeLists.txt)
 
 
 endfunction (build_stage)
