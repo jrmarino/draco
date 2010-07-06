@@ -1,0 +1,350 @@
+##
+##  DRACO ADA COMPILER
+##  CMAKE BUILD SCRIPT - GNAT1 AND GNATBIND
+##
+##
+##  Copyright (c) 2010, John Marino (www.auroraux.org)
+##  All rights reserved.
+##
+##  Permission to use, copy, modify, and/or distribute this software for any
+##  purpose with or without fee is hereby granted, provided that the above
+##  copyright notice and this permission notice appear in all copies.
+##
+##  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+##  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+##  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+##  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+##  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+##  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+##  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+##
+
+
+
+# The basic strategy here is to compile just the necessary files needed to
+# build gnat1 and friends to get to the point of building the real-time
+# library with the new gnat1 (and friends).  So we are going to build these
+# common files twice per stage (up to 6 times for a full bootstrap)
+
+# Languages-specific object files for Ada.
+# Object files for gnat1 from C sources.
+set (GNAT1_C_OBJS
+      ada/b_gnat1.o
+      ada/adadecode.o
+      ada/adaint.o
+      ada/cstreams.o
+      ada/cio.o
+      ada/targtyps.o
+      ada/decl.o
+      ada/misc.o
+      ada/utils.o
+      ada/utils2.o
+      ada/trans.o
+      ada/cuintp.o
+      ada/argv.o
+      ada/raise.o
+      ada/init.o
+      ada/tracebak.o
+      ada/initialize.o
+      ada/env.o
+)
+
+
+##############  GENERATED FILE LIST -- DO NOT EDIT BY HAND  ##############
+
+set (compile_sequence
+     R:adb:ada/a-exexda         R:adb:ada/a-exextr         R:adb:ada/a-excpol    
+     R:adb:ada/a-exstat         R:adb:ada/lib-list         R:adb:ada/lib-sort    
+     R:adb:ada/par-ch10         R:adb:ada/par-ch11         R:adb:ada/par-ch12    
+     R:adb:ada/par-ch13         R:adb:ada/par-ch2          R:adb:ada/par-ch3     
+     R:adb:ada/par-ch4          R:adb:ada/par-ch5          R:adb:ada/par-ch6     
+     R:adb:ada/par-ch7          R:adb:ada/par-ch8          R:adb:ada/par-ch9     
+     R:adb:ada/par-endh         R:adb:ada/par-labl         R:adb:ada/par-load    
+     R:adb:ada/par-prag         R:adb:ada/par-sync         R:adb:ada/par-tchk    
+     R:adb:ada/par-util         R:ads:ada/a-unccon         R:ads:ada/a-uncdea    
+     R:ads:ada/unchdeal         R:ads:ada/unchconv         R:ads:ada/s-rident    
+     R:adb:ada/g-hesorg         R:adb:ada/g-dyntab         R:adb:ada/g-table     
+     R:ads:ada/system           R:ads:ada/ada              R:ads:ada/alloc       
+     R:ads:ada/gnat             R:ads:ada/interfac         R:ads:ada/s-purexc    
+     R:ads:ada/s-unstyp         R:ads:ada/ttypef           R:ads:ada/a-charac    
+     R:adb:ada/debug            R:ads:ada/rident           R:adb:ada/s-casuti    
+     R:adb:ada/s-conca2         R:ads:ada/s-crtl           R:adb:ada/s-parame    
+     R:adb:ada/s-strhas         R:adb:ada/s-traceb         R:adb:ada/s-traent    
+     R:adb:ada/s-utf_32         R:adb:ada/s-wchcon         R:adb:ada/s-wchjis    
+     R:ads:ada/a-chlat1         R:adb:ada/g-byorma         R:adb:ada/g-hesora    
+     R:adb:ada/g-spchge         R:adb:ada/s-conca3         R:adb:ada/s-conca4    
+     R:adb:ada/s-conca5         R:adb:ada/s-conca6         R:adb:ada/s-conca7    
+     R:adb:ada/s-conca8         R:adb:ada/s-conca9         R:adb:ada/s-crc32     
+     R:adb:ada/s-restri         R:adb:ada/g-htable         R:adb:ada/s-addope    
+     R:adb:ada/s-imenne         R:adb:ada/s-stoele         R:adb:ada/s-strcom    
+     R:adb:ada/s-string         R:adb:ada/g-speche         R:adb:ada/s-bitops    
+     R:adb:ada/s-except         R:adb:ada/s-htable         R:adb:ada/s-wchcnv    
+     R:adb:ada/s-carun8         R:adb:ada/s-mastop         R:adb:ada/s-stache    
+     R:adb:ada/a-comlin         R:adb:ada/g-u3spch         R:adb:ada/gnatvsn     
+     R:adb:ada/i-cstrea         R:adb:ada/s-imgenu         R:adb:ada/s-sopco3    
+     R:adb:ada/s-sopco4         R:adb:ada/s-sopco5         R:adb:ada/s-strops    
+     R:ads:ada/hostparm         R:adb:ada/get_targ         R:ads:ada/ttypes      
+     R:adb:ada/krunch           R:adb:ada/a-elchha         R:adb:ada/s-soflin    
+     R:adb:ada/s-stalib         R:adb:ada/s-memory         R:adb:ada/s-secsta    
+     R:ads:ada/a-ioexce         R:adb:ada/s-exctab         R:adb:ada/scos        
+     R:adb:ada/stand            R:adb:ada/csets            R:adb:ada/hlo         
+     R:adb:ada/put_scos         R:adb:ada/stylesw          R:adb:ada/validsw     
+     R:adb:ada/get_scos         R:adb:ada/s-assert         R:adb:ada/i-c         
+     R:adb:ada/a-except         R:adb:ada/types            R:adb:ada/a-clrefi    
+     R:adb:ada/s-os_lib         R:adb:ada/table            R:adb:ada/output      
+     R:adb:ada/opt              R:adb:ada/tree_io          R:adb:ada/elists      
+     R:adb:ada/widechar         R:adb:ada/fname            R:adb:ada/binderr     
+     R:adb:ada/sinput-c         R:adb:ada/stringt          R:ads:ada/treeprs     
+     R:adb:ada/bindusg          R:adb:ada/butil            R:adb:ada/casing      
+     R:adb:ada/uintp            R:adb:ada/urealp           R:adb:ada/namet-sp    
+     R:adb:ada/sdefault         R:ads:ada/err_vars         R:adb:ada/namet       
+     R:adb:ada/sinput-d         R:adb:ada/snames           R:adb:ada/usage       
+     R:adb:ada/switch           R:adb:ada/switch-b         R:adb:ada/fmap        
+     R:adb:ada/osint-b          R:adb:ada/osint-c          R:adb:ada/scans       
+     R:adb:ada/lib-util         R:adb:ada/atree            R:adb:ada/nlists      
+     R:adb:ada/sinfo            R:adb:ada/sinfo-cn         R:adb:ada/styleg      
+     R:adb:ada/switch-c         R:adb:ada/debug_a          R:adb:ada/scil_ll     
+     R:adb:ada/targparm         R:adb:ada/nmake            R:adb:ada/scng        
+     R:adb:ada/fname-uf         R:adb:ada/tree_in          R:adb:ada/sinput      
+     R:adb:ada/bindgen          R:adb:ada/einfo            R:adb:ada/sem_aux     
+     R:adb:ada/osint            R:adb:ada/ali              R:adb:ada/tree_gen    
+     R:adb:ada/binde            R:adb:ada/prep             R:adb:ada/sem_scil    
+     R:adb:ada/sem_ch2          R:adb:ada/sem_smem         R:adb:ada/sem_vfpt    
+     R:adb:ada/erroutc          R:adb:ada/instpar          R:adb:ada/itypes      
+     R:adb:ada/exp_vfpt         R:adb:ada/lib              R:adb:ada/uname       
+     R:adb:ada/eval_fat         R:adb:ada/live             R:adb:ada/sem_mech    
+     R:adb:ada/comperr          R:adb:ada/exp_sel          R:adb:ada/tbuild      
+     R:adb:ada/exp_smem         R:adb:ada/exp_ch12         R:adb:ada/gnatbind    
+     R:adb:ada/style            R:adb:ada/exp_strm         R:adb:ada/repinfo     
+     R:adb:ada/exp_cg           R:adb:ada/exp_ch13         R:adb:ada/back_end    
+     R:adb:ada/exp_ch2          R:adb:ada/sem_intr         R:adb:ada/exp_dbug    
+     R:adb:ada/sem_dist         R:adb:ada/impunit          R:adb:ada/restrict    
+     R:adb:ada/sem_case         R:adb:ada/sem_elim         R:adb:ada/treepr      
+     R:adb:ada/errout           R:adb:ada/ali-util         R:adb:ada/bcheck      
+     R:adb:ada/expander         R:adb:ada/inline           R:adb:ada/par_sco     
+     R:adb:ada/sinput-l         R:adb:ada/prepcomp         R:adb:ada/sprint      
+     R:adb:ada/lib-xref         R:adb:ada/sem_ch11         R:adb:ada/sem_warn    
+     R:adb:ada/exp_tss          R:adb:ada/scn              R:adb:ada/exp_atag    
+     R:adb:ada/rtsfind          R:adb:ada/exp_ch8          R:adb:ada/exp_util    
+     R:adb:ada/exp_prag         R:adb:ada/exp_ch11         R:adb:ada/lib-load    
+     R:adb:ada/exp_dist         R:adb:ada/exp_imgv         R:adb:ada/sem         
+     R:adb:ada/lib-writ         R:adb:ada/sem_ch13         R:adb:ada/checks      
+     R:adb:ada/exp_pakd         R:adb:ada/exp_ch7          R:adb:ada/exp_intr    
+     R:adb:ada/sem_cat          R:adb:ada/sem_util         R:adb:ada/cstand      
+     R:adb:ada/layout           R:adb:ada/exp_fixd         R:adb:ada/sem_eval    
+     R:adb:ada/sem_type         R:adb:ada/exp_code         R:adb:ada/frontend    
+     R:adb:ada/exp_ch3          R:adb:ada/sem_elab         R:adb:ada/sem_ch7     
+     R:adb:ada/sem_ch10         R:adb:ada/exp_ch9          R:adb:ada/exp_disp    
+     R:adb:ada/sem_disp         R:adb:ada/sem_res          R:adb:ada/par         
+     R:adb:ada/sem_aggr         R:adb:ada/exp_ch5          R:adb:ada/gnat1drv    
+     R:adb:ada/sem_ch4          R:adb:ada/sem_ch8          R:adb:ada/sem_ch12    
+     R:adb:ada/sem_ch9          R:adb:ada/exp_attr         R:adb:ada/freeze      
+     R:adb:ada/exp_ch4          R:adb:ada/sem_ch5          R:adb:ada/sem_ch6     
+     R:adb:ada/exp_aggr         R:adb:ada/exp_ch6          R:adb:ada/sem_ch3     
+     R:adb:ada/sem_attr         R:adb:ada/sem_prag    
+)
+
+##########################  END GENERATED BLOCK  ##########################
+
+
+##############  GENERATED FOR GNAT1 -- DO NOT EDIT BY HAND  ##############
+
+set (gnat1_object_files
+     a-exexda.o     a-exextr.o     a-excpol.o     a-exstat.o     lib-list.o
+     lib-sort.o     par-ch10.o     par-ch11.o     par-ch12.o     par-ch13.o
+      par-ch2.o      par-ch3.o      par-ch4.o      par-ch5.o      par-ch6.o
+      par-ch7.o      par-ch8.o      par-ch9.o     par-endh.o     par-labl.o
+     par-load.o     par-prag.o     par-sync.o     par-tchk.o     par-util.o
+     a-unccon.o     a-uncdea.o     unchdeal.o     unchconv.o     s-rident.o
+     g-hesorg.o     g-dyntab.o      g-table.o       system.o          ada.o
+        alloc.o         gnat.o     interfac.o     s-purexc.o     s-unstyp.o
+       ttypef.o     a-charac.o        debug.o       rident.o     s-casuti.o
+     s-conca2.o       s-crtl.o     s-parame.o     s-strhas.o     s-traceb.o
+     s-traent.o     s-utf_32.o     s-wchcon.o     s-wchjis.o     a-chlat1.o
+     g-byorma.o     g-hesora.o     g-spchge.o     s-conca3.o     s-conca4.o
+     s-conca5.o     s-conca6.o     s-conca7.o     s-conca8.o     s-conca9.o
+      s-crc32.o     s-restri.o     g-htable.o     s-addope.o     s-imenne.o
+     s-stoele.o     s-strcom.o     s-string.o     g-speche.o     s-bitops.o
+     s-except.o     s-htable.o     s-wchcnv.o     s-carun8.o     s-mastop.o
+     s-stache.o     g-u3spch.o      gnatvsn.o     i-cstrea.o     s-imgenu.o
+     s-sopco3.o     s-sopco4.o     s-sopco5.o     s-strops.o     hostparm.o
+     get_targ.o       ttypes.o       krunch.o     a-elchha.o     s-soflin.o
+     s-stalib.o     s-memory.o     s-secsta.o     a-ioexce.o     s-exctab.o
+         scos.o        stand.o        csets.o          hlo.o     put_scos.o
+      stylesw.o      validsw.o     get_scos.o     s-assert.o          i-c.o
+     a-except.o        types.o     s-os_lib.o        table.o       output.o
+          opt.o      tree_io.o       elists.o     widechar.o        fname.o
+      stringt.o      treeprs.o        butil.o       casing.o        uintp.o
+       urealp.o     namet-sp.o     sdefault.o     err_vars.o        namet.o
+     sinput-d.o       snames.o        usage.o       switch.o         fmap.o
+      osint-c.o        scans.o     lib-util.o        atree.o       nlists.o
+        sinfo.o     sinfo-cn.o       styleg.o     switch-c.o      debug_a.o
+      scil_ll.o     targparm.o        nmake.o         scng.o     fname-uf.o
+      tree_in.o       sinput.o        einfo.o      sem_aux.o        osint.o
+          ali.o     tree_gen.o         prep.o     sem_scil.o      sem_ch2.o
+     sem_smem.o     sem_vfpt.o      erroutc.o       itypes.o     exp_vfpt.o
+          lib.o        uname.o     eval_fat.o         live.o     sem_mech.o
+      comperr.o      exp_sel.o       tbuild.o     exp_smem.o     exp_ch12.o
+        style.o     exp_strm.o      repinfo.o       exp_cg.o     exp_ch13.o
+     back_end.o      exp_ch2.o     sem_intr.o     exp_dbug.o     sem_dist.o
+      impunit.o     restrict.o     sem_case.o     sem_elim.o       treepr.o
+       errout.o     expander.o       inline.o      par_sco.o     sinput-l.o
+     prepcomp.o       sprint.o     lib-xref.o     sem_ch11.o     sem_warn.o
+      exp_tss.o          scn.o     exp_atag.o      rtsfind.o      exp_ch8.o
+     exp_util.o     exp_prag.o     exp_ch11.o     lib-load.o     exp_dist.o
+     exp_imgv.o          sem.o     lib-writ.o     sem_ch13.o       checks.o
+     exp_pakd.o      exp_ch7.o     exp_intr.o      sem_cat.o     sem_util.o
+       cstand.o       layout.o     exp_fixd.o     sem_eval.o     sem_type.o
+     exp_code.o     frontend.o      exp_ch3.o     sem_elab.o      sem_ch7.o
+     sem_ch10.o      exp_ch9.o     exp_disp.o     sem_disp.o      sem_res.o
+          par.o     sem_aggr.o      exp_ch5.o     gnat1drv.o      sem_ch4.o
+      sem_ch8.o     sem_ch12.o      sem_ch9.o     exp_attr.o       freeze.o
+      exp_ch4.o      sem_ch5.o      sem_ch6.o     exp_aggr.o      exp_ch6.o
+      sem_ch3.o     sem_attr.o     sem_prag.o     seh_init.o      targext.o
+       prefix.o
+)
+
+##########################  END GENERATED BLOCK  ##########################
+
+
+##############  GENERATED FOR BIND -- DO NOT EDIT BY HAND  ##############
+
+set (bind_object_files
+     a-exexda.o     a-exextr.o     a-excpol.o     a-exstat.o     lib-list.o
+     lib-sort.o     a-unccon.o     a-uncdea.o     unchdeal.o     unchconv.o
+     s-rident.o     g-hesorg.o       system.o          ada.o        alloc.o
+         gnat.o     interfac.o     s-unstyp.o        debug.o       rident.o
+     s-casuti.o     s-conca2.o       s-crtl.o     s-parame.o     s-strhas.o
+     s-traceb.o     s-traent.o     s-utf_32.o     s-wchcon.o     s-wchjis.o
+     g-hesora.o     s-conca3.o     s-conca4.o     s-conca5.o     s-conca6.o
+     s-conca7.o     s-conca8.o     s-conca9.o      s-crc32.o     s-restri.o
+     g-htable.o     s-addope.o     s-imenne.o     s-stoele.o     s-string.o
+     s-except.o     s-htable.o     s-wchcnv.o     s-carun8.o     s-mastop.o
+     s-stache.o     a-comlin.o      gnatvsn.o     s-imgenu.o     s-sopco3.o
+     s-sopco4.o     s-sopco5.o     s-strops.o     hostparm.o     a-elchha.o
+     s-soflin.o     s-stalib.o     s-memory.o     s-secsta.o     s-exctab.o
+        stand.o        csets.o      stylesw.o     s-assert.o     a-except.o
+        types.o     a-clrefi.o     s-os_lib.o        table.o       output.o
+          opt.o      tree_io.o       elists.o     widechar.o        fname.o
+      binderr.o     sinput-c.o      stringt.o      bindusg.o        butil.o
+       casing.o        uintp.o       urealp.o     sdefault.o     err_vars.o
+        namet.o       snames.o       switch.o     switch-b.o         fmap.o
+      osint-b.o        scans.o        atree.o       nlists.o        sinfo.o
+       styleg.o      scil_ll.o     targparm.o         scng.o       sinput.o
+      bindgen.o        einfo.o      sem_aux.o        osint.o          ali.o
+        binde.o      erroutc.o          lib.o        uname.o     gnatbind.o
+        style.o       errout.o     ali-util.o       bcheck.o       adaint.o
+         argv.o         exit.o          cio.o     cstreams.o          env.o
+        final.o         init.o   initialize.o     seh_init.o         link.o
+      targext.o        raise.o     tracebak.o       prefix.o      version.o
+)
+
+##########################  END GENERATED BLOCK  ##########################
+
+
+# for reference - delete
+#gnat1$(exeext): $(TARGET_ADA_SRCS) $(GNAT1_OBJS) $(ADA_BACKEND) $(LIBDEPS)
+#	$(GCC_LINK) -o $@ $(GNAT1_OBJS) $(ADA_BACKEND) $(LIBS) $(SYSLIBS) $(BACKENDLIBS) $(CFLAGS)
+
+
+
+############## compile_and_mark_objects ##############
+# This function is the major one.  It adds the object file dependencies to
+# the driver_stage_x target, and it compiles each file to an object file.
+# The bind and linking has to come at build time. (?)
+
+function (xxxxcompile_and_mark_objects X ADA_COMPILER)
+
+   set (ali_files "")
+
+   foreach (encoded_name ${ordered_files})
+
+      string (REPLACE ":" ";" test ${encoded_name})
+
+      list (GET test 0 location)
+      list (GET test 1 extension)
+      list (GET test 2 basename)
+      list (APPEND ali_files ${basename}.ali)
+
+      if ("${location}" STREQUAL "R")
+         set (srcfile ${DIR_DRIVER}/${basename}.${extension})
+         set (incflag "-I${CMAKE_CURRENT_BINARY_DIR}")
+      else ()
+         set (srcfile ${basename}.${extension})
+         set (incflag "-I-;-I${DIR_DRIVER}")
+      endif ()
+
+      add_custom_command (
+         OUTPUT ${basename}.o ${basename}.ali
+         COMMAND ${ADA_COMPILER} ${incflag} -c ${srcfile}
+         DEPENDS ${srcfile}
+      )
+
+   endforeach()
+
+   add_custom_command (
+      OUTPUT b~draco.ads b~draco.adb
+      COMMAND ${TOOL_BIND} -x draco.ali
+      DEPENDS ${ali_files}
+   )
+
+   add_custom_command (
+      OUTPUT draco
+      COMMAND ${TOOL_LINK} draco.ali -o ${execloc}
+      DEPENDS b~draco.ads b~draco.adb
+   )
+
+endfunction (xxxxcompile_and_mark_objects)
+
+
+
+
+
+if (${CURRENT_STAGE} EQUAL 1)
+
+   set (pass_compiler ${EXTERNAL_ADA_COMPILER})
+   set (pass_binder   ${TOOL_BIND})
+   set (pass_linker   ${TOOL_LINK})
+   set (pass_cc       ${CMAKE_C_COMPILER})
+   set (execloc       ${DIR_STAGE_1}/sysroot/libexec/draco-${DRACO_VERSION}/gnat1)
+   add_custom_target (gnat1_stage1 DEPENDS gnat1)
+   add_dependencies  (draco_stage1 gnat1_stage1)
+
+elseif (${CURRENT_STAGE} EQUAL 2)
+
+   # for standard and bootstrap profile, the system C compiler with system
+   # as/linker is used.  For the cross profile, the system C compiler is
+   # used with the foreign as/linker.  For the Xeno profile, we've got to
+   # use an external C cross compiler.
+
+   set (pass_compiler ${DIR_STAGE_1}/sysroot/bin/draco)
+   set (pass_binder   ${DIR_STAGE_1}/sysroot/bin/gnatbind)
+   set (pass_linker   ${DIR_STAGE_1}/sysroot/bin/gnatlink)
+
+   if ("${profile}" STREQUAL "xeno")
+      set (pass_cc       ${c_cross})
+   else ()
+      set (pass_cc       ${CMAKE_C_COMPILER})
+   endif ()
+
+   set (execloc       ${DIR_STAGE_2}/sysroot/libexec/draco-${DRACO_VERSION}/gnat1)
+   add_custom_target (gnat1_stage2 DEPENDS gnat1)
+   add_dependencies  (draco_stage2 gnat1_stage2)
+
+else (${CURRENT_STAGE} EQUAL 3)
+
+   # only the bootstrap profile gets to stage 3 so system C compiler is fine
+   set (pass_compiler ${DIR_STAGE_2}/sysroot/bin/draco)
+   set (pass_binder   ${DIR_STAGE_2}/sysroot/bin/gnatbind)
+   set (pass_linker   ${DIR_STAGE_2}/sysroot/bin/gnatlink)
+   set (pass_cc       ${CMAKE_C_COMPILER})
+   set (execloc       ${DIR_STAGE_3}/sysroot/libexec/draco-${DRACO_VERSION}/gnat1)
+   add_custom_target (gnat1_stage3 DEPENDS gnat1)
+   add_dependencies  (draco_stage3 gnat1_stage3)
+
+endif ()
+
+
+#compile_and_mark_objects ()
+
+
