@@ -83,15 +83,15 @@ add_definitions  (${task_macros} ${task_flags} ${libgcov_functions})
 
 if (${CURRENT_STAGE} EQUAL 1)
 
-   add_executable (generator ${base}/gcov-iov.c)
+   add_executable (generator_gcov ${base}/gcov-iov.c)
    string (STRIP "${BASEVER}" S_BASEVER)
    string (STRIP "${DEVPHASE}" S_DEVPHASE)
 
    set (outfile ${DIR_HEADERS}/gcov-iov.h)
    add_custom_command (
       OUTPUT ${outfile}
-      COMMAND generator '${S_BASEVER}' '${S_DEVPHASE}' > ${outfile}
-      DEPENDS generator ${base}/gcov-iov.c
+      COMMAND generator_gcov '${S_BASEVER}' '${S_DEVPHASE}' > ${outfile}
+      DEPENDS generator_gcov ${base}/gcov-iov.c
    )
 
 

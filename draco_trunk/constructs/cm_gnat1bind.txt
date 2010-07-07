@@ -53,95 +53,95 @@ set (GNAT1_C_OBJS
 ##############  GENERATED FILE LIST -- DO NOT EDIT BY HAND  ##############
 
 set (compile_sequence
-     R:adb:ada/a-exexda         R:adb:ada/a-exextr         R:adb:ada/a-excpol    
-     R:adb:ada/a-exstat         R:adb:ada/lib-list         R:adb:ada/lib-sort    
-     R:adb:ada/par-ch10         R:adb:ada/par-ch11         R:adb:ada/par-ch12    
-     R:adb:ada/par-ch13         R:adb:ada/par-ch2          R:adb:ada/par-ch3     
-     R:adb:ada/par-ch4          R:adb:ada/par-ch5          R:adb:ada/par-ch6     
-     R:adb:ada/par-ch7          R:adb:ada/par-ch8          R:adb:ada/par-ch9     
-     R:adb:ada/par-endh         R:adb:ada/par-labl         R:adb:ada/par-load    
-     R:adb:ada/par-prag         R:adb:ada/par-sync         R:adb:ada/par-tchk    
-     R:adb:ada/par-util         R:ads:ada/a-unccon         R:ads:ada/a-uncdea    
-     R:ads:ada/unchdeal         R:ads:ada/unchconv         R:ads:ada/s-rident    
-     R:adb:ada/g-hesorg         R:adb:ada/g-dyntab         R:adb:ada/g-table     
-     R:ads:ada/system           R:ads:ada/ada              R:ads:ada/alloc       
-     R:ads:ada/gnat             R:ads:ada/interfac         R:ads:ada/s-purexc    
-     R:ads:ada/s-unstyp         R:ads:ada/ttypef           R:ads:ada/a-charac    
-     R:adb:ada/debug            R:ads:ada/rident           R:adb:ada/s-casuti    
-     R:adb:ada/s-conca2         R:ads:ada/s-crtl           R:adb:ada/s-parame    
-     R:adb:ada/s-strhas         R:adb:ada/s-traceb         R:adb:ada/s-traent    
-     R:adb:ada/s-utf_32         R:adb:ada/s-wchcon         R:adb:ada/s-wchjis    
-     R:ads:ada/a-chlat1         R:adb:ada/g-byorma         R:adb:ada/g-hesora    
-     R:adb:ada/g-spchge         R:adb:ada/s-conca3         R:adb:ada/s-conca4    
-     R:adb:ada/s-conca5         R:adb:ada/s-conca6         R:adb:ada/s-conca7    
-     R:adb:ada/s-conca8         R:adb:ada/s-conca9         R:adb:ada/s-crc32     
-     R:adb:ada/s-restri         R:adb:ada/g-htable         R:adb:ada/s-addope    
-     R:adb:ada/s-imenne         R:adb:ada/s-stoele         R:adb:ada/s-strcom    
-     R:adb:ada/s-string         R:adb:ada/g-speche         R:adb:ada/s-bitops    
-     R:adb:ada/s-except         R:adb:ada/s-htable         R:adb:ada/s-wchcnv    
-     R:adb:ada/s-carun8         R:adb:ada/s-mastop         R:adb:ada/s-stache    
-     R:adb:ada/a-comlin         R:adb:ada/g-u3spch         R:adb:ada/gnatvsn     
-     R:adb:ada/i-cstrea         R:adb:ada/s-imgenu         R:adb:ada/s-sopco3    
-     R:adb:ada/s-sopco4         R:adb:ada/s-sopco5         R:adb:ada/s-strops    
-     R:ads:ada/hostparm         R:adb:ada/get_targ         R:ads:ada/ttypes      
-     R:adb:ada/krunch           R:adb:ada/a-elchha         R:adb:ada/s-soflin    
-     R:adb:ada/s-stalib         R:adb:ada/s-memory         R:adb:ada/s-secsta    
-     R:ads:ada/a-ioexce         R:adb:ada/s-exctab         R:adb:ada/scos        
-     R:adb:ada/stand            R:adb:ada/csets            R:adb:ada/hlo         
-     R:adb:ada/put_scos         R:adb:ada/stylesw          R:adb:ada/validsw     
-     R:adb:ada/get_scos         R:adb:ada/s-assert         R:adb:ada/i-c         
-     R:adb:ada/a-except         R:adb:ada/types            R:adb:ada/a-clrefi    
-     R:adb:ada/s-os_lib         R:adb:ada/table            R:adb:ada/output      
-     R:adb:ada/opt              R:adb:ada/tree_io          R:adb:ada/elists      
-     R:adb:ada/widechar         R:adb:ada/fname            R:adb:ada/binderr     
-     R:adb:ada/sinput-c         R:adb:ada/stringt          L:ads:ada/treeprs     
-     R:adb:ada/bindusg          R:adb:ada/butil            R:adb:ada/casing      
-     R:adb:ada/uintp            R:adb:ada/urealp           R:adb:ada/namet-sp    
-     L:adb:ada/sdefault         R:ads:ada/err_vars         R:adb:ada/namet       
-     R:adb:ada/sinput-d         L:adb:ada/snames           R:adb:ada/usage       
-     R:adb:ada/switch           R:adb:ada/switch-b         R:adb:ada/fmap        
-     R:adb:ada/osint-b          R:adb:ada/osint-c          R:adb:ada/scans       
-     R:adb:ada/lib-util         R:adb:ada/atree            R:adb:ada/nlists      
-     R:adb:ada/sinfo            R:adb:ada/sinfo-cn         R:adb:ada/styleg      
-     R:adb:ada/switch-c         R:adb:ada/debug_a          R:adb:ada/scil_ll     
-     R:adb:ada/targparm         L:adb:ada/nmake            R:adb:ada/scng        
-     R:adb:ada/fname-uf         R:adb:ada/tree_in          R:adb:ada/sinput      
-     R:adb:ada/bindgen          R:adb:ada/einfo            R:adb:ada/sem_aux     
-     R:adb:ada/osint            R:adb:ada/ali              R:adb:ada/tree_gen    
-     R:adb:ada/binde            R:adb:ada/prep             R:adb:ada/sem_scil    
-     R:adb:ada/sem_ch2          R:adb:ada/sem_smem         R:adb:ada/sem_vfpt    
-     R:adb:ada/erroutc          R:adb:ada/instpar          R:adb:ada/itypes      
-     R:adb:ada/exp_vfpt         R:adb:ada/lib              R:adb:ada/uname       
-     R:adb:ada/eval_fat         R:adb:ada/live             R:adb:ada/sem_mech    
-     R:adb:ada/comperr          R:adb:ada/exp_sel          R:adb:ada/tbuild      
-     R:adb:ada/exp_smem         R:adb:ada/exp_ch12         R:adb:ada/gnatbind    
-     R:adb:ada/style            R:adb:ada/exp_strm         R:adb:ada/repinfo     
-     R:adb:ada/exp_cg           R:adb:ada/exp_ch13         R:adb:ada/back_end    
-     R:adb:ada/exp_ch2          R:adb:ada/sem_intr         R:adb:ada/exp_dbug    
-     R:adb:ada/sem_dist         R:adb:ada/impunit          R:adb:ada/restrict    
-     R:adb:ada/sem_case         R:adb:ada/sem_elim         R:adb:ada/treepr      
-     R:adb:ada/errout           R:adb:ada/ali-util         R:adb:ada/bcheck      
-     R:adb:ada/expander         R:adb:ada/inline           R:adb:ada/par_sco     
-     R:adb:ada/sinput-l         R:adb:ada/prepcomp         R:adb:ada/sprint      
-     R:adb:ada/lib-xref         R:adb:ada/sem_ch11         R:adb:ada/sem_warn    
-     R:adb:ada/exp_tss          R:adb:ada/scn              R:adb:ada/exp_atag    
-     R:adb:ada/rtsfind          R:adb:ada/exp_ch8          R:adb:ada/exp_util    
-     R:adb:ada/exp_prag         R:adb:ada/exp_ch11         R:adb:ada/lib-load    
-     R:adb:ada/exp_dist         R:adb:ada/exp_imgv         R:adb:ada/sem         
-     R:adb:ada/lib-writ         R:adb:ada/sem_ch13         R:adb:ada/checks      
-     R:adb:ada/exp_pakd         R:adb:ada/exp_ch7          R:adb:ada/exp_intr    
-     R:adb:ada/sem_cat          R:adb:ada/sem_util         R:adb:ada/cstand      
-     R:adb:ada/layout           R:adb:ada/exp_fixd         R:adb:ada/sem_eval    
-     R:adb:ada/sem_type         R:adb:ada/exp_code         R:adb:ada/frontend    
-     R:adb:ada/exp_ch3          R:adb:ada/sem_elab         R:adb:ada/sem_ch7     
-     R:adb:ada/sem_ch10         R:adb:ada/exp_ch9          R:adb:ada/exp_disp    
-     R:adb:ada/sem_disp         R:adb:ada/sem_res          R:adb:ada/par         
-     R:adb:ada/sem_aggr         R:adb:ada/exp_ch5          R:adb:ada/gnat1drv    
-     R:adb:ada/sem_ch4          R:adb:ada/sem_ch8          R:adb:ada/sem_ch12    
-     R:adb:ada/sem_ch9          R:adb:ada/exp_attr         R:adb:ada/freeze      
-     R:adb:ada/exp_ch4          R:adb:ada/sem_ch5          R:adb:ada/sem_ch6     
-     R:adb:ada/exp_aggr         R:adb:ada/exp_ch6          R:adb:ada/sem_ch3     
-     R:adb:ada/sem_attr         R:adb:ada/sem_prag    
+     R:adb:ada/a-exexda         R:adb:ada/a-exextr         R:adb:ada/a-excpol
+     R:adb:ada/a-exstat         R:adb:ada/lib-list         R:adb:ada/lib-sort
+     R:adb:ada/par-ch10         R:adb:ada/par-ch11         R:adb:ada/par-ch12
+     R:adb:ada/par-ch13         R:adb:ada/par-ch2          R:adb:ada/par-ch3
+     R:adb:ada/par-ch4          R:adb:ada/par-ch5          R:adb:ada/par-ch6
+     R:adb:ada/par-ch7          R:adb:ada/par-ch8          R:adb:ada/par-ch9
+     R:adb:ada/par-endh         R:adb:ada/par-labl         R:adb:ada/par-load
+     R:adb:ada/par-prag         R:adb:ada/par-sync         R:adb:ada/par-tchk
+     R:adb:ada/par-util         R:ads:ada/a-unccon         R:ads:ada/a-uncdea
+     R:ads:ada/unchdeal         R:ads:ada/unchconv         R:ads:ada/s-rident
+     R:adb:ada/g-hesorg         R:adb:ada/g-dyntab         R:adb:ada/g-table
+     R:ads:ada/system           R:ads:ada/ada              R:ads:ada/alloc
+     R:ads:ada/gnat             R:ads:ada/interfac         R:ads:ada/s-purexc
+     R:ads:ada/s-unstyp         R:ads:ada/ttypef           R:ads:ada/a-charac
+     R:adb:ada/debug            R:ads:ada/rident           R:adb:ada/s-casuti
+     R:adb:ada/s-conca2         R:ads:ada/s-crtl           R:adb:ada/s-parame
+     R:adb:ada/s-strhas         R:adb:ada/s-traceb         R:adb:ada/s-traent
+     R:adb:ada/s-utf_32         R:adb:ada/s-wchcon         R:adb:ada/s-wchjis
+     R:ads:ada/a-chlat1         R:adb:ada/g-byorma         R:adb:ada/g-hesora
+     R:adb:ada/g-spchge         R:adb:ada/s-conca3         R:adb:ada/s-conca4
+     R:adb:ada/s-conca5         R:adb:ada/s-conca6         R:adb:ada/s-conca7
+     R:adb:ada/s-conca8         R:adb:ada/s-conca9         R:adb:ada/s-crc32
+     R:adb:ada/s-restri         R:adb:ada/g-htable         R:adb:ada/s-addope
+     R:adb:ada/s-imenne         R:adb:ada/s-stoele         R:adb:ada/s-strcom
+     R:adb:ada/s-string         R:adb:ada/g-speche         R:adb:ada/s-bitops
+     R:adb:ada/s-except         R:adb:ada/s-htable         R:adb:ada/s-wchcnv
+     R:adb:ada/s-carun8         R:adb:ada/s-mastop         R:adb:ada/s-stache
+     R:adb:ada/a-comlin         R:adb:ada/g-u3spch         R:adb:ada/gnatvsn
+     R:adb:ada/i-cstrea         R:adb:ada/s-imgenu         R:adb:ada/s-sopco3
+     R:adb:ada/s-sopco4         R:adb:ada/s-sopco5         R:adb:ada/s-strops
+     R:ads:ada/hostparm         R:adb:ada/get_targ         R:ads:ada/ttypes
+     R:adb:ada/krunch           R:adb:ada/a-elchha         R:adb:ada/s-soflin
+     R:adb:ada/s-stalib         R:adb:ada/s-memory         R:adb:ada/s-secsta
+     R:ads:ada/a-ioexce         R:adb:ada/s-exctab         R:adb:ada/scos
+     R:adb:ada/stand            R:adb:ada/csets            R:adb:ada/hlo
+     R:adb:ada/put_scos         R:adb:ada/stylesw          R:adb:ada/validsw
+     R:adb:ada/get_scos         R:adb:ada/s-assert         R:adb:ada/i-c
+     R:adb:ada/a-except         R:adb:ada/types            R:adb:ada/a-clrefi
+     R:adb:ada/s-os_lib         R:adb:ada/table            R:adb:ada/output
+     R:adb:ada/opt              R:adb:ada/tree_io          R:adb:ada/elists
+     R:adb:ada/widechar         R:adb:ada/fname            R:adb:ada/binderr
+     R:adb:ada/sinput-c         R:adb:ada/stringt          L:ads:ada/treeprs
+     R:adb:ada/bindusg          R:adb:ada/butil            R:adb:ada/casing
+     R:adb:ada/uintp            R:adb:ada/urealp           R:adb:ada/namet-sp
+     L:adb:ada/sdefault         R:ads:ada/err_vars         R:adb:ada/namet
+     R:adb:ada/sinput-d         L:adb:ada/snames           R:adb:ada/usage
+     R:adb:ada/switch           R:adb:ada/switch-b         R:adb:ada/fmap
+     R:adb:ada/osint-b          R:adb:ada/osint-c          R:adb:ada/scans
+     R:adb:ada/lib-util         R:adb:ada/atree            R:adb:ada/nlists
+     R:adb:ada/sinfo            R:adb:ada/sinfo-cn         R:adb:ada/styleg
+     R:adb:ada/switch-c         R:adb:ada/debug_a          R:adb:ada/scil_ll
+     R:adb:ada/targparm         L:adb:ada/nmake            R:adb:ada/scng
+     R:adb:ada/fname-uf         R:adb:ada/tree_in          R:adb:ada/sinput
+     R:adb:ada/bindgen          R:adb:ada/einfo            R:adb:ada/sem_aux
+     R:adb:ada/osint            R:adb:ada/ali              R:adb:ada/tree_gen
+     R:adb:ada/binde            R:adb:ada/prep             R:adb:ada/sem_scil
+     R:adb:ada/sem_ch2          R:adb:ada/sem_smem         R:adb:ada/sem_vfpt
+     R:adb:ada/erroutc          R:adb:ada/instpar          R:adb:ada/itypes
+     R:adb:ada/exp_vfpt         R:adb:ada/lib              R:adb:ada/uname
+     R:adb:ada/eval_fat         R:adb:ada/live             R:adb:ada/sem_mech
+     R:adb:ada/comperr          R:adb:ada/exp_sel          R:adb:ada/tbuild
+     R:adb:ada/exp_smem         R:adb:ada/exp_ch12         R:adb:ada/gnatbind
+     R:adb:ada/style            R:adb:ada/exp_strm         R:adb:ada/repinfo
+     R:adb:ada/exp_cg           R:adb:ada/exp_ch13         R:adb:ada/back_end
+     R:adb:ada/exp_ch2          R:adb:ada/sem_intr         R:adb:ada/exp_dbug
+     R:adb:ada/sem_dist         R:adb:ada/impunit          R:adb:ada/restrict
+     R:adb:ada/sem_case         R:adb:ada/sem_elim         R:adb:ada/treepr
+     R:adb:ada/errout           R:adb:ada/ali-util         R:adb:ada/bcheck
+     R:adb:ada/expander         R:adb:ada/inline           R:adb:ada/par_sco
+     R:adb:ada/sinput-l         R:adb:ada/prepcomp         R:adb:ada/sprint
+     R:adb:ada/lib-xref         R:adb:ada/sem_ch11         R:adb:ada/sem_warn
+     R:adb:ada/exp_tss          R:adb:ada/scn              R:adb:ada/exp_atag
+     R:adb:ada/rtsfind          R:adb:ada/exp_ch8          R:adb:ada/exp_util
+     R:adb:ada/exp_prag         R:adb:ada/exp_ch11         R:adb:ada/lib-load
+     R:adb:ada/exp_dist         R:adb:ada/exp_imgv         R:adb:ada/sem
+     R:adb:ada/lib-writ         R:adb:ada/sem_ch13         R:adb:ada/checks
+     R:adb:ada/exp_pakd         R:adb:ada/exp_ch7          R:adb:ada/exp_intr
+     R:adb:ada/sem_cat          R:adb:ada/sem_util         R:adb:ada/cstand
+     R:adb:ada/layout           R:adb:ada/exp_fixd         R:adb:ada/sem_eval
+     R:adb:ada/sem_type         R:adb:ada/exp_code         R:adb:ada/frontend
+     R:adb:ada/exp_ch3          R:adb:ada/sem_elab         R:adb:ada/sem_ch7
+     R:adb:ada/sem_ch10         R:adb:ada/exp_ch9          R:adb:ada/exp_disp
+     R:adb:ada/sem_disp         R:adb:ada/sem_res          R:adb:ada/par
+     R:adb:ada/sem_aggr         R:adb:ada/exp_ch5          R:adb:ada/gnat1drv
+     R:adb:ada/sem_ch4          R:adb:ada/sem_ch8          R:adb:ada/sem_ch12
+     R:adb:ada/sem_ch9          R:adb:ada/exp_attr         R:adb:ada/freeze
+     R:adb:ada/exp_ch4          R:adb:ada/sem_ch5          R:adb:ada/sem_ch6
+     R:adb:ada/exp_aggr         R:adb:ada/exp_ch6          R:adb:ada/sem_ch3
+     R:adb:ada/sem_attr         R:adb:ada/sem_prag
 )
 
 ##########################  END GENERATED BLOCK  ##########################
@@ -248,56 +248,6 @@ set (bind_object_files
 
 
 
-############## compile_and_mark_objects ##############
-# This function is the major one.  It adds the object file dependencies to
-# the driver_stage_x target, and it compiles each file to an object file.
-# The bind and linking has to come at build time. (?)
-
-function (xxxxcompile_and_mark_objects X ADA_COMPILER)
-
-   set (ali_files "")
-
-   foreach (encoded_name ${ordered_files})
-
-      string (REPLACE ":" ";" test ${encoded_name})
-
-      list (GET test 0 location)
-      list (GET test 1 extension)
-      list (GET test 2 basename)
-      list (APPEND ali_files ${basename}.ali)
-
-      if ("${location}" STREQUAL "R")
-         set (srcfile ${DIR_DRIVER}/${basename}.${extension})
-         set (incflag "-I${CMAKE_CURRENT_BINARY_DIR}")
-      else ()
-         set (srcfile ${basename}.${extension})
-         set (incflag "-I-;-I${DIR_DRIVER}")
-      endif ()
-
-      add_custom_command (
-         OUTPUT ${basename}.o ${basename}.ali
-         COMMAND ${ADA_COMPILER} ${incflag} -c ${srcfile}
-         DEPENDS ${srcfile}
-      )
-
-   endforeach()
-
-   add_custom_command (
-      OUTPUT b~draco.ads b~draco.adb
-      COMMAND ${TOOL_BIND} -x draco.ali
-      DEPENDS ${ali_files}
-   )
-
-   add_custom_command (
-      OUTPUT draco
-      COMMAND ${TOOL_LINK} draco.ali -o ${execloc}
-      DEPENDS b~draco.ads b~draco.adb
-   )
-
-endfunction (xxxxcompile_and_mark_objects)
-
-
-
 
 
 if (${CURRENT_STAGE} EQUAL 1)
@@ -307,8 +257,20 @@ if (${CURRENT_STAGE} EQUAL 1)
    set (pass_linker   ${TOOL_LINK})
    set (pass_cc       ${CMAKE_C_COMPILER})
    set (execloc       ${DIR_STAGE_1}/sysroot/libexec/draco-${DRACO_VERSION}/gnat1)
-   add_custom_target (gnat1_stage1 DEPENDS gnat1)
-   add_dependencies  (draco_stage1 gnat1_stage1)
+
+#   add_custom_target (gnat1_stage1 DEPENDS gnat1)
+   add_custom_target (gnat1_stage1 DEPENDS
+nmake.adb
+nmake.ads
+snames.ads
+snames.adb
+snames.h
+einfo.h
+sinfo.h
+treeprs.ads
+)
+   add_dependencies  (frontend_stage1 gnat1_stage1)
+
 
 elseif (${CURRENT_STAGE} EQUAL 2)
 
@@ -329,7 +291,7 @@ elseif (${CURRENT_STAGE} EQUAL 2)
 
    set (execloc       ${DIR_STAGE_2}/sysroot/libexec/draco-${DRACO_VERSION}/gnat1)
    add_custom_target (gnat1_stage2 DEPENDS gnat1)
-   add_dependencies  (draco_stage2 gnat1_stage2)
+   add_dependencies  (frontend_stage2 gnat1_stage2)
 
 else (${CURRENT_STAGE} EQUAL 3)
 
@@ -340,11 +302,168 @@ else (${CURRENT_STAGE} EQUAL 3)
    set (pass_cc       ${CMAKE_C_COMPILER})
    set (execloc       ${DIR_STAGE_3}/sysroot/libexec/draco-${DRACO_VERSION}/gnat1)
    add_custom_target (gnat1_stage3 DEPENDS gnat1)
-   add_dependencies  (draco_stage3 gnat1_stage3)
+   add_dependencies  (frontend_stage3 gnat1_stage3)
 
 endif ()
 
 
-#compile_and_mark_objects ()
+
+
+############## generate_einfo_h ##############
+# This function generates the dependency einfo.h
+
+function (generate_einfo_h)
+
+   file (COPY ${DIR_ADA}/einfo.ads ${DIR_ADA}/einfo.adb ${DIR_ADA}/xeinfo.adb
+         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/einfo)
+
+   add_custom_command (
+      OUTPUT einfo.h
+      COMMAND ${CMAKE_COMMAND} -E chdir einfo ${pass_compiler} -c xeinfo.adb
+      COMMAND ${CMAKE_COMMAND} -E chdir einfo ${pass_binder} -x xeinfo.ali
+      COMMAND ${CMAKE_COMMAND} -E chdir einfo ${pass_linker} xeinfo.ali
+      COMMAND ${CMAKE_COMMAND} -E chdir einfo ./xeinfo ../einfo.h
+      DEPENDS einfo/xeinfo.adb einfo/einfo.ads einfo/xeinfo.adb
+   )
+
+endfunction (generate_einfo_h)
+
+
+
+
+
+############## generate_sinfo_h ##############
+# This function generates the dependency sinfo.h
+
+function (generate_sinfo_h)
+
+   file (COPY ${DIR_ADA}/sinfo.ads ${DIR_ADA}/sinfo.adb ${DIR_ADA}/xsinfo.adb
+         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/sinfo)
+
+   add_custom_command (
+      OUTPUT sinfo.h
+      COMMAND ${CMAKE_COMMAND} -E chdir sinfo ${pass_compiler} -c xsinfo.adb
+      COMMAND ${CMAKE_COMMAND} -E chdir sinfo ${pass_binder} -x xsinfo.ali
+      COMMAND ${CMAKE_COMMAND} -E chdir sinfo ${pass_linker} xsinfo.ali
+      COMMAND ${CMAKE_COMMAND} -E chdir sinfo ./xsinfo ../sinfo.h
+      DEPENDS sinfo/xsinfo.adb sinfo/sinfo.ads sinfo/xsinfo.adb
+   )
+
+endfunction (generate_sinfo_h)
+
+
+
+
+
+
+############## generate_treeprs ##############
+# This function generates the dependency treeprs.ads
+
+function (generate_treeprs)
+
+   file (COPY ${DIR_ADA}/treeprs.adt ${DIR_ADA}/sinfo.ads ${DIR_ADA}/xtreeprs.adb
+         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/treeprs)
+
+   add_custom_command (
+      OUTPUT treeprs.ads
+      COMMAND ${CMAKE_COMMAND} -E chdir treeprs ${pass_compiler} -c xtreeprs.adb
+      COMMAND ${CMAKE_COMMAND} -E chdir treeprs ${pass_binder} -x xtreeprs.ali
+      COMMAND ${CMAKE_COMMAND} -E chdir treeprs ${pass_linker} xtreeprs.ali
+      COMMAND ${CMAKE_COMMAND} -E chdir treeprs ./xtreeprs ../treeprs.ads
+      DEPENDS treeprs/treeprs.adt treeprs/sinfo.ads treeprs/xtreeprs.adb
+   )
+
+endfunction (generate_treeprs)
+
+
+
+
+
+############## generate_snames ##############
+# This function generates the dependency snames.ads, snames.adb, snames.h
+
+function (generate_snames)
+
+   file (COPY  ${DIR_ADA}/xutil.ads
+               ${DIR_ADA}/xutil.adb
+               ${DIR_ADA}/snames.ads-tmpl
+               ${DIR_ADA}/snames.adb-tmpl
+               ${DIR_ADA}/snames.h-tmpl
+               ${DIR_ADA}/xsnamest.adb
+         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/snamest)
+
+   add_custom_command (
+      OUTPUT snames.ads snames.adb snames.h
+      COMMAND ${CMAKE_COMMAND} -E chdir snamest ${pass_compiler} -c xutil.adb
+      COMMAND ${CMAKE_COMMAND} -E chdir snamest ${pass_compiler} -c xsnamest.adb
+      COMMAND ${CMAKE_COMMAND} -E chdir snamest ${pass_binder} -x xsnamest.ali
+      COMMAND ${CMAKE_COMMAND} -E chdir snamest ${pass_linker} xsnamest.ali
+      COMMAND ${CMAKE_COMMAND} -E chdir snamest ./xsnamest
+      COMMAND ${CMAKE_COMMAND} -E rename snamest/snames.ns snames.ads
+      COMMAND ${CMAKE_COMMAND} -E rename snamest/snames.nb snames.adb
+      COMMAND ${CMAKE_COMMAND} -E rename snamest/snames.nh snames.h
+      DEPENDS
+               snamest/xutil.ads
+               snamest/xutil.adb
+               snamest/snames.ads-tmpl
+               snamest/snames.adb-tmpl
+               snamest/snames.h-tmpl
+               snamest/xsnamest.adb
+   )
+
+endfunction (generate_snames)
+
+
+
+
+
+############## generate_nmake_sb ##############
+# This function generates the dependency nmake.ads nmake.adb
+
+function (generate_nmake_sb)
+
+   file (COPY  ${DIR_ADA}/xutil.ads
+               ${DIR_ADA}/xutil.adb
+               ${DIR_ADA}/sinfo.ads
+               ${DIR_ADA}/nmake.adt
+               ${DIR_ADA}/xnmake.adb
+         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/nmake)
+
+   add_custom_command (
+      OUTPUT nmake.ads nmake.adb
+      COMMAND ${CMAKE_COMMAND} -E chdir nmake ${pass_compiler} -c xutil.adb
+      COMMAND ${CMAKE_COMMAND} -E chdir nmake ${pass_compiler} -c xnmake.adb
+      COMMAND ${CMAKE_COMMAND} -E chdir nmake ${pass_binder} -x xnmake.ali
+      COMMAND ${CMAKE_COMMAND} -E chdir nmake ${pass_linker} xnmake.ali
+      COMMAND ${CMAKE_COMMAND} -E chdir nmake ./xnmake -b ./nmake.adb
+      COMMAND ${CMAKE_COMMAND} -E chdir nmake ./xnmake -s ../nmake.ads
+      COMMAND ${CMAKE_COMMAND} -E copy  nmake/nmake.adb .
+      DEPENDS
+               nmake/xutil.ads
+               nmake/xutil.adb
+               nmake/sinfo.ads
+               nmake/nmake.adt
+               nmake/xnmake.adb
+   )
+
+endfunction (generate_nmake_sb)
+
+
+
+
+generate_einfo_h  ()
+generate_sinfo_h  ()
+generate_treeprs  ()
+generate_snames   ()
+generate_nmake_sb ()
+
+
+
+
+
+
+
+
+
 
 
