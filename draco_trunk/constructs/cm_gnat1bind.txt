@@ -94,17 +94,17 @@ set (compile_sequence
      R:adb:ada/s-os_lib         R:adb:ada/table            R:adb:ada/output      
      R:adb:ada/opt              R:adb:ada/tree_io          R:adb:ada/elists      
      R:adb:ada/widechar         R:adb:ada/fname            R:adb:ada/binderr     
-     R:adb:ada/sinput-c         R:adb:ada/stringt          R:ads:ada/treeprs     
+     R:adb:ada/sinput-c         R:adb:ada/stringt          L:ads:ada/treeprs     
      R:adb:ada/bindusg          R:adb:ada/butil            R:adb:ada/casing      
      R:adb:ada/uintp            R:adb:ada/urealp           R:adb:ada/namet-sp    
-     R:adb:ada/sdefault         R:ads:ada/err_vars         R:adb:ada/namet       
-     R:adb:ada/sinput-d         R:adb:ada/snames           R:adb:ada/usage       
+     L:adb:ada/sdefault         R:ads:ada/err_vars         R:adb:ada/namet       
+     R:adb:ada/sinput-d         L:adb:ada/snames           R:adb:ada/usage       
      R:adb:ada/switch           R:adb:ada/switch-b         R:adb:ada/fmap        
      R:adb:ada/osint-b          R:adb:ada/osint-c          R:adb:ada/scans       
      R:adb:ada/lib-util         R:adb:ada/atree            R:adb:ada/nlists      
      R:adb:ada/sinfo            R:adb:ada/sinfo-cn         R:adb:ada/styleg      
      R:adb:ada/switch-c         R:adb:ada/debug_a          R:adb:ada/scil_ll     
-     R:adb:ada/targparm         R:adb:ada/nmake            R:adb:ada/scng        
+     R:adb:ada/targparm         L:adb:ada/nmake            R:adb:ada/scng        
      R:adb:ada/fname-uf         R:adb:ada/tree_in          R:adb:ada/sinput      
      R:adb:ada/bindgen          R:adb:ada/einfo            R:adb:ada/sem_aux     
      R:adb:ada/osint            R:adb:ada/ali              R:adb:ada/tree_gen    

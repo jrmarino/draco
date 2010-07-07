@@ -1,0 +1,9 @@
+ada/sinfo.h
+ada/einfo.h
+ada/nmake.adb
+ada/nmake.ads
+ada/treeprs.ads
+ada/snames.ads
+ada/snames.adb
+ada/snames.h
+ada/sdefault.adb

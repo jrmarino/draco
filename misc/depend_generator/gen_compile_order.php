@@ -97,6 +97,7 @@ class TSortAda
 	private $separate_comp = array ();
 	private $missing_objs  = array ();
 	private $unused_files  = array ();
+	private $exceptions    = array ();
 	private $component;
 
 
@@ -112,6 +113,7 @@ class TSortAda
 			echo ('#########   Recursion Failed   #########');
 		}
 		$this->read_objects($objfile);
+		$this->read_exceptions ($depfile);
 	}
 
 	function generate_output ()
@@ -159,7 +161,7 @@ class TSortAda
 		{
 			$cr = ($counter % 3 == 2) ? "\n" : '';
 			$DBE = $this->dir_base_ext ($filename);
-			$localremote = "R";
+			$localremote = in_array($filename, $this->exceptions) ? 'L' : 'R';
 			$encoded = sprintf("%s:%s:%s/%s", $localremote, $DBE['extension'],
 						$DBE['relpath'], $DBE['base']);
 			$block = sprintf("     %-22s%s", $encoded, $cr);
@@ -472,7 +474,7 @@ class TSortAda
 		$fgc = file_get_contents($inputFile);
 		$lineArray = explode("\n", $fgc);
 		$this->unused_files = $this->orderedList;
-		foreach ($lineArray as $lineno => $line)
+		foreach ($lineArray as $line)
 		{
 			$cleanline = trim ($line);
 			if (!empty($cleanline))
@@ -502,10 +504,24 @@ class TSortAda
 				}
 			}
 		}
-
 	}
 
+	private function read_exceptions ($inputFile)
+	{
+		$localFile = str_replace ('dep.','local.', $inputFile);
+		if (!file_exists($localFile)) { return; }
 
+		$fgc = file_get_contents($localFile);
+		$lineArray = explode("\n", $fgc);
+		foreach ($lineArray as $line)
+		{
+			$cleanline = trim ($line);
+			if (!empty($cleanline))
+			{
+				$this->exceptions[] = $cleanline;
+			}
+		}
+	}
 }
 
 $SortAda = new TSortAda ($depfile, $objfile, $inputs['objlist']);
