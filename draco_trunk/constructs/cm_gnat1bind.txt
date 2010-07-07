@@ -451,11 +451,50 @@ endfunction (generate_nmake_sb)
 
 
 
+############## generate_sdefault ##############
+# This function generates the dependency sdefault.adb
+
+function (generate_sdefault)
+
+   set (SF sdefault.adb)
+
+   file (WRITE  ${SF} "pragma Style_Checks (Off);\n")
+   file (APPEND ${SF} "with Osint; use Osint;\n")
+   file (APPEND ${SF} "package body Sdefault is\n")
+   file (APPEND ${SF} "   S0 : constant String := \"${draco_prefix}/\";\n")
+   file (APPEND ${SF} "   S1 : constant String := \"${draco_prefix}/lib/draco-${DRACO_VERSION}/adainclude/\";\n")
+   file (APPEND ${SF} "   S2 : constant String := \"${draco_prefix}/lib/draco-${DRACO_VERSION}/adalib/\";\n")
+   file (APPEND ${SF} "   S3 : constant String := \"${TARGET_TRIPLET}\";\n")
+   file (APPEND ${SF} "   S4 : constant String := \"${draco_prefix}/lib/draco-${DRACO_VERSION}/\";\n")
+   file (APPEND ${SF} "   function Include_Dir_Default_Name return String_Ptr is\n")
+   file (APPEND ${SF} "   begin\n")
+   file (APPEND ${SF} "      return Relocate_Path (S0, S1);\n")
+   file (APPEND ${SF} "   end Include_Dir_Default_Name;\n")
+   file (APPEND ${SF} "   function Object_Dir_Default_Name return String_Ptr is\n")
+   file (APPEND ${SF} "   begin\n")
+   file (APPEND ${SF} "      return Relocate_Path (S0, S2);\n")
+   file (APPEND ${SF} "   end Object_Dir_Default_Name;\n")
+   file (APPEND ${SF} "   function Target_Name return String_Ptr is\n")
+   file (APPEND ${SF} "   begin\n")
+   file (APPEND ${SF} "      return new String'(S3);\n")
+   file (APPEND ${SF} "   end Target_Name;\n")
+   file (APPEND ${SF} "   function Search_Dir_Prefix return String_Ptr is\n")
+   file (APPEND ${SF} "   begin\n")
+   file (APPEND ${SF} "      return Relocate_Path (S0, S4);\n")
+   file (APPEND ${SF} "   end Search_Dir_Prefix;\n")
+   file (APPEND ${SF} "end Sdefault;\n")
+
+endfunction (generate_sdefault)
+
+
+
+
 generate_einfo_h  ()
 generate_sinfo_h  ()
 generate_treeprs  ()
 generate_snames   ()
 generate_nmake_sb ()
+generate_sdefault ()
 
 
 
