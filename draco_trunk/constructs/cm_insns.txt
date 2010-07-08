@@ -1,0 +1,140 @@
+##
+##  DRACO ADA COMPILER
+##  CMAKE BUILD SCRIPT - GENERATE INSN FILES
+##
+##
+##  Copyright (c) 2010, John Marino (www.auroraux.org)
+##  All rights reserved.
+##
+##  Permission to use, copy, modify, and/or distribute this software for any
+##  purpose with or without fee is hereby granted, provided that the above
+##  copyright notice and this permission notice appear in all copies.
+##
+##  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+##  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+##  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+##  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+##  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+##  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+##  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+##
+
+
+
+# set base directory
+set (base ${DIR_REMNANTS}/gcc)
+
+#set includes
+include_directories (
+   ${DIR_REMNANTS}/gcc
+   ${DIR_REMNANTS}/include
+   ${DIR_HEADERS}
+)
+
+add_definitions (
+   -g
+   -fkeep-inline-functions
+   -DIN_GCC
+   ${LOOSE_WARN}
+   ${C_LOOSE_WARN}
+   -Wmissing-format-attribute
+   -pedantic
+   -Wno-long-long
+   -Wno-variadic-macros
+   -Wno-overlength-strings
+   -Wold-style-definition
+   -Wc++-compat
+   -fno-common
+   -DHAVE_CONFIG_H
+   -DGENERATOR_FILE
+)
+
+set (MDFILE ${DIR_REMNANTS}/gcc/config/${cpu_type}/${cpu_type}.md)
+
+############## build_insn_generators ##############
+# This function builds all the generators needed to make insn files
+
+function (build_insn_generators)
+
+   add_executable (genflags      ${base}/genflags.c)
+   add_executable (gencheck      ${base}/gencheck.c)
+   add_executable (genmodes      ${base}/genmodes.c)
+   add_executable (genconstants  ${base}/genconstants.c)
+   add_executable (genconditions ${base}/genconditions.c)
+   add_executable (gencondmd     gencondmd.c)
+
+   add_dependencies (genflags    ${DIR_HEADERS}/insn-modes.h)
+
+endfunction (build_insn_generators)
+
+
+
+
+############## build_insn_flags  ##############
+# This functions builds the insn_flags.h header.  First a generator is 
+# compiled and then that generator is executed to produce the header.
+
+function (build_insn_flags)
+
+   add_custom_command (
+      OUTPUT ${DIR_HEADERS}/insn-flags.h
+      COMMAND genflags ${MDFILE} insn-conditions.md > ${DIR_HEADERS}/insn-flags.h
+      DEPENDS genflags insn-conditions.md ${DIR_HEADERS}/insn-modes.h
+   )
+
+endfunction (build_insn_flags)
+
+
+function (build_insn_conditions)
+
+   add_custom_command (
+      OUTPUT insn-conditions.md
+      COMMAND gencondmd > insn-conditions.md
+      DEPENDS gencondmd
+   )
+
+endfunction (build_insn_conditions)
+
+
+function (build_insn_gencondmd_c)
+
+   add_custom_command (
+      OUTPUT gencondmd.c
+      COMMAND genconditions ${MDFILE} > gencondmd.c
+      DEPENDS genconditions ${MDFILE}
+   )
+
+endfunction (build_insn_gencondmd_c)
+
+
+
+
+function (build_insn_modes)
+
+   add_custom_command (
+      OUTPUT insn-modes.c ${DIR_HEADERS}/insn-modes.h
+      COMMAND genmodes > insn-modes.c
+      COMMAND genmodes -h > ${DIR_HEADERS}/insn-modes.h
+      DEPENDS genmodes
+   )
+
+endfunction (build_insn_modes)
+
+
+
+
+
+##########################################
+
+
+
+build_insn_generators  ()
+build_insn_modes       ()
+build_insn_gencondmd_c ()
+build_insn_conditions  ()
+build_insn_flags       ()
+
+add_custom_target (insn_files DEPENDS 
+	${DIR_HEADERS}/insn-flags.h
+	${DIR_HEADERS}/insn-modes.h
+)

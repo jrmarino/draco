@@ -50,6 +50,37 @@ set (GNAT1_C_OBJS
 )
 
 
+set (GNAT1_C_FILES
+
+      ada/adadecode
+      ada/adaint
+      ada/argv
+      ada/aux-io
+      ada/cio
+      ada/cstreams
+      ada/env
+      ada/init
+      ada/initialize
+      ada/raise
+      ada/tracebak
+
+      gcc_interface/cuintp
+      gcc_interface/decl
+      gcc_interface/misc
+      gcc_interface/targtyps
+      gcc_interface/utils
+      gcc_interface/utils2
+      gcc_interface/trans
+
+      gcc_remnants/version.c
+      gcc_remnants/attribs.c
+      gcc_remnants/prefix.c
+)
+
+
+
+
+
 ##############  GENERATED FILE LIST -- DO NOT EDIT BY HAND  ##############
 
 set (compile_sequence
@@ -247,7 +278,7 @@ set (bind_object_files
 #	$(GCC_LINK) -o $@ $(GNAT1_OBJS) $(ADA_BACKEND) $(LIBS) $(SYSLIBS) $(BACKENDLIBS) $(CFLAGS)
 
 
-
+add_dependencies (frontend_stage1 insn_files)
 
 
 if (${CURRENT_STAGE} EQUAL 1)
@@ -268,6 +299,30 @@ snames.h
 einfo.h
 sinfo.h
 treeprs.ads
+      adadecode.o
+      adaint.o
+      argv.o
+      aux-io.o
+      cio.o
+      cstreams.o
+      env.o
+      init.o
+      initialize.o
+      raise.o
+      tracebak.o
+
+      cuintp.o
+      decl.o
+      misc.o
+      targtyps.o
+      utils.o
+      utils2.o
+      trans.o
+
+#      version.o
+      attribs.o
+      prefix.o
+
 )
    add_dependencies  (frontend_stage1 gnat1_stage1)
 
@@ -489,20 +544,54 @@ endfunction (generate_sdefault)
 
 
 
-generate_einfo_h  ()
-generate_sinfo_h  ()
-generate_treeprs  ()
-generate_snames   ()
-generate_nmake_sb ()
-generate_sdefault ()
+############## generate_c_objs ##############
+# This function generates all the c objects
+
+function (generate_c_objects)
+
+   set (cobj_flags -g -O2 -W -Wall -DIN_GCC)
+   set (incl_flags "-I${DIR_HEADERS};-I${DIR_REMNANTS}/include;-I${DIR_REMNANTS}/gcc")
+   list (APPEND incl_flags "-I${DIR_ADA}")
+   list (APPEND incl_flags "-I${DIR_GCCINT}")
+   list (APPEND incl_flags "-I${HEADER_GMP}")
+
+   foreach (cobj ${GNAT1_C_FILES})
+
+      set (srcfile ${CMAKE_SOURCE_DIR}/${cobj}.c)
+      string (REGEX REPLACE "^.+/(.+)$" "\\1" outfile_base ${cobj})
+      set (outfile ${outfile_base}.o)
+
+      add_custom_command (
+         OUTPUT ${outfile}
+         COMMAND ${pass_compiler} ${incl_flags} ${cobj_flags} -c ${srcfile}
+         DEPENDS ${srcfile}
+      )
+
+   endforeach ()
+
+endfunction (generate_c_objects)
+
+#ALL_COMPILERFLAGS
+#ADA_CFLAGS
+#ALL_CPPFLAGS
+#set (ADAFLAGS -W -Wall -gnatpg -gnata)
+#set (SOME_ADAFLAGS -gnata)
+#set (FORCE_DEBUG_ADAFLAGS -g)
+#set (ADA_CFLAGS "")
+#set (T_CFLAGS "")
+#set (CFLAGS -g)
+#set (INTERNAL_CFLAGS -DIN_GCC)
+#TAGET_LIBGCC2_CFLAGS   (set by tmake files?)
+#set (GNATLIBFLAGS = -gnatpg -nostdinc)
+#set (GNATLIBCFLAGS = -g O2)
+#set (GNATLIBCFLAGS_FOR_C -fexceptions -DIN_RTS -DHAVE_GETIPINFO
 
 
-
-
-
-
-
-
-
-
+generate_einfo_h   ()
+generate_sinfo_h   ()
+generate_treeprs   ()
+generate_snames    ()
+generate_nmake_sb  ()
+generate_sdefault  ()
+generate_c_objects ()
 

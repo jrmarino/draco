@@ -39,6 +39,8 @@ set (SYSTEM_H  system.h
 set (host_xm_file "")
 set (host_xm_defines "")
 set (host_xmake_file "")
+set (host_xm_inc_list "")
+set (build_xm_inc_list "")
 set (host_exeext "")
 set (out_host_hook_obj "host-default.o")
 set (host_can_use_collect2 "yes")

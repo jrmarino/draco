@@ -46,8 +46,6 @@ set (host_xm_defines    "")
 set (build_xm_defines   "")
 set (tm_inc_list        "")
 set (xm_inc_list        "")
-set (host_xm_inc_list   "")
-set (build_xm_inc_list  "")
 set (REVISION_BASIC     "-=> DRACO")
 set (REVISION           ${REVISION_BASIC})
 set (option_list        ${DIR_GCCINT}/lang.opt
