@@ -26,6 +26,7 @@ set (base ${DIR_REMNANTS}/gcc)
 
 #set includes
 include_directories (
+   ${CMAKE_CURRENT_BINARY_DIR}
    ${DIR_REMNANTS}/gcc
    ${DIR_REMNANTS}/include
    ${DIR_HEADERS}
@@ -43,7 +44,6 @@ add_definitions (
    -Wno-variadic-macros
    -Wno-overlength-strings
    -Wold-style-definition
-   -Wc++-compat
    -fno-common
    -DHAVE_CONFIG_H
    -DGENERATOR_FILE
@@ -56,14 +56,15 @@ set (MDFILE ${DIR_REMNANTS}/gcc/config/${cpu_type}/${cpu_type}.md)
 
 function (build_insn_generators)
 
-   add_executable (genflags      ${base}/genflags.c)
+   add_executable (genflags      ${base}/genflags.c insn-modes.h)
    add_executable (gencheck      ${base}/gencheck.c)
-   add_executable (genmodes      ${base}/genmodes.c)
+   add_executable (genmodes      ${base}/genmodes.c ${base}/errors.c)
    add_executable (genconstants  ${base}/genconstants.c)
-   add_executable (genconditions ${base}/genconditions.c)
-   add_executable (gencondmd     gencondmd.c)
+   add_executable (gengtype      ${base}/gengtype.c)
+   add_executable (genconditions ${base}/genconditions.c ${base}/vec.c insn-modes.h line-map.h)
+   add_executable (gencondmd     gencondmd.c insn-constants.h)
 
-   add_dependencies (genflags    ${DIR_HEADERS}/insn-modes.h)
+   target_link_libraries (genmodes iberty)
 
 endfunction (build_insn_generators)
 
@@ -71,20 +72,23 @@ endfunction (build_insn_generators)
 
 
 ############## build_insn_flags  ##############
-# This functions builds the insn_flags.h header.  First a generator is 
+# This functions builds the insn_flags.h header.  First a generator is
 # compiled and then that generator is executed to produce the header.
 
 function (build_insn_flags)
 
    add_custom_command (
-      OUTPUT ${DIR_HEADERS}/insn-flags.h
-      COMMAND genflags ${MDFILE} insn-conditions.md > ${DIR_HEADERS}/insn-flags.h
-      DEPENDS genflags insn-conditions.md ${DIR_HEADERS}/insn-modes.h
+      OUTPUT  insn-flags.h
+      COMMAND genflags ${MDFILE} insn-conditions.md > insn-flags.h
+      DEPENDS genflags insn-conditions.md insn-modes.h
    )
 
 endfunction (build_insn_flags)
 
 
+
+
+############## build_insn_conditions  ##############
 function (build_insn_conditions)
 
    add_custom_command (
@@ -96,6 +100,8 @@ function (build_insn_conditions)
 endfunction (build_insn_conditions)
 
 
+
+############## build_insn_gencondmd_c  ##############
 function (build_insn_gencondmd_c)
 
    add_custom_command (
@@ -108,18 +114,77 @@ endfunction (build_insn_gencondmd_c)
 
 
 
-
+############## build_insn_modes  ##############
 function (build_insn_modes)
 
    add_custom_command (
-      OUTPUT insn-modes.c ${DIR_HEADERS}/insn-modes.h
+      OUTPUT insn-modes.c insn-modes.h
       COMMAND genmodes > insn-modes.c
-      COMMAND genmodes -h > ${DIR_HEADERS}/insn-modes.h
+      COMMAND genmodes -h > insn-modes.h
       DEPENDS genmodes
    )
 
 endfunction (build_insn_modes)
 
+
+############## create_all_tree_def ##############
+function (create_all_tree_def)
+
+   set (ATF all-tree.def)
+   set (TREE     ${DIR_REMNANTS}/gcc/tree.def)
+   set (ADA_TREE ${DIR_GCCINT}/ada-tree.def)
+   file (WRITE  ${ATF} "#include \"${TREE}\"\n")
+   file (APPEND ${ATF} "END_OF_BASE_TREE_CODES\n")
+   file (APPEND ${ATF} "#include \"${ADA_TREE}\"\n")
+
+endfunction (create_all_tree_def)
+
+
+############## create_bversion ##############
+function (create_bversion)
+
+   string (STRIP "${BASEVER}" S_BASEVER)
+   string (REGEX REPLACE "^([0-9][0-9]?).+$"                      "\\1" MAJOR ${S_BASEVER})
+   string (REGEX REPLACE "^[0-9][0-9]?[.]([0-9][0-9]?).+"         "\\1" MINOR ${S_BASEVER})
+   string (REGEX REPLACE "^[0-9][0-9]?[.][0-9][0-9]?[.]([0-9]+)$" "\\1" PATCHLEVEL ${S_BASEVER})
+
+   math   (EXPR GCC_VERSION "${MAJOR} * 1000 + ${MINOR}")
+
+   set (FN bversion.h)
+   file (WRITE  ${FN} "#define BUILDING_GCC_MAJOR ${MAJOR}\n")
+   file (APPEND ${FN} "#define BUILDING_GCC_MINOR ${MINOR}\n")
+   file (APPEND ${FN} "#define BUILDING_GCC_PATCHLEVEL ${PATCHLEVEL}\n")
+   file (APPEND ${FN} "#define BUILDING_GCC_VERSION ${GCC_VERSION}\n")
+
+endfunction (create_bversion)
+
+
+
+############## build_insn_constants  ##############
+function (build_insn_constants)
+
+   add_custom_command (
+      OUTPUT  insn-constants.h
+      COMMAND genconstants > insn-constants.h
+      DEPENDS genconstants
+   )
+
+endfunction (build_insn_constants)
+
+
+
+
+############## build_gtype_desc  ##############
+function (build_gtype_desc)
+
+   add_custom_command (
+      OUTPUT insn-modes.c insn-modes.h
+      COMMAND gengtype > insn-modes.c
+      COMMAND genmodes -h > insn-modes.h
+      DEPENDS genmodes
+   )
+
+endfunction (build_gtype_desc)
 
 
 
@@ -127,14 +192,18 @@ endfunction (build_insn_modes)
 ##########################################
 
 
-
+file (COPY ${DIR_REMNANTS}/line-map.h DESTINATION .)
+create_all_tree_def    ()
+create_bversion        ()
 build_insn_generators  ()
+build_insn_constants   ()
 build_insn_modes       ()
 build_insn_gencondmd_c ()
 build_insn_conditions  ()
 build_insn_flags       ()
 
-add_custom_target (insn_files DEPENDS 
-	${DIR_HEADERS}/insn-flags.h
-	${DIR_HEADERS}/insn-modes.h
+add_custom_target (insn_files DEPENDS
+	insn-flags.h
+	insn-modes.h
+#   insn-constants.h
 )

@@ -26,11 +26,11 @@ set (DIR_STAGE_1    ${CMAKE_BINARY_DIR}/stage_1)
 set (DIR_STAGE_2    ${CMAKE_BINARY_DIR}/stage_2)
 set (DIR_STAGE_3    ${CMAKE_BINARY_DIR}/stage_3)
 set (DIR_HEADERS    ${CMAKE_BINARY_DIR}/headers)
-set (DIR_INSNS      ${CMAKE_BINARY_DIR}/insns)
 set (DIR_REMNANTS   ${CMAKE_SOURCE_DIR}/gcc_remnants)
 set (DIR_GCCINT     ${CMAKE_SOURCE_DIR}/gcc_interface)
 set (DIR_DRIVER     ${CMAKE_SOURCE_DIR}/driver)
 set (DIR_ADA        ${CMAKE_SOURCE_DIR}/ada)
+
 
 
 
@@ -49,9 +49,11 @@ endfunction (copy_to_new_name)
 
 
 
+
 ############## build_stage ##############
 # THis function creates the stage directory skeleton
 #
+
 function (build_stage stage_path)
 
    file (MAKE_DIRECTORY
@@ -65,8 +67,10 @@ function (build_stage stage_path)
          ${stage_path}/libgcc
          ${stage_path}/libgcc_eh
          ${stage_path}/libgcov
+         ${stage_path}/libiberty
          ${stage_path}/crtstuff
          ${stage_path}/driver
+         ${stage_path}/insns
          ${stage_path}/gnat1bind
          ${stage_path}/gnat1bind/sinfo
          ${stage_path}/gnat1bind/einfo
@@ -77,9 +81,12 @@ function (build_stage stage_path)
    copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcc_eh.txt ${stage_path}/libgcc_eh CMakeLists.txt)
    copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcc.txt    ${stage_path}/libgcc    CMakeLists.txt)
    copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcov.txt   ${stage_path}/libgcov   CMakeLists.txt)
+   copy_to_new_name (${DIR_CONSTRUCTS} cm_libiberty.txt ${stage_path}/libiberty CMakeLists.txt)
    copy_to_new_name (${DIR_CONSTRUCTS} cm_crtstuff.txt  ${stage_path}/crtstuff  CMakeLists.txt)
    copy_to_new_name (${DIR_CONSTRUCTS} cm_driver.txt    ${stage_path}/driver    CMakeLists.txt)
    copy_to_new_name (${DIR_CONSTRUCTS} cm_gnat1bind.txt ${stage_path}/gnat1bind CMakeLists.txt)
+   copy_to_new_name (${DIR_CONSTRUCTS} cm_insns.txt     ${stage_path}/insns     CMakeLists.txt)
+
 #   copy_to_new_name (${DIR_CONSTRUCTS} cm_gnatlink.txt    ${stage_path}/gnatlink    CMakeLists.txt)
 #   copy_to_new_name (${DIR_CONSTRUCTS} cm_gnatmake.txt    ${stage_path}/gnatmake    CMakeLists.txt)
 
@@ -108,5 +115,4 @@ endif ()
 
 # Create the unique directories now
 file (MAKE_DIRECTORY ${DIR_HEADERS})
-file (MAKE_DIRECTORY ${DIR_INSNS})
-copy_to_new_name (${DIR_CONSTRUCTS} cm_insns.txt  ${DIR_INSNS}  CMakeLists.txt)
+

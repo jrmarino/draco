@@ -131,12 +131,16 @@ if (NOT ${CROSSXENO})
    add_custom_target (draco_stage1)
    add_custom_target (frontend_stage1)
 
+   add_subdirectory (${DIR_STAGE_1}/libiberty ${DIR_STAGE_1}/libiberty)
    add_subdirectory (${DIR_STAGE_1}/libgcc    ${DIR_STAGE_1}/libgcc)
    add_subdirectory (${DIR_STAGE_1}/libgcc_eh ${DIR_STAGE_1}/libgcc_eh)
    add_subdirectory (${DIR_STAGE_1}/libgcov   ${DIR_STAGE_1}/libgcov)
    add_subdirectory (${DIR_STAGE_1}/crtstuff  ${DIR_STAGE_1}/crtstuff)
    add_subdirectory (${DIR_STAGE_1}/driver    ${DIR_STAGE_1}/driver)
-   add_subdirectory (${DIR_STAGE_1}/gnat1bind ${DIR_STAGE_1}/gnat1bind)
+   add_subdirectory (${DIR_STAGE_1}/insns     ${DIR_STAGE_1}/insns)
+#   add_subdirectory (${DIR_STAGE_1}/gnat1bind ${DIR_STAGE_1}/gnat1bind)
+
+
 
    add_dependencies  (compiler libgcc_stage1)
    add_dependencies  (compiler draco_stage1)

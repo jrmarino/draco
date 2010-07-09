@@ -46,6 +46,7 @@ set (out_host_hook_obj "host-default.o")
 set (host_can_use_collect2 "yes")
 set (use_long_long_for_widest_fast_int "no")
 set (result_xmake_files "")
+set (pex_specific "pex-unix")
 
 
 

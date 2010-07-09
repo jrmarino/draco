@@ -1,0 +1,162 @@
+##
+##  DRACO ADA COMPILER
+##  CMAKE BUILD SCRIPT - STATIC LIBRARY LIBIBERY
+##
+##
+##  Copyright (c) 2010, John Marino (www.auroraux.org)
+##  All rights reserved.
+##
+##  Permission to use, copy, modify, and/or distribute this software for any
+##  purpose with or without fee is hereby granted, provided that the above
+##  copyright notice and this permission notice appear in all copies.
+##
+##  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+##  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+##  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+##  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+##  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+##  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+##  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+##
+
+
+
+
+
+# Compiler flags.  Target values are constant,
+# even between native and xeno builds (only host and compiler varies)
+set (task_flags
+   -DHAVE_CONFIG_H
+   -g
+   -fkeep-inline-functions
+   -Wall
+   -Wwrite-strings
+   -Wstrict-prototypes
+   -Wold-style-declaration
+   -Wmissing-parameter-type
+   -Wclobbered
+   -Wsign-compare
+   -pedantic
+)
+
+
+# defined include directories.  The c_objects needed to be removed later
+# for cross-compiler profiles
+include_directories (
+   ${DIR_REMNANTS}/include
+   ${DIR_REMNANTS}/gcc
+   ${DIR_HEADERS}
+)
+
+
+# required objects for libiberty (there are more, these are only the
+# ones that are required at a minimum according to the makefile.
+
+set (components
+   regex
+   cplus-dem
+   cp-demangle
+   md5
+   sha1
+   alloca
+   argv
+   choose-temp
+   concat
+   cp-demint
+   crc32
+   dyn-string
+   fdmatch
+   fibheap
+   filename_cmp
+   floatformat
+   fnmatch
+   fopen_unlocked
+   getopt
+   getopt1
+   getpwd
+   getruntime
+   hashtab
+   hex
+   lbasename
+   lrealpath
+   make-relative-prefix
+   make-temp-file
+   objalloc
+   obstack
+   partition
+   pexecute
+   ${pex_specific}
+   physmem
+   pex-common
+   pex-one
+   safe-ctype
+   sort
+   spaces
+   splay-tree
+   strerror
+   strsignal
+   unlink-if-ordinary
+   xatexit
+   xexit
+   xmalloc
+   xmemdup
+   xstrdup
+   xstrerror
+   xstrndup
+)
+
+# convert the list above to full path source
+set (component_source_files "")
+foreach (component ${components})
+
+   list (APPEND component_source_files
+                ${DIR_REMNANTS}/libiberty/${component}.c)
+
+endforeach ()
+
+
+
+# relative sysroot/lib location
+set (syslib ../sysroot/lib/draco-${DRACO_VERSION})
+
+add_definitions  (${task_flags})
+
+
+
+
+if (${CURRENT_STAGE} EQUAL 1)
+
+   add_library       (iberty STATIC ${component_source_files})
+   add_dependencies  (libgcc_stage1 iberty)
+
+#   get_target_property   (real_libname iberty LOCATION)
+#   get_filename_component(justname ${real_libname} NAME)
+
+#   add_custom_command (
+#      OUTPUT ${syslib}/${justname}
+#      COMMAND ${CMAKE_COMMAND} -E copy ${justname} ${syslib}/${justname}
+#      DEPENDS iberty
+#   )
+
+
+elseif (${CURRENT_STAGE} EQUAL 2)
+
+   #so a bootstrap compiler will be statically linked to libgcov2 rather than libgcov
+   add_dependencies  (libgcc_stage2 iberty2)
+   add_library       (iberty2 STATIC ${component_source_files})
+
+else (${CURRENT_STAGE} EQUAL 3)
+
+   #so a bootstrap compiler will be statically linked to libgcov2 rather than libgcov
+   add_dependencies  (libgcc_stage3 iberty3)
+   add_library       (iberty3 STATIC ${component_source_files})
+
+endif ()
+
+
+
+
+
+
+
+
