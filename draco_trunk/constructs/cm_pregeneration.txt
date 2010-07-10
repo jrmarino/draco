@@ -1,0 +1,341 @@
+##
+##  DRACO ADA COMPILER
+##  CMAKE BUILD SCRIPT - PREGENERATION
+##
+##
+##  Copyright (c) 2010, John Marino (www.auroraux.org)
+##  All rights reserved.
+##
+##  Permission to use, copy, modify, and/or distribute this software for any
+##  purpose with or without fee is hereby granted, provided that the above
+##  copyright notice and this permission notice appear in all copies.
+##
+##  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+##  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+##  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+##  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+##  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+##  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+##  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+##
+
+
+
+############## define_file_gthr_default_h ##############
+# creates gth-default.h header and places it in the build directory
+
+function (define_file_gthr_default_h)
+
+   set  (GTHREAD_FLAGS "-DHAVE_GTHR_DEFAULT" PARENT_SCOPE)
+
+   copy_to_new_name (
+      ${DIR_REMNANTS}/gcc "gthr-${thread_file}.h"
+      ${DIR_HEADERS}      "gthr-default.h")
+
+
+endfunction (define_file_gthr_default_h)
+
+
+
+
+############## define_file_tconfig_h ##############
+# creates tconfig.h header and places it in the build directory
+
+function (define_file_tconfig_h)
+
+   set  (t_file ${DIR_HEADERS}/tconfig.h)
+   set  (DEFINE_LIST USED_FOR_TARGET ${xm_defines})
+
+   file (WRITE  ${t_file} "#ifndef GCC_TCONFIG_H\n")
+   file (APPEND ${t_file} "#define GCC_TCONFIG_H\n")
+
+   # Define TARGET_CPU_DEFAULT if the system wants one.
+   # This substitutes for lots of *.h files.
+   if (NOT ${TARGET_CPU_DEFAULT} STREQUAL "")
+      file (APPEND ${t_file} "#define TARGET_CPU_DEFAULT (${TARGET_CPU_DEFAULT})\n")
+   endif ()
+
+
+   foreach (definition ${DEFINE_LIST})
+      string (REPLACE "=" " " splitdef ${definition})
+      string (REGEX REPLACE "^(.[^=]+)(=.*)?$" "\\1" term1 "${definition}")
+      file (APPEND ${t_file} "#ifndef ${term1}\n")
+      file (APPEND ${t_file} "# define ${splitdef}\n")
+      file (APPEND ${t_file} "#endif\n")
+   endforeach ()
+
+
+   # The first entry in HEADERS may be auto-FOO.h ;
+   # it wants to be included even when not -DIN_GCC.
+   # Postpone including defaults.h until after the insn-*
+   # headers, so that the HAVE_* flags are available
+   # when defaults.h gets included.
+
+   file (APPEND ${t_file} "#include \"auto-host.h\"\n")
+   file (APPEND ${t_file} "#ifdef IN_GCC\n")
+   file (APPEND ${t_file} "# include \"ansidecl.h\"\n")
+   foreach (config_header ${xm_inc_list})
+      file (APPEND ${t_file} "# include \"config/${config_header}\"\n")
+   endforeach ()
+   file (APPEND ${t_file} "#endif\n")
+   file (APPEND ${t_file} "#endif /* GCC_TCONFIG_H */\n")
+
+endfunction (define_file_tconfig_h)
+
+
+
+
+############## define_file_tm_h ##############
+# creates tm.h header and places it in the build directory
+
+function (define_file_tm_h)
+
+   set  (t_file ${DIR_HEADERS}/tm.h)
+   set  (DEFINE_LIST  ${tm_defines})
+
+   file (WRITE  ${t_file} "#ifndef GCC_TM_H\n")
+   file (APPEND ${t_file} "#define GCC_TM_H\n")
+
+   # Define TARGET_CPU_DEFAULT if the system wants one.
+   # This substitutes for lots of *.h files.
+   if (NOT ${TARGET_CPU_DEFAULT} STREQUAL "")
+      file (APPEND ${t_file} "#define TARGET_CPU_DEFAULT (${TARGET_CPU_DEFAULT})\n")
+   endif ()
+
+   foreach (definition ${DEFINE_LIST})
+      string (REPLACE "=" " " splitdef ${definition})
+      string (REGEX REPLACE "^(.[^=]+)(=.*)?$" "\\1" term1 "${definition}")
+      file (APPEND ${t_file} "#ifndef ${term1}\n")
+      file (APPEND ${t_file} "# define ${splitdef}\n")
+      file (APPEND ${t_file} "#endif\n")
+   endforeach ()
+
+
+   # The first entry in HEADERS may be auto-FOO.h ;
+   # it wants to be included even when not -DIN_GCC.
+   # Postpone including defaults.h until after the insn-*
+   # headers, so that the HAVE_* flags are available
+   # when defaults.h gets included.
+
+   file (APPEND ${t_file} "#ifdef IN_GCC\n")
+   file (APPEND ${t_file} "# include \"options.h\"\n")
+   foreach (config_header ${tm_inc_list})
+      file (APPEND ${t_file} "# include \"config/${config_header}\"\n")
+   endforeach ()
+   file (APPEND ${t_file} "#endif\n")
+
+   file (APPEND ${t_file} "#if defined IN_GCC && !defined GENERATOR_FILE && !defined USED_FOR_TARGET\n")
+   file (APPEND ${t_file} "# include \"insn-flags.h\"\n")
+   file (APPEND ${t_file} "# include \"insn-constants.h\"\n")
+   file (APPEND ${t_file} "#endif\n")
+   file (APPEND ${t_file} "# include \"defaults.h\"\n")
+   file (APPEND ${t_file} "#endif /* GCC_TM_H */\n")
+
+endfunction (define_file_tm_h)
+
+
+
+
+############## define_file_tm_p_h ##############
+# creates tm_p.h header and places it in the build directory
+
+function (define_file_tm_p_h)
+
+   set  (t_file ${DIR_HEADERS}/tm_p.h)
+
+   file (WRITE  ${t_file} "#ifndef GCC_TM_P_H\n")
+   file (APPEND ${t_file} "#define GCC_TM_P_H\n")
+
+   # Define TARGET_CPU_DEFAULT if the system wants one.
+   # This substitutes for lots of *.h files.
+   if (NOT ${TARGET_CPU_DEFAULT} STREQUAL "")
+      file (APPEND ${t_file} "#define TARGET_CPU_DEFAULT (${TARGET_CPU_DEFAULT})\n")
+   endif ()
+
+
+   # The first entry in HEADERS may be auto-FOO.h ;
+   # it wants to be included even when not -DIN_GCC.
+   # Postpone including defaults.h until after the insn-*
+   # headers, so that the HAVE_* flags are available
+   # when defaults.h gets included.
+
+   file (APPEND ${t_file} "#ifdef IN_GCC\n")
+   file (APPEND ${t_file} "# include \"options.h\"\n")
+   foreach (config_header ${tm_p_inc_list})
+      file (APPEND ${t_file} "# include \"config/${config_header}\"\n")
+   endforeach ()
+   file (APPEND ${t_file} "#endif\n")
+
+   file (APPEND ${t_file} "#endif /* GCC_TM_P_H */\n")
+
+endfunction (define_file_tm_p_h)
+
+
+
+
+############## define_file_bconfig_h ##############
+# creates bconfig.h header and places it in the build directory
+
+function (define_file_bconfig_h)
+
+   set  (t_file ${DIR_HEADERS}/bconfig.h)
+   set  (DEFINE_LIST ${build_xm_defines})
+
+   file (WRITE  ${t_file} "#ifndef GCC_BCONFIG_H\n")
+   file (APPEND ${t_file} "#define GCC_BCONFIG_H\n")
+
+   # Define TARGET_CPU_DEFAULT if the system wants one.
+   # This substitutes for lots of *.h files.
+   if (NOT ${TARGET_CPU_DEFAULT} STREQUAL "")
+      file (APPEND ${t_file} "#define TARGET_CPU_DEFAULT (${TARGET_CPU_DEFAULT})\n")
+   endif ()
+
+
+   foreach (definition ${DEFINE_LIST})
+      string (REPLACE "=" " " splitdef ${definition})
+      string (REGEX REPLACE "^(.[^=]+)(=.*)?$" "\\1" term1 "${definition}")
+      file (APPEND ${t_file} "#ifndef ${term1}\n")
+      file (APPEND ${t_file} "# define ${splitdef}\n")
+      file (APPEND ${t_file} "#endif\n")
+   endforeach ()
+
+
+   # The first entry in HEADERS may be auto-FOO.h ;
+   # it wants to be included even when not -DIN_GCC.
+   # Postpone including defaults.h until after the insn-*
+   # headers, so that the HAVE_* flags are available
+   # when defaults.h gets included.
+
+   file (APPEND ${t_file} "#include \"auto-host.h\"\n")
+   file (APPEND ${t_file} "#ifdef IN_GCC\n")
+   file (APPEND ${t_file} "# include \"ansidecl.h\"\n")
+   foreach (config_header ${build_xm_inc_list})
+      file (APPEND ${t_file} "# include \"config/${config_header}\"\n")
+   endforeach ()
+   file (APPEND ${t_file} "#endif\n")
+   file (APPEND ${t_file} "#endif /* GCC_BCONFIG_H */\n")
+
+endfunction (define_file_bconfig_h)
+
+
+
+
+############## define_file_options_set ##############
+# This Awk script reads in the option records generated from
+# opt-gather.awk, combines the flags of duplicate options and generates a
+# C header file.
+#
+# This program uses functions from opt-functions.awk
+# Usage: awk -f opt-functions.awk -f opth-gen.awk < inputfile > options.h
+
+function (define_file_options_set)
+
+   set (optawk "${DIR_REMNANTS}/gcc/opt-gather.awk")
+   set (funawk "${DIR_REMNANTS}/gcc/opt-functions.awk")
+   set (gnhawk "${DIR_REMNANTS}/gcc/opth-gen.awk")
+   set (gncawk "${DIR_REMNANTS}/gcc/optc-gen.awk")
+   find_program (AWK NAMES gawk awk)
+   execute_process (
+      COMMAND ${AWK} -f ${optawk} ${option_list}
+      COMMAND ${AWK} -f ${funawk}
+                     -f ${gnhawk}
+                      OUTPUT_FILE ${DIR_HEADERS}/options.h)
+
+   set (payload "header_name=\"config.h system.h coretypes.h tm.h\"")
+   execute_process (
+      COMMAND ${AWK} -f ${optawk} ${option_list}
+      COMMAND ${AWK} -f ${funawk}
+                     -f ${gncawk}
+                     -v ${payload}
+                     OUTPUT_FILE ${DIR_HEADERS}/options.c)
+
+endfunction (define_file_options_set)
+
+
+
+############## generate_sdefault ##############
+# This function generates the dependency sdefault.adb
+
+function (generate_sdefault)
+
+   set (SF ${DIR_GENSRC}/sdefault.adb)
+
+   file (WRITE  ${SF} "pragma Style_Checks (Off);\n")
+   file (APPEND ${SF} "with Osint; use Osint;\n")
+   file (APPEND ${SF} "package body Sdefault is\n")
+   file (APPEND ${SF} "   S0 : constant String := \"${draco_prefix}/\";\n")
+   file (APPEND ${SF} "   S1 : constant String := \"${draco_prefix}/lib/draco-${DRACO_VERSION}/adainclude/\";\n")
+   file (APPEND ${SF} "   S2 : constant String := \"${draco_prefix}/lib/draco-${DRACO_VERSION}/adalib/\";\n")
+   file (APPEND ${SF} "   S3 : constant String := \"${TARGET_TRIPLET}\";\n")
+   file (APPEND ${SF} "   S4 : constant String := \"${draco_prefix}/lib/draco-${DRACO_VERSION}/\";\n")
+   file (APPEND ${SF} "   function Include_Dir_Default_Name return String_Ptr is\n")
+   file (APPEND ${SF} "   begin\n")
+   file (APPEND ${SF} "      return Relocate_Path (S0, S1);\n")
+   file (APPEND ${SF} "   end Include_Dir_Default_Name;\n")
+   file (APPEND ${SF} "   function Object_Dir_Default_Name return String_Ptr is\n")
+   file (APPEND ${SF} "   begin\n")
+   file (APPEND ${SF} "      return Relocate_Path (S0, S2);\n")
+   file (APPEND ${SF} "   end Object_Dir_Default_Name;\n")
+   file (APPEND ${SF} "   function Target_Name return String_Ptr is\n")
+   file (APPEND ${SF} "   begin\n")
+   file (APPEND ${SF} "      return new String'(S3);\n")
+   file (APPEND ${SF} "   end Target_Name;\n")
+   file (APPEND ${SF} "   function Search_Dir_Prefix return String_Ptr is\n")
+   file (APPEND ${SF} "   begin\n")
+   file (APPEND ${SF} "      return Relocate_Path (S0, S4);\n")
+   file (APPEND ${SF} "   end Search_Dir_Prefix;\n")
+   file (APPEND ${SF} "end Sdefault;\n")
+
+endfunction (generate_sdefault)
+
+
+
+############## create_all_tree_def ##############
+function (create_all_tree_def)
+
+   set (ATF ${DIR_GENSRC}/all-tree.def)
+   set (TREE     ${DIR_REMNANTS}/gcc/tree.def)
+   set (ADA_TREE ${DIR_GCCINT}/ada-tree.def)
+   file (WRITE  ${ATF} "#include \"${TREE}\"\n")
+   file (APPEND ${ATF} "END_OF_BASE_TREE_CODES\n")
+   file (APPEND ${ATF} "#include \"${ADA_TREE}\"\n")
+
+endfunction (create_all_tree_def)
+
+
+
+
+############## create_bversion ##############
+function (create_bversion)
+
+   string (STRIP "${BASEVER}" S_BASEVER)
+   string (REGEX REPLACE "^([0-9][0-9]?).+$"                      "\\1" MAJOR ${S_BASEVER})
+   string (REGEX REPLACE "^[0-9][0-9]?[.]([0-9][0-9]?).+"         "\\1" MINOR ${S_BASEVER})
+   string (REGEX REPLACE "^[0-9][0-9]?[.][0-9][0-9]?[.]([0-9]+)$" "\\1" PATCHLEVEL ${S_BASEVER})
+
+   math   (EXPR GCC_VERSION "${MAJOR} * 1000 + ${MINOR}")
+
+   set (FN ${DIR_GENSRC}/bversion.h)
+   file (WRITE  ${FN} "#define BUILDING_GCC_MAJOR ${MAJOR}\n")
+   file (APPEND ${FN} "#define BUILDING_GCC_MINOR ${MINOR}\n")
+   file (APPEND ${FN} "#define BUILDING_GCC_PATCHLEVEL ${PATCHLEVEL}\n")
+   file (APPEND ${FN} "#define BUILDING_GCC_VERSION ${GCC_VERSION}\n")
+
+endfunction (create_bversion)
+
+
+
+
+##########################################
+
+
+define_file_gthr_default_h ()
+define_file_tconfig_h      ()
+define_file_tm_h           ()
+define_file_tm_p_h         ()
+define_file_bconfig_h      ()
+define_file_options_set    ()
+generate_sdefault          ()
+create_all_tree_def        ()
+create_bversion            ()
+

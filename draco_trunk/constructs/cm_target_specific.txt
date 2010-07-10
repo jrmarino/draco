@@ -25,11 +25,8 @@ set (draco_bitbucket    "POSIX")
 set (draco_backend      "undefined")
 set (draco_osname       "Generic")
 set (draco_cc1_spec     "blank")
-set (draco_prefix       "/usr/local")
 set (draco_dash_pipe    "True")
 set (use_gcc_stdint     "none")
-set (gnu_ld             "yes")
-set (gas                "yes")
 set (TARGET_CPU_DEFAULT "")
 set (need_64bit_hwint   "")
 set (need_64bit_isa     "")
@@ -52,20 +49,7 @@ set (option_list        ${DIR_GCCINT}/lang.opt
                         ${DIR_REMNANTS}/gcc/common.opt)
 
 
-if (DEFINED non_gnu_as)
-   set (gas    "no")
-endif ()
-if (DEFINED non_gnu_ld)
-   set (gnu_ld "no")
-endif ()
-if (DEFINED prefix)
-   if (EXISTS (${prefix}))
-      set (draco_prefix  "${prefix}")
-   else ()
-      set (P1 "The provided installation prefix `${prefix}` is not a valid path.")
-      message (FATAL_ERROR "${P1}")
-   endif ()
-endif ()
+
 
 
 

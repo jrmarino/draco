@@ -1,0 +1,236 @@
+##
+##  DRACO ADA COMPILER
+##  CMAKE BUILD SCRIPT - BUILD SETTINGS
+##
+##
+##  Copyright (c) 2010, John Marino (www.auroraux.org)
+##  All rights reserved.
+##
+##  Permission to use, copy, modify, and/or distribute this software for any
+##  purpose with or without fee is hereby granted, provided that the above
+##  copyright notice and this permission notice appear in all copies.
+##
+##  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+##  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+##  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+##  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+##  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+##  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+##  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+##
+
+
+
+set (gnu_ld             "yes")
+set (gas                "yes")
+set (draco_prefix       "/usr/local")
+
+
+
+
+############## define_external_ada_compiler ##############
+# This function will look for an Ada compiler named draco or gnatgcc.
+# If the parameter "ada_boot" is provided, then it will look in that exact
+# path and store it in the cache if successful.  If not, fatal error is thrown.
+
+function (define_external_ada_compiler)
+
+   if ("${ada_boot}" STREQUAL "")
+      find_program (EXTERNAL_ADA_COMPILER gnatgcc draco)
+      if ("${EXTERNAL_ADA_COMPILER}" STREQUAL "EXTERNAL_ADA_COMPILER-NOTFOUND")
+         message (FATAL_ERROR "The `draco` or `gnatgcc` compilers could not be found in the standard search path.")
+      endif ()
+   else ()
+      if (EXISTS "${ada_boot}")
+         set (EXTERNAL_ADA_COMPILER "${ada_boot}" CACHE FILEPATH "External Ada compiler provided via command-line" FORCE)
+      else ()
+         message (FATAL_ERROR "There was no file located at `${ada_boot}` (Ada compiler or otherwise).")
+      endif ()
+   endif ()
+
+endfunction (define_external_ada_compiler)
+
+
+
+
+############## define_gnat_tool_paths ##############
+# This function will check to see if the toolpaths option was issued and if so
+# it will check its validity.  Otherwise it will search for both gnatlink and
+# gnatbind in the default search path.  If both are not found, a fatal error
+# will be issued.  The paths will be stored in the cache.
+
+function (define_gnat_tool_paths)
+
+   if ("${toolpath}" STREQUAL "")
+      find_program (TOOL_BIND gnatbind)
+      find_program (TOOL_LINK gnatlink)
+   else ()
+      find_program (TOOL_BIND gnatbind PATHS "${toolpath}" NO_DEFAULT_PATH)
+      find_program (TOOL_LINK gnatlink PATHS "${toolpath}" NO_DEFAULT_PATH)
+   endif ()
+
+   if ("${TOOL_BIND}" STREQUAL "TOOL_BIND-NOTFOUND")
+      if (DEFINED toolpath)
+         message (FATAL_ERROR "The `gnatbind` program was not found in the `${toolpath}` directory.")
+      else ()
+         message (FATAL_ERROR "The `gnatbind` program was not found in the standard search path.")
+      endif ()
+   endif ()
+   if ("${TOOL_LINK}" STREQUAL "TOOL_LINK-NOTFOUND")
+      if (DEFINED toolpath)
+         message (FATAL_ERROR "The `gnatlink` program was not found in the `${toolpath}` directory.")
+      else ()
+         message (FATAL_ERROR "The `gnatlink` program was not found in the standard search path.")
+      endif ()
+   endif ()
+
+endfunction (define_gnat_tool_paths)
+
+
+
+
+############## define_assembler_path ##############
+# This function sets the variable {TOOL_ASSEMBLER} based on the various command
+# line settings and the search path.
+
+function (define_assembler_path)
+
+   if (DEFINED non_gnu_as)
+      set (gas "no" PARENT_SCOPE)
+   endif ()
+
+   if (DEFINED with_as)
+      if ("${with_as}" STREQUAL "" OR NOT EXISTS ${with_as})
+         message (FATAL_ERROR "Specified assembler does not exist.")
+      endif ()
+      set (TOOL_ASSEMBLER "${with_as}" PARENT_SCOPE)
+   else ()
+      set (stdname /usr/bin/as)
+      if (EXISTS ${stdname})
+         set (TOOL_ASSEMBLER ${stdname} PARENT_SCOPE)
+      else ()
+         message (FATAL_ERROR "There is no assembler named `${stdname}` in the search path.")
+      endif ()
+   endif ()
+
+endfunction (define_assembler_path)
+
+
+
+############## define_linker_path ##############
+# This function sets the variable {TOOL_LINKER} based on the various command
+# line settings and the search path.
+
+function (define_linker_path)
+
+   if (DEFINED non_gnu_ld)
+      set (gnu_ld "no" PARENT_SCOPE)
+   endif ()
+
+   if (DEFINED with_ld)
+      if ("${with_ld}" STREQUAL "" OR NOT EXISTS ${with_ld})
+         message (FATAL_ERROR "Specified linker does not exist.")
+      endif ()
+      set (TOOL_LINKER "${with_ld}" PARENT_SCOPE)
+   else ()
+      set (stdname /usr/bin/ld)
+      if (EXISTS ${stdname})
+         set (TOOL_LINKER ${stdname} PARENT_SCOPE)
+      else ()
+         message (FATAL_ERROR "There is no linker named `${stdname}` in the search path.")
+      endif ()
+   endif ()
+
+endfunction (define_linker_path)
+
+
+
+
+############## define_install_prefix ##############
+
+function (define_install_prefix)
+
+   if (DEFINED prefix)
+      if (EXISTS ${prefix})
+         set (draco_prefix  "${prefix}" PARENT_SCOPE)
+      else ()
+         set (P1 "The provided installation prefix `${prefix}` is not a valid path.")
+         message (FATAL_ERROR "${P1}")
+      endif ()
+   endif ()
+
+endfunction (define_install_prefix)
+
+
+
+
+
+############## define_early_stage_c_compiler ##############
+# This function will define the stage 1 C compiler.  If the command line
+# options "with-clang=" or the environment variable "CC" is defined, then
+# this will define the first C compiler, otherwise the standard CMAKE C
+# compiler will be used.
+
+function (define_early_stage_c_compiler)
+
+   if (DEFINED with_clang)
+      if ("{with_clang}" STREQUAL "")
+         find_program (EXTERNAL_C_COMPILER clang)
+         if ("${EXTERNAL_C_COMPILER}" STREQUAL "EXTERNAL_C_COMPILER-NOTFOUND")
+            message (FATAL_ERROR "The `clang` compiler could not be found in the standard search path.")
+         endif ()
+      else ()
+         if (EXISTS "{with_clang}")
+            set (EXTERNAL_C_COMPILER "${with_clang}" CACHE FILEPATH "External C compiler provided via command-line" FORCE)
+         else ()
+            message (FATAL_ERROR "The `clang` compiler could not be found here: ${with_clang}.")
+         endif ()
+      endif ()
+   elseif (NOT "$ENV{CC}" STREQUAL "")
+      if (EXISTS "$ENV{CC}")
+            set (EXTERNAL_C_COMPILER "$ENV{CC}" CACHE FILEPATH "External C compiler provided via command-line" FORCE)
+      else ()
+            message (FATAL_ERROR "The `CC` compiler in the environment variable could not be found here: $ENV{CC}.")
+      endif ()
+   else ()
+      set (EXTERNAL_C_COMPILER "${CMAKE_C_COMPILER}" CACHE FILEPATH "External C compiler provided via CMAKE" FORCE)
+   endif ()
+
+endfunction (define_early_stage_c_compiler)
+
+
+############## define_c_cross_compiler ##############
+# only in the case of the xeno profile, the value of c_cross is checked.
+# Not existing is not permitted, and if it does exist, the path must be valid.
+
+function (define_c_cross_compiler)
+
+   set (tmp_cross "")
+   if ("${profile}" STREQUAL "xeno")
+      if (DEFINED c_cross)
+         if (EXISTS "${c_cross}")
+            set (tmp_cross "${c_cross}")
+         else ()
+            message (FATAL_ERROR "There path to the C cross-compiler (${c_cross}) is not valid.")
+         endif ()
+      else ()
+         message (FATAL_ERROR "The -D c_cross option must be set when the xeno profile is requested.")
+      endif ()
+   endif ()
+   set (CROSS_C_COMPILER "${tmp_cross}" CACHE FILEPATH "C Cross-compiler value provided by command-line." FORCE)
+
+endfunction  (define_c_cross_compiler)
+
+
+
+
+############################################
+
+define_early_stage_c_compiler ()
+define_external_ada_compiler  ()
+define_c_cross_compiler       ()
+define_gnat_tool_paths        ()
+define_install_prefix         ()
+define_assembler_path         ()
+define_linker_path            ()
+find_program (SYSTEM_ARCHIVER ar)

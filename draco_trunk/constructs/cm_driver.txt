@@ -117,30 +117,6 @@ endfunction (construct_configuration)
 
 
 
-############## assembler_path ##############
-# If we are at this point, which is past the header generation, we know that our
-# with_as (if present) is a good value.  We can derive the full path.
-
-function (assembler_path)
-
-   if (DEFINED with_as)
-      set (draco_assembler "${with_as}" PARENT_SCOPE)
-   else ()
-      if ("${gas}" STREQUAL "yes")
-         set (stdname gas)
-      else ()
-         set (stdname as)
-      endif ()
-      find_path (as_path ${stdname})
-      if ("${as_path}" STREQUAL "as_path-NOTFOUND")
-         message (FATAL_ERROR "There is no assembler named `${stdname}` in the search path.")
-      else ()
-         set (draco_assembler "${as_path}/${stdname}" PARENT_SCOPE)
-      endif ()
-   endif ()
-
-endfunction (assembler_path)
-
 
 ############## create_driver_specification ##############
 # This function creates a configuration file for building the DRACO driver
@@ -163,7 +139,6 @@ function (create_driver_specification)
    set (execpath "../${commpath}:${draco_prefix}/${commpath}")
    six_digit_os_version ()
    construct_configuration ()
-   assembler_path ()
 
    file (WRITE ${outfile} "
 with DracoSystem;
@@ -183,7 +158,7 @@ package DracoSystemSpecs is
    file (APPEND ${outfile} "      Dash_For_Pipe  => ${draco_dash_pipe},\n")
    file (APPEND ${outfile} "      CPU_AutoDetect => False,\n")
    file (APPEND ${outfile} "      CC_Flags       => DracoSystem.${draco_cc1_spec},\n")
-   file (APPEND ${outfile} "      Path_assembler => DracoSystem.Set_DefPath (\"${draco_assembler}\"),\n")
+   file (APPEND ${outfile} "      Path_assembler => DracoSystem.Set_DefPath (\"${TOOL_ASSEMBLER}\"),\n")
    file (APPEND ${outfile} "      Path_libexec   => DracoSystem.Set_DefPath (\"${execpath}\"),\n")
    file (APPEND ${outfile} "      Config_options => DracoSystem.Set_Config  (\"${result_config}\")\n")
 
@@ -191,66 +166,6 @@ package DracoSystemSpecs is
 
 endfunction (create_driver_specification)
 
-
-
-
-############## define_gnat_tool_paths ##############
-# This function will check to see if the toolpaths option was issued and if so
-# it will check its validity.  Otherwise it will search for both gnatlink and
-# gnatbind in the default search path.  If both are not found, a fatal error
-# will be issued.  The paths will be stored in the cache.
-
-function (define_gnat_tool_paths)
-
-   if ("${toolpath}" STREQUAL "")
-      find_program (TOOL_BIND gnatbind)
-      find_program (TOOL_LINK gnatlink)
-   else ()
-      find_program (TOOL_BIND gnatbind PATHS "${toolpath}" NO_DEFAULT_PATH)
-      find_program (TOOL_LINK gnatlink PATHS "${toolpath}" NO_DEFAULT_PATH)
-   endif ()
-
-   if ("${TOOL_BIND}" STREQUAL "TOOL_BIND-NOTFOUND")
-      if (DEFINED toolpath)
-         message (FATAL_ERROR "The `gnatbind` program was not found in the `${toolpath}` directory.")
-      else ()
-         message (FATAL_ERROR "The `gnatbind` program was not found in the standard search path.")
-      endif ()
-   endif ()
-   if ("${TOOL_LINK}" STREQUAL "TOOL_LINK-NOTFOUND")
-      if (DEFINED toolpath)
-         message (FATAL_ERROR "The `gnatlink` program was not found in the `${toolpath}` directory.")
-      else ()
-         message (FATAL_ERROR "The `gnatlink` program was not found in the standard search path.")
-      endif ()
-   endif ()
-
-endfunction (define_gnat_tool_paths)
-
-
-
-
-############## define_external_ada_compiler ##############
-# This function will look for an Ada compiler named draco or gnatgcc.
-# If the parameter "ada_boot" is provided, then it will look in that exact
-# path and store it in the cache if successful.  If not, fatal error is thrown.
-
-function (define_external_ada_compiler)
-
-   if ("${ada_boot}" STREQUAL "")
-      find_program (EXTERNAL_ADA_COMPILER gnatgcc draco)
-      if ("${EXTERNAL_ADA_COMPILER}" STREQUAL "EXTERNAL_ADA_COMPILER-NOTFOUND")
-         message (FATAL_ERROR "The `draco` or `gnatgcc` compilers could not be found in the standard search path.")
-      endif ()
-   else ()
-      if (EXISTS "${ada_boot}")
-         set (EXTERNAL_ADA_COMPILER "${ada_boot}" CACHE FILEPATH "External Ada compiler provided via command-line" FORCE)
-      else ()
-         message (FATAL_ERROR "There was no file located at `${ada_boot}` (Ada compiler or otherwise).")
-      endif ()
-   endif ()
-
-endfunction (define_external_ada_compiler)
 
 
 
@@ -283,7 +198,7 @@ function (compile_and_mark_objects)
 
       add_custom_command (
          OUTPUT ${basename}.o ${basename}.ali
-         COMMAND ${pass_compiler} ${incflag} -c ${srcfile}
+         COMMAND ${DRACO_ADA_COMPILER} ${incflag} -c ${srcfile}
          DEPENDS ${srcfile}
       )
 
@@ -291,13 +206,13 @@ function (compile_and_mark_objects)
 
    add_custom_command (
       OUTPUT b~draco.ads b~draco.adb
-      COMMAND ${pass_binder} -x draco.ali
+      COMMAND ${ADA_BINDER} -x draco.ali
       DEPENDS ${ali_files}
    )
 
    add_custom_command (
       OUTPUT draco
-      COMMAND ${pass_linker} draco.ali -o ${execloc}
+      COMMAND ${ADA_LINKER} draco.ali -o ${execloc}
       DEPENDS b~draco.ads b~draco.adb
    )
 
@@ -330,36 +245,23 @@ set (ordered_files
 
 
 create_driver_specification ()
-define_gnat_tool_paths ()
-define_external_ada_compiler ()
+set (execloc       ../sysroot/bin/draco)
 
 
 if (${CURRENT_STAGE} EQUAL 1)
 
-   set (pass_compiler ${EXTERNAL_ADA_COMPILER})
-   set (pass_binder   ${TOOL_BIND})
-   set (pass_linker   ${TOOL_LINK})
-   set (execloc       ${DIR_STAGE_1}/sysroot/bin/draco)
-   add_custom_target (driver_stage1 DEPENDS draco)
-   add_dependencies  (draco_stage1 driver_stage1)
+   add_custom_target (draco1 DEPENDS draco)
+   add_dependencies  (driver_s1 draco1)
 
 elseif (${CURRENT_STAGE} EQUAL 2)
 
-   set (pass_compiler ${DIR_STAGE_1}/sysroot/bin/draco)
-   set (pass_binder   ${DIR_STAGE_1}/sysroot/bin/gnatbind)
-   set (pass_linker   ${DIR_STAGE_1}/sysroot/bin/gnatlink)
-   set (execloc       ${DIR_STAGE_2}/sysroot/bin/draco)
-   add_custom_target (driver_stage2 DEPENDS draco)
-   add_dependencies  (draco_stage2 driver_stage2)
+   add_custom_target (draco2 DEPENDS draco)
+   add_dependencies  (driver_s2 draco2)
 
 else (${CURRENT_STAGE} EQUAL 3)
 
-   set (pass_compiler ${DIR_STAGE_2}/sysroot/bin/draco)
-   set (pass_binder   ${DIR_STAGE_2}/sysroot/bin/gnatbind)
-   set (pass_linker   ${DIR_STAGE_2}/sysroot/bin/gnatlink)
-   set (execloc       ${DIR_STAGE_3}/sysroot/bin/draco)
-   add_custom_target (driver_stage3 DEPENDS draco)
-   add_dependencies  (draco_stage3 driver_stage3)
+   add_custom_target (draco3 DEPENDS draco)
+   add_dependencies  (driver_s3 draco3)
 
 endif ()
 

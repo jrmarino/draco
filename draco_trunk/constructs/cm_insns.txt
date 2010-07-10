@@ -25,14 +25,13 @@
 set (base ${DIR_REMNANTS}/gcc)
 
 #set includes
-include_directories (
-   ${CMAKE_CURRENT_BINARY_DIR}
+set (local_incs
+   ../stage_1/host_headers
    ${DIR_REMNANTS}/gcc
    ${DIR_REMNANTS}/include
-   ${DIR_HEADERS}
 )
 
-add_definitions (
+set (local_flags
    -g
    -fkeep-inline-functions
    -DIN_GCC
@@ -58,13 +57,11 @@ function (build_insn_generators)
 
    add_executable (genflags      ${base}/genflags.c insn-modes.h)
    add_executable (gencheck      ${base}/gencheck.c)
-   add_executable (genmodes      ${base}/genmodes.c ${base}/errors.c)
    add_executable (genconstants  ${base}/genconstants.c)
    add_executable (gengtype      ${base}/gengtype.c)
    add_executable (genconditions ${base}/genconditions.c ${base}/vec.c insn-modes.h line-map.h)
    add_executable (gencondmd     gencondmd.c insn-constants.h)
 
-   target_link_libraries (genmodes iberty)
 
 endfunction (build_insn_generators)
 
@@ -127,36 +124,7 @@ function (build_insn_modes)
 endfunction (build_insn_modes)
 
 
-############## create_all_tree_def ##############
-function (create_all_tree_def)
 
-   set (ATF all-tree.def)
-   set (TREE     ${DIR_REMNANTS}/gcc/tree.def)
-   set (ADA_TREE ${DIR_GCCINT}/ada-tree.def)
-   file (WRITE  ${ATF} "#include \"${TREE}\"\n")
-   file (APPEND ${ATF} "END_OF_BASE_TREE_CODES\n")
-   file (APPEND ${ATF} "#include \"${ADA_TREE}\"\n")
-
-endfunction (create_all_tree_def)
-
-
-############## create_bversion ##############
-function (create_bversion)
-
-   string (STRIP "${BASEVER}" S_BASEVER)
-   string (REGEX REPLACE "^([0-9][0-9]?).+$"                      "\\1" MAJOR ${S_BASEVER})
-   string (REGEX REPLACE "^[0-9][0-9]?[.]([0-9][0-9]?).+"         "\\1" MINOR ${S_BASEVER})
-   string (REGEX REPLACE "^[0-9][0-9]?[.][0-9][0-9]?[.]([0-9]+)$" "\\1" PATCHLEVEL ${S_BASEVER})
-
-   math   (EXPR GCC_VERSION "${MAJOR} * 1000 + ${MINOR}")
-
-   set (FN bversion.h)
-   file (WRITE  ${FN} "#define BUILDING_GCC_MAJOR ${MAJOR}\n")
-   file (APPEND ${FN} "#define BUILDING_GCC_MINOR ${MINOR}\n")
-   file (APPEND ${FN} "#define BUILDING_GCC_PATCHLEVEL ${PATCHLEVEL}\n")
-   file (APPEND ${FN} "#define BUILDING_GCC_VERSION ${GCC_VERSION}\n")
-
-endfunction (create_bversion)
 
 
 
@@ -192,18 +160,49 @@ endfunction (build_gtype_desc)
 ##########################################
 
 
-file (COPY ${DIR_REMNANTS}/line-map.h DESTINATION .)
-create_all_tree_def    ()
-create_bversion        ()
-build_insn_generators  ()
-build_insn_constants   ()
-build_insn_modes       ()
-build_insn_gencondmd_c ()
-build_insn_conditions  ()
-build_insn_flags       ()
+#file (COPY ${DIR_REMNANTS}/line-map.h DESTINATION .)
+#build_insn_generators  ()
+#build_insn_constants   ()
+#build_insn_modes       ()
+#build_insn_gencondmd_c ()
+#build_insn_conditions  ()
+#build_insn_flags       ()
 
-add_custom_target (insn_files DEPENDS
-	insn-flags.h
-	insn-modes.h
+#add_custom_target (insn_files DEPENDS
+#	insn-flags.h
+#	insn-modes.h
 #   insn-constants.h
+#)
+
+
+##########################################
+
+set (build_source
+#  errors
+#  gcc-none
+#   min-insn-modes
+#  print-rtl
+
+   genattr
+   genattrtab
+   read-md
+   rtl
 )
+
+#genmodes
+set (stat_iberty ${DIR_STAGE_1}/libiberty/libiberty.a)
+draco_add_executable (genmodes "${base}/genmodes.c;${base}/errors.c;${stat_iberty}" "${local_incs}" "${local_flags}")
+
+foreach (basename ${build_source})
+
+   draco_add_executable (${basename} "${base}/${basename}.c" "${local_incs}" "${local_flags}")
+
+endforeach ()
+
+   add_custom_target (insngen DEPENDS genmodes ${build_source})
+   add_dependencies  (insn_generators insngen)
+
+#add_dependencies   (insn_generators ${build_source})
+
+
+

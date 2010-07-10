@@ -1,6 +1,6 @@
 ##
 ##  DRACO ADA COMPILER
-##  CMAKE BUILD SCRIPT - GENERATE HEADERS
+##  CMAKE BUILD SCRIPT - GENERATE HOST HEADERS
 ##
 ##
 ##  Copyright (c) 2010, John Marino (www.auroraux.org)
@@ -37,7 +37,7 @@
 
 function (define_file_autohost_h)
 
-   set  (t_file ${DIR_HEADERS}/auto-host.h)
+   set  (t_file auto-host.h)
    file (WRITE  ${t_file} "/* auto-host.h.  Mixture of custom and pregenerated config.in */
 
 #define ENABLE_RUNTIME_CHECKING      1
@@ -61,17 +61,12 @@ function (define_file_autohost_h)
 #define ICONV_CONST                  const
 ")
 
-   if (DEFINED with_as)
-      if ("${with_as}" STREQUAL "" OR NOT EXISTS ${with_as})
-         message (FATAL_ERROR "Specified assembler does not exist.")
-      endif ()
-      file (APPEND ${t_file} "#define DEFAULT_ASSEMBLER            \"${with_as}\"\n")
-   endif ()
+   file (APPEND ${t_file} "#define DEFAULT_ASSEMBLER            \"${TOOL_ASSEMBLER}\"\n")
    if (DEFINED with_ld)
       if ("${with_ld}" STREQUAL "" OR NOT EXISTS ${with_ld})
          message (FATAL_ERROR "Specified linker does not exist.")
       endif ()
-      file (APPEND ${t_file} "#define DEFAULT_LINKER               \"${with_ld}\"\n")
+      file (APPEND ${t_file} "#define DEFAULT_LINKER               \"${TOOL_LINKER}\"\n")
    endif ()
 
    # There are lots of other linker/assembler questions that
@@ -116,168 +111,12 @@ endfunction (define_file_autohost_h)
 
 
 
-
-############## define_file_options_set ##############
-# This Awk script reads in the option records generated from
-# opt-gather.awk, combines the flags of duplicate options and generates a
-# C header file.
-#
-# This program uses functions from opt-functions.awk
-# Usage: awk -f opt-functions.awk -f opth-gen.awk < inputfile > options.h
-
-function (define_file_options_set)
-
-   set (optawk "${DIR_REMNANTS}/gcc/opt-gather.awk")
-   set (funawk "${DIR_REMNANTS}/gcc/opt-functions.awk")
-   set (gnhawk "${DIR_REMNANTS}/gcc/opth-gen.awk")
-   set (gncawk "${DIR_REMNANTS}/gcc/optc-gen.awk")
-   find_program (AWK NAMES gawk awk)
-   execute_process (
-      COMMAND ${AWK} -f ${optawk} ${option_list}
-      COMMAND ${AWK} -f ${funawk}
-                     -f ${gnhawk}
-                      OUTPUT_FILE ${DIR_HEADERS}/options.h)
-
-   set (payload "header_name=\"config.h system.h coretypes.h tm.h\"")
-   execute_process (
-      COMMAND ${AWK} -f ${optawk} ${option_list}
-      COMMAND ${AWK} -f ${funawk}
-                     -f ${gncawk}
-                     -v ${payload}
-                     OUTPUT_FILE ${DIR_HEADERS}/options.c)
-
-endfunction (define_file_options_set)
-
-
-
-
-
-
-
-############## define_file_tm_h ##############
-# creates tm.h header and places it in the build directory
-
-function (define_file_tm_h)
-
-   set  (t_file ${DIR_HEADERS}/tm.h)
-   set  (DEFINE_LIST  ${tm_defines})
-
-   file (WRITE  ${t_file} "#ifndef GCC_TM_H\n")
-   file (APPEND ${t_file} "#define GCC_TM_H\n")
-
-   # Define TARGET_CPU_DEFAULT if the system wants one.
-   # This substitutes for lots of *.h files.
-   if (NOT ${TARGET_CPU_DEFAULT} STREQUAL "")
-      file (APPEND ${t_file} "#define TARGET_CPU_DEFAULT (${TARGET_CPU_DEFAULT})\n")
-   endif ()
-
-   foreach (definition ${DEFINE_LIST})
-      string (REPLACE "=" " " splitdef ${definition})
-      string (REGEX REPLACE "^(.[^=]+)(=.*)?$" "\\1" term1 "${definition}")
-      file (APPEND ${t_file} "#ifndef ${term1}\n")
-      file (APPEND ${t_file} "# define ${splitdef}\n")
-      file (APPEND ${t_file} "#endif\n")
-   endforeach ()
-
-
-   # The first entry in HEADERS may be auto-FOO.h ;
-   # it wants to be included even when not -DIN_GCC.
-   # Postpone including defaults.h until after the insn-*
-   # headers, so that the HAVE_* flags are available
-   # when defaults.h gets included.
-
-   file (APPEND ${t_file} "#ifdef IN_GCC\n")
-   file (APPEND ${t_file} "# include \"options.h\"\n")
-   foreach (config_header ${tm_inc_list})
-      file (APPEND ${t_file} "# include \"config/${config_header}\"\n")
-   endforeach ()
-   file (APPEND ${t_file} "#endif\n")
-
-   file (APPEND ${t_file} "#if defined IN_GCC && !defined GENERATOR_FILE && !defined USED_FOR_TARGET\n")
-   file (APPEND ${t_file} "# include \"insn-flags.h\"\n")
-   file (APPEND ${t_file} "# include \"insn-constants.h\"\n")
-   file (APPEND ${t_file} "#endif\n")
-   file (APPEND ${t_file} "# include \"defaults.h\"\n")
-   file (APPEND ${t_file} "#endif /* GCC_TM_H */\n")
-
-endfunction (define_file_tm_h)
-
-
-
-
-
-############## define_file_tconfig_h ##############
-# creates tconfig.h header and places it in the build directory
-
-function (define_file_tconfig_h)
-
-   set  (t_file ${DIR_HEADERS}/tconfig.h)
-   set  (DEFINE_LIST USED_FOR_TARGET ${xm_defines})
-
-   file (WRITE  ${t_file} "#ifndef GCC_TCONFIG_H\n")
-   file (APPEND ${t_file} "#define GCC_TCONFIG_H\n")
-
-   # Define TARGET_CPU_DEFAULT if the system wants one.
-   # This substitutes for lots of *.h files.
-   if (NOT ${TARGET_CPU_DEFAULT} STREQUAL "")
-      file (APPEND ${t_file} "#define TARGET_CPU_DEFAULT (${TARGET_CPU_DEFAULT})\n")
-   endif ()
-
-
-   foreach (definition ${DEFINE_LIST})
-      string (REPLACE "=" " " splitdef ${definition})
-      string (REGEX REPLACE "^(.[^=]+)(=.*)?$" "\\1" term1 "${definition}")
-      file (APPEND ${t_file} "#ifndef ${term1}\n")
-      file (APPEND ${t_file} "# define ${splitdef}\n")
-      file (APPEND ${t_file} "#endif\n")
-   endforeach ()
-
-
-   # The first entry in HEADERS may be auto-FOO.h ;
-   # it wants to be included even when not -DIN_GCC.
-   # Postpone including defaults.h until after the insn-*
-   # headers, so that the HAVE_* flags are available
-   # when defaults.h gets included.
-
-   file (APPEND ${t_file} "#include \"auto-host.h\"\n")
-   file (APPEND ${t_file} "#ifdef IN_GCC\n")
-   file (APPEND ${t_file} "# include \"ansidecl.h\"\n")
-   foreach (config_header ${xm_inc_list})
-      file (APPEND ${t_file} "# include \"config/${config_header}\"\n")
-   endforeach ()
-   file (APPEND ${t_file} "#endif\n")
-   file (APPEND ${t_file} "#endif /* GCC_TCONFIG_H */\n")
-
-endfunction (define_file_tconfig_h)
-
-
-
-
-
-############## define_file_gthr_default_h ##############
-# creates gth-default.h header and places it in the build directory
-
-function (define_file_gthr_default_h)
-
-   set  (GTHREAD_FLAGS "-DHAVE_GTHR_DEFAULT" PARENT_SCOPE)
-
-   copy_to_new_name (
-      ${DIR_REMNANTS}/gcc "gthr-${thread_file}.h"
-      ${DIR_HEADERS}      "gthr-default.h")
-
-
-endfunction (define_file_gthr_default_h)
-
-
-
-
-
 ############## define_file_config_h ##############
 # creates config.h header and places it in the build directory
 
 function (define_file_config_h)
 
-   set  (t_file ${DIR_HEADERS}/config.h)
+   set  (t_file config.h)
    set  (DEFINE_LIST ${host_xm_defines})
 
    file (WRITE  ${t_file} "#ifndef GCC_CONFIG_H\n")
@@ -322,102 +161,19 @@ endfunction (define_file_config_h)
 
 
 
-
-
-############## define_file_bconfig_h ##############
-# creates bconfig.h header and places it in the build directory
-
-function (define_file_bconfig_h)
-
-   set  (t_file ${DIR_HEADERS}/bconfig.h)
-   set  (DEFINE_LIST ${build_xm_defines})
-
-   file (WRITE  ${t_file} "#ifndef GCC_BCONFIG_H\n")
-   file (APPEND ${t_file} "#define GCC_BCONFIG_H\n")
-
-   # Define TARGET_CPU_DEFAULT if the system wants one.
-   # This substitutes for lots of *.h files.
-   if (NOT ${TARGET_CPU_DEFAULT} STREQUAL "")
-      file (APPEND ${t_file} "#define TARGET_CPU_DEFAULT (${TARGET_CPU_DEFAULT})\n")
-   endif ()
-
-
-   foreach (definition ${DEFINE_LIST})
-      string (REPLACE "=" " " splitdef ${definition})
-      string (REGEX REPLACE "^(.[^=]+)(=.*)?$" "\\1" term1 "${definition}")
-      file (APPEND ${t_file} "#ifndef ${term1}\n")
-      file (APPEND ${t_file} "# define ${splitdef}\n")
-      file (APPEND ${t_file} "#endif\n")
-   endforeach ()
-
-
-   # The first entry in HEADERS may be auto-FOO.h ;
-   # it wants to be included even when not -DIN_GCC.
-   # Postpone including defaults.h until after the insn-*
-   # headers, so that the HAVE_* flags are available
-   # when defaults.h gets included.
-
-   file (APPEND ${t_file} "#include \"auto-host.h\"\n")
-   file (APPEND ${t_file} "#ifdef IN_GCC\n")
-   file (APPEND ${t_file} "# include \"ansidecl.h\"\n")
-   foreach (config_header ${build_xm_inc_list})
-      file (APPEND ${t_file} "# include \"config/${config_header}\"\n")
-   endforeach ()
-   file (APPEND ${t_file} "#endif\n")
-   file (APPEND ${t_file} "#endif /* GCC_BCONFIG_H */\n")
-
-endfunction (define_file_bconfig_h)
-
-
-
-############## define_file_tm_p_h ##############
-# creates tm_p.h header and places it in the build directory
-
-function (define_file_tm_p_h)
-
-   set  (t_file ${DIR_HEADERS}/tm_p.h)
-
-   file (WRITE  ${t_file} "#ifndef GCC_TM_P_H\n")
-   file (APPEND ${t_file} "#define GCC_TM_P_H\n")
-
-   # Define TARGET_CPU_DEFAULT if the system wants one.
-   # This substitutes for lots of *.h files.
-   if (NOT ${TARGET_CPU_DEFAULT} STREQUAL "")
-      file (APPEND ${t_file} "#define TARGET_CPU_DEFAULT (${TARGET_CPU_DEFAULT})\n")
-   endif ()
-
-
-   # The first entry in HEADERS may be auto-FOO.h ;
-   # it wants to be included even when not -DIN_GCC.
-   # Postpone including defaults.h until after the insn-*
-   # headers, so that the HAVE_* flags are available
-   # when defaults.h gets included.
-
-   file (APPEND ${t_file} "#ifdef IN_GCC\n")
-   file (APPEND ${t_file} "# include \"options.h\"\n")
-   foreach (config_header ${tm_p_inc_list})
-      file (APPEND ${t_file} "# include \"config/${config_header}\"\n")
-   endforeach ()
-   file (APPEND ${t_file} "#endif\n")
-
-   file (APPEND ${t_file} "#endif /* GCC_TM_P_H */\n")
-
-endfunction (define_file_tm_p_h)
-
-
-
-
-
 ##########################################
 
 
-define_file_gthr_default_h ()
-define_file_tconfig_h   ()
-define_file_tm_h        ()
-define_file_tm_p_h      ()
-define_file_options_set ()
+
+
 define_file_autohost_h  ()
 define_file_config_h    ()
-define_file_bconfig_h   ()
 
-
+set (headerfiles
+   ${DIR_HEADERS}/tconfig.h
+   ${DIR_HEADERS}/gthr-default.h
+   ${DIR_HEADERS}/options.h
+   ${DIR_HEADERS}/bconfig.h
+   ${DIR_HEADERS}/tm_p.h
+   ${DIR_HEADERS}/tm.h)
+file (COPY ${headerfiles} DESTINATION ".")
