@@ -1,6 +1,6 @@
 ##
 ##  DRACO ADA COMPILER
-##  CMAKE BUILD SCRIPT - STATIC LIBRARY LIBIBERY
+##  CMAKE BUILD SCRIPT - STATIC LIBRARY LIBCPP
 ##
 ##
 ##  Copyright (c) 2010, John Marino (www.auroraux.org)
@@ -23,20 +23,20 @@
 
 
 
-# Compiler flags.  Target values are constant,
-# even between native and xeno builds (only host and compiler varies)
+# Compiler flags.
 set (task_flags
-   -DHAVE_CONFIG_H
    -g
    -fkeep-inline-functions
+   -W
    -Wall
    -Wwrite-strings
+   -Wmissing-format-attribute
    -Wstrict-prototypes
-#   -Wold-style-declaration
-#   -Wmissing-parameter-type
-#   -Wclobbered
-   -Wsign-compare
+   -Wmissing-prototypes
+   -Wold-style-definition
+   -Wc++-compat
    -pedantic
+   -Wno-long-long
 )
 
 
@@ -46,6 +46,7 @@ set (local_incs
    ../host_headers
    ${DIR_REMNANTS}/gcc
    ${DIR_REMNANTS}/include
+   ${DIR_REMNANTS}/libcpp/include
 )
 
 
@@ -54,63 +55,28 @@ set (local_incs
 # ones that are required at a minimum according to the makefile.
 
 set (components
-   regex
-   cplus-dem
-   cp-demangle
-   md5
-   sha1
-   alloca
-   argv
-   choose-temp
-   concat
-   cp-demint
-   crc32
-   dyn-string
-   fdmatch
-   fibheap
-   filename_cmp
-   floatformat
-   fnmatch
-   fopen_unlocked
-   getopt
-   getopt1
-   getpwd
-   getruntime
-   hashtab
-   hex
-   lbasename
-   lrealpath
-   make-relative-prefix
-   make-temp-file
-   objalloc
-   obstack
-   partition
-   pexecute
-   ${pex_specific}
-   physmem
-   pex-common
-   pex-one
-   safe-ctype
-   sort
-   spaces
-   splay-tree
-   strerror
-   strsignal
-   unlink-if-ordinary
-   xatexit
-   xexit
-   xmalloc
-   xmemdup
-   xstrdup
-   xstrerror
-   xstrndup
+   charset
+   directives
+   directives-only
+   errors
+   expr
+   files
+   identifiers
+   init
+   lex
+   line-map
+   macro
+   mkdeps
+   pch
+   symtab
+   traditional
 )
 
 # convert the list above to full path source
 #set (component_source_files "")
 foreach (component ${components})
    list (APPEND component_source_files
-                ${DIR_REMNANTS}/libiberty/${component}.c)
+                ${DIR_REMNANTS}/libcpp/${component}.c)
 endforeach ()
 
 
@@ -122,9 +88,9 @@ set (syslib ../sysroot/lib/draco-${DRACO_VERSION})
 
 
 set (fullpath ${CMAKE_CURRENT_BINARY_DIR})
-draco_add_library (iberty ${fullpath} "${component_source_files}" "${local_incs}" "${task_flags}")
-add_custom_target (iberty_sub${CURRENT_STAGE} DEPENDS ${fullpath}/libiberty.a)
-add_dependencies  (library_iberty_s${CURRENT_STAGE} iberty_sub${CURRENT_STAGE})
+draco_add_library (cpp ${fullpath} "${component_source_files}" "${local_incs}" "${task_flags}")
+add_custom_target (cpp_sub${CURRENT_STAGE} DEPENDS ${fullpath}/libcpp.a)
+add_dependencies  (library_cpp_s${CURRENT_STAGE} cpp_sub${CURRENT_STAGE})
 
 
 

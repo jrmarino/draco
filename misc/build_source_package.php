@@ -87,8 +87,16 @@ class TDracoSource
          $this->dir_src_location . '/gcc_remnants/libcpp'
       );
       $this->copy_directory_contents(
+         $this->dir_gccroot      . '/libcpp/include',
+         $this->dir_src_location . '/gcc_remnants/libcpp/include'
+      );
+      $this->copy_directory_contents(
          $this->dir_gccroot      . '/libdecnumber',
          $this->dir_src_location . '/gcc_remnants/libdecnumber'
+      );
+      $this->copy_directory_contents(
+         $this->dir_gccroot      . '/libdecnumber/dpd',
+         $this->dir_src_location . '/gcc_remnants/libdecnumber/dpd'
       );
       $this->copy_directory_contents(
          $this->dir_gccroot      . '/libiberty',
@@ -179,7 +187,9 @@ class TDracoSource
       mkdir ($topdir . '/gcc_remnants', 0777);
       mkdir ($topdir . '/gcc_remnants/include', 0777);
       mkdir ($topdir . '/gcc_remnants/libcpp', 0777);
+      mkdir ($topdir . '/gcc_remnants/libcpp/include', 0777);
       mkdir ($topdir . '/gcc_remnants/libdecnumber', 0777);
+      mkdir ($topdir . '/gcc_remnants/libdecnumber/dpd', 0777);
       mkdir ($topdir . '/gcc_remnants/libiberty', 0777);
       mkdir ($topdir . '/gcc_remnants/gcc', 0777);
       mkdir ($topdir . '/gcc_remnants/gcc/c-family', 0777);

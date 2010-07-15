@@ -66,10 +66,12 @@ function (build_stage stage_path)
          ${stage_path}/sysroot/lib/draco-${DRACO_VERSION}
          ${stage_path}/sysroot/libexec
          ${stage_path}/sysroot/libexec/draco-${DRACO_VERSION}
+         ${stage_path}/libcpp
          ${stage_path}/libgcc
          ${stage_path}/libgcc_eh
          ${stage_path}/libgcov
          ${stage_path}/libiberty
+         ${stage_path}/libdecnumber
          ${stage_path}/crtstuff
          ${stage_path}/driver
          ${stage_path}/host_headers
@@ -80,13 +82,15 @@ function (build_stage stage_path)
          ${stage_path}/gnat1bind/snamest
          ${stage_path}/gnat1bind/nmake
    )
-   copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcc_eh.txt   ${stage_path}/libgcc_eh    CMakeLists.txt)
-   copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcc.txt      ${stage_path}/libgcc       CMakeLists.txt)
-   copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcov.txt     ${stage_path}/libgcov      CMakeLists.txt)
-   copy_to_new_name (${DIR_CONSTRUCTS} cm_libiberty.txt   ${stage_path}/libiberty    CMakeLists.txt)
-   copy_to_new_name (${DIR_CONSTRUCTS} cm_crtstuff.txt    ${stage_path}/crtstuff     CMakeLists.txt)
-   copy_to_new_name (${DIR_CONSTRUCTS} cm_driver.txt      ${stage_path}/driver       CMakeLists.txt)
-   copy_to_new_name (${DIR_CONSTRUCTS} cm_gnat1bind.txt   ${stage_path}/gnat1bind    CMakeLists.txt)
+   copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcc_eh.txt    ${stage_path}/libgcc_eh    CMakeLists.txt)
+   copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcc.txt       ${stage_path}/libgcc       CMakeLists.txt)
+   copy_to_new_name (${DIR_CONSTRUCTS} cm_libgcov.txt      ${stage_path}/libgcov      CMakeLists.txt)
+   copy_to_new_name (${DIR_CONSTRUCTS} cm_libcpp.txt       ${stage_path}/libcpp       CMakeLists.txt)
+   copy_to_new_name (${DIR_CONSTRUCTS} cm_libdecnumber.txt ${stage_path}/libdecnumber CMakeLists.txt)
+   copy_to_new_name (${DIR_CONSTRUCTS} cm_libiberty.txt    ${stage_path}/libiberty    CMakeLists.txt)
+   copy_to_new_name (${DIR_CONSTRUCTS} cm_crtstuff.txt     ${stage_path}/crtstuff     CMakeLists.txt)
+   copy_to_new_name (${DIR_CONSTRUCTS} cm_driver.txt       ${stage_path}/driver       CMakeLists.txt)
+   copy_to_new_name (${DIR_CONSTRUCTS} cm_gnat1bind.txt    ${stage_path}/gnat1bind    CMakeLists.txt)
 
    copy_to_new_name (${DIR_CONSTRUCTS} cm_gen_headers.txt ${stage_path}/host_headers CMakeLists.txt)
 

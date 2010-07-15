@@ -140,7 +140,7 @@ include (${DIR_CONSTRUCTS}/cm_pregeneration.txt)
 # global variable {DRACO_C_COMPILER} and the archiver specified by the global
 # variable {DRACO_ARCHIVER}.  The {set_files} is a list of full path names.
 
-function (draco_add_library    target_name set_files set_includes set_flags)
+function (draco_add_library    target_name full_path set_files set_includes set_flags)
 
    set (drac_libname lib${target_name}.a)
    set (drac_includes "")
@@ -263,6 +263,8 @@ add_custom_target (gnatbind_s1        DEPENDS gnat1_s1)
 add_subdirectory (${DIR_STAGE_1}/driver       ${DIR_STAGE_1}/driver)
 add_subdirectory (${DIR_STAGE_1}/host_headers ${DIR_STAGE_1}/host_headers)
 add_subdirectory (${DIR_STAGE_1}/libiberty    ${DIR_STAGE_1}/libiberty)
+add_subdirectory (${DIR_STAGE_1}/libcpp       ${DIR_STAGE_1}/libcpp)
+add_subdirectory (${DIR_STAGE_1}/libdecnumber ${DIR_STAGE_1}/libdecnumber)
 add_subdirectory (${DIR_INSNS}                ${DIR_INSNS})
 
 # Sets up more dependencies for the standard and bootstrap profiles
