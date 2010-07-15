@@ -6,7 +6,7 @@ SNAPSHOT=4.6-20100626
 NATIVE_HOST=i386-pc-solaris2.11
 OS_LABEL4VERS="[Opensolaris SXCE]"
 ADA_PREFIX=/export/home/opt/ada
-PREFIX=$ADA_PREFIX/aux450
+PREFIX=$ADA_PREFIX/aux460
 PKG_PREFIX=/opt/csw
 GNATGCC=$ADA_PREFIX/fsf444/bin/gnatgcc
 BUILD_CPP=no
@@ -71,7 +71,7 @@ mkdir -p $WRKSRC
 		--prefix=$PREFIX \
 		--with-as=/usr/sfw/bin/gas \
 		--without-gnu-ld \
-		--with-ld=/usr/bin/ls \
+		--with-ld=/usr/bin/ld \
 		--with-system-zlib \
 		--with-gmp=$PKG_PREFIX \
 		--with-mpfr=$PKG_PREFIX \
