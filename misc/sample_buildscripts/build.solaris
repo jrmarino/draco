@@ -39,9 +39,9 @@ CONFIGURE_ENV="CC=$GNATGCC PATH=$BOOTPATH"
 echo "===> Extracting the source files..."
 mkdir -p $WRKDIR
 cd $WRKDIR
-bunzip2 -c $DISTFILES/$CORE_TARBALL | tar xf -
+bunzip2 -c $DISTFILES/$CORE_TARBALL | gtar xf -
 if [ "$BUILD_CPP" = "YES" ]; then
-	bunzip2 -c $DISTFILES/$LCPP_TARBALL | tar xf -
+	bunzip2 -c $DISTFILES/$LCPP_TARBALL | gtar xf -
 	BUILD_LANGS=c,ada,c++
 else
 	BUILD_LANGS=c,ada
