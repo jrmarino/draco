@@ -66,7 +66,24 @@ begin
             TheFunction := Hardcode.Codegen_anonymous_function_double;
             Hardcode.Codegen_SetInsertPoint ("Entry", TheFunction, Result);
          end;
-      when  3 => Put_Line (" 3"); 
+      when  3 =>
+         declare
+            Result  : Core_h.LLVMValueRef;
+         begin
+            Put_Line ("==================================");
+            Put_Line ("Option 3:  int mul_add (int x,y,z)");
+            Put_Line ("           { return x * y + z }");
+            Put_Line ("==================================");
+            result := Hardcode.Four_Int_Function ("mul_add");
+         end;
+      when  4 =>
+         Put_Line ("=======================================");
+         Put_Line ("Option 4:  uint gcd (uint x, y)");
+         Put_Line ("  if (x == y) {return x;}");
+         Put_Line ("  else if (x < y) {return gcd (x, y-x);}");
+         Put_Line ("  else {return gcd(x - y, y);}");
+         Put_Line ("=======================================");
+         Hardcode.Example_Recursive;
          
       when others => 
          declare 

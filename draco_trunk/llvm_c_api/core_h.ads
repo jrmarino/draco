@@ -1589,10 +1589,10 @@ package Core_h is
    pragma Import (C, LLVMBuildBr, "LLVMBuildBr");
 
    function LLVMBuildCondBr
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMBasicBlockRef;
-      arg4 : LLVMBasicBlockRef) return LLVMValueRef;  -- Core.h:806
+     (B     : LLVMBuilderRef;
+      Bif   : LLVMValueRef;
+      Bthen : LLVMBasicBlockRef;
+      Belse : LLVMBasicBlockRef) return LLVMValueRef;  -- Core.h:806
    pragma Import (C, LLVMBuildCondBr, "LLVMBuildCondBr");
 
    function LLVMBuildSwitch
@@ -1637,216 +1637,216 @@ package Core_h is
 
   -- Arithmetic
    function LLVMBuildAdd
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:827
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:827
    pragma Import (C, LLVMBuildAdd, "LLVMBuildAdd");
 
    function LLVMBuildNSWAdd
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:829
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:829
    pragma Import (C, LLVMBuildNSWAdd, "LLVMBuildNSWAdd");
 
    function LLVMBuildNUWAdd
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:831
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:831
    pragma Import (C, LLVMBuildNUWAdd, "LLVMBuildNUWAdd");
 
    function LLVMBuildFAdd
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:833
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:833
    pragma Import (C, LLVMBuildFAdd, "LLVMBuildFAdd");
 
    function LLVMBuildSub
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:835
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:835
    pragma Import (C, LLVMBuildSub, "LLVMBuildSub");
 
    function LLVMBuildNSWSub
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:837
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:837
    pragma Import (C, LLVMBuildNSWSub, "LLVMBuildNSWSub");
 
    function LLVMBuildNUWSub
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:839
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:839
    pragma Import (C, LLVMBuildNUWSub, "LLVMBuildNUWSub");
 
    function LLVMBuildFSub
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:841
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:841
    pragma Import (C, LLVMBuildFSub, "LLVMBuildFSub");
 
    function LLVMBuildMul
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:843
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:843
    pragma Import (C, LLVMBuildMul, "LLVMBuildMul");
 
    function LLVMBuildNSWMul
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:845
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:845
    pragma Import (C, LLVMBuildNSWMul, "LLVMBuildNSWMul");
 
    function LLVMBuildNUWMul
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:847
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:847
    pragma Import (C, LLVMBuildNUWMul, "LLVMBuildNUWMul");
 
    function LLVMBuildFMul
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:849
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:849
    pragma Import (C, LLVMBuildFMul, "LLVMBuildFMul");
 
    function LLVMBuildUDiv
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:851
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:851
    pragma Import (C, LLVMBuildUDiv, "LLVMBuildUDiv");
 
    function LLVMBuildSDiv
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:853
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:853
    pragma Import (C, LLVMBuildSDiv, "LLVMBuildSDiv");
 
    function LLVMBuildExactSDiv
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:855
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:855
    pragma Import (C, LLVMBuildExactSDiv, "LLVMBuildExactSDiv");
 
    function LLVMBuildFDiv
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:857
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:857
    pragma Import (C, LLVMBuildFDiv, "LLVMBuildFDiv");
 
    function LLVMBuildURem
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:859
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:859
    pragma Import (C, LLVMBuildURem, "LLVMBuildURem");
 
    function LLVMBuildSRem
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:861
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:861
    pragma Import (C, LLVMBuildSRem, "LLVMBuildSRem");
 
    function LLVMBuildFRem
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:863
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:863
    pragma Import (C, LLVMBuildFRem, "LLVMBuildFRem");
 
    function LLVMBuildShl
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:865
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:865
    pragma Import (C, LLVMBuildShl, "LLVMBuildShl");
 
    function LLVMBuildLShr
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:867
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:867
    pragma Import (C, LLVMBuildLShr, "LLVMBuildLShr");
 
    function LLVMBuildAShr
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:869
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:869
    pragma Import (C, LLVMBuildAShr, "LLVMBuildAShr");
 
    function LLVMBuildAnd
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:871
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:871
    pragma Import (C, LLVMBuildAnd, "LLVMBuildAnd");
 
    function LLVMBuildOr
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:873
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:873
    pragma Import (C, LLVMBuildOr, "LLVMBuildOr");
 
    function LLVMBuildXor
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : LLVMValueRef;
-      arg4 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:875
+     (B    : LLVMBuilderRef;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:875
    pragma Import (C, LLVMBuildXor, "LLVMBuildXor");
 
    function LLVMBuildBinOp
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMOpcode;
-      arg3 : LLVMValueRef;
-      arg4 : LLVMValueRef;
-      arg5 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:877
+     (B    : LLVMBuilderRef;
+      Op   : LLVMOpcode;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:877
    pragma Import (C, LLVMBuildBinOp, "LLVMBuildBinOp");
 
    function LLVMBuildNeg
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:880
+     (B    : LLVMBuilderRef;
+      Val  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:880
    pragma Import (C, LLVMBuildNeg, "LLVMBuildNeg");
 
    function LLVMBuildNSWNeg
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:881
+     (B    : LLVMBuilderRef;
+      Val  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:881
    pragma Import (C, LLVMBuildNSWNeg, "LLVMBuildNSWNeg");
 
    function LLVMBuildNUWNeg
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:883
+     (B    : LLVMBuilderRef;
+      Val  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:883
    pragma Import (C, LLVMBuildNUWNeg, "LLVMBuildNUWNeg");
 
    function LLVMBuildFNeg
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:885
+     (B    : LLVMBuilderRef;
+      Val  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:885
    pragma Import (C, LLVMBuildFNeg, "LLVMBuildFNeg");
 
    function LLVMBuildNot
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:886
+     (B    : LLVMBuilderRef;
+      Val  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:886
    pragma Import (C, LLVMBuildNot, "LLVMBuildNot");
 
   -- Memory
@@ -2064,11 +2064,11 @@ package Core_h is
 
   -- Comparisons
    function LLVMBuildICmp
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMIntPredicate;
-      arg3 : LLVMValueRef;
-      arg4 : LLVMValueRef;
-      arg5 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:953
+     (B    : LLVMBuilderRef;
+      Op   : LLVMIntPredicate;
+      LHS  : LLVMValueRef;
+      RHS  : LLVMValueRef;
+      Name : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:953
    pragma Import (C, LLVMBuildICmp, "LLVMBuildICmp");
 
    function LLVMBuildFCmp
@@ -2087,11 +2087,11 @@ package Core_h is
    pragma Import (C, LLVMBuildPhi, "LLVMBuildPhi");
 
    function LLVMBuildCall
-     (arg1 : LLVMBuilderRef;
-      arg2 : LLVMValueRef;
-      arg3 : System.Address;
-      arg4 : unsigned;
-      arg5 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:962
+     (B       : LLVMBuilderRef;
+      Fn      : LLVMValueRef;
+      Args    : System.Address;
+      NumArgs : unsigned;
+      Name    : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:962
    pragma Import (C, LLVMBuildCall, "LLVMBuildCall");
 
    function LLVMBuildSelect

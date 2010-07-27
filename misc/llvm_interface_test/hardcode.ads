@@ -24,9 +24,12 @@ package Hardcode is
          TheFunction : in Core_h.LLVMValueRef;
          Result      : in Core_h.LLVMValueRef
    );
+   function Four_Int_Function (FunctionName: String) 
+      return Core_h.LLVMValueRef;
    procedure Create_Context;
    procedure Dump_Value (DValueRef : in Core_h.LLVMValueRef);
    procedure Dump_Module;
+   procedure Example_Recursive;
 
 private
 
