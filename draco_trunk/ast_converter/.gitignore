@@ -1,0 +1,10 @@
+# ignore terdlets
+
+*.ali
+*.o
+
+
+# ignore these test links
+
+core_h.ads
+types.ads
