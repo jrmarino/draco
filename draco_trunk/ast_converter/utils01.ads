@@ -28,14 +28,21 @@ package utils01 is
    type TLLVMPointerType is (loc_unused, loc_value, loc_type);
 
    type TAssocRec is record
-      llvm_pointer : Address;
-      pointer_type : TLLVMPointerType;
+      llvm_pointer : Address           := Null_Address;
+      pointer_type : TLLVMPointerType  := loc_unused;
    end record;
 
-   type TTreeAssociation is array (Natural range <>) of TAssocRec;
+   type TTreeAssociation is array (Node_Id range <>) of TAssocRec;
    --  The intended use is to declare an instance of TTreeAssociation with
    --  default record values of system.null_pointer and loc_unused, and to
    --  pass that variable to the procedures and functions below.
+
+
+   function init_gnat_to_llvm (max_gnat_nodes : in Node_Id)
+   return TTreeAssociation;
+   --  This returns a TTreeAssociation variable, which is an array of
+   --  records.  The array range will be 0 to max_gnat_nodes - 1 (assuming
+   --  the lower bound for Node_Id continues to be zero)
 
 
    function present_llvm_tree (TreeAssoc   : in TTreeAssociation;
