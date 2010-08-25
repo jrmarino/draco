@@ -144,4 +144,29 @@ private
 
 
 
+   function lvalue_required_for_attribute_p (gnat_node : in Node_Id)
+   return Boolean;
+   --  Return a True value if an lvalue is required for GNAT_NODE, which is
+   --  an N_Attribute_Reference
+
+
+
+   function lvalue_required_p (gnat_node              : in Node_Id;
+                               llvm_type              : in LLVMTypeRef;
+                               is_constant            : in Boolean;
+                               is_address_of_constant : in Boolean;
+                               has_an_alias           : in Boolean)
+   return Boolean;
+   --  Return a True value if an lvalue is required for GNAT_NODE.  LLVM_TYPE
+   --  is the type that will be used for GNAT_NODE in the translated llvm tree.
+   --  IS_CONSTANT indicates whether the underlying object represented by
+   --  GNAT_NODE is constant in the Ada sense.  If it is,
+   --  IS_ADDRESS_OF_CONSTANT indicates whether its value is the address of a
+   --  constant and HAS_AN_ALIAS indicates whether it is aliased.  If it is not
+   --  constant then IS_ADDRESS_OF_CONSTANT and HAS_AN_ALIAS are ignored.
+   --
+   --  The function climbs up the GNAT true starting from the node and returns
+   --  True upon encountering a node that effectively requires an lvalue
+   --  downstream.
+
 end DLC;
