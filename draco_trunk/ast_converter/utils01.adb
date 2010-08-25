@@ -20,7 +20,7 @@
 
 
 
-package body utils01 is
+package body Utils01 is
 
    -------------------------
    --  init_gnat_to_llvm  --

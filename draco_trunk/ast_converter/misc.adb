@@ -27,7 +27,7 @@ package body Misc is
    --  must_pass_by_ref  --
    ------------------------
 
-   function must_pass_by_ref (llvm_type : LLVMTypeRef)
+   function must_pass_by_ref (llvm_type : in LLVMTypeRef)
    return Boolean is
    begin
       --  TO-DO: Fill in guts of this function
@@ -40,7 +40,7 @@ package body Misc is
    --  default_pass_by_ref  --
    ---------------------------
 
-   function default_pass_by_ref (llvm_type : LLVMTypeRef)
+   function default_pass_by_ref (llvm_type : in LLVMTypeRef)
    return Boolean is
    begin
       --  TO-DO: Fill in guts of this function

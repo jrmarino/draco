@@ -23,7 +23,7 @@ with Core_h; use Core_h;
 with Types;  use Types;
 with System; use System;
 
-package utils01 is
+package Utils01 is
 
    type TLLVMPointerType is (loc_unused, loc_value, loc_type);
 
