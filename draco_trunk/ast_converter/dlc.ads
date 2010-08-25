@@ -24,7 +24,6 @@ with Types;  use Types;
 with Snames; use Snames;
 with System; use System;
 
-
 package DLC is
 
    type DLC_Mode_Type is (
@@ -45,7 +44,7 @@ package DLC is
 
    procedure Draco_to_llvm_ast_converter (
          gnat_root               : in Node_Id;
-         max_gnat_node           : in Node_Id;
+         max_gnat_nodes          : in Node_Id;
          next_node_ptr           : in Address;
          prev_node_ptr           : in Address;
          elists_ptr              : in Address;

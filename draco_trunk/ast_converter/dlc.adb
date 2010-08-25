@@ -19,6 +19,10 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
+with utils01;
+with Atree; use Atree;
+with Sinfo; use Sinfo;
+
 package body DLC is
 
    ----------------------------------
@@ -27,7 +31,7 @@ package body DLC is
 
    procedure Draco_to_llvm_ast_converter (
          gnat_root               : in Node_Id;
-         max_gnat_node           : in Node_Id;
+         max_gnat_nodes          : in Node_Id;
          next_node_ptr           : in Address;
          prev_node_ptr           : in Address;
          elists_ptr              : in Address;
@@ -44,8 +48,15 @@ package body DLC is
          dlc_std_exception_type  : in Entity_Id;
          dlc_operating_mode      : in DLC_Mode_Type
    ) is
+      type_annotate_only : Boolean;
+      TreeSync  : utils01.TTreeAssociation :=
+                  utils01.init_gnat_to_llvm (max_gnat_nodes);
+      DummySync : utils01.TTreeAssociation :=
+                  utils01.init_gnat_to_llvm (max_gnat_nodes);
    begin
-      null;
+      type_annotate_only := (dlc_operating_mode = Declarations_Only);
+      pragma Assert (Nkind (gnat_root) = N_Compilation_Unit,
+                     "DLC: Root node is not a compilation Unit");
    end Draco_to_llvm_ast_converter;
 
 
@@ -125,6 +136,7 @@ package body DLC is
    begin
       null;
    end Subprogram_body_to_llvm;
+
 
 
    --------------------

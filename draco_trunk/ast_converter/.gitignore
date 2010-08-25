@@ -13,3 +13,8 @@ namet.ads
 alloc.ads
 table.ads
 hostparm.ads
+atree.ads
+sinfo.ads
+uintp.ads
+urealp.ads
+einfo.ads
