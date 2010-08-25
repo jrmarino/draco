@@ -8,3 +8,8 @@
 
 core_h.ads
 types.ads
+snames.ads
+namet.ads
+alloc.ads
+table.ads
+hostparm.ads
