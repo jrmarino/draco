@@ -21,7 +21,7 @@
 
 with Misc;
 with Decl;
-with Utils01;
+with Dglobal;
 with Atree;    use Atree;
 with Sinfo;    use Sinfo;
 with Einfo;    use Einfo;
@@ -53,13 +53,14 @@ package body DLC is
          dlc_std_exception_type  : in Entity_Id;
          dlc_operating_mode      : in DLC_Mode_Type
    ) is
-      type_annotate_only : Boolean;
-      TreeSync  : Utils01.TTreeAssociation :=
+      TreeSync  : aliased Utils01.TTreeAssociation :=
                   Utils01.init_gnat_to_llvm (max_gnat_nodes);
-      DummySync : Utils01.TTreeAssociation :=
+      DummySync : aliased Utils01.TTreeAssociation :=
                   Utils01.init_gnat_to_llvm (max_gnat_nodes);
    begin
-      type_annotate_only := (dlc_operating_mode = Declarations_Only);
+      Dglobal.ref_TreeSync := TreeSync'Unchecked_Access;
+      Dglobal.ref_DummySync := DummySync'Unchecked_Access;
+      Dglobal.type_annotate_only := (dlc_operating_mode = Declarations_Only);
       pragma Assert (Nkind (gnat_root) = N_Compilation_Unit,
                      "DLC: Root node is not a compilation Unit");
 
@@ -114,11 +115,12 @@ package body DLC is
    --  lvalue_required_p  --
    -------------------------
 
-   function lvalue_required_p (gnat_node              : in Node_Id;
-                               llvm_type              : in LLVMTypeRef;
-                               is_constant            : in Boolean;
-                               is_address_of_constant : in Boolean;
-                               has_an_alias           : in Boolean)
+   function lvalue_required_p (ref_TreeSync           : Utils01.TPSync;
+                               gnat_node              : Node_Id;
+                               llvm_type              : LLVMTypeRef;
+                               is_constant            : Boolean;
+                               is_address_of_constant : Boolean;
+                               has_an_alias           : Boolean)
    return Boolean is
       result      : Boolean;
       gnat_temp   : Node_Id;
@@ -178,6 +180,7 @@ package body DLC is
                               Has_Aliased_Components (Etype (gnat_node));
                   begin
                      result := lvalue_required_p (
+                        ref_TreeSync           => ref_TreeSync,
                         gnat_node              => gnat_parent,
                         llvm_type              => llvm_type,
                         is_constant            => is_constant,
@@ -200,6 +203,7 @@ package body DLC is
                            Has_Aliased_Components (Etype (gnat_node));
                begin
                   result := lvalue_required_p (
+                              ref_TreeSync           => ref_TreeSync,
                               gnat_node              => gnat_parent,
                               llvm_type              => llvm_type,
                               is_constant            => is_constant,
@@ -215,6 +219,7 @@ package body DLC is
                            Is_Aliased (Entity (Selector_Name (gnat_node)));
                begin
                   result := lvalue_required_p (
+                              ref_TreeSync           => ref_TreeSync,
                               gnat_node              => gnat_parent,
                               llvm_type              => llvm_type,
                               is_constant            => is_constant,
@@ -288,6 +293,7 @@ package body DLC is
                --  This mimics the GiGi fall through to N_Unchecked_Type_Conv.
                result := not is_constant
                          or else lvalue_required_p (
+                              ref_TreeSync           => ref_TreeSync,
                               gnat_node              => gnat_parent,
                               llvm_type              => Decl.get_unpadded_type
                                                          (Etype (gnat_parent)),
@@ -300,6 +306,7 @@ package body DLC is
 
                result := not is_constant
                          or else lvalue_required_p (
+                              ref_TreeSync           => ref_TreeSync,
                               gnat_node              => gnat_parent,
                               llvm_type              => Decl.get_unpadded_type
                                                          (Etype (gnat_parent)),
@@ -324,6 +331,7 @@ package body DLC is
             if is_constant and is_address_of_constant then
 
                result := lvalue_required_p (
+                              ref_TreeSync           => ref_TreeSync,
                               gnat_node              => gnat_parent,
                               llvm_type              => Decl.get_unpadded_type
                                                          (Etype (gnat_parent)),

@@ -21,12 +21,44 @@
 
 with Core_h; use Core_h;
 with Types;  use Types;
+with System; use System;
+with Utils01;
 
 package Decl is
 
-   function get_unpadded_type (gnat_entity : in Entity_Id) return LLVMTypeRef;
+   type TDefinition is (none, exists, special);
+
+   function gnat_to_llvm_entity (gnat_entity  : Entity_Id;
+                                 llvm_expr    : LLVMValueRef;
+                                 definition   : TDefinition)
+   return Address;
+   --  Given GNAT_ENTITY, a GNAT defining identifier node, which denotes some
+   --  Adaventity, return the equivalent LLVM tree for that entity
+   --  (LLVMValueRef) and associate the LLVMValueRef with the input GNAT
+   --  defining identifier.
+   --
+   --  If GNAT_ENTITY is a variable or a constant declaration, LLVM_EXPR gives
+   --  its initial value (how?).  This is optional for a variable.  For a
+   --  renamed entity, LLVM_EXPR gives the object being renamed.
+   --
+   --  DEFINITION is not "none" if this call is intended for a definition.
+   --  This is used for separate compilation where it is necessary to know
+   --  whether an external declaration or a definition must be created if the
+   --  LLVM equivalent was not created previously.  The value of "exists" is
+   --  normally used for an existing DEFINITION, but a value of "special" is
+   --  used in special circumstances, defined in the code.
+
+
+
+   function get_unpadded_type (gnat_entity : Entity_Id) return LLVMTypeRef;
    --  Similar, but the GNAT_ENTITY is assumed to refer to a GNAT type.
    --  Return the unpadded version of the LLVM type corresponding to that
    --  entity.
+
+
+
+   function gnat_to_llvm_type (gnat_entity  : Entity_Id) return LLVMTypeKind;
+   --  Similar, but GNAT_ENTITY is assumed to refer to a GNAT type.
+   --  Return the LLVM type corresponding to that entity
 
 end Decl;

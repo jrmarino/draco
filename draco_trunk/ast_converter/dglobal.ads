@@ -1,6 +1,6 @@
 --
 --  DRACO ADA COMPILER
---  Misc Functions
+--  DLC Global Variables
 --
 --
 --  Copyright (c) 2010, John Marino (www.auroraux.org)
@@ -19,32 +19,18 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
+with Utils01;
+with Core_h; use Core_h;
 with System; use System;
 
-package body Misc is
+package Dglobal is
 
-   ------------------------
-   --  must_pass_by_ref  --
-   ------------------------
+   NULL_TREE : constant LLVMValueRef := LLVMValueRef (Null_Address);
 
-   function must_pass_by_ref (llvm_type : in LLVMTypeRef)
-   return Boolean is
-   begin
-      --  TO-DO: Fill in guts of this function
-      return not (Address (llvm_type) = Null_Address);
-   end must_pass_by_ref;
+   type_annotate_only : Boolean      := False;
+   void_type_node     : LLVMTypeRef  := LLVMTypeRef (Null_Address);
 
+   ref_TreeSync  : Utils01.TPSync;
+   ref_DummySync : Utils01.TPSync;
 
-
-   ---------------------------
-   --  default_pass_by_ref  --
-   ---------------------------
-
-   function default_pass_by_ref (llvm_type : in LLVMTypeRef)
-   return Boolean is
-   begin
-      --  TO-DO: Fill in guts of this function
-      return not (Address (llvm_type) = Null_Address);
-   end default_pass_by_ref;
-
-end Misc;
+end Dglobal;

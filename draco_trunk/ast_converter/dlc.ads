@@ -23,6 +23,7 @@ with Core_h; use Core_h;
 with Types;  use Types;
 with Snames; use Snames;
 with System; use System;
+with Utils01;
 
 package DLC is
 
@@ -151,11 +152,12 @@ private
 
 
 
-   function lvalue_required_p (gnat_node              : in Node_Id;
-                               llvm_type              : in LLVMTypeRef;
-                               is_constant            : in Boolean;
-                               is_address_of_constant : in Boolean;
-                               has_an_alias           : in Boolean)
+   function lvalue_required_p (ref_TreeSync           : Utils01.TPSync;
+                               gnat_node              : Node_Id;
+                               llvm_type              : LLVMTypeRef;
+                               is_constant            : Boolean;
+                               is_address_of_constant : Boolean;
+                               has_an_alias           : Boolean)
    return Boolean;
    --  Return a True value if an lvalue is required for GNAT_NODE.  LLVM_TYPE
    --  is the type that will be used for GNAT_NODE in the translated llvm tree.

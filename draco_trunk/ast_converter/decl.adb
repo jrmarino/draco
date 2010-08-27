@@ -19,7 +19,9 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
+with Dglobal;
 with System; use System;
+with Einfo;  use Einfo;
 
 package body Decl is
 
@@ -27,12 +29,61 @@ package body Decl is
    --  get_unpadded_type  --
    -------------------------
 
-   function get_unpadded_type (gnat_entity : in Entity_Id)
+   function get_unpadded_type (gnat_entity : Entity_Id)
    return LLVMTypeRef is
       bogus : LLVMTypeRef := LLVMTypeRef (Null_Address);
    begin
       --  TO-DO: Obviously, this function is bogus
       return bogus;
-   end;
+   end get_unpadded_type;
 
-end Misc;
+
+
+   -------------------------
+   --  gnat_to_llvm_type  --
+   -------------------------
+
+   function gnat_to_llvm_type (gnat_entity  : Entity_Id)
+   return LLVMTypeKind is
+      llvm_ref : Address;
+   begin
+      if Dglobal.type_annotate_only and then Is_Generic_Type (gnat_entity) then
+         return LLVMVoidTypeKind;
+      end if;
+
+      llvm_ref := gnat_to_llvm_entity (
+                     gnat_entity  => gnat_entity,
+                     llvm_expr    => Dglobal.NULL_TREE,
+                     definition   => none);
+
+      declare
+         LPT : Utils01.TLLVMPointerType;
+         use type Utils01.TLLVMPointerType;
+      begin
+         LPT := Utils01.get_pointer_type (
+                        TreeAssoc   => Dglobal.ref_TreeSync.all,
+                        gnat_entity => gnat_entity);
+         pragma Assert (LPT = Utils01.loc_type);
+      end;
+
+      return LLVMGetTypeKind (LLVMTypeRef (llvm_ref));
+
+   end gnat_to_llvm_type;
+
+
+
+   ---------------------------
+   --  gnat_to_llvm_entity  --
+   ---------------------------
+
+   function gnat_to_llvm_entity (gnat_entity  : Entity_Id;
+                                 llvm_expr    : LLVMValueRef;
+                                 definition   : TDefinition)
+   return Address is
+      bogus : Address := Null_Address;
+   begin
+      --  TO-DO: Obviously, this function is bogus
+      return bogus;
+   end gnat_to_llvm_entity;
+
+end Decl;

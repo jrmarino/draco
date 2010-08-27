@@ -37,16 +37,18 @@ package Utils01 is
    --  default record values of system.null_pointer and loc_unused, and to
    --  pass that variable to the procedures and functions below.
 
+   type TPSync is access all TTreeAssociation;
 
-   function init_gnat_to_llvm (max_gnat_nodes : in Node_Id)
+
+   function init_gnat_to_llvm (max_gnat_nodes : Node_Id)
    return TTreeAssociation;
    --  This returns a TTreeAssociation variable, which is an array of
    --  records.  The array range will be 0 to max_gnat_nodes - 1 (assuming
    --  the lower bound for Node_Id continues to be zero)
 
 
-   function present_llvm_tree (TreeAssoc   : in TTreeAssociation;
-                               gnat_entity : in Entity_Id) return Boolean;
+   function present_llvm_tree (TreeAssoc   : TTreeAssociation;
+                               gnat_entity : Entity_Id) return Boolean;
    --  Each element of the TreeAssoc array is initialized to pointer_type of
    --  loc_unused.  This function will return false if the pointer_type is
    --  still set to loc_unused, otherwise it will return true.  It basically
@@ -54,18 +56,26 @@ package Utils01 is
    --  AST yet.
 
 
-   function get_llvm_value    (TreeAssoc   : in TTreeAssociation;
-                               gnat_entity : in Entity_Id) return LLVMValueRef;
+   function get_llvm_value    (TreeAssoc   : TTreeAssociation;
+                               gnat_entity : Entity_Id) return LLVMValueRef;
    --  If the LLVM AST value is set, this function will return the pointer
    --  to it.  However, if the pointer_type is loc_unused or loc_type, then
    --  it will assert, as this is never expected.
 
 
-   function get_llvm_type     (TreeAssoc   : in TTreeAssociation;
-                               gnat_entity : in Entity_Id) return LLVMTypeRef;
+   function get_llvm_type     (TreeAssoc   : TTreeAssociation;
+                               gnat_entity : Entity_Id) return LLVMTypeRef;
    --  If the LLVM AST type is set, this function will return the pointer
    --  to it.  However, if the pointer_type is loc_unused or loc_value, then
    --  it will assert, as this is never expected.
+
+
+   function get_pointer_type  (TreeAssoc   : TTreeAssociation;
+                               gnat_entity : Entity_Id)
+   return TLLVMPointerType;
+   --  If the type of pointer stored in the structure is not known for certain,
+   --  this function will determine it.  It could possibly be used to
+   --  generate assertions.
 
 
    procedure save_llvm_value  (TreeAssoc   : in out TTreeAssociation;

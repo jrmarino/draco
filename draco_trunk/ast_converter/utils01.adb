@@ -26,7 +26,7 @@ package body Utils01 is
    --  init_gnat_to_llvm  --
    -------------------------
 
-   function init_gnat_to_llvm (max_gnat_nodes : in Node_Id)
+   function init_gnat_to_llvm (max_gnat_nodes : Node_Id)
    return TTreeAssociation is
       Upper_Bound : Node_Id := max_gnat_nodes + Node_Low_Bound - 1;
       result : TTreeAssociation (Node_Low_Bound .. Upper_Bound);
@@ -40,8 +40,8 @@ package body Utils01 is
    --  present_llvm_tree  --
    -------------------------
 
-   function present_llvm_tree (TreeAssoc   : in TTreeAssociation;
-                               gnat_entity : in Entity_Id)
+   function present_llvm_tree (TreeAssoc   : TTreeAssociation;
+                               gnat_entity : Entity_Id)
    return Boolean is
       index  : Node_Id := Node_Id (gnat_entity);
       result : Boolean;
@@ -56,8 +56,8 @@ package body Utils01 is
    --  get_llvm_value  --
    ----------------------
 
-   function get_llvm_value    (TreeAssoc   : in TTreeAssociation;
-                               gnat_entity : in Entity_Id)
+   function get_llvm_value    (TreeAssoc   : TTreeAssociation;
+                               gnat_entity : Entity_Id)
    return LLVMValueRef is
       index  : Node_Id := Node_Id (gnat_entity);
    begin
@@ -74,8 +74,8 @@ package body Utils01 is
    --  get_llvm_type  --
    ---------------------
 
-   function get_llvm_type     (TreeAssoc   : in TTreeAssociation;
-                               gnat_entity : in Entity_Id)
+   function get_llvm_type     (TreeAssoc   : TTreeAssociation;
+                               gnat_entity : Entity_Id)
    return LLVMTypeRef is
       index  : Node_Id := Node_Id (gnat_entity);
    begin
@@ -85,6 +85,20 @@ package body Utils01 is
       );
       return LLVMTypeRef (TreeAssoc (index).llvm_pointer);
    end get_llvm_type;
+
+
+
+   ------------------------
+   --  get_pointer_type  --
+   ------------------------
+
+   function get_pointer_type  (TreeAssoc   : TTreeAssociation;
+                               gnat_entity : Entity_Id)
+   return TLLVMPointerType is
+      index  : Node_Id := Node_Id (gnat_entity);
+   begin
+      return TreeAssoc (index).pointer_type;
+   end get_pointer_type;
 
 
 
