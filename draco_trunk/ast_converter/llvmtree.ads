@@ -25,6 +25,7 @@ with System; use System;
 package LlvmTree is
 
    type TLLVMPointerType is (loc_unused,
+                             loc_null_tree,
                              loc_value,
                              loc_type,
                              loc_module,
@@ -35,5 +36,9 @@ package LlvmTree is
       llvm_pointer : Address           := Null_Address;
       pointer_type : TLLVMPointerType  := loc_unused;
    end record;
+
+   NULL_TREE : constant TTree := (
+                  llvm_pointer => Null_address,
+                  pointer_type => loc_null_tree);
 
 end LlvmTree;

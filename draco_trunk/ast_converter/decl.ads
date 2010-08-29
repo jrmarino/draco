@@ -30,13 +30,12 @@ package Decl is
    type TDefinition is (none, exists, special);
 
    function gnat_to_llvm_entity (gnat_entity  : Entity_Id;
-                                 llvm_expr    : LLVMValueRef;
+                                 llvm_expr    : TTree;
                                  definition   : TDefinition)
    return TTree;
    --  Given GNAT_ENTITY, a GNAT defining identifier node, which denotes some
-   --  Adaventity, return the equivalent LLVM tree for that entity
-   --  (LLVMValueRef) and associate the LLVMValueRef with the input GNAT
-   --  defining identifier.
+   --  Ada entity, return the equivalent LLVM tree for that entity and
+   --  associate the tree with the input GNAT defining identifier.
    --
    --  If GNAT_ENTITY is a variable or a constant declaration, LLVM_EXPR gives
    --  its initial value (how?).  This is optional for a variable.  For a

@@ -55,7 +55,7 @@ package body Decl is
 
       llvm_decl := gnat_to_llvm_entity (
                      gnat_entity  => gnat_entity,
-                     llvm_expr    => Dglobal.NULL_TREE,
+                     llvm_expr    => NULL_TREE,
                      definition   => none);
 
       pragma Assert (llvm_decl.pointer_type = loc_type);
@@ -71,7 +71,7 @@ package body Decl is
    ---------------------------
 
    function gnat_to_llvm_entity (gnat_entity  : Entity_Id;
-                                 llvm_expr    : LLVMValueRef;
+                                 llvm_expr    : TTree;
                                  definition   : TDefinition)
    return TTree is
       bogus : TTree;

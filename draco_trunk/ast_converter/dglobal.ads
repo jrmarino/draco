@@ -27,8 +27,6 @@ with LlvmTree; use LlvmTree;
 
 package Dglobal is
 
-   NULL_TREE : constant LLVMValueRef := LLVMValueRef (Null_Address);
-
    type_annotate_only : Boolean      := False;
    void_type_node     : TTree;
 
