@@ -30,9 +30,10 @@ package body Decl is
    -------------------------
 
    function get_unpadded_type (gnat_entity : Entity_Id)
-   return LLVMTypeRef is
-      bogus : LLVMTypeRef := LLVMTypeRef (Null_Address);
+   return TTree is
+      bogus : TTree;
    begin
+      bogus := gnat_to_llvm_type (gnat_entity => gnat_entity);
       --  TO-DO: Obviously, this function is bogus
       return bogus;
    end get_unpadded_type;
@@ -44,29 +45,22 @@ package body Decl is
    -------------------------
 
    function gnat_to_llvm_type (gnat_entity  : Entity_Id)
-   return LLVMTypeKind is
-      llvm_ref : Address;
+   return TTree is
+      llvm_decl : TTree;
    begin
+      --  The back end never attempts to annotate generic types
       if Dglobal.type_annotate_only and then Is_Generic_Type (gnat_entity) then
-         return LLVMVoidTypeKind;
+         return Dglobal.void_type_node;
       end if;
 
-      llvm_ref := gnat_to_llvm_entity (
+      llvm_decl := gnat_to_llvm_entity (
                      gnat_entity  => gnat_entity,
                      llvm_expr    => Dglobal.NULL_TREE,
                      definition   => none);
 
-      declare
-         LPT : Utils01.TLLVMPointerType;
-         use type Utils01.TLLVMPointerType;
-      begin
-         LPT := Utils01.get_pointer_type (
-                        TreeAssoc   => Dglobal.ref_TreeSync.all,
-                        gnat_entity => gnat_entity);
-         pragma Assert (LPT = Utils01.loc_type);
-      end;
+      pragma Assert (llvm_decl.pointer_type = loc_type);
 
-      return LLVMGetTypeKind (LLVMTypeRef (llvm_ref));
+      return llvm_decl;
 
    end gnat_to_llvm_type;
 
@@ -79,8 +73,8 @@ package body Decl is
    function gnat_to_llvm_entity (gnat_entity  : Entity_Id;
                                  llvm_expr    : LLVMValueRef;
                                  definition   : TDefinition)
-   return Address is
-      bogus : Address := Null_Address;
+   return TTree is
+      bogus : TTree;
    begin
       --  TO-DO: Obviously, this function is bogus
       return bogus;

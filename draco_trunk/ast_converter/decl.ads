@@ -19,9 +19,10 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-with Core_h; use Core_h;
-with Types;  use Types;
-with System; use System;
+with Core_h;   use Core_h;
+with Types;    use Types;
+with System;   use System;
+with LlvmTree; use LlvmTree;
 with Utils01;
 
 package Decl is
@@ -31,7 +32,7 @@ package Decl is
    function gnat_to_llvm_entity (gnat_entity  : Entity_Id;
                                  llvm_expr    : LLVMValueRef;
                                  definition   : TDefinition)
-   return Address;
+   return TTree;
    --  Given GNAT_ENTITY, a GNAT defining identifier node, which denotes some
    --  Adaventity, return the equivalent LLVM tree for that entity
    --  (LLVMValueRef) and associate the LLVMValueRef with the input GNAT
@@ -50,14 +51,14 @@ package Decl is
 
 
 
-   function get_unpadded_type (gnat_entity : Entity_Id) return LLVMTypeRef;
+   function get_unpadded_type (gnat_entity : Entity_Id) return TTree;
    --  Similar, but the GNAT_ENTITY is assumed to refer to a GNAT type.
    --  Return the unpadded version of the LLVM type corresponding to that
    --  entity.
 
 
 
-   function gnat_to_llvm_type (gnat_entity  : Entity_Id) return LLVMTypeKind;
+   function gnat_to_llvm_type (gnat_entity  : Entity_Id) return TTree;
    --  Similar, but GNAT_ENTITY is assumed to refer to a GNAT type.
    --  Return the LLVM type corresponding to that entity
 

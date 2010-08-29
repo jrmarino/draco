@@ -21,3 +21,7 @@ einfo.ads
 nlists.ads
 sem_util.ads
 nmake.ads
+elists.ads
+sinput.ads
+stringt.ads
+casing.ads

@@ -19,20 +19,14 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-with Core_h; use Core_h;
-with Types;  use Types;
-with System; use System;
+with Core_h;   use Core_h;
+with Types;    use Types;
+with System;   use System;
+with LlvmTree; use LlvmTree;
 
 package Utils01 is
 
-   type TLLVMPointerType is (loc_unused, loc_value, loc_type);
-
-   type TAssocRec is record
-      llvm_pointer : Address           := Null_Address;
-      pointer_type : TLLVMPointerType  := loc_unused;
-   end record;
-
-   type TTreeAssociation is array (Node_Id range <>) of TAssocRec;
+   type TTreeAssociation is array (Node_Id range <>) of TTree;
    --  The intended use is to declare an instance of TTreeAssociation with
    --  default record values of system.null_pointer and loc_unused, and to
    --  pass that variable to the procedures and functions below.
@@ -54,6 +48,13 @@ package Utils01 is
    --  still set to loc_unused, otherwise it will return true.  It basically
    --  signals whether the gnat entity in question has been added to the LLVM
    --  AST yet.
+
+
+   function get_llvm_tree     (TreeAssoc   : TTreeAssociation;
+                               gnat_entity : Entity_Id) return TTree;
+   --  If the LLVM AST value is set, this function will return the TTree
+   --  structure.  However, if the pointer_type is loc_unused, then
+   --  it will assert, as this is never expected.
 
 
    function get_llvm_value    (TreeAssoc   : TTreeAssociation;
@@ -78,20 +79,11 @@ package Utils01 is
    --  generate assertions.
 
 
-   procedure save_llvm_value  (TreeAssoc   : in out TTreeAssociation;
+   procedure save_llvm_tree   (TreeAssoc   : in out TTreeAssociation;
                                gnat_entity : in Entity_Id;
-                               value_ref   : in LLVMValueRef);
-   --  This procedure will associate a gnat value with an llvm value through
-   --  the use of a pointer.  A check will be performed to make sure the
-   --  association wasn't previously made, and the pointer isn't null.
+                               tree        : in TTree);
+   --  This procedure will associate a gnat AST node with an llvm AST node
+   --  which is stored in the TTree structure.  A copy of the llvm node will
+   --  be made after verifying the gnat node was previously unset;
 
-
-   procedure save_llvm_type   (TreeAssoc   : in out TTreeAssociation;
-                               gnat_entity : in Entity_Id;
-                               type_ref    : in LLVMTypeRef);
-   --  This procedure will associate a gnat type with an llvm type through
-   --  the use of a pointer.  A check will be performed to make sure the
-   --  association wasn't previously made, and the pointer isn't null.
-
-
-end utils01;
+end Utils01;

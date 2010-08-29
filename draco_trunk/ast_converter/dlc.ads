@@ -19,10 +19,14 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-with Core_h; use Core_h;
-with Types;  use Types;
-with Snames; use Snames;
-with System; use System;
+with Core_h;   use Core_h;
+with Types;    use Types;
+with Atree;    use Atree;
+with Namet;    use Namet;
+with Snames;   use Snames;
+with System;   use System;
+with Sinput;   use Sinput;
+with LlvmTree; use LlvmTree;
 with Utils01;
 
 package DLC is
@@ -41,19 +45,19 @@ package DLC is
       --  Back end call is skipped (syntax only, or errors found)
    );
 
+      type DLC_File_Info_Type is record
+         File_Name        : File_Name_Type;
+         Num_Source_Lines : Nat;
+      end record;
+
+      type DLC_File_Info is array (1 .. Last_Source_File) of
+                            DLC_File_Info_Type;
 
 
    procedure Draco_to_llvm_ast_converter (
          gnat_root               : in Node_Id;
          max_gnat_nodes          : in Node_Id;
-         next_node_ptr           : in Address;
-         prev_node_ptr           : in Address;
-         elists_ptr              : in Address;
-         elmts_ptr               : in Address;
-         strings_ptr             : in Address;
-         string_chars_ptr        : in Address;
-         list_headers_ptr        : in Address;
-         file_info_ptr           : in Address;
+         file_info               : in DLC_File_Info;
          number_file             : in Nat;
          dlc_std_boolean         : in Entity_Id;
          dlc_std_integer         : in Entity_Id;
@@ -64,6 +68,14 @@ package DLC is
    );
    --  This is the main program of the back-end.  It sets up all the table
    --  structures and then generates code.
+   --  Deleted from GiGi predecessor: nodes_ptr, access Atree
+   --                                 prev_node_ptr (Node_Id), access NLists
+   --                                 next_node_ptr (Node_Id), access NLists
+   --                                 elmts_ptr (Elmt_Id), access Elists
+   --                                 elists_ptr (Elist_Id), access Elists
+   --                                 list_headers_ptr (List_Id), acc  Nlists
+   --                                 strings_ptr (String_Id), acc Stringt
+   --                                 string_chars_ptr (Char_Code), acc Stringt
 
 
 
@@ -154,7 +166,7 @@ private
 
    function lvalue_required_p (ref_TreeSync           : Utils01.TPSync;
                                gnat_node              : Node_Id;
-                               llvm_type              : LLVMTypeRef;
+                               llvm_type              : TTree;
                                is_constant            : Boolean;
                                is_address_of_constant : Boolean;
                                has_an_alias           : Boolean)

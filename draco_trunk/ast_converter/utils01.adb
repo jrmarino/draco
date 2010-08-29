@@ -52,12 +52,30 @@ package body Utils01 is
 
 
 
+   ---------------------
+   --  get_llvm_tree  --
+   ---------------------
+
+   function get_llvm_tree (TreeAssoc   : TTreeAssociation;
+                           gnat_entity : Entity_Id)
+   return TTree is
+      index  : Node_Id := Node_Id (gnat_entity);
+   begin
+      pragma Assert (
+                TreeAssoc (index).pointer_type /= loc_unused,
+                "Utils#1: Tree leaf not present."
+      );
+      return TreeAssoc (index);
+   end get_llvm_tree;
+
+
+
    ----------------------
    --  get_llvm_value  --
    ----------------------
 
-   function get_llvm_value    (TreeAssoc   : TTreeAssociation;
-                               gnat_entity : Entity_Id)
+   function get_llvm_value (TreeAssoc   : TTreeAssociation;
+                            gnat_entity : Entity_Id)
    return LLVMValueRef is
       index  : Node_Id := Node_Id (gnat_entity);
    begin
@@ -74,8 +92,8 @@ package body Utils01 is
    --  get_llvm_type  --
    ---------------------
 
-   function get_llvm_type     (TreeAssoc   : TTreeAssociation;
-                               gnat_entity : Entity_Id)
+   function get_llvm_type (TreeAssoc   : TTreeAssociation;
+                           gnat_entity : Entity_Id)
    return LLVMTypeRef is
       index  : Node_Id := Node_Id (gnat_entity);
    begin
@@ -92,8 +110,8 @@ package body Utils01 is
    --  get_pointer_type  --
    ------------------------
 
-   function get_pointer_type  (TreeAssoc   : TTreeAssociation;
-                               gnat_entity : Entity_Id)
+   function get_pointer_type (TreeAssoc   : TTreeAssociation;
+                              gnat_entity : Entity_Id)
    return TLLVMPointerType is
       index  : Node_Id := Node_Id (gnat_entity);
    begin
@@ -101,48 +119,22 @@ package body Utils01 is
    end get_pointer_type;
 
 
-
-   -----------------------
-   --  save_llvm_value  --
-   -----------------------
-
-   procedure save_llvm_value  (TreeAssoc   : in out TTreeAssociation;
-                               gnat_entity : in Entity_Id;
-                               value_ref   : in LLVMValueRef)
-   is
-      present : Boolean := present_llvm_tree (TreeAssoc, gnat_entity);
-      valid   : Boolean := Address (value_ref) /= Null_Address;
-      index   : Node_Id := Node_Id (gnat_entity);
-   begin
-      pragma Assert (
-                valid and not present,
-                "Utils#1: Tree leaf value already present upon save"
-      );
-      TreeAssoc (index) := (pointer_type => loc_value,
-                            llvm_pointer => Address (value_ref));
-   end save_llvm_value;
-
-
-
    ----------------------
-   --  save_llvm_type  --
+   --  save_llvm_tree  --
    ----------------------
 
-   procedure save_llvm_type   (TreeAssoc   : in out TTreeAssociation;
-                               gnat_entity : in Entity_Id;
-                               type_ref    : in LLVMTypeRef)
+   procedure save_llvm_tree (TreeAssoc   : in out TTreeAssociation;
+                             gnat_entity : in Entity_Id;
+                             tree        : in TTree)
    is
       present : Boolean := present_llvm_tree (TreeAssoc, gnat_entity);
-      valid   : Boolean := Address (type_ref) /= Null_Address;
       index   : Node_Id := Node_Id (gnat_entity);
    begin
-      pragma Assert (
-                valid and not present,
-                "Tree leaf type already present upon save"
-      );
-      TreeAssoc (index) := (pointer_type => loc_type,
-                            llvm_pointer => Address (type_ref));
-   end save_llvm_type;
+      pragma Assert (not present,
+                     "Utils#1: Tree leaf value already present upon save");
+      TreeAssoc (index) := tree;
+   end save_llvm_tree;
 
 
-end utils01;
+
+end Utils01;

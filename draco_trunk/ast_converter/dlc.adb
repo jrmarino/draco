@@ -22,10 +22,10 @@
 with Misc;
 with Decl;
 with Dglobal;
-with Atree;    use Atree;
 with Sinfo;    use Sinfo;
 with Einfo;    use Einfo;
-with Nlists;   use Nlists;
+with Elists;  use Elists;
+with Nlists;  use Nlists;
 with Sem_Util; use Sem_Util;
 
 package body DLC is
@@ -37,14 +37,7 @@ package body DLC is
    procedure Draco_to_llvm_ast_converter (
          gnat_root               : in Node_Id;
          max_gnat_nodes          : in Node_Id;
-         next_node_ptr           : in Address;
-         prev_node_ptr           : in Address;
-         elists_ptr              : in Address;
-         elmts_ptr               : in Address;
-         strings_ptr             : in Address;
-         string_chars_ptr        : in Address;
-         list_headers_ptr        : in Address;
-         file_info_ptr           : in Address;
+         file_info               : in DLC_File_Info;
          number_file             : in Nat;
          dlc_std_boolean         : in Entity_Id;
          dlc_std_integer         : in Entity_Id;
@@ -58,13 +51,15 @@ package body DLC is
       DummySync : aliased Utils01.TTreeAssociation :=
                   Utils01.init_gnat_to_llvm (max_gnat_nodes);
    begin
-      Dglobal.ref_TreeSync := TreeSync'Unchecked_Access;
-      Dglobal.ref_DummySync := DummySync'Unchecked_Access;
+      Dglobal.ref_TreeSync       := TreeSync'Unchecked_Access;
+      Dglobal.ref_DummySync      := DummySync'Unchecked_Access;
+      Dglobal.max_gnat_nodes     := max_gnat_nodes;
       Dglobal.type_annotate_only := (dlc_operating_mode = Declarations_Only);
+
       pragma Assert (Nkind (gnat_root) = N_Compilation_Unit,
                      "DLC: Root node is not a compilation Unit");
 
-      --  TO-DO: void_type_node bitsize and size redefinition
+      --  TO-DO: void_type_node bitsize and si``1ze redefinition
       --         when type_annotate_only
 
       --  TO-DO: Enable GNAT Stack Checking
@@ -117,7 +112,7 @@ package body DLC is
 
    function lvalue_required_p (ref_TreeSync           : Utils01.TPSync;
                                gnat_node              : Node_Id;
-                               llvm_type              : LLVMTypeRef;
+                               llvm_type              : TTree;
                                is_constant            : Boolean;
                                is_address_of_constant : Boolean;
                                has_an_alias           : Boolean)

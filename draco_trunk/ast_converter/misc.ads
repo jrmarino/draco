@@ -19,11 +19,11 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-with Core_h; use Core_h;
+with LlvmTree; use LlvmTree;
 
 package Misc is
 
-   function default_pass_by_ref (llvm_type : in LLVMTypeRef) return Boolean;
+   function default_pass_by_ref (llvm_type : in TTree) return Boolean;
    --  We pass aggregates by reference if they are sufficiently large.  The
    --  choice of constant her is somewhat arbitrary.  We also pass by
    --  reference if the target machine would either pass or return by
@@ -33,7 +33,7 @@ package Misc is
 
 
 
-   function must_pass_by_ref (llvm_type : in LLVMTypeRef) return Boolean;
+   function must_pass_by_ref (llvm_type : in TTree) return Boolean;
    --  We pass only unconstrained objects, those required by the language
    --  to be passed by reference, and objects of variable size.  The latter
    --  is more efficient, avoids problems with variable size temporaries,

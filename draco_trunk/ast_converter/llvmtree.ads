@@ -1,6 +1,6 @@
 --
 --  DRACO ADA COMPILER
---  DLC Global Variables
+--  DLC LLVM Tree Node Structure
 --
 --
 --  Copyright (c) 2010, John Marino (www.auroraux.org)
@@ -19,22 +19,21 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-with Utils01;
-with Types;    use Types;
-with Core_h;   use Core_h;
-with System;   use System;
-with LlvmTree; use LlvmTree;
+with Core_h; use Core_h;
+with System; use System;
 
-package Dglobal is
+package LlvmTree is
 
-   NULL_TREE : constant LLVMValueRef := LLVMValueRef (Null_Address);
+   type TLLVMPointerType is (loc_unused,
+                             loc_value,
+                             loc_type,
+                             loc_module,
+                             loc_basic_block);
+   --  Not used: loc_context, loc_builder, loc_type_handle
 
-   type_annotate_only : Boolean      := False;
-   void_type_node     : TTree;
+   type TTree is record
+      llvm_pointer : Address           := Null_Address;
+      pointer_type : TLLVMPointerType  := loc_unused;
+   end record;
 
-   ref_TreeSync  : Utils01.TPSync;
-   ref_DummySync : Utils01.TPSync;
-
-   max_gnat_nodes : Node_Id;
-
-end Dglobal;
+end LlvmTree;
