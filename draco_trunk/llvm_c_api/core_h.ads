@@ -562,73 +562,77 @@ package Core_h is
 
   -- Operations on struct types
    function LLVMStructTypeInContext
-     (arg1 : LLVMContextRef;
-      arg2 : System.Address;
-      arg3 : unsigned;
-      arg4 : LLVMBool) return LLVMTypeRef;  -- Core.h:388
+     (C            : LLVMContextRef;
+      ElementTypes : System.Address;
+      ElementCount : unsigned;
+      Packed       : LLVMBool) return LLVMTypeRef;  -- Core.h:388
    pragma Import (C, LLVMStructTypeInContext, "LLVMStructTypeInContext");
 
    function LLVMStructType
-     (arg1 : System.Address;
-      arg2 : unsigned;
-      arg3 : LLVMBool) return LLVMTypeRef;  -- Core.h:390
+     (ElementTypes : System.Address;
+      ElementCount : unsigned;
+      Packed       : LLVMBool) return LLVMTypeRef;  -- Core.h:390
    pragma Import (C, LLVMStructType, "LLVMStructType");
 
-   function LLVMCountStructElementTypes (arg1 : LLVMTypeRef) return unsigned;  -- Core.h:392
+   function LLVMCountStructElementTypes (StructTy : LLVMTypeRef) return unsigned;  -- Core.h:392
    pragma Import (C, LLVMCountStructElementTypes, "LLVMCountStructElementTypes");
 
-   procedure LLVMGetStructElementTypes (arg1 : LLVMTypeRef; arg2 : System.Address);  -- Core.h:393
+   procedure LLVMGetStructElementTypes (StructTy : LLVMTypeRef; Dest : System.Address);  -- Core.h:393
    pragma Import (C, LLVMGetStructElementTypes, "LLVMGetStructElementTypes");
 
-   function LLVMIsPackedStruct (arg1 : LLVMTypeRef) return LLVMBool;  -- Core.h:394
+   function LLVMIsPackedStruct (StructTy : LLVMTypeRef) return LLVMBool;  -- Core.h:394
    pragma Import (C, LLVMIsPackedStruct, "LLVMIsPackedStruct");
 
   -- Operations on union types
    function LLVMUnionTypeInContext
-     (arg1 : LLVMContextRef;
-      arg2 : System.Address;
-      arg3 : unsigned) return LLVMTypeRef;  -- Core.h:397
+     (C            : LLVMContextRef;
+      ElementTypes : System.Address;
+      ElementCount : unsigned) return LLVMTypeRef;  -- Core.h:397
    pragma Import (C, LLVMUnionTypeInContext, "LLVMUnionTypeInContext");
 
-   function LLVMUnionType (arg1 : System.Address; arg2 : unsigned) return LLVMTypeRef;  -- Core.h:399
+   function LLVMUnionType (ElementTypes : System.Address; 
+                           ElementCount : unsigned) return LLVMTypeRef;  -- Core.h:399
    pragma Import (C, LLVMUnionType, "LLVMUnionType");
 
-   function LLVMCountUnionElementTypes (arg1 : LLVMTypeRef) return unsigned;  -- Core.h:400
+   function LLVMCountUnionElementTypes (UnionTy : LLVMTypeRef) return unsigned;  -- Core.h:400
    pragma Import (C, LLVMCountUnionElementTypes, "LLVMCountUnionElementTypes");
 
-   procedure LLVMGetUnionElementTypes (arg1 : LLVMTypeRef; arg2 : System.Address);  -- Core.h:401
+   procedure LLVMGetUnionElementTypes (UnionTy : LLVMTypeRef; Dest : System.Address);  -- Core.h:401
    pragma Import (C, LLVMGetUnionElementTypes, "LLVMGetUnionElementTypes");
 
   -- Operations on array, pointer, and vector types (sequence types)
-   function LLVMArrayType (arg1 : LLVMTypeRef; arg2 : unsigned) return LLVMTypeRef;  -- Core.h:404
+   function LLVMArrayType (ElementType  : LLVMTypeRef; 
+                           ElementCount : unsigned) return LLVMTypeRef;  -- Core.h:404
    pragma Import (C, LLVMArrayType, "LLVMArrayType");
 
-   function LLVMPointerType (arg1 : LLVMTypeRef; arg2 : unsigned) return LLVMTypeRef;  -- Core.h:405
+   function LLVMPointerType (ElementType  : LLVMTypeRef; 
+                             AddressSpace : unsigned) return LLVMTypeRef;  -- Core.h:405
    pragma Import (C, LLVMPointerType, "LLVMPointerType");
 
-   function LLVMVectorType (arg1 : LLVMTypeRef; arg2 : unsigned) return LLVMTypeRef;  -- Core.h:406
+   function LLVMVectorType (ElementType  : LLVMTypeRef; 
+                            ElementCount : unsigned) return LLVMTypeRef;  -- Core.h:406
    pragma Import (C, LLVMVectorType, "LLVMVectorType");
 
-   function LLVMGetElementType (arg1 : LLVMTypeRef) return LLVMTypeRef;  -- Core.h:408
+   function LLVMGetElementType (Ty : LLVMTypeRef) return LLVMTypeRef;  -- Core.h:408
    pragma Import (C, LLVMGetElementType, "LLVMGetElementType");
 
-   function LLVMGetArrayLength (arg1 : LLVMTypeRef) return unsigned;  -- Core.h:409
+   function LLVMGetArrayLength (ArrayTy : LLVMTypeRef) return unsigned;  -- Core.h:409
    pragma Import (C, LLVMGetArrayLength, "LLVMGetArrayLength");
 
-   function LLVMGetPointerAddressSpace (arg1 : LLVMTypeRef) return unsigned;  -- Core.h:410
+   function LLVMGetPointerAddressSpace (PointerTy : LLVMTypeRef) return unsigned;  -- Core.h:410
    pragma Import (C, LLVMGetPointerAddressSpace, "LLVMGetPointerAddressSpace");
 
-   function LLVMGetVectorSize (arg1 : LLVMTypeRef) return unsigned;  -- Core.h:411
+   function LLVMGetVectorSize (VectorTy : LLVMTypeRef) return unsigned;  -- Core.h:411
    pragma Import (C, LLVMGetVectorSize, "LLVMGetVectorSize");
 
   -- Operations on other types
-   function LLVMVoidTypeInContext (arg1 : LLVMContextRef) return LLVMTypeRef;  -- Core.h:414
+   function LLVMVoidTypeInContext (C : LLVMContextRef) return LLVMTypeRef;  -- Core.h:414
    pragma Import (C, LLVMVoidTypeInContext, "LLVMVoidTypeInContext");
 
-   function LLVMLabelTypeInContext (arg1 : LLVMContextRef) return LLVMTypeRef;  -- Core.h:415
+   function LLVMLabelTypeInContext (C : LLVMContextRef) return LLVMTypeRef;  -- Core.h:415
    pragma Import (C, LLVMLabelTypeInContext, "LLVMLabelTypeInContext");
 
-   function LLVMOpaqueTypeInContext (arg1 : LLVMContextRef) return LLVMTypeRef;  -- Core.h:416
+   function LLVMOpaqueTypeInContext (C : LLVMContextRef) return LLVMTypeRef;  -- Core.h:416
    pragma Import (C, LLVMOpaqueTypeInContext, "LLVMOpaqueTypeInContext");
 
    function LLVMVoidType return LLVMTypeRef;  -- Core.h:418
@@ -641,16 +645,17 @@ package Core_h is
    pragma Import (C, LLVMOpaqueType, "LLVMOpaqueType");
 
   -- Operations on type handles
-   function LLVMCreateTypeHandle (arg1 : LLVMTypeRef) return LLVMTypeHandleRef;  -- Core.h:423
+   function LLVMCreateTypeHandle (PotentiallyAbstractTy : LLVMTypeRef) return LLVMTypeHandleRef;  -- Core.h:423
    pragma Import (C, LLVMCreateTypeHandle, "LLVMCreateTypeHandle");
 
-   procedure LLVMRefineType (arg1 : LLVMTypeRef; arg2 : LLVMTypeRef);  -- Core.h:424
+   procedure LLVMRefineType (AbstractTy : LLVMTypeRef; 
+                             ConcreteTy : LLVMTypeRef);  -- Core.h:424
    pragma Import (C, LLVMRefineType, "LLVMRefineType");
 
-   function LLVMResolveTypeHandle (arg1 : LLVMTypeHandleRef) return LLVMTypeRef;  -- Core.h:425
+   function LLVMResolveTypeHandle (TypeHandle : LLVMTypeHandleRef) return LLVMTypeRef;  -- Core.h:425
    pragma Import (C, LLVMResolveTypeHandle, "LLVMResolveTypeHandle");
 
-   procedure LLVMDisposeTypeHandle (arg1 : LLVMTypeHandleRef);  -- Core.h:426
+   procedure LLVMDisposeTypeHandle (TypeHandle : LLVMTypeHandleRef);  -- Core.h:426
    pragma Import (C, LLVMDisposeTypeHandle, "LLVMDisposeTypeHandle");
 
   --===-- Values ------------------------------------------------------------===
