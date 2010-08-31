@@ -31,11 +31,11 @@ package body Decl is
 
    function get_unpadded_type (gnat_entity : Entity_Id)
    return TTree is
-      bogus : TTree;
+      llvm_type : TTree;
    begin
-      bogus := gnat_to_llvm_type (gnat_entity => gnat_entity);
+      llvm_type := gnat_to_llvm_type (gnat_entity => gnat_entity);
       --  TO-DO: Obviously, this function is bogus
-      return bogus;
+      return llvm_type;
    end get_unpadded_type;
 
 

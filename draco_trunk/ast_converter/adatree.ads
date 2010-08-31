@@ -19,21 +19,12 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-with Utils01;
-with Types;    use Types;
-with Core_h;   use Core_h;
-with System;   use System;
 with LlvmTree; use LlvmTree;
 
-package Dglobal is
+package AdaTree is
 
-   type_annotate_only : Boolean      := False;
-   void_type_node     : TTree;
+   function type_is_padding_p (node : TTree) return Boolean;
+   --  For a RECORD_TYPE, True if this was made just to supply needed padding
+   --  or alignment.
 
-   ref_TreeSync  : Utils01.TPSync;
-   ref_DummySync : Utils01.TPSync;
-
-   max_gnat_nodes : Node_Id;
-   module         : LLVMModuleRef;
-
-end Dglobal;
+end AdaTree;

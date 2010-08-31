@@ -32,13 +32,22 @@ package LlvmTree is
                              loc_basic_block);
    --  Not used: loc_context, loc_builder, loc_type_handle
 
+   type TTypeLangFlags is array (Natural range 0 .. 6) of Boolean;
+
    type TTree is record
-      llvm_pointer : Address           := Null_Address;
-      pointer_type : TLLVMPointerType  := loc_unused;
+      llvm_pointer   : Address           := Null_Address;
+      pointer_type   : TLLVMPointerType  := loc_unused;
+      type_lang_flag : TTypeLangFlags    := (others => False);
    end record;
 
    NULL_TREE : constant TTree := (
-                  llvm_pointer => Null_address,
-                  pointer_type => loc_null_tree);
+                  llvm_pointer   => Null_address,
+                  pointer_type   => loc_null_tree,
+                  type_lang_flag => (others => False));
+
+   function get_typeref_from_tree (tree : TTree) return LLVMTypeRef;
+   --  Given a TTree structure, returns a LLVMTypeRef, which is a pointer to
+   --  a type definition with the LLVM AST tree.  If the tree pointer_type is
+   --  not equal to loc_type, an assertion will occur.
 
 end LlvmTree;

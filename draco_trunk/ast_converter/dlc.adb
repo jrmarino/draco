@@ -24,9 +24,11 @@ with Decl;
 with Dglobal;
 with Sinfo;    use Sinfo;
 with Einfo;    use Einfo;
-with Elists;  use Elists;
-with Nlists;  use Nlists;
+with Elists;   use Elists;
+with Nlists;   use Nlists;
 with Sem_Util; use Sem_Util;
+with Exp_Dbug; use Exp_Dbug;
+with Interfaces.C.Strings;
 
 package body DLC is
 
@@ -63,6 +65,21 @@ package body DLC is
       --         when type_annotate_only
 
       --  TO-DO: Enable GNAT Stack Checking
+
+      declare
+         unit_node_entity : Entity_Id := Defining_Entity (Unit (gnat_root));
+      begin
+         Get_External_Name (Entity     => unit_node_entity,
+                            Has_Suffix => False);
+      end;
+
+      declare
+         unit_name_str : String (1 .. Name_Len) := Name_Buffer (1 .. Name_Len);
+         unit_name_ptr : Interfaces.C.Strings.chars_ptr :=
+                         Interfaces.C.Strings.New_String (unit_name_str);
+      begin
+         Dglobal.module := LLVMModuleCreateWithName (unit_name_ptr);
+      end;
 
 
 

@@ -1,6 +1,6 @@
 --
 --  DRACO ADA COMPILER
---  DLC Global Variables
+--  DLC LLVM Tree Node Structure
 --
 --
 --  Copyright (c) 2010, John Marino (www.auroraux.org)
@@ -19,21 +19,20 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-with Utils01;
-with Types;    use Types;
-with Core_h;   use Core_h;
-with System;   use System;
-with LlvmTree; use LlvmTree;
+package LlvmTree is
 
-package Dglobal is
+   -----------------------------
+   --  get_typeref_from_tree  --
+   -----------------------------
 
-   type_annotate_only : Boolean      := False;
-   void_type_node     : TTree;
+   function get_typeref_from_tree (tree : TTree)
+   return LLVMTypeRef is
+   begin
+      pragma Assert (tree.pointer_type = loc_type,
+                     "llvmtree: Tree is not associated with a type.");
 
-   ref_TreeSync  : Utils01.TPSync;
-   ref_DummySync : Utils01.TPSync;
+      return LLVMTypeRef (tree.llvm_pointer);
+   end get_typeref_from_tree;
 
-   max_gnat_nodes : Node_Id;
-   module         : LLVMModuleRef;
 
-end Dglobal;
+end LlvmTree;

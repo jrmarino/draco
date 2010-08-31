@@ -19,21 +19,27 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-with Utils01;
-with Types;    use Types;
-with Core_h;   use Core_h;
-with System;   use System;
-with LlvmTree; use LlvmTree;
+with Core_h; use Core_h;
 
-package Dglobal is
+package body AdaTree is
 
-   type_annotate_only : Boolean      := False;
-   void_type_node     : TTree;
+   -------------------------
+   --  type_is_padding_p  --
+   -------------------------
 
-   ref_TreeSync  : Utils01.TPSync;
-   ref_DummySync : Utils01.TPSync;
+   function type_is_padding_p (node : TTree)
+   return Boolean is
+      result      : Boolean := False;
+      TypeRef     : LLVMTypeRef;
+      record_type : Boolean;
+   begin
+      TypeRef  := get_typeref_from_tree (node);
+      record_type := (LLVMGetTypeKind (TypeRef) = LLVMStructTypeKind);
+      if record_type then
+         result := node.type_lang_flag (5);
+      end if;
+      return result;
+   end type_is_padding_p;
 
-   max_gnat_nodes : Node_Id;
-   module         : LLVMModuleRef;
 
-end Dglobal;
+end AdaTree;
