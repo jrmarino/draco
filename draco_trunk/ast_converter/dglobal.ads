@@ -28,6 +28,7 @@ with LlvmTree; use LlvmTree;
 package Dglobal is
 
    type_annotate_only : Boolean      := False;
+   optimize           : Boolean      := True;
    void_type_node     : TTree;
 
    ref_TreeSync  : Utils01.TPSync;

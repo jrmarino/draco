@@ -19,15 +19,17 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-with Misc;
-with Decl;
-with Dglobal;
+with Lib;      use Lib;
 with Sinfo;    use Sinfo;
 with Einfo;    use Einfo;
 with Elists;   use Elists;
 with Nlists;   use Nlists;
 with Sem_Util; use Sem_Util;
 with Exp_Dbug; use Exp_Dbug;
+
+with Misc;
+with Decl;
+with Dglobal;
 with Interfaces.C.Strings;
 
 package body DLC is
@@ -80,6 +82,12 @@ package body DLC is
       begin
          Dglobal.module := LLVMModuleCreateWithName (unit_name_ptr);
       end;
+
+      --  It seems that stack check probing is a gcc mechanism.
+      --  If it's discovered that LLVM has something similar (or gets something
+      --  similar in the future, then complete this code.
+      --  if not Targparm.Stack_Check_Probes_On_Target then
+      --     System.Stack_Checking.Operations.Stack_Check (??)
 
 
 
@@ -490,8 +498,85 @@ package body DLC is
 
    procedure Compilation_Unit_to_llvm (gnat_node : Node_Id)
    is
+      gnat_unit      : Node_Id := Unit (gnat_node);
+      body_p         : Boolean;
+      elab_proc_decl : LLVMValueRef;
    begin
-      null;
+
+      body_p := (Nkind (gnat_unit) = N_Package_Body) or
+                (Nkind (gnat_unit) = N_Subprogram_Body);
+
+      declare
+         gnat_unit_entity : Entity_Id := Defining_Entity (gnat_unit);
+      begin
+         Get_External_Name (Entity     => gnat_unit_entity,
+                            Has_Suffix => False);
+      end;
+
+      declare
+         unit_name_str     : String (1 .. Name_Len + 6) :=
+                             Name_Buffer (1 .. Name_Len) & "_elabs";
+         unit_name_ptr     : Interfaces.C.Strings.chars_ptr;
+         compunit_ret_type : LLVMTypeRef := LLVMVoidType;
+         compunit_function : LLVMTypeRef;
+      begin
+         if body_p then
+            unit_name_str (unit_name_str'Length) := 'b';
+         end if;
+         unit_name_ptr := Interfaces.C.Strings.New_String (unit_name_str);
+         compunit_function := LLVMFunctionType (
+                              ReturnType => compunit_ret_type,
+                              ParamTypes => Null_Address,
+                              ParamCount =>  0,
+                              IsVarArg   => 0);
+         elab_proc_decl := LLVMAddFunction (
+                              M          => Dglobal.module,
+                              Name       => unit_name_ptr,
+                              FunctionTy => compunit_function);
+      end;
+
+      --  TO-DO: Figure out where optimize get set in gcc
+      if Dglobal.optimize then
+         declare
+            gnat_entity : Entity_Id := First_Inlined_Subprogram (gnat_node);
+            gnat_body   : Node_Id;
+            advance     : Boolean;
+         begin
+            Entity_Loop :
+               loop
+                  gnat_body := Parent (Declaration_Node (gnat_entity));
+                  advance   := True;
+
+                  if (Nkind (gnat_body) /= N_Subprogram_Body) then
+                     advance := False;  -- Supposedly this should never happen
+                  else
+                     gnat_body := Parent (Declaration_Node (
+                                    Corresponding_Body (gnat_body)));
+                  end if;
+
+                  if advance and then Present (gnat_body) then
+                     --  TO-DO: gnat_to_llvm_entity (gnat_entity, Null_tree, 0)
+                     --         add_stmt (gnat_to_gnu (gnat_body)
+                     null;
+                  end if;
+
+                  gnat_entity := Next_Inlined_Subprogram (gnat_entity);
+                  exit Entity_Loop when Present (gnat_entity);
+               end loop Entity_Loop;
+         end;
+      end if;
+
+
+      if Dglobal.type_annotate_only and (gnat_node = Cunit (Main_Unit)) then
+      --  TO-DO: elaborate_all_entries (gnat_node);
+
+         if (Nkind (gnat_unit) = N_Subprogram_Declaration) or else
+            (Nkind (gnat_unit) = N_Generic_Package_Declaration) or else
+            (Nkind (gnat_unit) = N_Generic_Subprogram_Declaration) then
+            return;
+         end if;
+      end if;
+
    end Compilation_Unit_to_llvm;
 
 
