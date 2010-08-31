@@ -378,7 +378,7 @@ package Core_h is
    pragma Convention (C, LLVMRealPredicate);  -- Core.h:279
 
   --===-- Error handling ----------------------------------------------------===
-   procedure LLVMDisposeMessage (arg1 : Interfaces.C.Strings.chars_ptr);  -- Core.h:284
+   procedure LLVMDisposeMessage (Message : Interfaces.C.Strings.chars_ptr);  -- Core.h:284
    pragma Import (C, LLVMDisposeMessage, "LLVMDisposeMessage");
 
   --===-- Contexts ----------------------------------------------------------===
@@ -389,60 +389,66 @@ package Core_h is
    function LLVMGetGlobalContext return LLVMContextRef;  -- Core.h:291
    pragma Import (C, LLVMGetGlobalContext, "LLVMGetGlobalContext");
 
-   procedure LLVMContextDispose (arg1 : LLVMContextRef);  -- Core.h:292
+   procedure LLVMContextDispose (C : LLVMContextRef);  -- Core.h:292
    pragma Import (C, LLVMContextDispose, "LLVMContextDispose");
 
    function LLVMGetMDKindIDInContext
-     (arg1 : LLVMContextRef;
-      arg2 : Interfaces.C.Strings.chars_ptr;
-      arg3 : unsigned) return unsigned;  -- Core.h:294
+     (C    : LLVMContextRef;
+      Name : Interfaces.C.Strings.chars_ptr;
+      SLen : unsigned) return unsigned;  -- Core.h:294
    pragma Import (C, LLVMGetMDKindIDInContext, "LLVMGetMDKindIDInContext");
 
-   function LLVMGetMDKindID (arg1 : Interfaces.C.Strings.chars_ptr; arg2 : unsigned) return unsigned;  -- Core.h:296
+   function LLVMGetMDKindID (Name : Interfaces.C.Strings.chars_ptr;
+                             SLen : unsigned) return unsigned;  -- Core.h:296
    pragma Import (C, LLVMGetMDKindID, "LLVMGetMDKindID");
 
   --===-- Modules -----------------------------------------------------------===
   -- Create and destroy modules.
   --* See llvm::Module::Module.
-   function LLVMModuleCreateWithName (arg1 : Interfaces.C.Strings.chars_ptr) return LLVMModuleRef;  -- Core.h:302
+   function LLVMModuleCreateWithName (ModuleID : Interfaces.C.Strings.chars_ptr) return LLVMModuleRef;  -- Core.h:302
    pragma Import (C, LLVMModuleCreateWithName, "LLVMModuleCreateWithName");
 
-   function LLVMModuleCreateWithNameInContext (arg1 : Interfaces.C.Strings.chars_ptr; arg2 : LLVMContextRef) return LLVMModuleRef;  -- Core.h:303
+   function LLVMModuleCreateWithNameInContext (ModuleID : Interfaces.C.Strings.chars_ptr;
+                                               C        : LLVMContextRef) return LLVMModuleRef;  -- Core.h:303
    pragma Import (C, LLVMModuleCreateWithNameInContext, "LLVMModuleCreateWithNameInContext");
 
   --* See llvm::Module::~Module.
-   procedure LLVMDisposeModule (arg1 : LLVMModuleRef);  -- Core.h:307
+   procedure LLVMDisposeModule (M : LLVMModuleRef);  -- Core.h:307
    pragma Import (C, LLVMDisposeModule, "LLVMDisposeModule");
 
   --* Data layout. See Module::getDataLayout.
-   function LLVMGetDataLayout (arg1 : LLVMModuleRef) return Interfaces.C.Strings.chars_ptr;  -- Core.h:310
+   function LLVMGetDataLayout (M : LLVMModuleRef) return Interfaces.C.Strings.chars_ptr;  -- Core.h:310
    pragma Import (C, LLVMGetDataLayout, "LLVMGetDataLayout");
 
-   procedure LLVMSetDataLayout (arg1 : LLVMModuleRef; arg2 : Interfaces.C.Strings.chars_ptr);  -- Core.h:311
+   procedure LLVMSetDataLayout (M      : LLVMModuleRef;
+                                Triple : Interfaces.C.Strings.chars_ptr);  -- Core.h:311
    pragma Import (C, LLVMSetDataLayout, "LLVMSetDataLayout");
 
   --* Target triple. See Module::getTargetTriple.
-   function LLVMGetTarget (arg1 : LLVMModuleRef) return Interfaces.C.Strings.chars_ptr;  -- Core.h:314
+   function LLVMGetTarget (M : LLVMModuleRef) return Interfaces.C.Strings.chars_ptr;  -- Core.h:314
    pragma Import (C, LLVMGetTarget, "LLVMGetTarget");
 
-   procedure LLVMSetTarget (arg1 : LLVMModuleRef; arg2 : Interfaces.C.Strings.chars_ptr);  -- Core.h:315
+   procedure LLVMSetTarget (M      : LLVMModuleRef;
+                            Triple : Interfaces.C.Strings.chars_ptr);  -- Core.h:315
    pragma Import (C, LLVMSetTarget, "LLVMSetTarget");
 
   --* See Module::addTypeName.
    function LLVMAddTypeName
-     (arg1 : LLVMModuleRef;
-      arg2 : Interfaces.C.Strings.chars_ptr;
-      arg3 : LLVMTypeRef) return LLVMBool;  -- Core.h:318
+     (M    : LLVMModuleRef;
+      Name : Interfaces.C.Strings.chars_ptr;
+      Ty   : LLVMTypeRef) return LLVMBool;  -- Core.h:318
    pragma Import (C, LLVMAddTypeName, "LLVMAddTypeName");
 
-   procedure LLVMDeleteTypeName (arg1 : LLVMModuleRef; arg2 : Interfaces.C.Strings.chars_ptr);  -- Core.h:319
+   procedure LLVMDeleteTypeName (M    : LLVMModuleRef;
+                                 Name : Interfaces.C.Strings.chars_ptr);  -- Core.h:319
    pragma Import (C, LLVMDeleteTypeName, "LLVMDeleteTypeName");
 
-   function LLVMGetTypeByName (arg1 : LLVMModuleRef; arg2 : Interfaces.C.Strings.chars_ptr) return LLVMTypeRef;  -- Core.h:320
+   function LLVMGetTypeByName (M    : LLVMModuleRef;
+                               Name : Interfaces.C.Strings.chars_ptr) return LLVMTypeRef;  -- Core.h:320
    pragma Import (C, LLVMGetTypeByName, "LLVMGetTypeByName");
 
   --* See Module::dump.
-   procedure LLVMDumpModule (arg1 : LLVMModuleRef);  -- Core.h:323
+   procedure LLVMDumpModule (M : LLVMModuleRef);  -- Core.h:323
    pragma Import (C, LLVMDumpModule, "LLVMDumpModule");
 
   --===-- Types -------------------------------------------------------------===
@@ -462,30 +468,31 @@ package Core_h is
   --
 
   --* See llvm::LLVMTypeKind::getTypeID.
-   function LLVMGetTypeKind (arg1 : LLVMTypeRef) return LLVMTypeKind;  -- Core.h:344
+   function LLVMGetTypeKind (Ty : LLVMTypeRef) return LLVMTypeKind;  -- Core.h:344
    pragma Import (C, LLVMGetTypeKind, "LLVMGetTypeKind");
 
   --* See llvm::LLVMType::getContext.
-   function LLVMGetTypeContext (arg1 : LLVMTypeRef) return LLVMContextRef;  -- Core.h:347
+   function LLVMGetTypeContext (Ty : LLVMTypeRef) return LLVMContextRef;  -- Core.h:347
    pragma Import (C, LLVMGetTypeContext, "LLVMGetTypeContext");
 
   -- Operations on integer types
-   function LLVMInt1TypeInContext (arg1 : LLVMContextRef) return LLVMTypeRef;  -- Core.h:350
+   function LLVMInt1TypeInContext (C : LLVMContextRef) return LLVMTypeRef;  -- Core.h:350
    pragma Import (C, LLVMInt1TypeInContext, "LLVMInt1TypeInContext");
 
-   function LLVMInt8TypeInContext (arg1 : LLVMContextRef) return LLVMTypeRef;  -- Core.h:351
+   function LLVMInt8TypeInContext (C : LLVMContextRef) return LLVMTypeRef;  -- Core.h:351
    pragma Import (C, LLVMInt8TypeInContext, "LLVMInt8TypeInContext");
 
-   function LLVMInt16TypeInContext (arg1 : LLVMContextRef) return LLVMTypeRef;  -- Core.h:352
+   function LLVMInt16TypeInContext (C : LLVMContextRef) return LLVMTypeRef;  -- Core.h:352
    pragma Import (C, LLVMInt16TypeInContext, "LLVMInt16TypeInContext");
 
-   function LLVMInt32TypeInContext (arg1 : LLVMContextRef) return LLVMTypeRef;  -- Core.h:353
+   function LLVMInt32TypeInContext (C : LLVMContextRef) return LLVMTypeRef;  -- Core.h:353
    pragma Import (C, LLVMInt32TypeInContext, "LLVMInt32TypeInContext");
 
-   function LLVMInt64TypeInContext (arg1 : LLVMContextRef) return LLVMTypeRef;  -- Core.h:354
+   function LLVMInt64TypeInContext (C : LLVMContextRef) return LLVMTypeRef;  -- Core.h:354
    pragma Import (C, LLVMInt64TypeInContext, "LLVMInt64TypeInContext");
 
-   function LLVMIntTypeInContext (arg1 : LLVMContextRef; arg2 : unsigned) return LLVMTypeRef;  -- Core.h:355
+   function LLVMIntTypeInContext (C       : LLVMContextRef;
+                                  NumBits : unsigned) return LLVMTypeRef;  -- Core.h:355
    pragma Import (C, LLVMIntTypeInContext, "LLVMIntTypeInContext");
 
    function LLVMInt1Type return LLVMTypeRef;  -- Core.h:357
@@ -503,26 +510,26 @@ package Core_h is
    function LLVMInt64Type return LLVMTypeRef;  -- Core.h:361
    pragma Import (C, LLVMInt64Type, "LLVMInt64Type");
 
-   function LLVMIntType (arg1 : unsigned) return LLVMTypeRef;  -- Core.h:362
+   function LLVMIntType (NumBits : unsigned) return LLVMTypeRef;  -- Core.h:362
    pragma Import (C, LLVMIntType, "LLVMIntType");
 
-   function LLVMGetIntTypeWidth (arg1 : LLVMTypeRef) return unsigned;  -- Core.h:363
+   function LLVMGetIntTypeWidth (IntegerTy : LLVMTypeRef) return unsigned;  -- Core.h:363
    pragma Import (C, LLVMGetIntTypeWidth, "LLVMGetIntTypeWidth");
 
   -- Operations on real types
-   function LLVMFloatTypeInContext (arg1 : LLVMContextRef) return LLVMTypeRef;  -- Core.h:366
+   function LLVMFloatTypeInContext (C : LLVMContextRef) return LLVMTypeRef;  -- Core.h:366
    pragma Import (C, LLVMFloatTypeInContext, "LLVMFloatTypeInContext");
 
-   function LLVMDoubleTypeInContext (arg1 : LLVMContextRef) return LLVMTypeRef;  -- Core.h:367
+   function LLVMDoubleTypeInContext (C : LLVMContextRef) return LLVMTypeRef;  -- Core.h:367
    pragma Import (C, LLVMDoubleTypeInContext, "LLVMDoubleTypeInContext");
 
-   function LLVMX86FP80TypeInContext (arg1 : LLVMContextRef) return LLVMTypeRef;  -- Core.h:368
+   function LLVMX86FP80TypeInContext (C : LLVMContextRef) return LLVMTypeRef;  -- Core.h:368
    pragma Import (C, LLVMX86FP80TypeInContext, "LLVMX86FP80TypeInContext");
 
-   function LLVMFP128TypeInContext (arg1 : LLVMContextRef) return LLVMTypeRef;  -- Core.h:369
+   function LLVMFP128TypeInContext (C : LLVMContextRef) return LLVMTypeRef;  -- Core.h:369
    pragma Import (C, LLVMFP128TypeInContext, "LLVMFP128TypeInContext");
 
-   function LLVMPPCFP128TypeInContext (arg1 : LLVMContextRef) return LLVMTypeRef;  -- Core.h:370
+   function LLVMPPCFP128TypeInContext (C : LLVMContextRef) return LLVMTypeRef;  -- Core.h:370
    pragma Import (C, LLVMPPCFP128TypeInContext, "LLVMPPCFP128TypeInContext");
 
    function LLVMFloatType return LLVMTypeRef;  -- Core.h:372
@@ -548,16 +555,17 @@ package Core_h is
       IsVarArg   : LLVMBool) return LLVMTypeRef;  -- Core.h:379
    pragma Import (C, LLVMFunctionType, "LLVMFunctionType");
 
-   function LLVMIsFunctionVarArg (arg1 : LLVMTypeRef) return LLVMBool;  -- Core.h:382
+   function LLVMIsFunctionVarArg (FunctionTy : LLVMTypeRef) return LLVMBool;  -- Core.h:382
    pragma Import (C, LLVMIsFunctionVarArg, "LLVMIsFunctionVarArg");
 
-   function LLVMGetReturnType (arg1 : LLVMTypeRef) return LLVMTypeRef;  -- Core.h:383
+   function LLVMGetReturnType (FunctionTy : LLVMTypeRef) return LLVMTypeRef;  -- Core.h:383
    pragma Import (C, LLVMGetReturnType, "LLVMGetReturnType");
 
-   function LLVMCountParamTypes (arg1 : LLVMTypeRef) return unsigned;  -- Core.h:384
+   function LLVMCountParamTypes (FunctionTy : LLVMTypeRef) return unsigned;  -- Core.h:384
    pragma Import (C, LLVMCountParamTypes, "LLVMCountParamTypes");
 
-   procedure LLVMGetParamTypes (arg1 : LLVMTypeRef; arg2 : System.Address);  -- Core.h:385
+   procedure LLVMGetParamTypes (FunctionTy : LLVMTypeRef;
+                                Dest       : System.Address);  -- Core.h:385
    pragma Import (C, LLVMGetParamTypes, "LLVMGetParamTypes");
 
   -- Operations on struct types
@@ -577,7 +585,8 @@ package Core_h is
    function LLVMCountStructElementTypes (StructTy : LLVMTypeRef) return unsigned;  -- Core.h:392
    pragma Import (C, LLVMCountStructElementTypes, "LLVMCountStructElementTypes");
 
-   procedure LLVMGetStructElementTypes (StructTy : LLVMTypeRef; Dest : System.Address);  -- Core.h:393
+   procedure LLVMGetStructElementTypes (StructTy : LLVMTypeRef;
+                                        Dest     : System.Address);  -- Core.h:393
    pragma Import (C, LLVMGetStructElementTypes, "LLVMGetStructElementTypes");
 
    function LLVMIsPackedStruct (StructTy : LLVMTypeRef) return LLVMBool;  -- Core.h:394
@@ -590,26 +599,27 @@ package Core_h is
       ElementCount : unsigned) return LLVMTypeRef;  -- Core.h:397
    pragma Import (C, LLVMUnionTypeInContext, "LLVMUnionTypeInContext");
 
-   function LLVMUnionType (ElementTypes : System.Address; 
+   function LLVMUnionType (ElementTypes : System.Address;
                            ElementCount : unsigned) return LLVMTypeRef;  -- Core.h:399
    pragma Import (C, LLVMUnionType, "LLVMUnionType");
 
    function LLVMCountUnionElementTypes (UnionTy : LLVMTypeRef) return unsigned;  -- Core.h:400
    pragma Import (C, LLVMCountUnionElementTypes, "LLVMCountUnionElementTypes");
 
-   procedure LLVMGetUnionElementTypes (UnionTy : LLVMTypeRef; Dest : System.Address);  -- Core.h:401
+   procedure LLVMGetUnionElementTypes (UnionTy : LLVMTypeRef;
+                                       Dest    : System.Address);  -- Core.h:401
    pragma Import (C, LLVMGetUnionElementTypes, "LLVMGetUnionElementTypes");
 
   -- Operations on array, pointer, and vector types (sequence types)
-   function LLVMArrayType (ElementType  : LLVMTypeRef; 
+   function LLVMArrayType (ElementType  : LLVMTypeRef;
                            ElementCount : unsigned) return LLVMTypeRef;  -- Core.h:404
    pragma Import (C, LLVMArrayType, "LLVMArrayType");
 
-   function LLVMPointerType (ElementType  : LLVMTypeRef; 
+   function LLVMPointerType (ElementType  : LLVMTypeRef;
                              AddressSpace : unsigned) return LLVMTypeRef;  -- Core.h:405
    pragma Import (C, LLVMPointerType, "LLVMPointerType");
 
-   function LLVMVectorType (ElementType  : LLVMTypeRef; 
+   function LLVMVectorType (ElementType  : LLVMTypeRef;
                             ElementCount : unsigned) return LLVMTypeRef;  -- Core.h:406
    pragma Import (C, LLVMVectorType, "LLVMVectorType");
 
@@ -648,7 +658,7 @@ package Core_h is
    function LLVMCreateTypeHandle (PotentiallyAbstractTy : LLVMTypeRef) return LLVMTypeHandleRef;  -- Core.h:423
    pragma Import (C, LLVMCreateTypeHandle, "LLVMCreateTypeHandle");
 
-   procedure LLVMRefineType (AbstractTy : LLVMTypeRef; 
+   procedure LLVMRefineType (AbstractTy : LLVMTypeRef;
                              ConcreteTy : LLVMTypeRef);  -- Core.h:424
    pragma Import (C, LLVMRefineType, "LLVMRefineType");
 
@@ -664,339 +674,347 @@ package Core_h is
   --
 
   -- Operations on all values
-   function LLVMTypeOf (arg1 : LLVMValueRef) return LLVMTypeRef;  -- Core.h:436
+   function LLVMTypeOf (Val : LLVMValueRef) return LLVMTypeRef;  -- Core.h:436
    pragma Import (C, LLVMTypeOf, "LLVMTypeOf");
 
-   function LLVMGetValueName (arg1 : LLVMValueRef) return Interfaces.C.Strings.chars_ptr;  -- Core.h:437
+   function LLVMGetValueName (Val : LLVMValueRef) return Interfaces.C.Strings.chars_ptr;  -- Core.h:437
    pragma Import (C, LLVMGetValueName, "LLVMGetValueName");
 
-   procedure LLVMSetValueName (arg1 : LLVMValueRef; arg2 : Interfaces.C.Strings.chars_ptr);  -- Core.h:438
+   procedure LLVMSetValueName (Val : LLVMValueRef;
+                               Name : Interfaces.C.Strings.chars_ptr);  -- Core.h:438
    pragma Import (C, LLVMSetValueName, "LLVMSetValueName");
 
-   procedure LLVMDumpValue (arg1 : LLVMValueRef);  -- Core.h:439
+   procedure LLVMDumpValue (Val : LLVMValueRef);  -- Core.h:439
    pragma Import (C, LLVMDumpValue, "LLVMDumpValue");
 
-   procedure LLVMReplaceAllUsesWith (arg1 : LLVMValueRef; arg2 : LLVMValueRef);  -- Core.h:440
+   procedure LLVMReplaceAllUsesWith (OldVal : LLVMValueRef;
+                                     NewVal : LLVMValueRef);  -- Core.h:440
    pragma Import (C, LLVMReplaceAllUsesWith, "LLVMReplaceAllUsesWith");
 
-   function LLVMHasMetadata (arg1 : LLVMValueRef) return int;  -- Core.h:441
+   function LLVMHasMetadata (Val : LLVMValueRef) return int;  -- Core.h:441
    pragma Import (C, LLVMHasMetadata, "LLVMHasMetadata");
 
-   function LLVMGetMetadata (arg1 : LLVMValueRef; arg2 : unsigned) return LLVMValueRef;  -- Core.h:442
+   function LLVMGetMetadata (Val    : LLVMValueRef;
+                             KindID : unsigned) return LLVMValueRef;  -- Core.h:442
    pragma Import (C, LLVMGetMetadata, "LLVMGetMetadata");
 
    procedure LLVMSetMetadata
-     (arg1 : LLVMValueRef;
-      arg2 : unsigned;
-      arg3 : LLVMValueRef);  -- Core.h:443
+     (Val    : LLVMValueRef;
+      KindID : unsigned;
+      Node   : LLVMValueRef);  -- Core.h:443
    pragma Import (C, LLVMSetMetadata, "LLVMSetMetadata");
 
   -- Conversion functions. Return the input value if it is an instance of the
   --   specified class, otherwise NULL. See llvm::dyn_cast_or_null<>.
 
-   function LLVMIsAArgument (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:448
+   function LLVMIsAArgument (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:448
    pragma Import (C, LLVMIsAArgument, "LLVMIsAArgument");
 
-   function LLVMIsABasicBlock (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:449
+   function LLVMIsABasicBlock (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:449
    pragma Import (C, LLVMIsABasicBlock, "LLVMIsABasicBlock");
 
-   function LLVMIsAInlineAsm (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:450
+   function LLVMIsAInlineAsm (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:450
    pragma Import (C, LLVMIsAInlineAsm, "LLVMIsAInlineAsm");
 
-   function LLVMIsAUser (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:451
+   function LLVMIsAUser (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:451
    pragma Import (C, LLVMIsAUser, "LLVMIsAUser");
 
-   function LLVMIsAConstant (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:452
+   function LLVMIsAConstant (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:452
    pragma Import (C, LLVMIsAConstant, "LLVMIsAConstant");
 
-   function LLVMIsAConstantAggregateZero (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:453
+   function LLVMIsAConstantAggregateZero (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:453
    pragma Import (C, LLVMIsAConstantAggregateZero, "LLVMIsAConstantAggregateZero");
 
-   function LLVMIsAConstantArray (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:454
+   function LLVMIsAConstantArray (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:454
    pragma Import (C, LLVMIsAConstantArray, "LLVMIsAConstantArray");
 
-   function LLVMIsAConstantExpr (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:455
+   function LLVMIsAConstantExpr (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:455
    pragma Import (C, LLVMIsAConstantExpr, "LLVMIsAConstantExpr");
 
-   function LLVMIsAConstantFP (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:456
+   function LLVMIsAConstantFP (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:456
    pragma Import (C, LLVMIsAConstantFP, "LLVMIsAConstantFP");
 
-   function LLVMIsAConstantInt (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:457
+   function LLVMIsAConstantInt (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:457
    pragma Import (C, LLVMIsAConstantInt, "LLVMIsAConstantInt");
 
-   function LLVMIsAConstantPointerNull (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:458
+   function LLVMIsAConstantPointerNull (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:458
    pragma Import (C, LLVMIsAConstantPointerNull, "LLVMIsAConstantPointerNull");
 
-   function LLVMIsAConstantStruct (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:459
+   function LLVMIsAConstantStruct (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:459
    pragma Import (C, LLVMIsAConstantStruct, "LLVMIsAConstantStruct");
 
-   function LLVMIsAConstantVector (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:460
+   function LLVMIsAConstantVector (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:460
    pragma Import (C, LLVMIsAConstantVector, "LLVMIsAConstantVector");
 
-   function LLVMIsAGlobalValue (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:461
+   function LLVMIsAGlobalValue (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:461
    pragma Import (C, LLVMIsAGlobalValue, "LLVMIsAGlobalValue");
 
-   function LLVMIsAFunction (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:462
+   function LLVMIsAFunction (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:462
    pragma Import (C, LLVMIsAFunction, "LLVMIsAFunction");
 
-   function LLVMIsAGlobalAlias (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:463
+   function LLVMIsAGlobalAlias (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:463
    pragma Import (C, LLVMIsAGlobalAlias, "LLVMIsAGlobalAlias");
 
-   function LLVMIsAGlobalVariable (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:464
+   function LLVMIsAGlobalVariable (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:464
    pragma Import (C, LLVMIsAGlobalVariable, "LLVMIsAGlobalVariable");
 
-   function LLVMIsAUndefValue (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:465
+   function LLVMIsAUndefValue (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:465
    pragma Import (C, LLVMIsAUndefValue, "LLVMIsAUndefValue");
 
-   function LLVMIsAInstruction (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:466
+   function LLVMIsAInstruction (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:466
    pragma Import (C, LLVMIsAInstruction, "LLVMIsAInstruction");
 
-   function LLVMIsABinaryOperator (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:467
+   function LLVMIsABinaryOperator (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:467
    pragma Import (C, LLVMIsABinaryOperator, "LLVMIsABinaryOperator");
 
-   function LLVMIsACallInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:468
+   function LLVMIsACallInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:468
    pragma Import (C, LLVMIsACallInst, "LLVMIsACallInst");
 
-   function LLVMIsAIntrinsicInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:469
+   function LLVMIsAIntrinsicInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:469
    pragma Import (C, LLVMIsAIntrinsicInst, "LLVMIsAIntrinsicInst");
 
-   function LLVMIsADbgInfoIntrinsic (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:470
+   function LLVMIsADbgInfoIntrinsic (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:470
    pragma Import (C, LLVMIsADbgInfoIntrinsic, "LLVMIsADbgInfoIntrinsic");
 
-   function LLVMIsADbgDeclareInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:471
+   function LLVMIsADbgDeclareInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:471
    pragma Import (C, LLVMIsADbgDeclareInst, "LLVMIsADbgDeclareInst");
 
-   function LLVMIsAEHSelectorInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:472
+   function LLVMIsAEHSelectorInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:472
    pragma Import (C, LLVMIsAEHSelectorInst, "LLVMIsAEHSelectorInst");
 
-   function LLVMIsAMemIntrinsic (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:473
+   function LLVMIsAMemIntrinsic (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:473
    pragma Import (C, LLVMIsAMemIntrinsic, "LLVMIsAMemIntrinsic");
 
-   function LLVMIsAMemCpyInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:474
+   function LLVMIsAMemCpyInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:474
    pragma Import (C, LLVMIsAMemCpyInst, "LLVMIsAMemCpyInst");
 
-   function LLVMIsAMemMoveInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:475
+   function LLVMIsAMemMoveInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:475
    pragma Import (C, LLVMIsAMemMoveInst, "LLVMIsAMemMoveInst");
 
-   function LLVMIsAMemSetInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:476
+   function LLVMIsAMemSetInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:476
    pragma Import (C, LLVMIsAMemSetInst, "LLVMIsAMemSetInst");
 
-   function LLVMIsACmpInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:477
+   function LLVMIsACmpInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:477
    pragma Import (C, LLVMIsACmpInst, "LLVMIsACmpInst");
 
-   function LLVMIsAFCmpInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:478
+   function LLVMIsAFCmpInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:478
    pragma Import (C, LLVMIsAFCmpInst, "LLVMIsAFCmpInst");
 
-   function LLVMIsAICmpInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:479
+   function LLVMIsAICmpInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:479
    pragma Import (C, LLVMIsAICmpInst, "LLVMIsAICmpInst");
 
-   function LLVMIsAExtractElementInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:480
+   function LLVMIsAExtractElementInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:480
    pragma Import (C, LLVMIsAExtractElementInst, "LLVMIsAExtractElementInst");
 
-   function LLVMIsAGetElementPtrInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:481
+   function LLVMIsAGetElementPtrInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:481
    pragma Import (C, LLVMIsAGetElementPtrInst, "LLVMIsAGetElementPtrInst");
 
-   function LLVMIsAInsertElementInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:482
+   function LLVMIsAInsertElementInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:482
    pragma Import (C, LLVMIsAInsertElementInst, "LLVMIsAInsertElementInst");
 
-   function LLVMIsAInsertValueInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:483
+   function LLVMIsAInsertValueInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:483
    pragma Import (C, LLVMIsAInsertValueInst, "LLVMIsAInsertValueInst");
 
-   function LLVMIsAPHINode (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:484
+   function LLVMIsAPHINode (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:484
    pragma Import (C, LLVMIsAPHINode, "LLVMIsAPHINode");
 
-   function LLVMIsASelectInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:485
+   function LLVMIsASelectInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:485
    pragma Import (C, LLVMIsASelectInst, "LLVMIsASelectInst");
 
-   function LLVMIsAShuffleVectorInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:486
+   function LLVMIsAShuffleVectorInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:486
    pragma Import (C, LLVMIsAShuffleVectorInst, "LLVMIsAShuffleVectorInst");
 
-   function LLVMIsAStoreInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:487
+   function LLVMIsAStoreInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:487
    pragma Import (C, LLVMIsAStoreInst, "LLVMIsAStoreInst");
 
-   function LLVMIsATerminatorInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:488
+   function LLVMIsATerminatorInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:488
    pragma Import (C, LLVMIsATerminatorInst, "LLVMIsATerminatorInst");
 
-   function LLVMIsABranchInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:489
+   function LLVMIsABranchInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:489
    pragma Import (C, LLVMIsABranchInst, "LLVMIsABranchInst");
 
-   function LLVMIsAInvokeInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:490
+   function LLVMIsAInvokeInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:490
    pragma Import (C, LLVMIsAInvokeInst, "LLVMIsAInvokeInst");
 
-   function LLVMIsAReturnInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:491
+   function LLVMIsAReturnInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:491
    pragma Import (C, LLVMIsAReturnInst, "LLVMIsAReturnInst");
 
-   function LLVMIsASwitchInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:492
+   function LLVMIsASwitchInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:492
    pragma Import (C, LLVMIsASwitchInst, "LLVMIsASwitchInst");
 
-   function LLVMIsAUnreachableInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:493
+   function LLVMIsAUnreachableInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:493
    pragma Import (C, LLVMIsAUnreachableInst, "LLVMIsAUnreachableInst");
 
-   function LLVMIsAUnwindInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:494
+   function LLVMIsAUnwindInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:494
    pragma Import (C, LLVMIsAUnwindInst, "LLVMIsAUnwindInst");
 
-   function LLVMIsAUnaryInstruction (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:495
+   function LLVMIsAUnaryInstruction (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:495
    pragma Import (C, LLVMIsAUnaryInstruction, "LLVMIsAUnaryInstruction");
 
-   function LLVMIsAAllocaInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:496
+   function LLVMIsAAllocaInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:496
    pragma Import (C, LLVMIsAAllocaInst, "LLVMIsAAllocaInst");
 
-   function LLVMIsACastInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:497
+   function LLVMIsACastInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:497
    pragma Import (C, LLVMIsACastInst, "LLVMIsACastInst");
 
-   function LLVMIsABitCastInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:498
+   function LLVMIsABitCastInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:498
    pragma Import (C, LLVMIsABitCastInst, "LLVMIsABitCastInst");
 
-   function LLVMIsAFPExtInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:499
+   function LLVMIsAFPExtInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:499
    pragma Import (C, LLVMIsAFPExtInst, "LLVMIsAFPExtInst");
 
-   function LLVMIsAFPToSIInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:500
+   function LLVMIsAFPToSIInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:500
    pragma Import (C, LLVMIsAFPToSIInst, "LLVMIsAFPToSIInst");
 
-   function LLVMIsAFPToUIInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:501
+   function LLVMIsAFPToUIInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:501
    pragma Import (C, LLVMIsAFPToUIInst, "LLVMIsAFPToUIInst");
 
-   function LLVMIsAFPTruncInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:502
+   function LLVMIsAFPTruncInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:502
    pragma Import (C, LLVMIsAFPTruncInst, "LLVMIsAFPTruncInst");
 
-   function LLVMIsAIntToPtrInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:503
+   function LLVMIsAIntToPtrInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:503
    pragma Import (C, LLVMIsAIntToPtrInst, "LLVMIsAIntToPtrInst");
 
-   function LLVMIsAPtrToIntInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:504
+   function LLVMIsAPtrToIntInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:504
    pragma Import (C, LLVMIsAPtrToIntInst, "LLVMIsAPtrToIntInst");
 
-   function LLVMIsASExtInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:505
+   function LLVMIsASExtInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:505
    pragma Import (C, LLVMIsASExtInst, "LLVMIsASExtInst");
 
-   function LLVMIsASIToFPInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:506
+   function LLVMIsASIToFPInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:506
    pragma Import (C, LLVMIsASIToFPInst, "LLVMIsASIToFPInst");
 
-   function LLVMIsATruncInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:507
+   function LLVMIsATruncInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:507
    pragma Import (C, LLVMIsATruncInst, "LLVMIsATruncInst");
 
-   function LLVMIsAUIToFPInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:508
+   function LLVMIsAUIToFPInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:508
    pragma Import (C, LLVMIsAUIToFPInst, "LLVMIsAUIToFPInst");
 
-   function LLVMIsAZExtInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:509
+   function LLVMIsAZExtInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:509
    pragma Import (C, LLVMIsAZExtInst, "LLVMIsAZExtInst");
 
-   function LLVMIsAExtractValueInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:510
+   function LLVMIsAExtractValueInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:510
    pragma Import (C, LLVMIsAExtractValueInst, "LLVMIsAExtractValueInst");
 
-   function LLVMIsALoadInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:511
+   function LLVMIsALoadInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:511
    pragma Import (C, LLVMIsALoadInst, "LLVMIsALoadInst");
 
-   function LLVMIsAVAArgInst (arg1 : LLVMValueRef) return LLVMValueRef;  -- Core.h:512
+   function LLVMIsAVAArgInst (Val : LLVMValueRef) return LLVMValueRef;  -- Core.h:512
    pragma Import (C, LLVMIsAVAArgInst, "LLVMIsAVAArgInst");
 
   -- Operations on Uses
-   function LLVMGetFirstUse (arg1 : LLVMValueRef) return LLVMUseRef;  -- Core.h:515
+   function LLVMGetFirstUse (Val : LLVMValueRef) return LLVMUseRef;  -- Core.h:515
    pragma Import (C, LLVMGetFirstUse, "LLVMGetFirstUse");
 
-   function LLVMGetNextUse (arg1 : LLVMUseRef) return LLVMUseRef;  -- Core.h:516
+   function LLVMGetNextUse (U : LLVMUseRef) return LLVMUseRef;  -- Core.h:516
    pragma Import (C, LLVMGetNextUse, "LLVMGetNextUse");
 
-   function LLVMGetUser (arg1 : LLVMUseRef) return LLVMValueRef;  -- Core.h:517
+   function LLVMGetUser (U : LLVMUseRef) return LLVMValueRef;  -- Core.h:517
    pragma Import (C, LLVMGetUser, "LLVMGetUser");
 
-   function LLVMGetUsedValue (arg1 : LLVMUseRef) return LLVMValueRef;  -- Core.h:518
+   function LLVMGetUsedValue (U : LLVMUseRef) return LLVMValueRef;  -- Core.h:518
    pragma Import (C, LLVMGetUsedValue, "LLVMGetUsedValue");
 
   -- Operations on Users
-   function LLVMGetOperand (arg1 : LLVMValueRef; arg2 : unsigned) return LLVMValueRef;  -- Core.h:521
+   function LLVMGetOperand (Val   : LLVMValueRef;
+                            Index : unsigned) return LLVMValueRef;  -- Core.h:521
    pragma Import (C, LLVMGetOperand, "LLVMGetOperand");
 
   -- Operations on constants of any type
   -- all zeroes
-   function LLVMConstNull (arg1 : LLVMTypeRef) return LLVMValueRef;  -- Core.h:524
+   function LLVMConstNull (Val : LLVMTypeRef) return LLVMValueRef;  -- Core.h:524
    pragma Import (C, LLVMConstNull, "LLVMConstNull");
 
   -- only for int/vector
-   function LLVMConstAllOnes (arg1 : LLVMTypeRef) return LLVMValueRef;  -- Core.h:525
+   function LLVMConstAllOnes (Val : LLVMTypeRef) return LLVMValueRef;  -- Core.h:525
    pragma Import (C, LLVMConstAllOnes, "LLVMConstAllOnes");
 
-   function LLVMGetUndef (arg1 : LLVMTypeRef) return LLVMValueRef;  -- Core.h:526
+   function LLVMGetUndef (Val : LLVMTypeRef) return LLVMValueRef;  -- Core.h:526
    pragma Import (C, LLVMGetUndef, "LLVMGetUndef");
 
-   function LLVMIsConstant (arg1 : LLVMValueRef) return LLVMBool;  -- Core.h:527
+   function LLVMIsConstant (Val : LLVMValueRef) return LLVMBool;  -- Core.h:527
    pragma Import (C, LLVMIsConstant, "LLVMIsConstant");
 
-   function LLVMIsNull (arg1 : LLVMValueRef) return LLVMBool;  -- Core.h:528
+   function LLVMIsNull (Val : LLVMValueRef) return LLVMBool;  -- Core.h:528
    pragma Import (C, LLVMIsNull, "LLVMIsNull");
 
-   function LLVMIsUndef (arg1 : LLVMValueRef) return LLVMBool;  -- Core.h:529
+   function LLVMIsUndef (Val : LLVMValueRef) return LLVMBool;  -- Core.h:529
    pragma Import (C, LLVMIsUndef, "LLVMIsUndef");
 
-   function LLVMConstPointerNull (arg1 : LLVMTypeRef) return LLVMValueRef;  -- Core.h:530
+   function LLVMConstPointerNull (Ty : LLVMTypeRef) return LLVMValueRef;  -- Core.h:530
    pragma Import (C, LLVMConstPointerNull, "LLVMConstPointerNull");
 
   -- Operations on metadata
    function LLVMMDStringInContext
-     (arg1 : LLVMContextRef;
-      arg2 : Interfaces.C.Strings.chars_ptr;
-      arg3 : unsigned) return LLVMValueRef;  -- Core.h:533
+     (C    : LLVMContextRef;
+      Str  : Interfaces.C.Strings.chars_ptr;
+      SLen : unsigned) return LLVMValueRef;  -- Core.h:533
    pragma Import (C, LLVMMDStringInContext, "LLVMMDStringInContext");
 
-   function LLVMMDString (arg1 : Interfaces.C.Strings.chars_ptr; arg2 : unsigned) return LLVMValueRef;  -- Core.h:535
+   function LLVMMDString (Str  : Interfaces.C.Strings.chars_ptr;
+                          SLen : unsigned) return LLVMValueRef;  -- Core.h:535
    pragma Import (C, LLVMMDString, "LLVMMDString");
 
    function LLVMMDNodeInContext
-     (arg1 : LLVMContextRef;
-      arg2 : System.Address;
-      arg3 : unsigned) return LLVMValueRef;  -- Core.h:536
+     (C     : LLVMContextRef;
+      Vals  : System.Address;
+      Count : unsigned) return LLVMValueRef;  -- Core.h:536
    pragma Import (C, LLVMMDNodeInContext, "LLVMMDNodeInContext");
 
-   function LLVMMDNode (arg1 : System.Address; arg2 : unsigned) return LLVMValueRef;  -- Core.h:538
+   function LLVMMDNode (Vals  : System.Address;
+                        Count : unsigned) return LLVMValueRef;  -- Core.h:538
    pragma Import (C, LLVMMDNode, "LLVMMDNode");
 
   -- Operations on scalar constants
    function LLVMConstInt
-     (arg1 : LLVMTypeRef;
-      arg2 : Extensions.unsigned_long_long;
-      arg3 : LLVMBool) return LLVMValueRef;  -- Core.h:541
+     (IntTy : LLVMTypeRef;
+      Text  : Extensions.unsigned_long_long;
+      Radix : LLVMBool) return LLVMValueRef;  -- Core.h:541
    pragma Import (C, LLVMConstInt, "LLVMConstInt");
 
    function LLVMConstIntOfString
-     (arg1 : LLVMTypeRef;
-      arg2 : Interfaces.C.Strings.chars_ptr;
-      arg3 : uint8_t) return LLVMValueRef;  -- Core.h:543
+     (IntTy : LLVMTypeRef;
+      Text  : Interfaces.C.Strings.chars_ptr;
+      Radix : uint8_t) return LLVMValueRef;  -- Core.h:543
    pragma Import (C, LLVMConstIntOfString, "LLVMConstIntOfString");
 
    function LLVMConstIntOfStringAndSize
-     (arg1 : LLVMTypeRef;
-      arg2 : Interfaces.C.Strings.chars_ptr;
-      arg3 : unsigned;
-      arg4 : uint8_t) return LLVMValueRef;  -- Core.h:545
+     (IntTy : LLVMTypeRef;
+      Text  : Interfaces.C.Strings.chars_ptr;
+      SLen  : unsigned;
+      Radix : uint8_t) return LLVMValueRef;  -- Core.h:545
    pragma Import (C, LLVMConstIntOfStringAndSize, "LLVMConstIntOfStringAndSize");
 
-   function LLVMConstReal (arg1 : LLVMTypeRef; arg2 : double) return LLVMValueRef;  -- Core.h:547
+   function LLVMConstReal (RealTy : LLVMTypeRef;
+                           N      : double) return LLVMValueRef;  -- Core.h:547
    pragma Import (C, LLVMConstReal, "LLVMConstReal");
 
-   function LLVMConstRealOfString (arg1 : LLVMTypeRef; arg2 : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:548
+   function LLVMConstRealOfString (RealTy : LLVMTypeRef;
+                                   Text   : Interfaces.C.Strings.chars_ptr) return LLVMValueRef;  -- Core.h:548
    pragma Import (C, LLVMConstRealOfString, "LLVMConstRealOfString");
 
    function LLVMConstRealOfStringAndSize
-     (arg1 : LLVMTypeRef;
-      arg2 : Interfaces.C.Strings.chars_ptr;
-      arg3 : unsigned) return LLVMValueRef;  -- Core.h:549
+     (RealTy : LLVMTypeRef;
+      Text   : Interfaces.C.Strings.chars_ptr;
+      SLen   : unsigned) return LLVMValueRef;  -- Core.h:549
    pragma Import (C, LLVMConstRealOfStringAndSize, "LLVMConstRealOfStringAndSize");
 
-   function LLVMConstIntGetZExtValue (arg1 : LLVMValueRef) return Extensions.unsigned_long_long;  -- Core.h:551
+   function LLVMConstIntGetZExtValue (ConstantVal : LLVMValueRef) return Extensions.unsigned_long_long;  -- Core.h:551
    pragma Import (C, LLVMConstIntGetZExtValue, "LLVMConstIntGetZExtValue");
 
-   function LLVMConstIntGetSExtValue (arg1 : LLVMValueRef) return Long_Long_Integer;  -- Core.h:552
+   function LLVMConstIntGetSExtValue (ConstantVal : LLVMValueRef) return Long_Long_Integer;  -- Core.h:552
    pragma Import (C, LLVMConstIntGetSExtValue, "LLVMConstIntGetSExtValue");
 
   -- Operations on composite constants
    function LLVMConstStringInContext
-     (arg1 : LLVMContextRef;
+     (C : LLVMContextRef;
       arg2 : Interfaces.C.Strings.chars_ptr;
       arg3 : unsigned;
       arg4 : LLVMBool) return LLVMValueRef;  -- Core.h:556
    pragma Import (C, LLVMConstStringInContext, "LLVMConstStringInContext");
 
    function LLVMConstStructInContext
-     (arg1 : LLVMContextRef;
+     (C : LLVMContextRef;
       arg2 : System.Address;
       arg3 : unsigned;
       arg4 : LLVMBool) return LLVMValueRef;  -- Core.h:558
@@ -1552,7 +1570,7 @@ package Core_h is
   -- * exclusive means of building instructions using the C interface.
   --
 
-   function LLVMCreateBuilderInContext (arg1 : LLVMContextRef) return LLVMBuilderRef;  -- Core.h:782
+   function LLVMCreateBuilderInContext (C : LLVMContextRef) return LLVMBuilderRef;  -- Core.h:782
    pragma Import (C, LLVMCreateBuilderInContext, "LLVMCreateBuilderInContext");
 
    function LLVMCreateBuilder return LLVMBuilderRef;  -- Core.h:783
