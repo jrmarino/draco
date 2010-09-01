@@ -19,7 +19,7 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-package LlvmTree is
+package body LlvmTree is
 
    -----------------------------
    --  get_typeref_from_tree  --
@@ -33,6 +33,34 @@ package LlvmTree is
 
       return LLVMTypeRef (tree.llvm_pointer);
    end get_typeref_from_tree;
+
+
+   -----------------------
+   --  forge_tree_type  --
+   -----------------------
+
+   function forge_tree_type (TypeRef : LLVMTypeRef)
+   return TTree is
+      result : TTree;
+   begin
+      result.llvm_pointer := Address (TypeRef);
+      result.pointer_type := loc_type;
+      return result;
+   end forge_tree_type;
+
+
+   -----------------------
+   -- forge_tree_value  --
+   -----------------------
+
+   function forge_tree_value (TypeRef : LLVMValueRef)
+   return TTree is
+      result : TTree;
+   begin
+      result.llvm_pointer := Address (TypeRef);
+      result.pointer_type := loc_value;
+      return result;
+   end forge_tree_value;
 
 
 end LlvmTree;

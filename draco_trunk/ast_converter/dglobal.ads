@@ -27,9 +27,15 @@ with LlvmTree; use LlvmTree;
 
 package Dglobal is
 
-   type_annotate_only : Boolean      := False;
-   optimize           : Boolean      := True;
-   void_type_node     : TTree;
+   type_annotate_only      : Boolean      := False;
+   optimize                : Boolean      := True;
+   void_type_node          : TTree;
+   boolean_type_node       : TTree;
+   unsigned_type_node      : TTree;
+   integer_type_node       : TTree;
+   jmpbuf_type             : TTree;
+   fdesc_type_node         : TTree;
+   longest_float_type_node : TTree;
 
    ref_TreeSync  : Utils01.TPSync;
    ref_DummySync : Utils01.TPSync;

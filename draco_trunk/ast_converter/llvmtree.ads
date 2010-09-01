@@ -41,7 +41,7 @@ package LlvmTree is
    end record;
 
    NULL_TREE : constant TTree := (
-                  llvm_pointer   => Null_address,
+                  llvm_pointer   => Null_Address,
                   pointer_type   => loc_null_tree,
                   type_lang_flag => (others => False));
 
@@ -49,5 +49,13 @@ package LlvmTree is
    --  Given a TTree structure, returns a LLVMTypeRef, which is a pointer to
    --  a type definition with the LLVM AST tree.  If the tree pointer_type is
    --  not equal to loc_type, an assertion will occur.
+
+
+   function forge_tree_type (TypeRef : LLVMTypeRef) return TTree;
+   --  Returns a TTree type that stores a type reference.
+
+   function forge_tree_value (TypeRef : LLVMValueRef) return TTree;
+   --  Returns a TTree type that stores a value reference.
+
 
 end LlvmTree;

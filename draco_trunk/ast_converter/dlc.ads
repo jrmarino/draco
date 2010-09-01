@@ -183,4 +183,10 @@ private
    --  True upon encountering a node that effectively requires an lvalue
    --  downstream.
 
+
+
+   function unchecked_conversion_nop (gnat_node : Node_Id) return Boolean;
+   --  Return True if GNAT_NODE, an unchecked type conversion, is a no-op as
+   --  far as DLC is concerned.  This is use to avoid conversions on the LHS.
+
 end DLC;
