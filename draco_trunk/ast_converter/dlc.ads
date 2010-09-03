@@ -21,10 +21,8 @@
 
 with Core_h;   use Core_h;
 with Types;    use Types;
-with Atree;    use Atree;
 with Namet;    use Namet;
 with Snames;   use Snames;
-with System;   use System;
 with Sinput;   use Sinput;
 with LlvmTree; use LlvmTree;
 with Utils01;
@@ -81,7 +79,7 @@ package DLC is
 
 private
 
-   function Identifier_to_llvm (gnat_node : Node_Id) return LLVMValueRef;
+   function Identifier_to_llvm (gnat_node : Node_Id) return TTree;
    --  Subroutine of DLC to translate gnat_node, an N_Identifier,
    --  to a LLVM tree, which is returned.
 
@@ -166,7 +164,7 @@ private
 
    function lvalue_required_p (ref_TreeSync           : Utils01.TPSync;
                                gnat_node              : Node_Id;
-                               llvm_type              : TTree;
+                               type_node              : Node_Id;
                                is_constant            : Boolean;
                                is_address_of_constant : Boolean;
                                has_an_alias           : Boolean)

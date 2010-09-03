@@ -22,13 +22,13 @@
 with Lib;      use Lib;
 with Sinfo;    use Sinfo;
 with Einfo;    use Einfo;
-with Elists;   use Elists;
+with Atree;    use Atree;
 with Nlists;   use Nlists;
+with System;   use System;
 with Sem_Util; use Sem_Util;
 with Exp_Dbug; use Exp_Dbug;
 
 with Misc;
-with Decl;
 with Dglobal;
 with Interfaces.C.Strings;
 
@@ -84,15 +84,17 @@ package body DLC is
       --  TO-DO: Enable GNAT Stack Checking
 
       declare
-         unit_node_entity : Entity_Id := Defining_Entity (Unit (gnat_root));
+         unit_node_entity : constant Entity_Id :=
+                                     Defining_Entity (Unit (gnat_root));
       begin
          Get_External_Name (Entity     => unit_node_entity,
                             Has_Suffix => False);
       end;
 
       declare
-         unit_name_str : String (1 .. Name_Len) := Name_Buffer (1 .. Name_Len);
-         unit_name_ptr : Interfaces.C.Strings.chars_ptr :=
+         unit_name_str : constant String (1 .. Name_Len) :=
+                                  Name_Buffer (1 .. Name_Len);
+         unit_name_ptr : constant Interfaces.C.Strings.chars_ptr :=
                          Interfaces.C.Strings.New_String (unit_name_str);
       begin
          Dglobal.module := LLVMModuleCreateWithName (unit_name_ptr);
@@ -117,7 +119,8 @@ package body DLC is
    function lvalue_required_for_attribute_p (gnat_node : in Node_Id)
    return Boolean is
       result : Boolean;
-      attrid : Attribute_Id := Get_Attribute_Id (Attribute_Name (gnat_node));
+      attrid : constant Attribute_Id :=
+                        Get_Attribute_Id (Attribute_Name (gnat_node));
    begin
       case attrid is
          when Attribute_Pos |
@@ -152,14 +155,14 @@ package body DLC is
 
    function lvalue_required_p (ref_TreeSync           : Utils01.TPSync;
                                gnat_node              : Node_Id;
-                               llvm_type              : TTree;
+                               type_node              : Node_Id;
                                is_constant            : Boolean;
                                is_address_of_constant : Boolean;
                                has_an_alias           : Boolean)
    return Boolean is
       result      : Boolean;
       gnat_temp   : Node_Id;
-      gnat_parent : Node_Id := Parent (gnat_node);
+      gnat_parent : constant Node_Id := Parent (gnat_node);
    begin
       case (Nkind (gnat_parent)) is
          when N_Reference =>
@@ -175,8 +178,8 @@ package body DLC is
               N_Procedure_Call_Statement =>
 
                result := not is_constant
-                         or else Misc.must_pass_by_ref (llvm_type)
-                         or else Misc.default_pass_by_ref (llvm_type);
+                         or else Misc.must_pass_by_ref (type_node)
+                         or else Misc.default_pass_by_ref (type_node);
 
          when N_Indexed_Component =>
 
@@ -211,13 +214,13 @@ package body DLC is
                --  It is a duplicate of part of the N_Slice case below.
                if not result then
                   declare
-                     alias2 : Boolean := has_an_alias or else
+                     alias2 : constant Boolean := has_an_alias or else
                               Has_Aliased_Components (Etype (gnat_node));
                   begin
                      result := lvalue_required_p (
                         ref_TreeSync           => ref_TreeSync,
                         gnat_node              => gnat_parent,
-                        llvm_type              => llvm_type,
+                        type_node              => type_node,
                         is_constant            => is_constant,
                         is_address_of_constant => is_address_of_constant,
                         has_an_alias           => alias2);
@@ -234,13 +237,13 @@ package body DLC is
 
             else
                declare
-                  alias2 : Boolean := has_an_alias or else
+                  alias2 : constant Boolean := has_an_alias or else
                            Has_Aliased_Components (Etype (gnat_node));
                begin
                   result := lvalue_required_p (
                               ref_TreeSync           => ref_TreeSync,
                               gnat_node              => gnat_parent,
-                              llvm_type              => llvm_type,
+                              type_node              => type_node,
                               is_constant            => is_constant,
                               is_address_of_constant => is_address_of_constant,
                               has_an_alias           => alias2);
@@ -250,13 +253,13 @@ package body DLC is
          when N_Selected_Component =>
 
                declare
-                  alias2 : Boolean := has_an_alias or else
+                  alias2 : constant Boolean := has_an_alias or else
                            Is_Aliased (Entity (Selector_Name (gnat_node)));
                begin
                   result := lvalue_required_p (
                               ref_TreeSync           => ref_TreeSync,
                               gnat_node              => gnat_parent,
-                              llvm_type              => llvm_type,
+                              type_node              => type_node,
                               is_constant            => is_constant,
                               is_address_of_constant => is_address_of_constant,
                               has_an_alias           => alias2);
@@ -330,8 +333,7 @@ package body DLC is
                          or else lvalue_required_p (
                               ref_TreeSync           => ref_TreeSync,
                               gnat_node              => gnat_parent,
-                              llvm_type              => Decl.get_unpadded_type
-                                                         (Etype (gnat_parent)),
+                              type_node              => gnat_parent,
                               is_constant            => is_constant,
                               is_address_of_constant => is_address_of_constant,
                               has_an_alias           => has_an_alias);
@@ -343,8 +345,7 @@ package body DLC is
                          or else lvalue_required_p (
                               ref_TreeSync           => ref_TreeSync,
                               gnat_node              => gnat_parent,
-                              llvm_type              => Decl.get_unpadded_type
-                                                         (Etype (gnat_parent)),
+                              type_node              => gnat_parent,
                               is_constant            => is_constant,
                               is_address_of_constant => is_address_of_constant,
                               has_an_alias           => has_an_alias);
@@ -368,8 +369,7 @@ package body DLC is
                result := lvalue_required_p (
                               ref_TreeSync           => ref_TreeSync,
                               gnat_node              => gnat_parent,
-                              llvm_type              => Decl.get_unpadded_type
-                                                         (Etype (gnat_parent)),
+                              type_node              => gnat_parent,
                               is_constant            => True,
                               is_address_of_constant => False,
                               has_an_alias           => True);
@@ -394,10 +394,163 @@ package body DLC is
    -------------------------
 
    function Identifier_to_llvm (gnat_node : Node_Id)
-   return LLVMValueRef is
-      result : LLVMValueRef := LLVMValueRef (Null_Address);
+   return TTree is
+      gnat_temp      : Node_Id;
+      gnat_temp_type : Node_Id;
+      result         : TTree;
+      result_type    : Node_Id;
+      rqmt_evaluated : Boolean := False;
+      require_lvalue : Boolean;
+      expect         : Boolean;
+
+      --  If GNAT_NODE is a constant, whether we should use the initialization
+      --  value instead of the constant entity, typically for scalars with an
+      --  address clause when the parent doesn't require an lvalue.
+
+      use_constant_initializer : Boolean := False;
    begin
+      --  If the Etype of this node does not equal the Etype of the Entity,
+      --  something is wrong with the entity map, probably in generic
+      --  instantiation.  However, this does not apply to types. Since we
+      --  sometimes have strange Ekinds, just do this test for objects.  Also,
+      --  if the Etype of the Entity is private, the Etype of the N_Identifier
+      --  is allowed to be the full type and also we consider a packed array
+      --  type to be the same as the original type. Similarly, a class-wide
+      --  type is equivalent to a subtype of itself. Finally, if the types are
+      --  Itypes, one may be a copy of the other, which is also legal.
+
+      if Nkind (gnat_node) = N_Defining_Identifier then
+         gnat_temp := gnat_node;
+      else
+         gnat_temp := Entity (gnat_node);
+      end if;
+      gnat_temp_type := Etype (gnat_temp);
+
+      expect := (Etype (gnat_node) = gnat_temp_type) or else
+
+                (Is_Packed (gnat_temp_type) and (Etype (gnat_node) =
+                  Packed_Array_Type (gnat_temp_type))) or else
+
+                (Is_Class_Wide_Type (Etype (gnat_node))) or else
+
+                ((Ekind (gnat_temp_type) in Private_Kind) and
+                  Present (Full_View (gnat_temp_type)) and
+                  (
+                    (Etype (gnat_node) = Full_View (gnat_temp_type)) or
+                    (
+                      Is_Packed (Full_View (gnat_temp_type)) and
+                      (Etype (gnat_node) = Packed_Array_Type (
+                         Full_View (gnat_temp_type))
+                      )
+                    )
+                  )
+                 ) or else
+
+                (Is_Itype (Etype (gnat_node)) and
+                 Is_Itype (gnat_temp_type)) or else
+
+                not (
+                      (Ekind (gnat_temp) = E_Variable) or
+                      (Ekind (gnat_temp) = E_Component) or
+                      (Ekind (gnat_temp) = E_Constant) or
+                      (Ekind (gnat_temp) = E_Loop_Parameter) or
+                      (Ekind (gnat_temp) in Formal_Kind)
+                    );
+
+      pragma Assert (expect, "ident2llvm: Entity values unexpected");
+
+
+      --  If this is a reference to a deferred constant whose partial view is
+      --  an unconstrained private type, the proper type is on the full view
+      --  of the constant, not on the full view of the type, which may be
+      --  unconstrained.
+      --
+      --  This may be a reference to a type, for example in the prefix of the
+      --  attribute Position, generated for dispatching code (see Make_DT in
+      --  exp_disp,adb). In that case we need the type itself, not is parent,
+      --  in particular if it is a derived type.
+
+      if (Is_Private_Type (gnat_temp_type)
+          and Has_Unknown_Discriminants (gnat_temp_type)
+          and Ekind (gnat_temp) = E_Constant
+          and Present (Full_View (gnat_temp))) then
+
+            gnat_temp := Full_View (gnat_temp);
+            gnat_temp_type := Etype (gnat_temp);
+      else
+         --  We want to use the Actual_Subtype if it has already been
+         --  elaborated, otherwise the Etype.  Avoid using Actual_Subtype for
+         --  packed arrays to simplify things.
+
+         if ((
+                Ekind (gnat_temp) = E_Constant
+                or Ekind (gnat_temp) = E_Variable
+                or Is_Formal (gnat_temp)
+              )
+              and not (
+                 Is_Array_Type (Etype (gnat_temp))
+                 and Present (Packed_Array_Type (Etype (gnat_temp)))
+              )
+              and Present (Actual_Subtype (gnat_temp))
+            ) then
+            gnat_temp_type := Actual_Subtype (gnat_temp);
+         else
+            gnat_temp_type := Etype (gnat_node);
+         end if;
+
+      end if;
+
+
+      --  Expand the type of this identifier first.
+      --  There is no order-of-elaboration issue here.
+
+      result_type := gnat_temp_type;
+
+      --  If this is a non-imported scalar constant with an address clause,
+      --  retrieve the value instead of a pointer to be dereferenced unless
+      --  an lvalue is required.  This is generally more efficient and actually
+      --  required if this is a static expression because it might be used
+      --  in a context where a dereference is inappropriate, such as a case
+      --  statement alternative or a record discriminant.  There is no possible
+      --  volatile-ness short-circuit here since Volatile constants must be
+      --  imported per C.6.
+
+      if (Ekind (gnat_temp) = E_Constant
+          and Is_Scalar_Type (gnat_temp_type)
+          and not Is_Imported (gnat_temp)
+          and Present (Address_Clause (gnat_temp))) then
+
+            require_lvalue := lvalue_required_p (
+                              ref_TreeSync           => Dglobal.ref_TreeSync,
+                              gnat_node              => gnat_node,
+                              type_node              => result_type,
+                              is_constant            => True,
+                              is_address_of_constant => False,
+                              has_an_alias           => Is_Aliased (gnat_temp)
+            );
+            rqmt_evaluated := True;
+            use_constant_initializer := not require_lvalue;
+      end if;
+
+
+      if use_constant_initializer then
+
+         --  If this is a deferred constant, the initializer is attached to
+         --  the full view.
+
+         if Present (Full_View (gnat_temp)) then
+            gnat_temp := Full_View (gnat_temp);
+         end if;
+
+         --  result = gnat_to_gnu (Expression (Declaration_Node (gnat_temp)));
+         null;
+      else
+         --  result = gnat_to_gnu_entity (gnat_temp, NULL_TREE, 0);
+         null;
+      end if;
+
       return result;
+      --  return Dglobal.void_type_node;
    end Identifier_to_llvm;
 
 
@@ -615,9 +768,9 @@ package body DLC is
    return Boolean is
       from_type   : Entity_Id;
       to_type     : Entity_Id;
-      parent_node : Node_Id   := Parent (gnat_node);
-      parent_kind : Node_Kind := Nkind (parent_node);
-      parent_name : Node_Id   := Sinfo.Name (parent_node);
+      parent_node : constant Node_Id   := Parent (gnat_node);
+      parent_kind : constant Node_Kind := Nkind (parent_node);
+      parent_name : constant Node_Id   := Sinfo.Name (parent_node);
    begin
       --  The conversion must be on the LHS of an assignment or an actual
       --  parameter of a call.  Otherwise, even if the conversion was
