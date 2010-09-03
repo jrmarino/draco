@@ -19,21 +19,18 @@
 --  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-with LlvmTree; use LlvmTree;
+with Types; use Types;
 
 package Misc is
 
-   function default_pass_by_ref (llvm_type : in TTree) return Boolean;
+   function default_pass_by_ref (type_node : Node_Id) return Boolean;
    --  We pass aggregates by reference if they are sufficiently large.  The
-   --  choice of constant her is somewhat arbitrary.  We also pass by
-   --  reference if the target machine would either pass or return by
-   --  reference.  Strictly speaking, we need only check the return if this
-   --  is an In Out parameter, but it's probably best to err on the side of
-   --  passing more things by reference.
+   --  choice of constant here is somewhat arbitrary.  Objects of variable
+   --  size and those required to be passed by reference also return True;
 
 
 
-   function must_pass_by_ref (llvm_type : in TTree) return Boolean;
+   function must_pass_by_ref (type_node : Node_Id) return Boolean;
    --  We pass only unconstrained objects, those required by the language
    --  to be passed by reference, and objects of variable size.  The latter
    --  is more efficient, avoids problems with variable size temporaries,

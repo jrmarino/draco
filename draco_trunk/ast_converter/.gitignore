@@ -27,3 +27,4 @@ stringt.ads
 casing.ads
 exp_dbug.ads
 lib.ads
+sem_aux.ads
