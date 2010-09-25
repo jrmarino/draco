@@ -454,8 +454,9 @@ package body Sem_Ch8 is
    --  private with on E.
 
    procedure Find_Expanded_Name (N : Node_Id);
-   --  Selected component is known to be expanded name. Verify legality of
-   --  selector given the scope denoted by prefix.
+   --  The input is a selected component is known to be expanded name. Verify
+   --  legality of selector given the scope denoted by prefix, and change node
+   --  N into a expanded name with a properly set Entity field.
 
    function Find_Renamed_Entity
      (N         : Node_Id;
@@ -510,10 +511,6 @@ package body Sem_Ch8 is
 
    procedure Write_Info;
    --  Write debugging information on entities declared in current scope
-
-   procedure Write_Scopes;
-   pragma Warnings (Off, Write_Scopes);
-   --  Debugging information: dump all entities on scope stack
 
    --------------------------------
    -- Analyze_Exception_Renaming --
@@ -2467,6 +2464,7 @@ package body Sem_Ch8 is
       end if;
 
       --  A useful warning, suggested by Ada Bug Finder (Ada-Europe 2005)
+      --  is to warn if an operator is being renamed as a different operator.
 
       if Comes_From_Source (N)
         and then Present (Old_S)
@@ -2478,6 +2476,10 @@ package body Sem_Ch8 is
            ("?& is being renamed as a different operator",
              New_S, Old_S);
       end if;
+
+      --  Check for renaming of obsolescent subprogram
+
+      Check_Obsolescent_2005_Entity (Entity (Nam), Nam);
 
       --  Another warning or some utility: if the new subprogram as the same
       --  name as the old one, the old one is not hidden by an outer homograph,
@@ -4410,6 +4412,10 @@ package body Sem_Ch8 is
 
       <<Found>> begin
 
+         --  Check violation of No_Wide_Characters restriction
+
+         Check_Wide_Character_Restriction (E, N);
+
          --  When distribution features are available (Get_PCS_Name /=
          --  Name_No_DSA), a remote access-to-subprogram type is converted
          --  into a record type holding whatever information is needed to
@@ -4958,6 +4964,10 @@ package body Sem_Ch8 is
       else
          Set_Etype (N, Get_Full_View (Etype (Id)));
       end if;
+
+      --  Check for violation of No_Wide_Characters
+
+      Check_Wide_Character_Restriction (Id, N);
 
       --  If the Ekind of the entity is Void, it means that all homonyms are
       --  hidden from all visibility (RM 8.3(5,14-20)).
@@ -5756,9 +5766,8 @@ package body Sem_Ch8 is
                     ("prefix of Base attribute must be scalar type",
                       Prefix (N));
 
-               elsif Sloc (Typ) = Standard_Location
+               elsif Warn_On_Redundant_Constructs
                  and then Base_Type (Typ) = Typ
-                 and then Warn_On_Redundant_Constructs
                then
                   Error_Msg_NE -- CODEFIX
                     ("?redundant attribute, & is its own base type", N, Typ);
@@ -5767,8 +5776,8 @@ package body Sem_Ch8 is
                T := Base_Type (Typ);
 
                --  Rewrite attribute reference with type itself (see similar
-               --  processing in Analyze_Attribute, case Base). Preserve
-               --  prefix if present, for other legality checks.
+               --  processing in Analyze_Attribute, case Base). Preserve prefix
+               --  if present, for other legality checks.
 
                if Nkind (Prefix (N)) = N_Expanded_Name then
                   Rewrite (N,
@@ -7329,8 +7338,8 @@ package body Sem_Ch8 is
               and then Scope (Id) /= Scope (Prev)
               and then Used_As_Generic_Actual (Scope (Prev))
               and then Used_As_Generic_Actual (Scope (Id))
-              and then List_Containing (Current_Use_Clause (Scope (Prev))) /=
-                       List_Containing (Current_Use_Clause (Scope (Id)))
+              and then not In_Same_List (Current_Use_Clause (Scope (Prev)),
+                                         Current_Use_Clause (Scope (Id)))
             then
                Set_Is_Potentially_Use_Visible (Prev, False);
                Append_Elmt (Prev, Hidden_By_Use_Clause (N));
@@ -7622,9 +7631,10 @@ package body Sem_Ch8 is
                         begin
                            S1 := Scope (Ent1);
                            S2 := Scope (Ent2);
-                           while S1 /= Standard_Standard
-                                   and then
-                                 S2 /= Standard_Standard
+                           while Present (S1)
+                             and then Present (S2)
+                             and then S1 /= Standard_Standard
+                             and then S2 /= Standard_Standard
                            loop
                               S1 := Scope (S1);
                               S2 := Scope (S2);
@@ -7725,11 +7735,11 @@ package body Sem_Ch8 is
       Write_Eol;
    end Write_Info;
 
-   -----------------
-   -- Write_Scopes --
-   -----------------
+   --------
+   -- ws --
+   --------
 
-   procedure Write_Scopes is
+   procedure ws is
       S : Entity_Id;
    begin
       for J in reverse 1 .. Scope_Stack.Last loop
@@ -7739,6 +7749,6 @@ package body Sem_Ch8 is
          Write_Name (Chars (S));
          Write_Eol;
       end loop;
-   end Write_Scopes;
+   end ws;
 
 end Sem_Ch8;

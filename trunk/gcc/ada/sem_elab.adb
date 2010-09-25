@@ -1676,7 +1676,7 @@ package body Sem_Elab is
 
          --  Here is where we give the warning
 
-                  --  All OK if warnings suppressed on the entity
+         --  All OK if warnings suppressed on the entity
 
          if not Has_Warnings_Off (Ent) then
             Error_Msg_Sloc := Sloc (Ent);
@@ -2288,7 +2288,7 @@ package body Sem_Elab is
                     ("task will be activated before elaboration of its body?",
                       Decl);
                   Error_Msg_N
-                    ("\Program_Error will be raised at run-time?", Decl);
+                    ("\Program_Error will be raised at run time?", Decl);
 
                elsif
                  Present (Corresponding_Body (Unit_Declaration_Node (Proc)))
@@ -2850,8 +2850,8 @@ package body Sem_Elab is
                Typ : constant Entity_Id := Etype (N);
                Chk : constant Boolean   := Do_Range_Check (N);
 
-               R   : constant Node_Id :=
-                       Make_Raise_Program_Error (Loc,
+               R  : constant Node_Id :=
+                      Make_Raise_Program_Error (Loc,
                          Reason => PE_Access_Before_Elaboration);
 
                Reloc_N : Node_Id;
