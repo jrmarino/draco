@@ -1153,6 +1153,33 @@ package body Ch4 is
       Lparen_Sloc    : Source_Ptr;
       Scan_State     : Saved_Scan_State;
 
+      procedure Box_Error;
+      --  Called if <> is encountered as positional aggregate element. Issues
+      --  error message and sets Expr_Node to Error.
+
+      ---------------
+      -- Box_Error --
+      ---------------
+
+      procedure Box_Error is
+      begin
+         if Ada_Version < Ada_2005 then
+            Error_Msg_SC ("box in aggregate is an Ada 2005 extension");
+         end if;
+
+         --  Ada 2005 (AI-287): The box notation is allowed only with named
+         --  notation because positional notation might be error prone. For
+         --  example, in "(X, <>, Y, <>)", there is no type associated with
+         --  the boxes, so you might not be leaving out the components you
+         --  thought you were leaving out.
+
+         Error_Msg_SC ("(Ada 2005) box only allowed with named notation");
+         Scan; -- past box
+         Expr_Node := Error;
+      end Box_Error;
+
+   --  Start of processsing for P_Aggregate_Or_Paren_Expr
+
    begin
       Lparen_Sloc := Token_Ptr;
       T_Left_Paren;
@@ -1196,26 +1223,17 @@ package body Ch4 is
             end if;
          end if;
 
-         --  Ada 2005 (AI-287): The box notation is allowed only with named
-         --  notation because positional notation might be error prone. For
-         --  example, in "(X, <>, Y, <>)", there is no type associated with
-         --  the boxes, so you might not be leaving out the components you
-         --  thought you were leaving out.
+         --  Scan expression, handling box appearing as positional argument
 
-         if Ada_Version >= Ada_05 and then Token = Tok_Box then
-            Error_Msg_SC ("(Ada 2005) box notation only allowed with "
-                          & "named notation");
-            Scan; --  past BOX
-            Aggregate_Node := New_Node (N_Aggregate, Lparen_Sloc);
-            return Aggregate_Node;
+         if Token = Tok_Box then
+            Box_Error;
+         else
+            Expr_Node := P_Expression_Or_Range_Attribute_If_OK;
          end if;
-
-         Expr_Node := P_Expression_Or_Range_Attribute_If_OK;
 
          --  Extension aggregate case
 
          if Token = Tok_With then
-
             if Nkind (Expr_Node) = N_Attribute_Reference
               and then Attribute_Name (Expr_Node) = Name_Range
             then
@@ -1316,8 +1334,7 @@ package body Ch4 is
                              "extension aggregate");
             raise Error_Resync;
 
-         --  A range attribute can only appear as part of a discrete choice
-         --  list.
+         --  Range attribute can only appear as part of a discrete choice list
 
          elsif Nkind (Expr_Node) = N_Attribute_Reference
            and then Attribute_Name (Expr_Node) = Name_Range
@@ -1386,11 +1403,17 @@ package body Ch4 is
             exit;
          end if;
 
+         --  Deal with misused box
+
+         if Token = Tok_Box then
+            Box_Error;
+
          --  Otherwise initiate for reentry to top of loop by scanning an
          --  initial expression, unless the first token is OTHERS.
 
-         if Token = Tok_Others then
+         elsif Token = Tok_Others then
             Expr_Node := Empty;
+
          else
             Save_Scan_State (Scan_State); -- at start of expression
             Expr_Node := P_Expression_Or_Range_Attribute_If_OK;
@@ -2670,7 +2693,7 @@ package body Ch4 is
    begin
       if Ada_Version < Ada_12 then
          Error_Msg_SC ("|case expression is an Ada 2012 feature");
-         Error_Msg_SC ("\|use -gnat12 switch to compile this unit");
+         Error_Msg_SC ("\|unit must be compiled with -gnat2012 switch");
       end if;
 
       Scan; -- past CASE
@@ -2761,11 +2784,11 @@ package body Ch4 is
 
       if Token = Tok_If and then Ada_Version < Ada_12 then
          Error_Msg_SC ("|conditional expression is an Ada 2012 feature");
-         Error_Msg_SC ("\|use -gnat12 switch to compile this unit");
+         Error_Msg_SC ("\|unit must be compiled with -gnat2012 switch");
       end if;
 
       Scan; -- past IF or ELSIF
-      Append_To (Exprs, P_Expression_No_Right_Paren);
+      Append_To (Exprs, P_Condition);
       TF_Then;
       Append_To (Exprs, P_Expression);
 
@@ -2844,7 +2867,7 @@ package body Ch4 is
       if Token = Tok_Vertical_Bar then
          if Ada_Version < Ada_12 then
             Error_Msg_SC ("set notation is an Ada 2012 feature");
-            Error_Msg_SC ("\|use -gnat12 switch to compile this unit");
+            Error_Msg_SC ("\|unit must be compiled with -gnat2012 switch");
          end if;
 
          Set_Alternatives (N, New_List (Alt));
