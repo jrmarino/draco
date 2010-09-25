@@ -55,7 +55,7 @@ package body Impunit is
    Non_Imp_File_Names_95 : constant File_List := (
 
    ------------------------------------------------------
-   -- Ada Hierarchy Units from Ada-83 Reference Manual --
+   -- Ada Hierarchy Units from Ada-95 Reference Manual --
    ------------------------------------------------------
 
      "a-astaco",    -- Ada.Asynchronous_Task_Control
@@ -173,13 +173,14 @@ package body Impunit is
      "a-wichun",    -- Ada.Wide_Characters.Unicode
      "a-widcha",    -- Ada.Wide_Characters
 
-      --  Note: strictly the next two should be Ada 2012 units, but it seems
+      --  Note: strictly the following should be Ada 2012 units, but it seems
       --  harmless (and useful) to make then available in Ada 95 mode, since
-      --  they only deal with Wide_Character, not Wide_Wide_Character.
+      --  they do not deal with Wide_Wide_Character.
 
      "a-stuten",    -- Ada.Strings.UTF_Encoding
      "a-suenco",    -- Ada.Strings.UTF_Encoding.Conversions
-     "a-suewen",    -- Ada.Strings.UTF_Encoding.Wide_Encoding
+     "a-suesen",    -- Ada.Strings.UTF_Encoding.String_Encoding
+     "a-suewse",    -- Ada.Strings.UTF_Encoding.Wide_String_Encoding
 
    ---------------------------
    -- GNAT Special IO Units --
@@ -394,6 +395,7 @@ package body Impunit is
      "a-envvar",    -- Ada.Environment_Variables
      "a-exetim",    -- Ada.Execution_Time
      "a-extiti",    -- Ada.Execution_Time.Timers
+     "a-izteio",    -- Ada.Integer_Wide_Wide_Text_IO
      "a-rttiev",    -- Ada.Real_Time.Timing_Events
      "a-ngcoar",    -- Ada.Numerics.Generic_Complex_Arrays
      "a-ngrear",    -- Ada.Numerics.Generic_Real_Arrays
@@ -470,7 +472,7 @@ package body Impunit is
       --  Note: strictly the following should be Ada 2012 units, but it seems
       --  harmless (and useful) to make then available in Ada 2005 mode.
 
-     "a-suezen",    -- Ada.Strings.UTF_Encoding.Wide_Wide_Encoding
+     "a-suezse",    -- Ada.Strings.UTF_Encoding.Wide_Wide_String_Encoding
 
    ---------------------------
    -- GNAT Special IO Units --
