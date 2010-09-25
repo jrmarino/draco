@@ -584,6 +584,10 @@ package body Sem_Attr is
 
             Check_For_Eliminated_Subprogram (P, Entity (P));
 
+            --  Check for obsolescent subprogram reference
+
+            Check_Obsolescent_2005_Entity (Entity (P), P);
+
             --  Build the appropriate subprogram type
 
             Build_Access_Subprogram_Type (P);
@@ -691,6 +695,12 @@ package body Sem_Attr is
                   then
                      Error_Msg_N
                        ("current instance attribute must appear alone", N);
+                  end if;
+
+                  if Is_CPP_Class (Root_Type (Typ)) then
+                     Error_Msg_N
+                       ("?current instance unsupported for derivations of "
+                        & "'C'P'P types", N);
                   end if;
 
                --  OK if we are in initialization procedure for the type
@@ -2535,6 +2545,25 @@ package body Sem_Attr is
          Check_E0;
          Find_Type (N);
 
+         --  Applying Class to untagged incomplete type is obsolescent in Ada
+         --  2005. Note that we can't test Is_Tagged_Type here on P_Type, since
+         --  this flag gets set by Find_Type in this situation.
+
+         if Restriction_Check_Required (No_Obsolescent_Features)
+           and then Ada_Version >= Ada_2005
+           and then Ekind (P_Type) = E_Incomplete_Type
+         then
+            declare
+               DN : constant Node_Id := Declaration_Node (P_Type);
+            begin
+               if Nkind (DN) = N_Incomplete_Type_Declaration
+                 and then not Tagged_Present (DN)
+               then
+                  Check_Restriction (No_Obsolescent_Features, P);
+               end if;
+            end;
+         end if;
+
       ------------------
       -- Code_Address --
       ------------------
@@ -2612,7 +2641,7 @@ package body Sem_Attr is
          --  Case from RM J.4(2) of constrained applied to private type
 
          if Is_Entity_Name (P) and then Is_Type (Entity (P)) then
-            Check_Restriction (No_Obsolescent_Features, N);
+            Check_Restriction (No_Obsolescent_Features, P);
 
             if Warn_On_Obsolescent_Feature then
                Error_Msg_N
@@ -4196,6 +4225,10 @@ package body Sem_Attr is
 
          if Is_Task_Type (P_Type) then
             Set_Etype (N, Universal_Integer);
+
+            --  Use with tasks is an obsolescent feature
+
+            Check_Restriction (No_Obsolescent_Features, P);
 
          elsif Is_Access_Type (P_Type) then
             if Ekind (P_Type) = E_Access_Subprogram_Type then
@@ -6359,7 +6392,7 @@ package body Sem_Attr is
       --  Note: for the folding case, it is fine to treat Machine_Rounding
       --  exactly the same way as Rounding, since this is one of the allowed
       --  behaviors, and performance is not an issue here. It might be a bit
-      --  better to give the same result as it would give at run-time, even
+      --  better to give the same result as it would give at run time, even
       --  though the non-determinism is certainly permitted.
 
       when Attribute_Machine_Rounding =>
@@ -7916,7 +7949,14 @@ package body Sem_Attr is
                   --  when within an instance, because any violations will have
                   --  been caught by the compilation of the generic unit.
 
+                  --  Note that we relax this check in CodePeer mode for
+                  --  compatibility with legacy code.
+
+                  --  This seems an odd decision??? Why should codepeer mode
+                  --  have a different notion of legality from the compiler???
+
                   elsif Attr_Id = Attribute_Access
+                    and then not CodePeer_Mode
                     and then not In_Instance
                     and then Present (Enclosing_Generic_Unit (Entity (P)))
                     and then Present (Enclosing_Generic_Body (N))
@@ -7933,9 +7973,9 @@ package body Sem_Attr is
                      --  The attribute type's ultimate ancestor must be
                      --  declared within the same generic unit as the
                      --  subprogram is declared. The error message is
-                     --  specialized to say "ancestor" for the case where
-                     --  the access type is not its own ancestor, since
-                     --  saying simply "access type" would be very confusing.
+                     --  specialized to say "ancestor" for the case where the
+                     --  access type is not its own ancestor, since saying
+                     --  simply "access type" would be very confusing.
 
                      if Enclosing_Generic_Unit (Entity (P)) /=
                           Enclosing_Generic_Unit (Root_Type (Btyp))
