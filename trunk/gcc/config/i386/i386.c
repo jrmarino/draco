@@ -3667,7 +3667,7 @@ ix86_option_override_internal (bool main_args_p)
       ix86_gen_one_cmpl2 = gen_one_cmpldi2;
       ix86_gen_monitor = gen_sse3_monitor64;
       ix86_gen_andsp = gen_anddi3;
-      ix86_gen_allocate_stack_worker = gen_allocate_stack_worker_probe_di;
+      ix86_gen_allocate_stack_worker = gen_allocate_stack_worker_64;
       ix86_gen_adjust_stack_and_probe = gen_adjust_stack_and_probedi;
       ix86_gen_probe_stack_range = gen_probe_stack_rangedi;
     }
@@ -3680,7 +3680,7 @@ ix86_option_override_internal (bool main_args_p)
       ix86_gen_one_cmpl2 = gen_one_cmplsi2;
       ix86_gen_monitor = gen_sse3_monitor;
       ix86_gen_andsp = gen_andsi3;
-      ix86_gen_allocate_stack_worker = gen_allocate_stack_worker_probe_si;
+      ix86_gen_allocate_stack_worker = gen_allocate_stack_worker_32;
       ix86_gen_adjust_stack_and_probe = gen_adjust_stack_and_probesi;
       ix86_gen_probe_stack_range = gen_probe_stack_rangesi;
     }
@@ -8808,7 +8808,8 @@ pro_epilogue_adjust_stack (rtx dest, rtx src, rtx offset,
       insn = emit_insn (gen_rtx_SET (DImode, tmp, offset));
       if (style < 0)
 	RTX_FRAME_RELATED_P (insn) = 1;
-      insn = emit_insn (gen_pro_epilogue_adjust_stack_di_2 (dest, src, tmp));
+      insn = emit_insn (gen_pro_epilogue_adjust_stack_di_2 (dest, src, tmp,
+							    offset));
     }
 
   if (style >= 0)
@@ -9731,26 +9732,16 @@ ix86_expand_prologue (void)
 	}
 
       emit_move_insn (eax, GEN_INT (allocate));
-      emit_insn (ix86_gen_allocate_stack_worker (eax, eax));
 
-      /* Use the fact that AX still contains ALLOCATE.  */
-      if (TARGET_64BIT)
-	insn = gen_pro_epilogue_adjust_stack_di_3 (stack_pointer_rtx,
-					           stack_pointer_rtx, eax);
-      else
-	insn = gen_pro_epilogue_adjust_stack_si_3 (stack_pointer_rtx,
-					           stack_pointer_rtx, eax);
-      insn = emit_insn (insn);
+      insn = emit_insn (ix86_gen_allocate_stack_worker (eax, eax));
 
       if (m->fs.cfa_reg == stack_pointer_rtx)
 	{
 	  m->fs.cfa_offset += allocate;
-
+	  t = gen_rtx_PLUS (Pmode, stack_pointer_rtx, GEN_INT (-allocate));
+	  t = gen_rtx_SET (VOIDmode, stack_pointer_rtx, t);
+	  add_reg_note (insn, REG_CFA_ADJUST_CFA, t);
 	  RTX_FRAME_RELATED_P (insn) = 1;
-	  add_reg_note (insn, REG_CFA_ADJUST_CFA,
-			gen_rtx_SET (VOIDmode, stack_pointer_rtx,
-				     plus_constant (stack_pointer_rtx,
-						    -allocate)));
 	}
       m->fs.sp_offset += allocate;
 
