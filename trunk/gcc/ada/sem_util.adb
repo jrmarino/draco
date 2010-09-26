@@ -1564,22 +1564,48 @@ package body Sem_Util is
 
       function Search_Tag (Iface : Entity_Id) return Entity_Id is
          ADT : Elmt_Id;
-
       begin
-         ADT := Next_Elmt (Next_Elmt (First_Elmt (Access_Disp_Table (T))));
+         if not Is_CPP_Class (T) then
+            ADT := Next_Elmt (Next_Elmt (First_Elmt (Access_Disp_Table (T))));
+         else
+            ADT := Next_Elmt (First_Elmt (Access_Disp_Table (T)));
+         end if;
+
          while Present (ADT)
-            and then Ekind (Node (ADT)) = E_Constant
+            and then Is_Tag (Node (ADT))
             and then Related_Type (Node (ADT)) /= Iface
          loop
-            --  Skip the secondary dispatch tables of Iface
+            --  Skip secondary dispatch table referencing thunks to user
+            --  defined primitives covered by this interface.
 
+            pragma Assert (Has_Suffix (Node (ADT), 'P'));
             Next_Elmt (ADT);
-            Next_Elmt (ADT);
-            Next_Elmt (ADT);
-            Next_Elmt (ADT);
+
+            --  Skip secondary dispatch tables of Ada types
+
+            if not Is_CPP_Class (T) then
+
+               --  Skip secondary dispatch table referencing thunks to
+               --  predefined primitives.
+
+               pragma Assert (Has_Suffix (Node (ADT), 'Y'));
+               Next_Elmt (ADT);
+
+               --  Skip secondary dispatch table referencing user-defined
+               --  primitives covered by this interface.
+
+               pragma Assert (Has_Suffix (Node (ADT), 'D'));
+               Next_Elmt (ADT);
+
+               --  Skip secondary dispatch table referencing predefined
+               --  primitives.
+
+               pragma Assert (Has_Suffix (Node (ADT), 'Z'));
+               Next_Elmt (ADT);
+            end if;
          end loop;
 
-         pragma Assert (Ekind (Node (ADT)) = E_Constant);
+         pragma Assert (Is_Tag (Node (ADT)));
          return Node (ADT);
       end Search_Tag;
 
@@ -2498,6 +2524,28 @@ package body Sem_Util is
          return False;
       end if;
    end Designate_Same_Unit;
+
+   --------------------------
+   -- Enclosing_CPP_Parent --
+   --------------------------
+
+   function Enclosing_CPP_Parent (Typ : Entity_Id) return Entity_Id is
+      Parent_Typ : Entity_Id := Typ;
+
+   begin
+      while not Is_CPP_Class (Parent_Typ)
+         and then Etype (Parent_Typ) /= Parent_Typ
+      loop
+         Parent_Typ := Etype (Parent_Typ);
+
+         if Is_Private_Type (Parent_Typ) then
+            Parent_Typ := Full_View (Base_Type (Parent_Typ));
+         end if;
+      end loop;
+
+      pragma Assert (Is_CPP_Class (Parent_Typ));
+      return Parent_Typ;
+   end Enclosing_CPP_Parent;
 
    ----------------------------
    -- Enclosing_Generic_Body --
@@ -5208,6 +5256,16 @@ package body Sem_Util is
       end if;
    end Has_Stream;
 
+   ----------------
+   -- Has_Suffix --
+   ----------------
+
+   function Has_Suffix (E : Entity_Id; Suffix : Character) return Boolean is
+   begin
+      Get_Name_String (Chars (E));
+      return Name_Buffer (Name_Len) = Suffix;
+   end Has_Suffix;
+
    --------------------------
    -- Has_Tagged_Component --
    --------------------------
@@ -6514,7 +6572,7 @@ package body Sem_Util is
       --  the corresponding procedure has been created, and which therefore do
       --  not have an assigned scope.
 
-      if Ekind (E) in Formal_Kind then
+      if Is_Formal (E) then
          return False;
       end if;
 
@@ -10474,20 +10532,24 @@ package body Sem_Util is
    begin
       --  First case, both are entities with same entity
 
-      if K1 in N_Has_Entity
-        and then K2 in N_Has_Entity
-        and then Present (Entity (N1))
-        and then Present (Entity (N2))
-        and then (Ekind (Entity (N1)) = E_Variable
-                    or else
-                  Ekind (Entity (N1)) = E_Constant)
-        and then Entity (N1) = Entity (N2)
-      then
-         return True;
+      if K1 in N_Has_Entity and then K2 in N_Has_Entity then
+         declare
+            EN1 : constant Entity_Id := Entity (N1);
+            EN2 : constant Entity_Id := Entity (N2);
+         begin
+            if Present (EN1) and then Present (EN2)
+              and then (Ekind_In (EN1, E_Variable, E_Constant)
+                         or else Is_Formal (EN1))
+              and then EN1 = EN2
+            then
+               return True;
+            end if;
+         end;
+      end if;
 
       --  Second case, selected component with same selector, same record
 
-      elsif K1 = N_Selected_Component
+      if K1 = N_Selected_Component
         and then K2 = N_Selected_Component
         and then Chars (Selector_Name (N1)) = Chars (Selector_Name (N2))
       then

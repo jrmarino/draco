@@ -101,6 +101,12 @@
 #  extra_headers	List of used header files from the directory
 #			config/${cpu_type}.
 #
+#  user_headers_inc_next_pre
+#			List of header file names of internal gcc header
+#			files, which should be prefixed by an include_next.
+#  user_headers_inc_next_post
+#			List of header file names of internal gcc header
+#			files, which should be postfixed by an include_next.
 #  use_gcc_tgmath	If set, add tgmath.h to the list of used header
 #			files.
 #
@@ -171,6 +177,8 @@
 out_file=
 tmake_file=
 extra_headers=
+user_headers_inc_next_pre=
+user_headers_inc_next_post=
 use_gcc_tgmath=yes
 use_gcc_stdint=none
 extra_passes=
@@ -259,6 +267,7 @@ m32c*-*-*)
 alpha*-*-*)
 	cpu_type=alpha
 	need_64bit_hwint=yes
+	extra_options="${extra_options} g.opt"
 	;;
 am33_2.0-*-linux*)
 	cpu_type=mn10300
@@ -281,6 +290,7 @@ crisv32-*)
 	cpu_type=cris
 	;;
 frv*)	cpu_type=frv
+	extra_options="${extra_options} g.opt"
 	;;
 moxie*)	cpu_type=moxie
 	;;
@@ -314,12 +324,17 @@ x86_64-*-*)
 ia64-*-*)
 	extra_headers=ia64intrin.h
 	need_64bit_hwint=yes
+	extra_options="${extra_options} g.opt"
 	;;
 hppa*-*-*)
 	cpu_type=pa
 	;;
+lm32*)
+	extra_options="${extra_options} g.opt"
+	;;
 m32r*-*-*)
         cpu_type=m32r
+	extra_options="${extra_options} g.opt"
         ;;
 m68k-*-*)
 	extra_headers=math-68881.h
@@ -328,6 +343,7 @@ mips*-*-*)
 	cpu_type=mips
 	need_64bit_hwint=yes
 	extra_headers="loongson.h"
+	extra_options="${extra_options} g.opt"
 	;;
 picochip-*-*)
         cpu_type=picochip
@@ -341,12 +357,15 @@ powerpc*-*-*)
 		cpu_is_64bit=yes
 		;;
 	esac
+	extra_options="${extra_options} g.opt"
 	;;
 rs6000*-*-*)
 	need_64bit_hwint=yes
+	extra_options="${extra_options} g.opt"
 	;;
 score*-*-*)
 	cpu_type=score
+	extra_options="${extra_options} g.opt"
 	;;
 sparc*-*-*)
 	cpu_type=sparc
@@ -387,12 +406,18 @@ i[34567]86-*-*)
 	if test "x$enable_cld" = xyes; then
 		tm_defines="${tm_defines} USE_IX86_CLD=1"
 	fi
+	if test "x$enable_frame_pointer" = xyes; then
+		tm_defines="${tm_defines} USE_IX86_FRAME_POINTER=1"
+	fi
 	tm_file="vxworks-dummy.h ${tm_file}"
 	;;
 x86_64-*-*)
 	tm_file="i386/biarch64.h ${tm_file}"
 	if test "x$enable_cld" = xyes; then
 		tm_defines="${tm_defines} USE_IX86_CLD=1"
+	fi
+	if test "x$enable_frame_pointer" = xyes; then
+		tm_defines="${tm_defines} USE_IX86_FRAME_POINTER=1"
 	fi
 	tm_file="vxworks-dummy.h ${tm_file}"
 	;;
@@ -404,6 +429,9 @@ case ${target} in
 	use_collect2=yes
 	;;
 esac
+
+# Common C libraries.
+tm_defines="$tm_defines LIBC_GLIBC=1 LIBC_UCLIBC=2 LIBC_BIONIC=3"
 
 # Common parts for widely ported systems.
 case ${target} in
@@ -545,8 +573,6 @@ case ${target} in
     *-*-gnu*)
       tmake_file="$tmake_file t-gnu";;
   esac
-  # Common C libraries.
-  tm_defines="$tm_defines LIBC_GLIBC=1 LIBC_UCLIBC=2 LIBC_BIONIC=3"
   # glibc / uclibc / bionic switch.
   # uclibc and bionic aren't usable for GNU/Hurd and neither for GNU/k*BSD.
   case $target in
@@ -732,7 +758,7 @@ alpha*-dec-osf5.1*)
 alpha64-dec-*vms*)
 	tm_file="${tm_file} alpha/vms.h alpha/vms64.h"
 	xm_file="alpha/xm-vms.h vms/xm-vms64.h"
-	tmake_file="alpha/t-alpha vms/t-vms vms/t-vms64 alpha/t-vms alpha/t-ieee"
+	tmake_file="alpha/t-alpha vms/t-vms alpha/t-vms alpha/t-ieee"
 	xmake_file=vms/x-vms
 	exeext=.exe
 	install_headers_dir=install-headers-cp
@@ -781,6 +807,12 @@ arm*-*-linux*)			# ARM GNU/Linux with ELF
 	arm*-*-linux-*eabi)
 	    tm_file="$tm_file arm/bpabi.h arm/linux-eabi.h"
 	    tmake_file="$tmake_file arm/t-arm-elf arm/t-bpabi arm/t-linux-eabi t-slibgcc-libgcc"
+	    # Define multilib configuration for arm-linux-androideabi.
+	    case ${target} in
+	    *-androideabi)
+		tmake_file="$tmake_file arm/t-linux-androideabi"
+		;;
+	    esac
   	    # The BPABI long long divmod functions return a 128-bit value in
 	    # registers r0-r3.  Correctly modeling that requires the use of
 	    # TImode.
@@ -968,6 +1000,10 @@ moxie-*-uclinux*)
 	tm_defines="${tm_defines} DEFAULT_LIBC=LIBC_UCLIBC"
 	extra_options="${extra_options} linux.opt"
 	;;
+moxie-*-rtems*)
+	tmake_file="${tmake_file} moxie/t-moxie moxie/t-moxie-softfp soft-fp/t-softfp moxie/t-rtems"
+	tm_file="moxie/moxie.h dbxelf.h elfos.h moxie/rtems.h rtems.h newlib-stdint.h"
+	;;
 h8300-*-rtems*)
 	tmake_file="h8300/t-h8300 h8300/t-elf t-rtems h8300/t-rtems"
 	tm_file="h8300/h8300.h dbxelf.h elfos.h h8300/elf.h h8300/rtems.h rtems.h newlib-stdint.h"
@@ -1107,6 +1143,7 @@ hppa[12]*-*-hpux11*)
 	else
 	    tmake_file="$tmake_file pa/t-slibgcc-dwarf-ver"
 	fi
+	extra_parts="libgcc_stub.a"
 	case x${enable_threads} in
 	x | xyes | xposix )
 		thread_file=posix
@@ -1135,12 +1172,14 @@ i[34567]86-*-darwin*)
 	# support.
 	with_cpu=${with_cpu:-generic}
 	tmake_file="${tmake_file} t-slibgcc-darwin i386/t-crtpc i386/t-crtfm"
+	extra_options="${extra_options} i386/darwin.opt"
 	lto_binary_reader=lto-macho
 	;;
 x86_64-*-darwin*)
 	with_cpu=${with_cpu:-generic}
 	tmake_file="${tmake_file} ${cpu_type}/t-darwin64 t-slibgcc-darwin i386/t-crtpc i386/t-crtfm"
 	tm_file="${tm_file} ${cpu_type}/darwin64.h"
+	extra_options="${extra_options} i386/darwin.opt"
 	lto_binary_reader=lto-macho
 	;;
 i[34567]86-*-elf*)
@@ -1290,13 +1329,10 @@ i[34567]86-*-solaris2*)
 	# Set default arch_32 to pentium4, tune_32 to generic like the other
 	# i386 targets, although config.guess defaults to i386-pc-solaris2*.
 	case ${target} in
-	*-*-solaris2.8*)
-		if test x$gas = xyes; then
-			with_arch_32=${with_arch_32:-pentium4}
-		else
-			# Solaris 8/x86 as cannot handle sse2.
-			with_arch_32=${with_arch_32:-pentiumpro}
-		fi
+	*-*-solaris2.[89]*)
+		# Solaris 8 and 9/x86 cannot execute SSE/SSE2 instructions by
+		# default.
+		with_arch_32=${with_arch_32:-pentiumpro}
 		;;
 	*)
 		with_arch_32=${with_arch_32:-pentium4}
@@ -1418,6 +1454,8 @@ i[34567]86-*-mingw* | x86_64-*-mingw*)
 	# This makes the logic if mingw's or the w64 feature set has to be used
 	case ${target} in
 		*-w64-*)
+			user_headers_inc_next_post="${user_headers_inc_next_post} float.h"
+			user_headers_inc_next_pre="${user_headers_inc_next_pre} stddef.h stdarg.h"
 			tm_file="${tm_file} i386/mingw-w64.h"
 			if test x$enable_targets = xall; then
 				tm_defines="${tm_defines} TARGET_BI_ARCH=1"
@@ -1447,7 +1485,7 @@ i[34567]86-*-mingw* | x86_64-*-mingw*)
 	else
 		tmake_eh_file="i386/t-sjlj-eh"
 	fi
-	tmake_file="${tmake_file} ${tmake_eh_file} i386/t-cygming"
+	tmake_file="${tmake_file} ${tmake_eh_file} i386/t-cygming t-dfprules"
         case ${target} in
                x86_64-w64-*)
                		tmake_file="${tmake_file} i386/t-mingw-w64"
@@ -1554,7 +1592,7 @@ ia64*-*-hpux*)
 ia64-hp-*vms*)
 	tm_file="${tm_file} elfos.h ia64/sysv4.h ia64/elf.h ia64/vms.h ia64/vms64.h"
 	xm_file="vms/xm-vms.h vms/xm-vms64.h"
-	tmake_file="vms/t-vms vms/t-vms64 ia64/t-ia64 ia64/t-vms"
+	tmake_file="vms/t-vms ia64/t-ia64 ia64/t-vms"
 	xmake_file=vms/x-vms
 	target_cpu_default="0"
 	if test x$gas = xyes
@@ -1818,6 +1856,7 @@ mips*-*-openbsd*)
 mips*-sde-elf*)
 	tm_file="elfos.h newlib-stdint.h ${tm_file} mips/elf.h mips/sde.h"
 	tmake_file="mips/t-sde mips/t-libgcc-mips16"
+	extra_options="${extra_options} mips/sde.opt"
 	case "${with_newlib}" in
 	  yes)
 	    # newlib / libgloss.
@@ -2372,7 +2411,7 @@ sh-*-symbianelf* | sh[12346l]*-*-symbianelf* | \
 	target_cpu_default=SELECT_`echo ${sh_cpu_default}|tr abcdefghijklmnopqrstuvwxyz- ABCDEFGHIJKLMNOPQRSTUVWXYZ_`
 	tm_defines=${tm_defines}' SH_MULTILIB_CPU_DEFAULT=\"'`echo $sh_cpu_default|sed s/sh/m/`'\"'
 	tm_defines="$tm_defines SUPPORT_`echo $sh_cpu_default | sed 's/^m/sh/' | tr abcdefghijklmnopqrstuvwxyz- ABCDEFGHIJKLMNOPQRSTUVWXYZ_`=1"
-	sh_multilibs=`echo $sh_multilibs | sed -e 's/,/ /g' -e 's/^sh/m/i' -e 's/ sh/ m/gi' | tr ABCDEFGHIJKLMNOPQRSTUVWXYZ_ abcdefghijklmnopqrstuvwxyz-`
+	sh_multilibs=`echo $sh_multilibs | sed -e 's/,/ /g' -e 's/^[Ss][Hh]/m/' -e 's/ [Ss][Hh]/ m/g' | tr ABCDEFGHIJKLMNOPQRSTUVWXYZ_ abcdefghijklmnopqrstuvwxyz-`
 	for sh_multilib in ${sh_multilibs}; do
 		case ${sh_multilib} in
 		m1 | m2 | m2e | m3 | m3e | \
@@ -2546,6 +2585,7 @@ v850e1-*-*)
 	tm_p_file=v850/v850-protos.h
 	tmake_file=v850/t-v850e
 	md_file=v850/v850.md
+	extra_modes=v850/v850-modes.def
 	out_file=v850/v850.c
 	extra_options="${extra_options} v850/v850.opt"
 	if test x$stabs = xyes
@@ -2563,6 +2603,7 @@ v850e-*-*)
 	tm_p_file=v850/v850-protos.h
 	tmake_file=v850/t-v850e
 	md_file=v850/v850.md
+	extra_modes=v850/v850-modes.def
 	out_file=v850/v850.c
 	extra_options="${extra_options} v850/v850.opt"
 	if test x$stabs = xyes
@@ -3323,7 +3364,7 @@ case "${target}" in
 			| 401 | 403 | 405 | 405fp | 440 | 440fp | 464 | 464fp \
 			| 476 | 476fp | 505 | 601 | 602 | 603 | 603e | ec603e \
 			| 604 | 604e | 620 | 630 | 740 | 750 | 7400 | 7450 \
-			| a2 | e300c[23] | 854[08] | e500mc | e500mc64 \
+			| a2 | e300c[23] | 854[08] | e500mc | e500mc64 | titan\
 			| 801 | 821 | 823 | 860 | 970 | G3 | G4 | G5 | cell)
 				# OK
 				;;
@@ -3488,6 +3529,12 @@ case ${target} in
 		tmake_file="${tmake_file} i386/t-fprules-softfp soft-fp/t-softfp"
 		;;
 	i[34567]86-*-cygwin* | i[34567]86-*-mingw* | x86_64-*-mingw*)
+		tmake_file="${tmake_file} i386/t-fprules-softfp soft-fp/t-softfp"
+		;;
+	i[34567]86-*-freebsd* | x86_64-*-freebsd*)
+		tmake_file="${tmake_file} i386/t-fprules-softfp soft-fp/t-softfp"
+		;;
+	i[34567]86-*-dragonfly* | x86_64-*-dragonfly*)
 		tmake_file="${tmake_file} i386/t-fprules-softfp soft-fp/t-softfp"
 		;;
 	ia64*-*-linux*)

@@ -2,7 +2,7 @@
 # If you want to build C++, change BUILD_CPP to "YES"
 
 GCC_VERSION=4.6.0
-SNAPSHOT=4.6-20100626
+SNAPSHOT=4.6-20100925
 NATIVE_HOST=i386-backplane-dragonfly2.6
 OS_LABEL4VERS="[DragonFly BSD]"
 PREFIX=/usr/local

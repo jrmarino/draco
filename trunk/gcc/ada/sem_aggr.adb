@@ -569,7 +569,7 @@ package body Sem_Aggr is
                   Set_Raises_Constraint_Error (N);
                   Error_Msg_N ("sub-aggregate low bound mismatch?", N);
                   Error_Msg_N
-                     ("\Constraint_Error will be raised at run-time?", N);
+                     ("\Constraint_Error will be raised at run time?", N);
                end if;
             end if;
 
@@ -583,7 +583,7 @@ package body Sem_Aggr is
                   Set_Raises_Constraint_Error (N);
                   Error_Msg_N ("sub-aggregate high bound mismatch?", N);
                   Error_Msg_N
-                     ("\Constraint_Error will be raised at run-time?", N);
+                     ("\Constraint_Error will be raised at run time?", N);
                end if;
             end if;
          end if;
@@ -1255,7 +1255,7 @@ package body Sem_Aggr is
          if OK_BH and then OK_AH and then Val_BH < Val_AH then
             Set_Raises_Constraint_Error (N);
             Error_Msg_N ("upper bound out of range?", AH);
-            Error_Msg_N ("\Constraint_Error will be raised at run-time?", AH);
+            Error_Msg_N ("\Constraint_Error will be raised at run time?", AH);
 
             --  You need to set AH to BH or else in the case of enumerations
             --  indices we will not be able to resolve the aggregate bounds.
@@ -1298,13 +1298,13 @@ package body Sem_Aggr is
          if OK_L and then Val_L > Val_AL then
             Set_Raises_Constraint_Error (N);
             Error_Msg_N ("lower bound of aggregate out of range?", N);
-            Error_Msg_N ("\Constraint_Error will be raised at run-time?", N);
+            Error_Msg_N ("\Constraint_Error will be raised at run time?", N);
          end if;
 
          if OK_H and then Val_H < Val_AH then
             Set_Raises_Constraint_Error (N);
             Error_Msg_N ("upper bound of aggregate out of range?", N);
-            Error_Msg_N ("\Constraint_Error will be raised at run-time?", N);
+            Error_Msg_N ("\Constraint_Error will be raised at run time?", N);
          end if;
       end Check_Bounds;
 
@@ -1344,7 +1344,7 @@ package body Sem_Aggr is
          if Range_Len < Len then
             Set_Raises_Constraint_Error (N);
             Error_Msg_N ("too many elements?", N);
-            Error_Msg_N ("\Constraint_Error will be raised at run-time?", N);
+            Error_Msg_N ("\Constraint_Error will be raised at run time?", N);
          end if;
       end Check_Length;
 
@@ -1411,6 +1411,14 @@ package body Sem_Aggr is
          --  Set to False if resolution of the expression failed
 
       begin
+         --  Defend against previous errors
+
+         if Nkind (Expr) = N_Error
+           or else Error_Posted (Expr)
+         then
+            return True;
+         end if;
+
          --  If the array type against which we are resolving the aggregate
          --  has several dimensions, the expressions nested inside the
          --  aggregate must be further aggregates (or strings).
@@ -2416,6 +2424,36 @@ package body Sem_Aggr is
             then
                Error_Msg_N
                  ("type of limited ancestor part must be constrained", A);
+
+            --  Reject the use of CPP constructors that leave objects partially
+            --  initialized. For example:
+
+            --    type CPP_Root is tagged limited record ...
+            --    pragma Import (CPP, CPP_Root);
+
+            --    type CPP_DT is new CPP_Root and Iface ...
+            --    pragma Import (CPP, CPP_DT);
+
+            --    type Ada_DT is new CPP_DT with ...
+
+            --    Obj : Ada_DT := Ada_DT'(New_CPP_Root with others => <>);
+
+            --  Using the constructor of CPP_Root the slots of the dispatch
+            --  table of CPP_DT cannot be set, and the secondary tag of
+            --  CPP_DT is unknown.
+
+            elsif Nkind (A) = N_Function_Call
+              and then Is_CPP_Constructor_Call (A)
+              and then Enclosing_CPP_Parent (Typ) /= A_Type
+            then
+               Error_Msg_NE
+                 ("?must use 'C'P'P constructor for type &", A,
+                  Enclosing_CPP_Parent (Typ));
+
+               --  The following call is not needed if the previous warning
+               --  is promoted to an error.
+
+               Resolve_Record_Aggregate (N, Typ);
 
             elsif Is_Class_Wide_Type (Etype (A))
               and then Nkind (Original_Node (A)) = N_Function_Call

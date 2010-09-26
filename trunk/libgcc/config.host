@@ -282,10 +282,12 @@ i[34567]86-*-elf*)
 x86_64-*-elf*)
 	;;
 i[34567]86-*-freebsd*)
+	tmake_file="${tmake_file} i386/t-freebsd"
 	;;
 x86_64-*-freebsd*)
 	;;
 i[34567]86-*-dragonfly*)
+	tmake_file="${tmake_file} i386/t-dragonfly"
 	;;
 x86_64-*-dragonfly*)
 	;;
@@ -352,6 +354,8 @@ ia64*-*-elf*)
 	tmake_file="ia64/t-ia64"
 	;;
 ia64*-*-freebsd*)
+	extra_parts="crtbegin.o crtend.o crtbeginS.o crtendS.o crtfastmath.o"
+	tmake_file="ia64/t-ia64"
 	;;
 ia64*-*-linux*)
 	extra_parts="crtbegin.o crtend.o crtbeginS.o crtendS.o crtfastmath.o"
@@ -465,6 +469,7 @@ powerpc*-*-freebsd*)
 powerpc-*-netbsd*)
 	;;
 powerpc-*-eabispe*)
+	tmake_file="${tmake_file} rs6000/t-ppccomm"
 	;;
 powerpc-*-eabisimaltivec*)
 	;;
@@ -475,6 +480,7 @@ powerpc-*-elf*)
 powerpc-*-eabialtivec*)
 	;;
 powerpc-*-eabi*)
+	tmake_file="${tmake_file} rs6000/t-ppccomm"
 	;;
 powerpc-*-rtems*)
 	;;
@@ -613,7 +619,9 @@ i[34567]86-*-darwin* | x86_64-*-darwin* | \
   i[34567]86-*-linux* | x86_64-*-linux* | \
   i[34567]86-*-gnu* | \
   i[34567]86-*-solaris2* | \
-  i[34567]86-*-cygwin* | i[34567]86-*-mingw* | x86_64-*-mingw*)
+  i[34567]86-*-cygwin* | i[34567]86-*-mingw* | x86_64-*-mingw* | \
+  i[34567]86-*-dragonfly* | x86_64-*-dragonfly* | \
+  i[34567]86-*-freebsd* | x86_64-*-freebsd*)
 	if test "${host_address}" = 32; then
 		tmake_file="${tmake_file} t-softfp i386/${host_address}/t-fprules-softfp"
 	fi
