@@ -529,20 +529,6 @@ case ${target} in
   gas=yes
   gnu_ld=yes
   extra_parts="crtbegin.o crtend.o crtbeginS.o crtendS.o"
-  case ${target} in
-    *-*-dragonfly1 | *-*-dragonfly[1].*)
-      tm_defines="${tm_defines} DFBSD_MAJOR=1" ;;
-    *-*-dragonfly2 | *-*-dragonfly[2].*)
-      tm_defines="${tm_defines} DFBSD_MAJOR=2" ;;
-    *-*-dragonfly3 | *-*-dragonfly[3].*)
-      tm_defines="${tm_defines} DFBSD_MAJOR=3" ;;
-    *-*-dragonfly4 | *-*-dragonfly[4].*)
-      tm_defines="${tm_defines} DFBSD_MAJOR=4" ;;
-    *)
-      echo 'Please update *-*-dragonfly* in gcc/config.gcc'
-      exit 1
-      ;;
-  esac
   tmake_file="t-slibgcc-elf-ver t-dragonfly"
   case ${enable_threads} in
     "" | yes | posix)

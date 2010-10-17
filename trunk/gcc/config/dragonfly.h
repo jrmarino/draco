@@ -1,6 +1,6 @@
 /* Base configuration file for all DragonFly targets.
-   Copyright (C) 1999, 2000, 2001, 2007 Free Software Foundation, Inc.
-   Copyright (C) 2010 John Marino (www.auroraux.org)
+   Copyright (C) 1999, 2000, 2001, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2010 John R. Marino <draco@marino.st>
 
 This file is part of GCC.
 
@@ -21,6 +21,10 @@ along with GCC; see the file COPYING3.  If not see
 /* Common DragonFly configuration. 
    All DragonFly architectures should include this file, which will specify
    their commonalities.
+
+   Adapted from gcc/config/freebsd.h by
+   Joerg Sonnenberger <joerg@bec.de>
+
    Adapted from gcc/config/i386/freebsd-elf.h by 
    David O'Brien <obrien@FreeBSD.org>.  
    Further work by David O'Brien <obrien@FreeBSD.org> and
@@ -33,28 +37,102 @@ along with GCC; see the file COPYING3.  If not see
    We also have -R (alias --rpath), no -z, --soname (-h), --assert etc.  */
 
 #undef  SWITCH_TAKES_ARG
-#define SWITCH_TAKES_ARG(CHAR) (DFBSD_SWITCH_TAKES_ARG(CHAR))
+#define SWITCH_TAKES_ARG(CHAR)              \
+  (DEFAULT_SWITCH_TAKES_ARG (CHAR)          \
+    || (CHAR) == 'h'                        \
+    || (CHAR) == 'z' /* ignored by ld */    \
+    || (CHAR) == 'R')
+
 
 #undef  WORD_SWITCH_TAKES_ARG
-#define WORD_SWITCH_TAKES_ARG(STR) (DFBSD_WORD_SWITCH_TAKES_ARG(STR))
+#define WORD_SWITCH_TAKES_ARG(STR)          \
+  (DEFAULT_WORD_SWITCH_TAKES_ARG (STR)      \
+   || !strcmp ((STR), "rpath")              \
+   || !strcmp ((STR), "rpath-link")         \
+   || !strcmp ((STR), "soname")             \
+   || !strcmp ((STR), "defsym")             \
+   || !strcmp ((STR), "assert")             \
+   || !strcmp ((STR), "dynamic-linker")     \
+  )
 
 #undef  TARGET_OS_CPP_BUILTINS
-#define TARGET_OS_CPP_BUILTINS() DFBSD_TARGET_OS_CPP_BUILTINS()
+#define TARGET_OS_CPP_BUILTINS()            \
+  do                                        \
+    {                                       \
+       builtin_define ("__DragonFly__");    \
+       builtin_define_std ("unix");         \
+       builtin_assert ("system=unix");      \
+       builtin_assert ("system=bsd");       \
+       builtin_assert ("system=DragonFly"); \
+    }                                       \
+  while (0)
 
 #undef  CPP_SPEC
-#define CPP_SPEC DFBSD_CPP_SPEC
+#define CPP_SPEC "							\
+  %(cpp_cpu)								\
+  %(cpp_arch)								\
+  %{posix:-D_POSIX_SOURCE}"
 
 #undef  STARTFILE_SPEC
-#define STARTFILE_SPEC DFBSD_STARTFILE_SPEC
+#define STARTFILE_SPEC	\
+  "%{!shared: \
+     %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} \
+		       %{!p:%{profile:gcrt1.o%s} \
+			 %{!profile:crt1.o%s}}}} \
+   crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
 
 #undef  ENDFILE_SPEC
-#define ENDFILE_SPEC DFBSD_ENDFILE_SPEC
+#define ENDFILE_SPEC	\
+  "%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
 
 #undef  LIB_SPEC
-#define LIB_SPEC DFBSD_LIB_SPEC
+#define LIB_SPEC "							\
+  %{pthread:-lpthread}							\
+  -lc									\
+  "
+
+/* Provide a LINK_SPEC appropriate for DragonFly.  Here we provide support
+   for the special GCC options -static and -shared, which allow us to
+   link things in one of these three modes by applying the appropriate
+   combinations of options at link-time. We like to support here for
+   as many of the other GNU linker options as possible. But I don't
+   have the time to search for those flags. I am sure how to add
+   support for -soname shared_object_name. H.J.
+
+   I took out %{v:%{!V:-V}}. It is too much :-(. They can use
+   -Wl,-V.
+
+   When the -shared link option is used a final link is not being
+   done.  */
+
+#define DFBSD_LINK_SPEC "\
+  %{p:%nconsider using `-pg' instead of `-p' with gprof(1)} \
+  %{v:-V} \
+  %{assert*} %{R*} %{rpath*} %{defsym*} \
+  %{shared:-Bshareable %{h*} %{soname*}} \
+    %{!shared: \
+      %{!static: \
+        %{rdynamic:-export-dynamic} \
+        %{!dynamic-linker:-dynamic-linker %(dfbsd_dynamic_linker) }} \
+    %{static:-Bstatic}} \
+  %{symbolic:-Bsymbolic}"
+
+#undef	LINK_SPEC
+#define	LINK_SPEC DFBSD_LINK_SPEC
 
 /* Define this so we can compile MS code for use with WINE.  */
 #define HANDLE_PRAGMA_PACK_PUSH_POP 1
+
+#define	DFBSD_DYNAMIC_LINKER		"/usr/libexec/ld-elf.so.2"
+
+#if defined(HAVE_LD_EH_FRAME_HDR)
+#define LINK_EH_SPEC "%{!static:--eh-frame-hdr} "
+#endif
+
+/* Use --as-needed -lgcc_s for eh support.  */
+#ifdef HAVE_LD_AS_NEEDED
+#define USE_LD_AS_NEEDED 1
+#endif
 
 /************************[  Target stuff  ]***********************************/
 

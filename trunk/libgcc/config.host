@@ -287,7 +287,9 @@ i[34567]86-*-freebsd*)
 x86_64-*-freebsd*)
 	;;
 i[34567]86-*-dragonfly*)
-	tmake_file="${tmake_file} i386/t-dragonfly"
+# added 25 SEP 10, but suffered build issues.  Not sure if this new
+# configuration is the culprit on not.  It might be freebsd specific.
+#	tmake_file="${tmake_file} i386/t-dragonfly"
 	;;
 x86_64-*-dragonfly*)
 	;;
