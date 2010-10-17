@@ -1204,9 +1204,8 @@ package body Sem_Ch10 is
       --  compilation unit actions list, and analyze them.
 
       declare
-         Loc : constant Source_Ptr := Sloc (N);
-         L   : constant List_Id :=
-                 Freeze_Entity (Cunit_Entity (Current_Sem_Unit), Loc);
+         L : constant List_Id :=
+               Freeze_Entity (Cunit_Entity (Current_Sem_Unit), N);
       begin
          while Is_Non_Empty_List (L) loop
             Insert_Library_Level_Action (Remove_Head (L));
@@ -1419,8 +1418,8 @@ package body Sem_Ch10 is
                      P := Parent_Spec (Unit (N));
                      loop
                         if Unit (P) = Lib_U then
-                           Error_Msg_N ("limited with_clause of immediate "
-                                        & "ancestor not allowed", Item);
+                           Error_Msg_N ("limited with_clause cannot "
+                                        & "name ancestor", Item);
                            exit;
                         end if;
 
@@ -1739,12 +1738,17 @@ package body Sem_Ch10 is
          --  Otherwise we must load the subunit and link to it
 
          else
+            --  Make sure that, if the subunit is preprocessed and -gnateG is
+            --  specified, the preprocessed file will be written.
+
+            Lib.Analysing_Subunit_Of_Main := True;
             Unum :=
               Load_Unit
                 (Load_Name  => Subunit_Name,
                  Required   => False,
                  Subunit    => True,
                  Error_Node => N);
+            Lib.Analysing_Subunit_Of_Main := False;
 
             --  Give message if we did not get the unit Emit warning even if
             --  missing subunit is not within main unit, to simplify debugging.
@@ -1822,11 +1826,11 @@ package body Sem_Ch10 is
             end if;
          end if;
 
-         --  The remaining case is when the subunit is not already loaded and
-         --  we are not generating code. In this case we are just performing
-         --  semantic analysis on the parent, and we are not interested in
-         --  the subunit. For subprograms, analyze the stub as a body. For
-         --  other entities the stub has already been marked as completed.
+      --  The remaining case is when the subunit is not already loaded and we
+      --  are not generating code. In this case we are just performing semantic
+      --  analysis on the parent, and we are not interested in the subunit. For
+      --  subprograms, analyze the stub as a body. For other entities the stub
+      --  has already been marked as completed.
 
       else
          Optional_Subunit;
@@ -2267,7 +2271,16 @@ package body Sem_Ch10 is
       else
          Set_Scope (Defining_Entity (N), Current_Scope);
          Generate_Reference (Nam, Defining_Identifier (N), 'b');
-         Set_Has_Completion (Etype (Nam));
+
+         --  Check for duplicate stub, if so give message and terminate
+
+         if Has_Completion (Etype (Nam)) then
+            Error_Msg_N ("duplicate stub for task", N);
+            return;
+         else
+            Set_Has_Completion (Etype (Nam));
+         end if;
+
          Analyze_Proper_Body (N, Etype (Nam));
 
          --  Set elaboration flag to indicate that entity is callable. This
@@ -2438,11 +2451,17 @@ package body Sem_Ch10 is
                         "and version-dependent?", Name (N));
                   end if;
 
-               elsif U_Kind = Ada_05_Unit
-                 and then Ada_Version < Ada_05
+               elsif U_Kind = Ada_2005_Unit
+                 and then Ada_Version < Ada_2005
                  and then Warn_On_Ada_2005_Compatibility
                then
                   Error_Msg_N ("& is an Ada 2005 unit?", Name (N));
+
+               elsif U_Kind = Ada_2012_Unit
+                 and then Ada_Version < Ada_2012
+                 and then Warn_On_Ada_2012_Compatibility
+               then
+                  Error_Msg_N ("& is an Ada 2012 unit?", Name (N));
                end if;
             end;
          end if;
@@ -2470,6 +2489,7 @@ package body Sem_Ch10 is
 
       elsif Unit_Kind = N_Package_Instantiation
         and then Nkind (U) = N_Package_Instantiation
+        and then Present (Instance_Spec (U))
       then
          --  If the instance has not been rewritten as a package declaration,
          --  then it appeared already in a previous with clause. Retrieve
@@ -3705,6 +3725,7 @@ package body Sem_Ch10 is
       while Present (Item) loop
          if Nkind (Item) = N_With_Clause
            and then Limited_Present (Item)
+           and then not Error_Posted (Item)
          then
             if Nkind (Name (Item)) = N_Selected_Component then
                Expand_Limited_With_Clause
@@ -3753,7 +3774,7 @@ package body Sem_Ch10 is
       --  looking for incomplete subtype declarations of incomplete types
       --  visible through a limited with clause.
 
-      if Ada_Version >= Ada_05
+      if Ada_Version >= Ada_2005
         and then Analyzed (N)
         and then Nkind (Unit (N)) = N_Package_Declaration
       then
@@ -4682,7 +4703,49 @@ package body Sem_Ch10 is
           (Is_Immediately_Visible (P)
             or else (Is_Child_Package and then Is_Visible_Child_Unit (P)))
       then
-         return;
+
+         --  The presence of both the limited and the analyzed nonlimited view
+         --  may also be an error, such as an illegal context for a limited
+         --  with_clause. In that case, do not process the context item at all.
+
+         if Error_Posted (N) then
+            return;
+         end if;
+
+         if Nkind (Unit (Cunit (Current_Sem_Unit))) = N_Package_Body then
+            declare
+               Item : Node_Id;
+            begin
+               Item := First (Context_Items (Cunit (Current_Sem_Unit)));
+               while Present (Item) loop
+                  if Nkind (Item) = N_With_Clause
+                    and then Comes_From_Source (Item)
+                    and then Entity (Name (Item)) = P
+                  then
+                     return;
+                  end if;
+
+                  Next (Item);
+               end loop;
+            end;
+
+            --  If this is a child body, assume that the nonlimited with_clause
+            --  appears in an ancestor. Could be refined ???
+
+            if Is_Child_Unit
+              (Defining_Entity
+                 (Unit (Library_Unit (Cunit (Current_Sem_Unit)))))
+            then
+               return;
+            end if;
+
+         else
+
+            --  If in package declaration, nonlimited view brought in from
+            --  parent unit or some error condition.
+
+            return;
+         end if;
       end if;
 
       if Debug_Flag_I then
@@ -5006,7 +5069,7 @@ package body Sem_Ch10 is
 
       if Is_Child_Unit (Uname)
         and then Is_Visible_Child_Unit (Uname)
-        and then Ada_Version >= Ada_05
+        and then Ada_Version >= Ada_2005
       then
          declare
             Decl1 : constant Node_Id  := Unit_Declaration_Node (P);
@@ -5114,7 +5177,11 @@ package body Sem_Ch10 is
    --  If the unit is not generic, but contains a generic unit, it is loaded on
    --  demand, at the point of instantiation (see ch12).
 
-   procedure Load_Needed_Body (N : Node_Id; OK : out Boolean) is
+   procedure Load_Needed_Body
+     (N          : Node_Id;
+      OK         : out Boolean;
+      Do_Analyze : Boolean := True)
+   is
       Body_Name : Unit_Name_Type;
       Unum      : Unit_Number_Type;
 
@@ -5147,7 +5214,9 @@ package body Sem_Ch10 is
                Write_Eol;
             end if;
 
-            Semantics (Cunit (Unum));
+            if Do_Analyze then
+               Semantics (Cunit (Unum));
+            end if;
          end if;
 
          OK := True;
