@@ -1,6 +1,6 @@
 /* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
    Free Software Foundation, Inc.
-   Copyright (C) 2010 John Marino (www.auroraux.org)
+   Copyright (C) 2010 John Marino <draco@marino.st>
 
 This file is part of GCC.
 

@@ -4,7 +4,7 @@
    Modified for stabs-in-ELF by H.J. Lu.
    Adapted from GNU/Linux version by John Polstra.
    Continued development by David O'Brien <obrien@freebsd.org>
-   Copyright (C) 2010 John Marino (www.auroraux.org)
+   Copyright (C) 2010 John Marino <draco@marino.st>
 
 This file is part of GCC.
 

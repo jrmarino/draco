@@ -1,7 +1,7 @@
 /* Definitions for AMD x86-64 running FreeBSD with ELF format
    Copyright (C) 2002, 2004, 2007 Free Software Foundation, Inc.
    Contributed by David O'Brien <obrien@FreeBSD.org>
-   Copyright (C) 2010 John Marino (www.auroraux.org)
+   Copyright (C) 2010 John Marino <draco@marino.st>
 
 This file is part of GCC.
 

@@ -1,6 +1,6 @@
 # Configure script for libada.
 #   Copyright 2003, 2004, 2009 Free Software Foundation, Inc.
-#   Copyright 2010 John Marino (www.auroraux.org)
+#   Copyright 2010 John Marino <draco@marino.st>
 #
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
