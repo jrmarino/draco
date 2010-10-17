@@ -120,6 +120,8 @@ along with GCC; see the file COPYING3.  If not see
 #undef	LINK_SPEC
 #define	LINK_SPEC DFBSD_LINK_SPEC
 
+#define LINK_LIBGCC_SPEC "%D"
+
 /* Define this so we can compile MS code for use with WINE.  */
 #define HANDLE_PRAGMA_PACK_PUSH_POP 1
 
