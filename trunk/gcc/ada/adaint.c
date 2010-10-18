@@ -2375,6 +2375,8 @@ __gnat_number_of_cpus (void)
   int cores = 1;
 
 #if defined (linux) || defined (sun) || defined (AIX) \
+    || (defined (__FreeBSD__) || (__DragonFly__) \
+    || (defined (__OpenBSD__) || (__NetBSD__) \
     || (defined (__alpha__)  && defined (_osf_)) || defined (__APPLE__)
   cores = (int) sysconf (_SC_NPROCESSORS_ONLN);
 
