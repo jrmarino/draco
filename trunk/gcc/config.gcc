@@ -542,6 +542,7 @@ case ${target} in
       exit 1
       ;;
   esac
+  default_use_cxa_atexit=yes
   ;;
 *-*-linux* | frv-*-*linux* | *-*-kfreebsd*-gnu | *-*-knetbsd*-gnu | *-*-gnu* | *-*-kopensolaris*-gnu)
   extra_parts="crtbegin.o crtbeginS.o crtbeginT.o crtend.o crtendS.o"

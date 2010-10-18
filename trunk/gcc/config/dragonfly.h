@@ -18,15 +18,15 @@ You should have received a copy of the GNU General Public License
 along with GCC; see the file COPYING3.  If not see
 <http://www.gnu.org/licenses/>.  */
 
-/* Common DragonFly configuration. 
+/* Common DragonFly configuration.
    All DragonFly architectures should include this file, which will specify
    their commonalities.
 
    Adapted from gcc/config/freebsd.h by
    Joerg Sonnenberger <joerg@bec.de>
 
-   Adapted from gcc/config/i386/freebsd-elf.h by 
-   David O'Brien <obrien@FreeBSD.org>.  
+   Adapted from gcc/config/i386/freebsd-elf.h by
+   David O'Brien <obrien@FreeBSD.org>.
    Further work by David O'Brien <obrien@FreeBSD.org> and
    Loren J. Rittle <ljrittle@acm.org>.  */
 
@@ -68,9 +68,9 @@ along with GCC; see the file COPYING3.  If not see
   while (0)
 
 #undef  CPP_SPEC
-#define CPP_SPEC "							\
-  %(cpp_cpu)								\
-  %(cpp_arch)								\
+#define CPP_SPEC "                            \
+  %(cpp_cpu)                                  \
+  %{fPIC|fpic|fPIE|fpie:-D__PIC__ -D__pic__}  \
   %{posix:-D_POSIX_SOURCE}"
 
 #undef  STARTFILE_SPEC
@@ -86,9 +86,9 @@ along with GCC; see the file COPYING3.  If not see
   "%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
 
 #undef  LIB_SPEC
-#define LIB_SPEC "							\
-  %{pthread:-lpthread}							\
-  -lc									\
+#define LIB_SPEC "                                  \
+  %{pthread:-lpthread}                              \
+  %{!nostdlib: %{!nostartfiles: %{!nolibc: -lc}}}   \
   "
 
 /* Provide a LINK_SPEC appropriate for DragonFly.  Here we provide support
@@ -105,7 +105,8 @@ along with GCC; see the file COPYING3.  If not see
    When the -shared link option is used a final link is not being
    done.  */
 
-#define DFBSD_LINK_SPEC "\
+#undef	LINK_SPEC
+#define	LINK_SPEC \
   %{p:%nconsider using `-pg' instead of `-p' with gprof(1)} \
   %{v:-V} \
   %{assert*} %{R*} %{rpath*} %{defsym*} \
@@ -116,9 +117,6 @@ along with GCC; see the file COPYING3.  If not see
         %{!dynamic-linker:-dynamic-linker %(dfbsd_dynamic_linker) }} \
     %{static:-Bstatic}} \
   %{symbolic:-Bsymbolic}"
-
-#undef	LINK_SPEC
-#define	LINK_SPEC DFBSD_LINK_SPEC
 
 #define LINK_LIBGCC_SPEC "%D"
 

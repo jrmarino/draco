@@ -26,7 +26,6 @@ along with GCC; see the file COPYING3.  If not see
 #undef WCHAR_TYPE_SIZE
 #undef PTRDIFF_TYPE
 #undef SIZE_TYPE
-#undef LINK_SPEC
 
 #if TARGET_64BIT
 
@@ -45,36 +44,7 @@ along with GCC; see the file COPYING3.  If not see
 #endif /* TAIL: TARGET_64BIT */
 
 
-#if defined (__x86_64__)
-
-#define TARGET_VERSION fprintf (stderr, " (x86-64 DragonFly/ELF)");
-#define LINK_SPEC "\
-  %{v:-V} \
-  %{assert*} %{R*} %{rpath*} %{defsym*} \
-  %{shared:-Bshareable %{h*} %{soname*}} \
-    %{!shared: \
-      %{!static: \
-        %{rdynamic:-export-dynamic} \
-	%{!dynamic-linker:-dynamic-linker %(dfbsd_dynamic_linker) }} \
-    %{static:-Bstatic}} \
-  %{symbolic:-Bsymbolic}"
-  
-#else  /* 32-bit arch */
-
 #define TARGET_VERSION fprintf (stderr, " (i386 DragonFly/ELF)");
-#define LINK_SPEC "\
-  %{p:%nconsider using `-pg' instead of `-p' with gprof(1)} \
-  %{v:-V} \
-  %{assert*} %{R*} %{rpath*} %{defsym*} \
-  %{shared:-Bshareable %{h*} %{soname*}} \
-    %{!shared: \
-      %{!static: \
-        %{rdynamic:-export-dynamic} \
-        %{!dynamic-linker:-dynamic-linker %(dfbsd_dynamic_linker) }} \
-    %{static:-Bstatic}} \
-  %{symbolic:-Bsymbolic}"
-
-#endif /* TAIL: defined(__x86_64__) */
 
 
 /* Override the default comment-starter of "/".  */
@@ -104,29 +74,6 @@ along with GCC; see the file COPYING3.  If not see
 #define SUBTARGET_EXTRA_SPECS \
   { "dfbsd_dynamic_linker", DFBSD_DYNAMIC_LINKER }
     
-/* Provide a STARTFILE_SPEC appropriate for DragonFly.  Here we add
-   the magical crtbegin.o file (see crtstuff.c) which provides part 
-	of the support for getting C++ file-scope static object constructed 
-	before entering `main'.  */
-   
-#undef	STARTFILE_SPEC
-#define STARTFILE_SPEC \
-  "%{!shared: \
-     %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} \
-		       %{!p:%{profile:gcrt1.o%s} \
-			 %{!profile:crt1.o%s}}}} \
-   crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
-
-/* Provide a ENDFILE_SPEC appropriate for DragonFly.  Here we tack on
-   the magical crtend.o file (see crtstuff.c) which provides part of 
-	the support for getting C++ file-scope static object constructed 
-	before entering `main', followed by a normal "finalizer" file, 
-	`crtn.o'.  */
-
-#undef	ENDFILE_SPEC
-#define ENDFILE_SPEC \
-  "%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
-
 
 /* A C statement to output to the stdio stream FILE an assembler
    command to advance the location counter to a multiple of 1<<LOG
