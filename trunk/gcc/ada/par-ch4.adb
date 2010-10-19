@@ -42,6 +42,7 @@ package body Ch4 is
       Attribute_Base         => True,
       Attribute_Class        => True,
       Attribute_Stub_Type    => True,
+      Attribute_Type_Key     => True,
       others                 => False);
    --  This map contains True for parameterless attributes that return a
    --  string or a type. For those attributes, a left parenthesis after
@@ -233,13 +234,18 @@ package body Ch4 is
          Save_Scan_State (Scan_State); -- at apostrophe
          Scan; -- past apostrophe
 
-         --  If left paren, then this might be a qualified expression, but we
-         --  are only in the business of scanning out names, so return with
-         --  Token backed up to point to the apostrophe. The treatment for
-         --  the range attribute is similar (we do not consider x'range to
-         --  be a name in this grammar).
+         --  Qualified expression in Ada 2012 mode (treated as a name)
 
-         if Token = Tok_Left_Paren or else Token = Tok_Range then
+         if Ada_Version >= Ada_2012 and then Token = Tok_Left_Paren then
+            goto Scan_Name_Extension_Apostrophe;
+
+         --  If left paren not in Ada 2012, then it is not part of the name,
+         --  since qualified expressions are not names in prior versions of
+         --  Ada, so return with Token backed up to point to the apostrophe.
+         --  The treatment for the range attribute is similar (we do not
+         --  consider x'range to be a name in this grammar).
+
+         elsif Token = Tok_Left_Paren or else Token = Tok_Range then
             Restore_Scan_State (Scan_State); -- to apostrophe
             Expr_Form := EF_Simple_Name;
             return Name_Node;
@@ -363,6 +369,10 @@ package body Ch4 is
             --  the current token to Tok_Semicolon, and returns True.
             --  Otherwise returns False.
 
+            ------------------------------------
+            -- Apostrophe_Should_Be_Semicolon --
+            ------------------------------------
+
             function Apostrophe_Should_Be_Semicolon return Boolean is
             begin
                if Token_Is_At_Start_Of_Line then
@@ -378,14 +388,20 @@ package body Ch4 is
          --  Start of processing for Scan_Apostrophe
 
          begin
+            --  Check for qualified expression case in Ada 2012 mode
+
+            if Ada_Version >= Ada_2012 and then Token = Tok_Left_Paren then
+               Name_Node := P_Qualified_Expression (Name_Node);
+               goto Scan_Name_Extension;
+
             --  If range attribute after apostrophe, then return with Token
             --  pointing to the apostrophe. Note that in this case the prefix
             --  need not be a simple name (cases like A.all'range). Similarly
             --  if there is a left paren after the apostrophe, then we also
             --  return with Token pointing to the apostrophe (this is the
-            --  qualified expression case).
+            --  aggregate case, or some error case).
 
-            if Token = Tok_Range or else Token = Tok_Left_Paren then
+            elsif Token = Tok_Range or else Token = Tok_Left_Paren then
                Restore_Scan_State (Scan_State); -- to apostrophe
                Expr_Form := EF_Name;
                return Name_Node;
@@ -1469,7 +1485,7 @@ package body Ch4 is
          --  Ada 2005(AI-287): The box notation is used to indicate the
          --  default initialization of aggregate components
 
-         if Ada_Version < Ada_05 then
+         if Ada_Version < Ada_2005 then
             Error_Msg_SP
               ("component association with '<'> is an Ada 2005 extension");
             Error_Msg_SP ("\unit must be compiled with -gnat05 switch");
@@ -2054,7 +2070,17 @@ package body Ch4 is
 
       if Token = Tok_Dot then
          Error_Msg_SC ("prefix for selection is not a name");
-         raise Error_Resync;
+
+         --  If qualified expression, comment and continue, otherwise something
+         --  is pretty nasty so do an Error_Resync call.
+
+         if Ada_Version < Ada_2012
+           and then Nkind (Node1) = N_Qualified_Expression
+         then
+            Error_Msg_SC ("\would be legal in Ada 2012 mode");
+         else
+            raise Error_Resync;
+         end if;
       end if;
 
       --  Special test to improve error recovery: If the current token is
@@ -2375,7 +2401,7 @@ package body Ch4 is
                --  If this looks like a conditional expression, then treat it
                --  that way with an error message.
 
-               elsif Ada_Version >= Ada_12 then
+               elsif Ada_Version >= Ada_2012 then
                   Error_Msg_SC
                     ("conditional expression must be parenthesized");
                   return P_Conditional_Expression;
@@ -2401,7 +2427,7 @@ package body Ch4 is
                --  If this looks like a case expression, then treat it that way
                --  with an error message.
 
-               elsif Ada_Version >= Ada_12 then
+               elsif Ada_Version >= Ada_2012 then
                   Error_Msg_SC ("case expression must be parenthesized");
                   return P_Case_Expression;
 
@@ -2634,7 +2660,7 @@ package body Ch4 is
 
    --  Error_Recovery: cannot raise Error_Resync
 
-   function  P_Qualified_Expression (Subtype_Mark : Node_Id) return Node_Id is
+   function P_Qualified_Expression (Subtype_Mark : Node_Id) return Node_Id is
       Qual_Node : Node_Id;
    begin
       Qual_Node := New_Node (N_Qualified_Expression, Prev_Token_Ptr);
@@ -2691,7 +2717,7 @@ package body Ch4 is
       Save_State : Saved_Scan_State;
 
    begin
-      if Ada_Version < Ada_12 then
+      if Ada_Version < Ada_2012 then
          Error_Msg_SC ("|case expression is an Ada 2012 feature");
          Error_Msg_SC ("\|unit must be compiled with -gnat2012 switch");
       end if;
@@ -2782,7 +2808,7 @@ package body Ch4 is
    begin
       Inside_Conditional_Expression := Inside_Conditional_Expression + 1;
 
-      if Token = Tok_If and then Ada_Version < Ada_12 then
+      if Token = Tok_If and then Ada_Version < Ada_2012 then
          Error_Msg_SC ("|conditional expression is an Ada 2012 feature");
          Error_Msg_SC ("\|unit must be compiled with -gnat2012 switch");
       end if;
@@ -2859,13 +2885,13 @@ package body Ch4 is
    procedure P_Membership_Test (N : Node_Id) is
       Alt : constant Node_Id :=
               P_Range_Or_Subtype_Mark
-                (Allow_Simple_Expression => (Ada_Version >= Ada_12));
+                (Allow_Simple_Expression => (Ada_Version >= Ada_2012));
 
    begin
       --  Set case
 
       if Token = Tok_Vertical_Bar then
-         if Ada_Version < Ada_12 then
+         if Ada_Version < Ada_2012 then
             Error_Msg_SC ("set notation is an Ada 2012 feature");
             Error_Msg_SC ("\|unit must be compiled with -gnat2012 switch");
          end if;

@@ -2,7 +2,7 @@
 
    Copyright 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
    2006, 2007, 2008, 2009 Free Software Foundation, Inc.
-   Copyright 2010 John Marino (www.auroraux.org)
+   Copyright 2010 John Marino <draco@marino.st>
    
    Note - certain prototypes declared in this header file are for
    functions whoes implementation copyright does not belong to the
@@ -637,6 +637,9 @@ extern int vsnprintf (char *, size_t, const char *, va_list) ATTRIBUTE_PRINTF(3,
 /* Compare version strings.  */
 extern int strverscmp (const char *, const char *);
 #endif
+
+/* Set the title of a process */
+extern void setproctitle (const char *name, ...);
 
 #define ARRAY_SIZE(a) (sizeof (a) / sizeof ((a)[0]))
 

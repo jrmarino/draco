@@ -620,9 +620,15 @@ package body Prj is
          The_Empty_String := Name_Find;
 
          Prj.Attr.Initialize;
-         Set_Name_Table_Byte (Name_Project,  Token_Type'Pos (Tok_Project));
-         Set_Name_Table_Byte (Name_Extends,  Token_Type'Pos (Tok_Extends));
-         Set_Name_Table_Byte (Name_External, Token_Type'Pos (Tok_External));
+
+         Set_Name_Table_Byte
+           (Name_Project,          Token_Type'Pos (Tok_Project));
+         Set_Name_Table_Byte
+           (Name_Extends,          Token_Type'Pos (Tok_Extends));
+         Set_Name_Table_Byte
+           (Name_External,         Token_Type'Pos (Tok_External));
+         Set_Name_Table_Byte
+           (Name_External_As_List, Token_Type'Pos (Tok_External_As_List));
       end if;
 
       if Tree /= No_Project_Tree then
@@ -870,6 +876,7 @@ package body Prj is
          Array_Table.Free (Tree.Arrays);
          Package_Table.Free (Tree.Packages);
          Source_Paths_Htable.Reset (Tree.Source_Paths_HT);
+         Source_Files_Htable.Reset (Tree.Source_Files_HT);
 
          Free_List (Tree.Projects, Free_Project => True);
          Free_Units (Tree.Units_HT);
@@ -898,6 +905,10 @@ package body Prj is
       Array_Table.Init              (Tree.Arrays);
       Package_Table.Init            (Tree.Packages);
       Source_Paths_Htable.Reset     (Tree.Source_Paths_HT);
+      Source_Files_Htable.Reset     (Tree.Source_Files_HT);
+      Replaced_Source_HTable.Reset  (Tree.Replaced_Sources);
+
+      Tree.Replaced_Source_Number := 0;
 
       Free_List (Tree.Projects, Free_Project => True);
       Free_Units (Tree.Units_HT);

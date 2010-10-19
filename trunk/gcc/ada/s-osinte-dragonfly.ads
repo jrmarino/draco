@@ -31,7 +31,7 @@
 -- now maintained by Ada Core Technologies Inc. in cooperation with Florida --
 -- State University (http://www.gnat.com).                                  --
 --                                                                          --
--- Copyright (C) 2010 John Marino (www.auroraux.org)                        --
+-- Copyright (C) 2010 John Marino <draco@marino.st>                         --
 ------------------------------------------------------------------------------
 
 --  This is the DragonFly BSD PTHREADS version of this package

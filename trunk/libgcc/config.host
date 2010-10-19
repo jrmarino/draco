@@ -1,7 +1,7 @@
 # libgcc host-specific configuration file.
 # Copyright 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007,
 # 2008, 2009, 2010 Free Software Foundation, Inc.
-# Copyright 2010 John Marino (www.auroraux.org)
+# Copyright 2010 John Marino <draco@marino.st>
 
 #This file is part of GCC.
 
@@ -107,6 +107,9 @@ m32r*-*-*)
 m68k-*-*)
 	;;
 mep*-*-*)
+	;;
+microblaze*-*-*)
+	cpu_type=microblaze
 	;;
 mips*-*-*)
 	cpu_type=mips
@@ -285,11 +288,15 @@ i[34567]86-*-freebsd*)
 	tmake_file="${tmake_file} i386/t-freebsd"
 	;;
 x86_64-*-freebsd*)
+	tmake_file="${tmake_file} i386/t-freebsd"
 	;;
 i[34567]86-*-dragonfly*)
-	tmake_file="${tmake_file} i386/t-dragonfly"
+# added 25 SEP 10, but suffered build issues.  Not sure if this new
+# configuration is the culprit on not.  It might be freebsd specific.
+#	tmake_file="${tmake_file} i386/t-dragonfly"
 	;;
 x86_64-*-dragonfly*)
+#	tmake_file="${tmake_file} i386/t-dragonfly"
 	;;
 i[34567]86-*-netbsdelf*)
 	;;
@@ -405,6 +412,9 @@ m68k-*-rtems*)
 mcore-*-elf)
 	;;
 mcore-*-pe*)
+	;;
+microblaze*-*-*)
+        tmake_file="microblaze/t-microblaze"
 	;;
 mips-sgi-irix[56]*)
 	;;
@@ -610,6 +620,9 @@ i[34567]86-*-linux* | x86_64-*-linux* | \
   i[34567]86-*-kfreebsd*-gnu | i[34567]86-*-knetbsd*-gnu | \
   i[34567]86-*-gnu*)
 	tmake_file="${tmake_file} t-tls"
+	if test "$libgcc_cv_cfi" = "yes"; then
+		tmake_file="${tmake_file} t-stack i386/t-stack-i386"
+	fi
 	;;
 esac
 

@@ -1,6 +1,6 @@
 # Makefile for GNU Ada Compiler (GNAT).
 #   Copyright (C) 1994-2010 Free Software Foundation, Inc.
-#   Copyright (C) 2010 John Marino (www.auroraux.org)
+#   Copyright (C) 2010 John Marino <draco@marino.st>
 
 #This file is part of GCC.
 
@@ -297,7 +297,7 @@ GNATLINK_OBJS = gnatlink.o \
  sdefault.o snames.o stylesw.o switch.o system.o table.o targparm.o tree_io.o \
  types.o validsw.o widechar.o
 
-GNATMAKE_OBJS = a-except.o ali.o ali-util.o s-casuti.o \
+GNATMAKE_OBJS = a-except.o ali.o ali-util.o aspects.o s-casuti.o \
  alloc.o atree.o binderr.o butil.o casing.o csets.o debug.o elists.o einfo.o\
  erroutc.o errutil.o err_vars.o fmap.o fname.o fname-uf.o fname-sf.o \
  gnatmake.o gnatvsn.o hostparm.o interfac.o i-c.o i-cstrin.o krunch.o lib.o \
@@ -1075,6 +1075,8 @@ ifeq ($(strip $(filter-out %86 linux%,$(arch) $(osys))),)
     THREADSLIB = -lmarte
   else
     LIBGNAT_TARGET_PAIRS += \
+    a-exetim.adb<a-exetim-posix.adb \
+    a-exetim.ads<a-exetim-default.ads \
     s-linux.ads<s-linux.ads \
     s-osinte.adb<s-osinte-posix.adb
 
@@ -1100,9 +1102,9 @@ ifeq ($(strip $(filter-out %86 linux%,$(arch) $(osys))),)
       EH_MECHANISM=-gcc
     endif
 
-    THREADSLIB = -lpthread
+    THREADSLIB = -lpthread -lrt
     EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
-    EXTRA_GNATRTL_TASKING_OBJS=s-linux.o
+    EXTRA_GNATRTL_TASKING_OBJS=s-linux.o a-exetim.o
   endif
 
   TOOLS_TARGET_PAIRS =  \
@@ -1865,6 +1867,8 @@ endif
 
 ifeq ($(strip $(filter-out powerpc% linux%,$(arch) $(osys))),)
   LIBGNAT_TARGET_PAIRS_COMMON = \
+  a-exetim.adb<a-exetim-posix.adb \
+  a-exetim.ads<a-exetim-default.ads \
   a-intnam.ads<a-intnam-linux.ads \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
@@ -1916,9 +1920,9 @@ ifeq ($(strip $(filter-out powerpc% linux%,$(arch) $(osys))),)
     mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
     indepsw.adb<indepsw-gnu.adb
 
-  EXTRA_GNATRTL_TASKING_OBJS=s-linux.o
+  EXTRA_GNATRTL_TASKING_OBJS=s-linux.o a-exetim.o
   EH_MECHANISM=-gcc
-  THREADSLIB = -lpthread
+  THREADSLIB = -lpthread -lrt
   GNATLIB_SHARED = gnatlib-shared-dual
   GMEM_LIB = gmemlib
   LIBRARY_VERSION := $(LIB_VERSION)
@@ -2063,6 +2067,8 @@ endif
 
 ifeq ($(strip $(filter-out %ia64 linux%,$(arch) $(osys))),)
   LIBGNAT_TARGET_PAIRS = \
+  a-exetim.adb<a-exetim-posix.adb \
+  a-exetim.ads<a-exetim-default.ads \
   a-intnam.ads<a-intnam-linux.ads \
   a-numaux.ads<a-numaux-libc-x86.ads \
   s-inmaop.adb<s-inmaop-posix.adb \
@@ -2084,10 +2090,10 @@ ifeq ($(strip $(filter-out %ia64 linux%,$(arch) $(osys))),)
     mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
     indepsw.adb<indepsw-gnu.adb
 
-  EXTRA_GNATRTL_TASKING_OBJS=s-linux.o
+  EXTRA_GNATRTL_TASKING_OBJS=s-linux.o a-exetim.o
   EH_MECHANISM=-gcc
   MISCLIB=
-  THREADSLIB=-lpthread
+  THREADSLIB=-lpthread -lrt
   GNATLIB_SHARED=gnatlib-shared-dual
   GMEM_LIB = gmemlib
   LIBRARY_VERSION := $(LIB_VERSION)
@@ -2152,6 +2158,8 @@ endif
 
 ifeq ($(strip $(filter-out %x86_64 linux%,$(arch) $(osys))),)
   LIBGNAT_TARGET_PAIRS = \
+  a-exetim.adb<a-exetim-posix.adb \
+  a-exetim.ads<a-exetim-default.ads \
   a-intnam.ads<a-intnam-linux.ads \
   a-numaux.adb<a-numaux-x86.adb \
   a-numaux.ads<a-numaux-x86.ads \
@@ -2175,9 +2183,9 @@ ifeq ($(strip $(filter-out %x86_64 linux%,$(arch) $(osys))),)
     indepsw.adb<indepsw-gnu.adb
 
   EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
-  EXTRA_GNATRTL_TASKING_OBJS=s-linux.o
+  EXTRA_GNATRTL_TASKING_OBJS=s-linux.o a-exetim.o
   EH_MECHANISM=-gcc
-  THREADSLIB=-lpthread
+  THREADSLIB=-lpthread -lrt
   GNATLIB_SHARED=gnatlib-shared-dual
   GMEM_LIB = gmemlib
   LIBRARY_VERSION := $(LIB_VERSION)
@@ -2641,11 +2649,13 @@ gnatlib-shared-win32:
 	     THREAD_KIND="$(THREAD_KIND)" \
              gnatlib
 	$(RM) $(RTSDIR)/libgna*$(soext)
-	cd $(RTSDIR); ../../xgcc -B../../ -shared $(TARGET_LIBGCC2_CFLAGS) \
+	cd $(RTSDIR); ../../xgcc -B../../ -shared -shared-libgcc \
+		$(TARGET_LIBGCC2_CFLAGS) \
 		-o libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) \
 		$(GNATRTL_NONTASKING_OBJS) $(LIBGNAT_OBJS) \
 		$(SO_OPTS)libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) $(MISCLIB)
-	cd $(RTSDIR); ../../xgcc -B../../ -shared $(TARGET_LIBGCC2_CFLAGS) \
+	cd $(RTSDIR); ../../xgcc -B../../ -shared -shared-libgcc \
+		$(TARGET_LIBGCC2_CFLAGS) \
 		-o libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
 		$(GNATRTL_TASKING_OBJS) \
 		$(SO_OPTS)libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
@@ -2794,15 +2804,9 @@ s-tasdeb.o  : s-tasdeb.adb s-tasdeb.ads
 	      $< $(OUTPUT_OPTION)
 
 # force no function reordering on a-except.o because of the exclusion bounds
-# mechanism (see the source file for more detailed information). However we
-# can do that only when building the runtime (not the compiler) because the
-# -fno-toplevel-reorder option exists only in GCC 4.2 and above.
+# mechanism (see the source file for more detailed information).
 
-ifneq (,$(findstring xgcc,$(CC)))
 NO_REORDER_ADAFLAGS=-fno-toplevel-reorder
-else
-NO_REORDER_ADAFLAGS=
-endif
 
 # force debugging information on a-except.o so that it is always
 # possible to set conditional breakpoints on exceptions.
