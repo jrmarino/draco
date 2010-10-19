@@ -106,7 +106,7 @@ along with GCC; see the file COPYING3.  If not see
    done.  */
 
 #undef	LINK_SPEC
-#define	LINK_SPEC \
+#define	LINK_SPEC "\
   %{p:%nconsider using `-pg' instead of `-p' with gprof(1)} \
   %{v:-V} \
   %{assert*} %{R*} %{rpath*} %{defsym*} \
