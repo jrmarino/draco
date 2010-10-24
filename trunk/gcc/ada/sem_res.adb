@@ -192,6 +192,7 @@ package body Sem_Res is
    procedure Resolve_Op_Expon                  (N : Node_Id; Typ : Entity_Id);
    procedure Resolve_Op_Not                    (N : Node_Id; Typ : Entity_Id);
    procedure Resolve_Qualified_Expression      (N : Node_Id; Typ : Entity_Id);
+   procedure Resolve_Quantified_Expression     (N : Node_Id; Typ : Entity_Id);
    procedure Resolve_Range                     (N : Node_Id; Typ : Entity_Id);
    procedure Resolve_Real_Literal              (N : Node_Id; Typ : Entity_Id);
    procedure Resolve_Reference                 (N : Node_Id; Typ : Entity_Id);
@@ -2698,6 +2699,9 @@ package body Sem_Res is
             when N_Qualified_Expression
                              => Resolve_Qualified_Expression     (N, Ctx_Type);
 
+            when N_Quantified_Expression
+                             => Resolve_Quantified_Expression    (N, Ctx_Type);
+
             when N_Raise_xxx_Error
                              => Set_Etype (N, Ctx_Type);
 
@@ -3644,6 +3648,19 @@ package body Sem_Res is
             --  any analysis. More thought required about this ???
 
             if Ekind_In (F, E_In_Parameter, E_In_Out_Parameter) then
+
+               --  Apply predicate checks, unless this is a call to the
+               --  predicate check function itself, which would cause an
+               --  infinite recursion.
+
+               if not (Ekind (Nam) = E_Function
+                        and then Has_Predicates (Nam))
+               then
+                  Apply_Predicate_Check (A, F_Typ);
+               end if;
+
+               --  Apply required constraint checks
+
                if Is_Scalar_Type (Etype (A)) then
                   Apply_Scalar_Range_Check (A, F_Typ);
 
@@ -3831,8 +3848,8 @@ package body Sem_Res is
 
             Eval_Actual (A);
 
-            --  If it is a named association, treat the selector_name as
-            --  a proper identifier, and mark the corresponding entity.
+            --  If it is a named association, treat the selector_name as a
+            --  proper identifier, and mark the corresponding entity.
 
             if Nkind (Parent (A)) = N_Parameter_Association then
                Set_Entity (Selector_Name (Parent (A)), F);
@@ -4322,6 +4339,10 @@ package body Sem_Res is
       then
          Set_Associated_Storage_Pool
            (Typ, Associated_Storage_Pool (Etype (Parent (N))));
+      end if;
+
+      if Ekind (Etype (N)) = E_Anonymous_Access_Type then
+         Check_Restriction (No_Anonymous_Allocators, N);
       end if;
 
       --  An erroneous allocator may be rewritten as a raise Program_Error
@@ -5163,7 +5184,7 @@ package body Sem_Res is
                      --  An Ada 2005 prefixed call to a primitive operation
                      --  whose first parameter is the prefix. This prefix was
                      --  prepended to the parameter list, which is actually a
-                     --  list of indices. Remove the prefix in order to build
+                     --  list of indexes. Remove the prefix in order to build
                      --  the proper indexed component.
 
                      Index_Node :=
@@ -5926,16 +5947,28 @@ package body Sem_Res is
          Set_Entity_With_Style_Check (N, E);
          Eval_Entity_Name (N);
 
-      --  Allow use of subtype only if it is a concurrent type where we are
-      --  currently inside the body. This will eventually be expanded into a
-      --  call to Self (for tasks) or _object (for protected objects). Any
-      --  other use of a subtype is invalid.
+      --  Case of subtype name appearing as an operand in expression
 
       elsif Is_Type (E) then
+
+         --  Allow use of subtype if it is a concurrent type where we are
+         --  currently inside the body. This will eventually be expanded into a
+         --  call to Self (for tasks) or _object (for protected objects). Any
+         --  other use of a subtype is invalid.
+
          if Is_Concurrent_Type (E)
            and then In_Open_Scopes (E)
          then
             null;
+
+         --  Allow reference to type specifically marked as being OK in this
+         --  context (this is used for example for type names in invariants).
+
+         elsif OK_To_Reference (E) then
+            null;
+
+         --  Any other use is an eror
+
          else
             Error_Msg_N
                ("invalid use of subtype mark in expression or call", N);
@@ -6323,6 +6356,37 @@ package body Sem_Res is
             Set_Etype (Prefix (N), Etype (Nam));
             Set_Etype (N, Typ);
             Resolve_Indexed_Component (N, Typ);
+            return;
+         end;
+      end if;
+
+      if Ekind_In (Nam, E_Entry, E_Entry_Family)
+        and then Present (PPC_Wrapper (Nam))
+        and then Current_Scope /= PPC_Wrapper (Nam)
+      then
+         --  Rewrite as call to the precondition wrapper, adding the task
+         --  object to the list of actuals. If the call is to a member of
+         --  an entry family, include the index as well.
+
+         declare
+            New_Call    : Node_Id;
+            New_Actuals : List_Id;
+         begin
+            New_Actuals := New_List (Obj);
+
+            if  Nkind (Entry_Name) = N_Indexed_Component then
+               Append_To (New_Actuals,
+                 New_Copy_Tree (First (Expressions (Entry_Name))));
+            end if;
+
+            Append_List (Parameter_Associations (N), New_Actuals);
+            New_Call :=
+              Make_Procedure_Call_Statement (Loc,
+                Name                   =>
+                  New_Occurrence_Of (PPC_Wrapper (Nam), Loc),
+                Parameter_Associations => New_Actuals);
+            Rewrite (N, New_Call);
+            Analyze_And_Resolve (N);
             return;
          end;
       end if;
@@ -7707,9 +7771,9 @@ package body Sem_Res is
          Wrong_Type (Expr, Target_Typ);
       end if;
 
-      --  If the target type is unconstrained, then we reset the type of
-      --  the result from the type of the expression. For other cases, the
-      --  actual subtype of the expression is the target type.
+      --  If the target type is unconstrained, then we reset the type of the
+      --  result from the type of the expression. For other cases, the actual
+      --  subtype of the expression is the target type.
 
       if Is_Composite_Type (Target_Typ)
         and then not Is_Constrained (Target_Typ)
@@ -7719,6 +7783,18 @@ package body Sem_Res is
 
       Eval_Qualified_Expression (N);
    end Resolve_Qualified_Expression;
+
+   -----------------------------------
+   -- Resolve_Quantified_Expression --
+   -----------------------------------
+
+   procedure Resolve_Quantified_Expression (N : Node_Id; Typ : Entity_Id) is
+   begin
+      --  The loop structure is already resolved during its analysis, only the
+      --  resolution of the condition needs to be done.
+
+      Resolve (Condition (N), Typ);
+   end Resolve_Quantified_Expression;
 
    -------------------
    -- Resolve_Range --
@@ -8402,7 +8478,16 @@ package body Sem_Res is
 
       Set_Slice_Subtype (N);
 
-      if Nkind (Drange) = N_Range then
+      --  Check bad use of type with predicates
+
+      if Has_Predicates (Etype (Drange)) then
+         Bad_Predicated_Subtype_Use
+           ("subtype& has predicate, not allowed in slice",
+            Drange, Etype (Drange));
+
+      --  Otherwise here is where we check suspicious indexes
+
+      elsif Nkind (Drange) = N_Range then
          Warn_On_Suspicious_Index (Name, Low_Bound  (Drange));
          Warn_On_Suspicious_Index (Name, High_Bound (Drange));
       end if;
@@ -8845,7 +8930,7 @@ package body Sem_Res is
             Orig_T := Etype (Parent (N));
          end if;
 
-         --  if we have an entity name, then give the warning if the entity
+         --  If we have an entity name, then give the warning if the entity
          --  is the right type, or if it is a loop parameter covered by the
          --  original type (that's needed because loop parameters have an
          --  odd subtype coming from the bounds).
@@ -8873,12 +8958,13 @@ package body Sem_Res is
                null;
 
             --  Finally, if this type conversion occurs in a context that
-            --  requires a prefix, and the expression is a qualified
-            --  expression, then the type conversion is not redundant,
-            --  because a qualified expression is not a prefix, whereas a
-            --  type conversion is. For example, "X := T'(Funx(...)).Y;" is
-            --  illegal. because a selected component requires a prefix, but
-            --  a type conversion makes it legal: "X := T(T'(Funx(...))).Y;"
+            --  requires a prefix, and the expression is a qualified expression
+            --  then the type conversion is not redundant, because a qualified
+            --  expression is not a prefix, whereas a type conversion is. For
+            --  example, "X := T'(Funx(...)).Y;" is illegal because a selected
+            --  component requires a prefix, but a type conversion makes it
+            --  legal: "X := T(T'(Funx(...))).Y;"
+
             --  In Ada 2012, a qualified expression is a name, so this idiom is
             --  no longer needed, but we still suppress the warning because it
             --  seems unfriendly for warnings to pop up when you switch to the
@@ -9480,9 +9566,9 @@ package body Sem_Res is
             --  be used when generating attributes of the string, for example
             --  in the context of a slice assignment.
 
-            Set_Etype        (Index_Subtype, Base_Type (Index_Type));
-            Set_Size_Info    (Index_Subtype, Index_Type);
-            Set_RM_Size      (Index_Subtype, RM_Size (Index_Type));
+            Set_Etype     (Index_Subtype, Base_Type (Index_Type));
+            Set_Size_Info (Index_Subtype, Index_Type);
+            Set_RM_Size   (Index_Subtype, RM_Size (Index_Type));
 
             Array_Subtype := Create_Itype (E_Array_Subtype, N);
 
@@ -9533,7 +9619,7 @@ package body Sem_Res is
 
             --     ityp (x)
 
-            --  with the Float_Truncate flag set, which is more efficient
+            --  with the Float_Truncate flag set, which is more efficient.
 
             then
                Rewrite (Operand,
@@ -9661,8 +9747,8 @@ package body Sem_Res is
       --  Specifically test for validity of tagged conversions
 
       function Valid_Array_Conversion return Boolean;
-      --  Check index and component conformance, and accessibility levels
-      --  if the component types are anonymous access types (Ada 2005)
+      --  Check index and component conformance, and accessibility levels if
+      --  the component types are anonymous access types (Ada 2005).
 
       ----------------------
       -- Conversion_Check --
@@ -9896,10 +9982,9 @@ package body Sem_Res is
             --  is no context type and the removal of the spurious operations
             --  must be done explicitly here.
 
-            --  The node may be labelled overloaded, but still contain only
-            --  one interpretation because others were discarded in previous
-            --  filters. If this is the case, retain the single interpretation
-            --  if legal.
+            --  The node may be labelled overloaded, but still contain only one
+            --  interpretation because others were discarded earlier. If this
+            --  is the case, retain the single interpretation if legal.
 
             Get_First_Interp (Operand, I, It);
             Opnd_Type := It.Typ;
@@ -10014,8 +10099,7 @@ package body Sem_Res is
            or else Opnd_Type = Any_Composite
            or else Opnd_Type = Any_String
          then
-            Error_Msg_N
-              ("illegal operand for array conversion", Operand);
+            Error_Msg_N ("illegal operand for array conversion", Operand);
             return False;
          else
             return Valid_Array_Conversion;
@@ -10307,11 +10391,11 @@ package body Sem_Res is
          end Check_Limited;
 
       --  Access to subprogram types. If the operand is an access parameter,
-      --  the type has a deeper accessibility that any master, and cannot
-      --  be assigned. We must make an exception if the conversion is part
-      --  of an assignment and the target is the return object of an extended
-      --  return statement, because in that case the accessibility check
-      --  takes place after the return.
+      --  the type has a deeper accessibility that any master, and cannot be
+      --  assigned. We must make an exception if the conversion is part of an
+      --  assignment and the target is the return object of an extended return
+      --  statement, because in that case the accessibility check takes place
+      --  after the return.
 
       elsif Is_Access_Subprogram_Type (Target_Type)
         and then No (Corresponding_Remote_Type (Opnd_Type))
@@ -10399,7 +10483,8 @@ package body Sem_Res is
       --  If both are tagged types, check legality of view conversions
 
       elsif Is_Tagged_Type (Target_Type)
-        and then Is_Tagged_Type (Opnd_Type)
+              and then
+            Is_Tagged_Type (Opnd_Type)
       then
          return Valid_Tagged_Conversion (Target_Type, Opnd_Type);
 
@@ -10408,8 +10493,8 @@ package body Sem_Res is
       elsif Root_Type (Target_Type) = Root_Type (Opnd_Type) then
          return True;
 
-      --  In an instance or an inlined body, there may be inconsistent
-      --  views of the same type, or of types derived from a common root.
+      --  In an instance or an inlined body, there may be inconsistent views of
+      --  the same type, or of types derived from a common root.
 
       elsif (In_Instance or In_Inlined_Body)
         and then

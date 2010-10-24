@@ -46,6 +46,7 @@ with Sem_Aux;  use Sem_Aux;
 with Sem_Case; use Sem_Case;
 with Sem_Cat;  use Sem_Cat;
 with Sem_Ch3;  use Sem_Ch3;
+with Sem_Ch5;  use Sem_Ch5;
 with Sem_Ch6;  use Sem_Ch6;
 with Sem_Ch8;  use Sem_Ch8;
 with Sem_Disp; use Sem_Disp;
@@ -99,7 +100,7 @@ package body Sem_Ch4 is
    --  the operand of the operator node.
 
    procedure Ambiguous_Operands (N : Node_Id);
-   --  for equality, membership, and comparison operators with overloaded
+   --  For equality, membership, and comparison operators with overloaded
    --  arguments, list possible interpretations.
 
    procedure Analyze_One_Call
@@ -1136,7 +1137,6 @@ package body Sem_Ch4 is
       Exp_Type  : Entity_Id;
       Exp_Btype : Entity_Id;
 
-      Last_Choice    : Nat;
       Dont_Care      : Boolean;
       Others_Present : Boolean;
 
@@ -1152,8 +1152,6 @@ package body Sem_Ch4 is
            Process_Non_Static_Choice => Non_Static_Choice_Error,
            Process_Associated_Node   => No_OP);
       use Case_Choices_Processing;
-
-      Case_Table : Choice_Table_Type (1 .. Number_Of_Choices (N));
 
       -----------------------------
       -- Non_Static_Choice_Error --
@@ -1251,8 +1249,7 @@ package body Sem_Ch4 is
 
       --  Call instantiated Analyze_Choices which does the rest of the work
 
-      Analyze_Choices
-        (N, Exp_Type, Case_Table, Last_Choice, Dont_Care, Others_Present);
+      Analyze_Choices (N, Exp_Type, Dont_Care, Others_Present);
 
       if Exp_Type = Universal_Integer and then not Others_Present then
          Error_Msg_N
@@ -2876,6 +2873,11 @@ package body Sem_Ch4 is
                      if All_Errors_Mode then
                         Error_Msg_Sloc := Sloc (Nam);
 
+                        if Etype (Formal) = Any_Type then
+                           Error_Msg_N
+                             ("there is no legal actual parameter", Actual);
+                        end if;
+
                         if Is_Overloadable (Nam)
                           and then Present (Alias (Nam))
                           and then not Comes_From_Source (Nam)
@@ -3175,6 +3177,54 @@ package body Sem_Ch4 is
 
       Set_Etype  (N, T);
    end Analyze_Qualified_Expression;
+
+   -----------------------------------
+   -- Analyze_Quantified_Expression --
+   -----------------------------------
+
+   procedure Analyze_Quantified_Expression (N : Node_Id) is
+      Loc : constant Source_Ptr := Sloc (N);
+      Ent : constant Entity_Id :=
+              New_Internal_Entity
+                (E_Loop, Current_Scope, Sloc (N), 'L');
+
+      Iterator : Node_Id;
+
+   begin
+      Set_Etype  (Ent,  Standard_Void_Type);
+      Set_Parent (Ent, N);
+
+      if Present (Loop_Parameter_Specification (N)) then
+         Iterator :=
+           Make_Iteration_Scheme (Loc,
+              Loop_Parameter_Specification =>
+                Loop_Parameter_Specification (N));
+      else
+         Iterator :=
+           Make_Iteration_Scheme (Loc,
+              Iterator_Specification =>
+                Iterator_Specification (N));
+      end if;
+
+      Push_Scope (Ent);
+      Set_Parent (Iterator, N);
+      Analyze_Iteration_Scheme (Iterator);
+
+      --  The loop specification may have been converted into an
+      --  iterator specification during its analysis. Update the
+      --  quantified node accordingly.
+
+      if Present (Iterator_Specification (Iterator)) then
+         Set_Iterator_Specification
+           (N, Iterator_Specification (Iterator));
+         Set_Loop_Parameter_Specification (N, Empty);
+      end if;
+
+      Analyze (Condition (N));
+      End_Scope;
+
+      Set_Etype (N, Standard_Boolean);
+   end Analyze_Quantified_Expression;
 
    -------------------
    -- Analyze_Range --
@@ -5509,6 +5559,13 @@ package body Sem_Ch4 is
          return False;
       end if;
 
+      --  If OK_To_Reference is set for the entity, then don't complain, it
+      --  means we are doing a preanalysis in which such complaints are wrong.
+
+      if OK_To_Reference (Entity (Enode)) then
+         return False;
+      end if;
+
       --  Now test the entity we got to see if it is a bad case
 
       case Ekind (Entity (Enode)) is
@@ -5596,7 +5653,6 @@ package body Sem_Ch4 is
                          or else Is_Array_Type (Etype (L))
                          or else Is_Array_Type (Etype (R)))
             then
-
                if Nkind (N) = N_Op_Concat then
                   if Etype (L) /= Any_Composite
                     and then Is_Array_Type (Etype (L))
@@ -6346,8 +6402,8 @@ package body Sem_Ch4 is
 
          if Present (Arr_Type) then
 
-            --  Verify that the actuals (excluding the object)
-            --  match the types of the indices.
+            --  Verify that the actuals (excluding the object) match the types
+            --  of the indexes.
 
             declare
                Actual : Node_Id;
