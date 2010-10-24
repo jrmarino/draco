@@ -986,6 +986,8 @@ package body Exp_Dist is
             Current_Subprogram_Number := Current_Subprogram_Number + 1;
          end if;
 
+         --  Need to handle the case of nested packages???
+
          Next (Current_Declaration);
       end loop;
    end Add_Calling_Stubs_To_Declarations;
@@ -1314,13 +1316,17 @@ package body Exp_Dist is
       end if;
 
       --  Build callers, receivers for every primitive operations and a RPC
-      --  receiver for this type.
+      --  receiver for this type. Note that we use Direct_Primitive_Operations,
+      --  not Primitive_Operations, because we really want just the primitives
+      --  of the tagged type itself, and in the case of a tagged synchronized
+      --  type we do not want to get the primitives of the corresponding
+      --  record type).
 
-      if Present (Primitive_Operations (Designated_Type)) then
+      if Present (Direct_Primitive_Operations (Designated_Type)) then
          Overload_Counter_Table.Reset;
 
          Current_Primitive_Elmt :=
-           First_Elmt (Primitive_Operations (Designated_Type));
+           First_Elmt (Direct_Primitive_Operations (Designated_Type));
          while Current_Primitive_Elmt /= No_Elmt loop
             Current_Primitive := Node (Current_Primitive_Elmt);
 
@@ -1336,8 +1342,9 @@ package body Exp_Dist is
                  Is_TSS (Current_Primitive, TSS_Stream_Input)  or else
                  Is_TSS (Current_Primitive, TSS_Stream_Output) or else
                  Is_TSS (Current_Primitive, TSS_Stream_Read)   or else
-                 Is_TSS (Current_Primitive, TSS_Stream_Write)  or else
-                 Is_Predefined_Interface_Primitive (Current_Primitive))
+                 Is_TSS (Current_Primitive, TSS_Stream_Write)
+                   or else
+                     Is_Predefined_Interface_Primitive (Current_Primitive))
               and then not Is_Hidden (Current_Primitive)
             then
                --  The first thing to do is build an up-to-date copy of the
@@ -1413,8 +1420,8 @@ package body Exp_Dist is
                        RACW_Type                => Stub_Elements.RACW_Type,
                        Parent_Primitive         => Current_Primitive);
 
-                  Current_Receiver := Defining_Unit_Name (
-                    Specification (Current_Receiver_Body));
+                  Current_Receiver :=
+                    Defining_Unit_Name (Specification (Current_Receiver_Body));
 
                   Append_To (Body_Decls, Current_Receiver_Body);
 
@@ -3910,6 +3917,8 @@ package body Exp_Dist is
 
                Current_Subprogram_Number := Current_Subprogram_Number + 1;
             end if;
+
+            --  Need to handle case of a nested package???
 
             Next (Current_Declaration);
          end loop;
@@ -6898,6 +6907,8 @@ package body Exp_Dist is
                Current_Subprogram_Number := Current_Subprogram_Number + 1;
             end if;
 
+            --  Need to handle case of a nested package???
+
             Next (Current_Declaration);
          end loop;
 
@@ -8202,7 +8213,7 @@ package body Exp_Dist is
             Arry : Entity_Id;
             --  For 'Range and Etype
 
-            Indices : List_Id;
+            Indexes : List_Id;
             --  For the construction of the innermost element expression
 
             with procedure Add_Process_Element
@@ -8218,7 +8229,7 @@ package body Exp_Dist is
             Depth   : Pos       := 1);
          --  Build nested loop statements that iterate over the elements of an
          --  array Arry. The statement(s) built by Add_Process_Element are
-         --  executed for each element; Indices is the list of indices to be
+         --  executed for each element; Indexes is the list of indexes to be
          --  used in the construction of the indexed component that denotes the
          --  current element. Subprogram is the entity for the subprogram for
          --  which this iterator is generated. The generated statements are
@@ -8987,7 +8998,7 @@ package body Exp_Dist is
                     new Append_Array_Traversal (
                       Subprogram => Fnam,
                       Arry       => Res,
-                      Indices    => New_List,
+                      Indexes    => New_List,
                       Add_Process_Element => FA_Ary_Add_Process_Element);
 
                   Res_Subtype_Indication : Node_Id :=
@@ -9863,7 +9874,7 @@ package body Exp_Dist is
                     new Append_Array_Traversal (
                       Subprogram => Fnam,
                       Arry       => Expr_Parameter,
-                      Indices    => New_List,
+                      Indexes    => New_List,
                       Add_Process_Element => TA_Ary_Add_Process_Element);
 
                   Index : Node_Id;
@@ -10845,7 +10856,7 @@ package body Exp_Dist is
                   Element_Expr : constant Node_Id :=
                                    Make_Indexed_Component (Loc,
                                      New_Occurrence_Of (Arry, Loc),
-                                     Indices);
+                                     Indexes);
                begin
                   Set_Etype (Element_Expr, Component_Type (Typ));
                   Add_Process_Element (Stmts,
@@ -10857,7 +10868,7 @@ package body Exp_Dist is
                return;
             end if;
 
-            Append_To (Indices,
+            Append_To (Indexes,
               Make_Identifier (Loc, New_External_Name ('L', Depth)));
 
             if not Constrained or else Depth > 1 then
