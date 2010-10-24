@@ -236,7 +236,7 @@ winflush_nt (void)
   /* Does nothing as there is no problem under NT.  */
 }
 
-#else
+#else /* !RTX */
 
 static void winflush_init (void);
 
@@ -302,9 +302,27 @@ __gnat_is_windows_xp (void)
   return is_win_xp;
 }
 
-#endif
+#endif /* !RTX */
 
-#endif
+/* Get the bounds of the stack.  The stack pointer is supposed to be
+   initialized to BASE when a thread is created and the stack can be extended
+   to LIMIT before reaching a guard page.
+   Note: for the main thread, the system automatically extend the stack, so
+   LIMIT is only the current limit.  */
+
+void
+__gnat_get_stack_bounds (void **base, void **limit)
+{
+  NT_TIB *tib;
+
+  /* We know that the first field of the TEB is the TIB.  */
+  tib = (NT_TIB *)NtCurrentTeb ();
+
+  *base = tib->StackBase;
+  *limit = tib->StackLimit;
+}
+
+#endif /* !__MINGW32__ */
 
 #else
 
@@ -351,7 +369,8 @@ __gnat_ttyname (int filedes)
   || defined (__MACHTEN__) || defined (__hpux__) || defined (_AIX) \
   || (defined (__svr4__) && defined (i386)) || defined (__Lynx__) \
   || defined (__CYGWIN__) || defined (__FreeBSD__) || defined (__OpenBSD__) \
-  || defined (__GLIBC__) || defined (__APPLE__) || defined (__DragonFly__)
+  || defined (__DragonFly__) \
+  || defined (__GLIBC__) || defined (__APPLE__)
 
 #ifdef __MINGW32__
 #if OLD_MINGW
@@ -409,7 +428,8 @@ getc_immediate_common (FILE *stream,
     || defined (__CYGWIN32__) || defined (__MACHTEN__) || defined (__hpux__) \
     || defined (_AIX) || (defined (__svr4__) && defined (i386)) \
     || defined (__Lynx__) || defined (__FreeBSD__) || defined (__OpenBSD__) \
-    || defined (__GLIBC__) || defined (__APPLE__) || defined (__DragonFly__)
+    || defined (__DragonFly__) \
+    || defined (__GLIBC__) || defined (__APPLE__)
   char c;
   int nread;
   int good_one = 0;
@@ -429,7 +449,8 @@ getc_immediate_common (FILE *stream,
     || defined (__osf__) || defined (__MACHTEN__) || defined (__hpux__) \
     || defined (_AIX) || (defined (__svr4__) && defined (i386)) \
     || defined (__Lynx__) || defined (__FreeBSD__) || defined (__OpenBSD__) \
-    || defined (__GLIBC__) || defined (__APPLE__) || defined (__DragonFly__)
+    || defined (__DragonFly__) \
+    || defined (__GLIBC__) || defined (__APPLE__)
       eof_ch = termios_rec.c_cc[VEOF];
 
       /* If waiting (i.e. Get_Immediate (Char)), set MIN = 1 and wait for
@@ -919,9 +940,9 @@ __gnat_localtime_tzoff (const time_t *timer, long *off)
 /* Darwin, Free BSD, Linux, Tru64, where component tm_gmtoff is present in
    struct tm */
 
-#elif defined (__APPLE__) || defined (__FreeBSD__) || defined (__DragonFly__) \
-     || defined (linux) || (defined (__alpha__) && defined (__osf__)) \
-     || defined (__GLIBC__)
+#elif defined (__APPLE__) || defined (__FreeBSD__) || defined (linux) ||\
+      defined (__DragonFly__) ||\
+     (defined (__alpha__) && defined (__osf__)) || defined (__GLIBC__)
 {
   localtime_r (timer, &tp);
   *off = tp.tm_gmtoff;
