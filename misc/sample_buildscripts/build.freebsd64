@@ -3,12 +3,11 @@
 
 GCC_VERSION=4.6.0
 SNAPSHOT=4.6-20101023
-NATIVE_HOST=i386-pc-solaris2.11
-OS_LABEL4VERS="[Opensolaris SXCE]"
-ADA_PREFIX=/export/home/opt/ada
-PREFIX=$ADA_PREFIX/aux460
-PKG_PREFIX=/opt/csw
-GNATGCC=$ADA_PREFIX/bin/gnatgcc
+NATIVE_HOST=x86_64-portbld-freebsd8.0
+OS_LABEL4VERS="[FreeBSD]"
+PREFIX=/usr/local
+PKG_PREFIX=/usr/local
+GNATGCC=$PREFIX/bin/gnatgcc
 BUILD_CPP=no
 
 TARGLIB=$PREFIX/lib/gcc/$NATIVE_HOST/$GCC_VERSION
@@ -39,15 +38,15 @@ CONFIGURE_ENV="CC=$GNATGCC PATH=$BOOTPATH"
 echo "===> Extracting the source files..."
 mkdir -p $WRKDIR
 cd $WRKDIR
-bunzip2 -c $DISTFILES/$CORE_TARBALL | gtar xf -
+tar -xyf $DISTFILES/$CORE_TARBALL
 if [ "$BUILD_CPP" = "YES" ]; then
-	bunzip2 -c $DISTFILES/$LCPP_TARBALL | gtar xf -
+	tar -xyf $DISTFILES/$LCPP_TARBALL
 	BUILD_LANGS=c,ada,c++
 else
 	BUILD_LANGS=c,ada
 fi
 cd $GCC_WRKSRC
-bunzip2 -c $DISTFILES/$LADA_TARBALL | tar xf -
+tar -xyf $DISTFILES/$LADA_TARBALL
 
 
 #Let's modify GNAT to display what OS it was build for.
@@ -69,15 +68,11 @@ mkdir -p $WRKSRC
 		--build=$NATIVE_HOST \
 		--program-prefix=gnat \
 		--prefix=$PREFIX \
-		--with-as=/usr/sfw/bin/gas \
-		--without-gnu-ld \
-		--with-ld=/usr/bin/ld \
 		--with-system-zlib \
 		--with-gmp=$PKG_PREFIX \
 		--with-mpfr=$PKG_PREFIX \
 		--with-mpc=$PKG_PREFIX \
 		--with-libiconv-prefix=$PKG_PREFIX \
-		--enable-threads=posix \
 		--enable-shared \
 		--disable-bootstrap \
 		--disable-libgomp \
@@ -88,10 +83,7 @@ mkdir -p $WRKSRC
 
 #build stage.
 CC=$GNATGCC
-ldpath=/usr/sfw/lib:$PREFIX/lib
-LDFLAGS="-L $ldpath -R $ldpath"
-LD_OPTIONS=$LDFLAGS
-export CC LDFLAGS LD_OPTIONS
+export CC
 
 ( cd $WRKSRC; gmake CC=$GNATGCC all )
 
