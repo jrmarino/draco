@@ -4,7 +4,7 @@
    Modified for stabs-in-ELF by H.J. Lu.
    Adapted from GNU/Linux version by John Polstra.
    Continued development by David O'Brien <obrien@freebsd.org>
-   Copyright (C) 2010 John Marino (www.auroraux.org)
+   Copyright (C) 2010 John Marino <draco@marino.st>
 
 This file is part of GCC.
 
@@ -22,30 +22,8 @@ You should have received a copy of the GNU General Public License
 along with GCC; see the file COPYING3.  If not see
 <http://www.gnu.org/licenses/>.  */
 
-#undef DBX_REGISTER_NUMBER
-#undef WCHAR_TYPE_SIZE
-#undef PTRDIFF_TYPE
-#undef SIZE_TYPE
-
-#if TARGET_64BIT
-
-#define DBX_REGISTER_NUMBER(n) dbx64_register_map[n]
-#define WCHAR_TYPE_SIZE	32
-#define PTRDIFF_TYPE	"long int"
-#define SIZE_TYPE	"long unsigned int"
-
-#else /* 32-bit TARGET */
-
-#define DBX_REGISTER_NUMBER(n) svr4_dbx_register_map[n]
-#define WCHAR_TYPE_SIZE	BITS_PER_WORD
-#define PTRDIFF_TYPE	"int"
-#define SIZE_TYPE	"unsigned int"
-
-#endif /* TAIL: TARGET_64BIT */
-
 
 #define TARGET_VERSION fprintf (stderr, " (i386 DragonFly/ELF)");
-
 
 /* Override the default comment-starter of "/".  */
 #undef  ASM_COMMENT_START
@@ -56,6 +34,10 @@ along with GCC; see the file COPYING3.  If not see
 
 #undef  ASM_APP_OFF
 #define ASM_APP_OFF "#NO_APP\n"
+
+#undef  DBX_REGISTER_NUMBER
+#define DBX_REGISTER_NUMBER(n) \
+  (TARGET_64BIT ? dbx64_register_map[n] : svr4_dbx_register_map[n])
 
 #undef  NO_PROFILE_COUNTERS
 #define NO_PROFILE_COUNTERS	1
@@ -69,11 +51,21 @@ along with GCC; see the file COPYING3.  If not see
 #undef  MCOUNT_PRESERVES_ALL_REGS
 #define MCOUNT_PRESERVES_ALL_REGS 0
 
+/* Make gcc agree with <machine/ansi.h>.  */
+
+#undef  SIZE_TYPE
+#define SIZE_TYPE	(TARGET_64BIT ? "long unsigned int" : "unsigned int")
+
+#undef  PTRDIFF_TYPE
+#define PTRDIFF_TYPE	(TARGET_64BIT ? "long int" : "int")
+
+#undef  WCHAR_TYPE_SIZE
+#define WCHAR_TYPE_SIZE	(TARGET_64BIT ? 32 : BITS_PER_WORD)
 
 #undef  SUBTARGET_EXTRA_SPECS	/* i386.h bogusly defines it.  */
 #define SUBTARGET_EXTRA_SPECS \
   { "dfbsd_dynamic_linker", DFBSD_DYNAMIC_LINKER }
-    
+
 
 /* A C statement to output to the stdio stream FILE an assembler
    command to advance the location counter to a multiple of 1<<LOG
