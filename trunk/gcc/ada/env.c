@@ -173,7 +173,8 @@ __gnat_setenv (char *name, char *value)
       LIB$SIGNAL (status);
   }
 
-#elif (defined (__vxworks) && defined (__RTP__)) || defined (__APPLE__)
+#elif (defined (__vxworks) && defined (__RTP__)) || defined (__APPLE__) \
+   || defined (__OpenBSD__)
   setenv (name, value, 1);
 
 #else
