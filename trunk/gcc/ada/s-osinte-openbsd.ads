@@ -122,13 +122,13 @@ package System.OS_Interface is
 
    type Signal_Set is array (Natural range <>) of Signal;
 
-   --  Interrupts that must be unmasked at all times.  DragonFlyBSD
+   --  Interrupts that must be unmasked at all times.  OpenBSD
    --  pthreads will not allow an application to mask out any
    --  interrupt needed by the threads library.
    Unmasked : constant Signal_Set :=
      (SIGTRAP, SIGBUS, SIGTTIN, SIGTTOU, SIGTSTP);
 
-   --  DragonFlyBSD will uses SIGPROF for timing.  Do not allow a
+   --  OpenBSD will uses SIGPROF for timing.  Do not allow a
    --  handler to attach to this signal.
    Reserved : constant Signal_Set := (0 .. 0 => SIGPROF);
 
@@ -347,7 +347,7 @@ package System.OS_Interface is
    --  FSU_THREADS requires pthread_init, which is nonstandard and this should
    --  be invoked during the elaboration of s-taprop.adb.
 
-   --  DragonFlyBSD does not require this so we provide an empty Ada body
+   --  OpenBSD does not require this so we provide an empty Ada body
 
    procedure pthread_init;
 
@@ -612,7 +612,7 @@ private
 
    type sigset_t is array (1 .. 4) of unsigned;
 
-   --  In DragonFlyBSD the component sa_handler turns out to
+   --  In OpenBSD the component sa_handler turns out to
    --  be one a union type, and the selector is a macro:
    --  #define sa_handler __sigaction_u._handler
    --  #define sa_sigaction __sigaction_u._sigaction
