@@ -560,7 +560,7 @@ package body Exp_Ch3 is
 
       function Init_Component return List_Id;
       --  Create one statement to initialize one array component, designated
-      --  by a full set of indices.
+      --  by a full set of indexes.
 
       function Init_One_Dimension (N : Int) return List_Id;
       --  Create loop to initialize one dimension of the array. The single
@@ -3540,7 +3540,7 @@ package body Exp_Ch3 is
       Stats : List_Id;
 
    begin
-      --  Build declarations for indices
+      --  Build declarations for indexes
 
       Decls := New_List;
 
@@ -3568,7 +3568,7 @@ package body Exp_Ch3 is
                Right_Opnd => New_Occurrence_Of (Left_Lo, Loc)),
           Then_Statements => New_List (Make_Simple_Return_Statement (Loc))));
 
-      --  Build initializations for indices
+      --  Build initializations for indexes
 
       declare
          F_Init : constant List_Id := New_List;
@@ -4508,6 +4508,25 @@ package body Exp_Ch3 is
          return;
       end if;
 
+      --  Deal with predicate check before we start to do major rewriting.
+      --  it is OK to initialize and then check the initialized value, since
+      --  the object goes out of scope if we get a predicate failure.
+
+      --  We need a predicate check if the type has predicates, and if either
+      --  there is an initializing expression, or for default initialization
+      --  when we have at least one case of an explicit default initial value.
+
+      if not Suppress_Assignment_Checks (N)
+        and then Present (Predicate_Function (Typ))
+        and then
+          (Present (Expr)
+            or else
+              Is_Partially_Initialized_Type (Typ, Include_Null => False))
+      then
+         Insert_After (N,
+           Make_Predicate_Check (Typ, New_Occurrence_Of (Def_Id, Loc)));
+      end if;
+
       --  Force construction of dispatch tables of library level tagged types
 
       if Tagged_Type_Expansion
@@ -4569,6 +4588,19 @@ package body Exp_Ch3 is
       --  Default initialization required, and no expression present
 
       if No (Expr) then
+
+         --  For the default initialization case, if we have a private type
+         --  with invariants, and invariant checks are enabled, then insert an
+         --  invariant check after the object declaration. Note that it is OK
+         --  to clobber the object with an invalid value since if the exception
+         --  is raised, then the object will go out of scope.
+
+         if Has_Invariants (Typ)
+           and then Present (Invariant_Procedure (Typ))
+         then
+            Insert_After (N,
+              Make_Invariant_Call (New_Occurrence_Of (Def_Id, Loc)));
+         end if;
 
          --  Expand Initialize call for controlled objects. One may wonder why
          --  the Initialize Call is not done in the regular Init procedure
@@ -4998,7 +5030,11 @@ package body Exp_Ch3 is
 
                   if Do_Range_Check (Expr) then
                      Set_Do_Range_Check (Expr, False);
-                     Generate_Range_Check (Expr, Typ, CE_Range_Check_Failed);
+
+                     if not Suppress_Assignment_Checks (N) then
+                        Generate_Range_Check
+                          (Expr, Typ, CE_Range_Check_Failed);
+                     end if;
                   end if;
                end if;
             end if;
@@ -5176,8 +5212,9 @@ package body Exp_Ch3 is
             Set_Renamed_Object (Defining_Identifier (N), Expr_Q);
             Set_Analyzed (N);
          end if;
-
       end if;
+
+   --  Exception on library entity not available
 
    exception
       when RE_Not_Available =>
@@ -5844,6 +5881,11 @@ package body Exp_Ch3 is
 
       Set_TSS (Typ, Fent);
       Set_Is_Pure (Fent);
+      --  The Pure flag will be reset is the current context is not pure.
+      --  For optimization purposes and constant-folding, indicate that the
+      --  Rep_To_Pos function can be considered free of side effects.
+
+      Set_Has_Pragma_Pure_Function (Fent);
 
       if not Debug_Generated_Code then
          Set_Debug_Info_Off (Fent);
@@ -6144,8 +6186,8 @@ package body Exp_Ch3 is
                     (Rep, Access_Disp_Table       (Def_Id));
                   Set_Dispatch_Table_Wrappers
                     (Rep, Dispatch_Table_Wrappers (Def_Id));
-                  Set_Primitive_Operations
-                    (Rep, Primitive_Operations    (Def_Id));
+                  Set_Direct_Primitive_Operations
+                    (Rep, Direct_Primitive_Operations (Def_Id));
                end;
             end if;
 

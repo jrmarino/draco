@@ -241,14 +241,7 @@ package body Lib.Xref is
       --  The check for Present here is to protect against previously
       --  reported critical errors.
 
-      if Is_Concurrent_Type (Base_T)
-        and then Present (Corresponding_Record_Type (Base_T))
-      then
-         Prim_List := Primitive_Operations
-                       (Corresponding_Record_Type (Base_T));
-      else
-         Prim_List := Primitive_Operations (Base_T);
-      end if;
+      Prim_List := Primitive_Operations (Base_T);
 
       if No (Prim_List) then
          return;
@@ -2170,8 +2163,8 @@ package body Lib.Xref is
                            end loop;
                         end;
 
-                     --  For array types, list index types as well.
-                     --  (This is not C, indices have distinct types).
+                     --  For array types, list index types as well. (This is
+                     --  not C, indexes have distinct types).
 
                      elsif Is_Array_Type (XE.Ent) then
                         declare

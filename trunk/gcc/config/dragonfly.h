@@ -59,8 +59,8 @@ along with GCC; see the file COPYING3.  If not see
 #define TARGET_OS_CPP_BUILTINS()            \
   do                                        \
     {                                       \
-       builtin_define ("__DragonFly__");    \
        builtin_define_std ("unix");         \
+       builtin_define ("__DragonFly__");    \
        builtin_assert ("system=unix");      \
        builtin_assert ("system=bsd");       \
        builtin_assert ("system=DragonFly"); \
@@ -68,9 +68,9 @@ along with GCC; see the file COPYING3.  If not see
   while (0)
 
 #undef  CPP_SPEC
-#define CPP_SPEC "                            \
-  %(cpp_cpu)                                  \
-  %{fPIC|fpic|fPIE|fpie:-D__PIC__ -D__pic__}  \
+#define CPP_SPEC "           \
+  %(cpp_cpu)                 \
+  %(cpp_arch)	             \
   %{posix:-D_POSIX_SOURCE}"
 
 #undef  STARTFILE_SPEC
@@ -86,9 +86,9 @@ along with GCC; see the file COPYING3.  If not see
   "%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
 
 #undef  LIB_SPEC
-#define LIB_SPEC "                                  \
-  %{pthread:-lpthread}                              \
-  %{!nostdlib: %{!nostartfiles: %{!nolibc: -lc}}}   \
+#define LIB_SPEC "        \
+  %{pthread:-lpthread}    \
+  -lc                     \
   "
 
 /* Provide a LINK_SPEC appropriate for DragonFly.  Here we provide support

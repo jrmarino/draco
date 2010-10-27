@@ -2,7 +2,7 @@
 # If you want to build C++, change BUILD_CPP to "YES"
 
 GCC_VERSION=4.6.0
-SNAPSHOT=4.6-20100925
+SNAPSHOT=4.6-20101023
 NATIVE_HOST=i386-portbld-freebsd8.0
 OS_LABEL4VERS="[FreeBSD]"
 PREFIX=/usr/local
@@ -74,6 +74,9 @@ mkdir -p $WRKSRC
 		--with-mpc=$PKG_PREFIX \
 		--with-libiconv-prefix=$PKG_PREFIX \
 		--enable-shared \
+		--disable-bootstrap \
+		--disable-libgomp \
+		--disable-libssp \
 		--disable-nls
 )
 

@@ -79,6 +79,9 @@ tree gnat_std_decls[(int) ADT_LAST];
 /* Functions to call for each of the possible raise reasons.  */
 tree gnat_raise_decls[(int) LAST_REASON_CODE + 1];
 
+/* Likewise, but with extra info for each of the possible raise reasons.  */
+tree gnat_raise_decls_ext[(int) LAST_REASON_CODE + 1];
+
 /* Forward declarations for handlers of attributes.  */
 static tree handle_const_attribute (tree *, tree, tree, int, bool *);
 static tree handle_nothrow_attribute (tree *, tree, tree, int, bool *);
@@ -1783,7 +1786,6 @@ create_subprog_decl (tree subprog_name, tree asm_name,
 
   DECL_EXTERNAL (subprog_decl)  = extern_flag;
   TREE_PUBLIC (subprog_decl)    = public_flag;
-  TREE_STATIC (subprog_decl)	= 1;
   TREE_READONLY (subprog_decl)  = TYPE_READONLY (subprog_type);
   TREE_THIS_VOLATILE (subprog_decl) = TYPE_VOLATILE (subprog_type);
   TREE_SIDE_EFFECTS (subprog_decl) = TYPE_VOLATILE (subprog_type);
@@ -1830,6 +1832,9 @@ begin_subprog_body (tree subprog_decl)
   tree param_decl;
 
   announce_function (subprog_decl);
+
+  /* This function is being defined.  */
+  TREE_STATIC (subprog_decl) = 1;
 
   current_function_decl = subprog_decl;
 

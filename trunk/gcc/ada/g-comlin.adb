@@ -1464,6 +1464,10 @@ package body GNAT.Command_Line is
    --  Start of processing for Get_Switches
 
    begin
+      if Config = null then
+         return "";
+      end if;
+
       Foreach (Config, Section => Section);
 
       --  Adding relevant aliases
@@ -1864,10 +1868,16 @@ package body GNAT.Command_Line is
                      return False;
                   end if;
 
-               when Parameter_With_Optional_Space
-                  | Parameter_With_Space_Or_Equal =>
+               when Parameter_With_Optional_Space =>
                   if Parameter /= "" then
                      Callback (Switch, " ", Parameter, Index => Index);
+                     Found_In_Config := True;
+                     return False;
+                  end if;
+
+               when Parameter_With_Space_Or_Equal =>
+                  if Parameter /= "" then
+                     Callback (Switch, "=", Parameter, Index => Index);
                      Found_In_Config := True;
                      return False;
                   end if;
@@ -1923,8 +1933,9 @@ package body GNAT.Command_Line is
                   null;
 
                when Parameter_With_Space_Or_Equal =>
-                  if Switch (Param) = ' '
-                    or else Switch (Param) = '='
+                  if Param <= Switch'Last
+                    and then
+                      (Switch (Param) = ' ' or else Switch (Param) = '=')
                   then
                      Callback (Switch (Switch'First .. Last),
                                "=", Switch (Param + 1 .. Switch'Last), Index);
@@ -2100,14 +2111,21 @@ package body GNAT.Command_Line is
          Index     : Integer)
       is
          pragma Unreferenced (Index);
+         Sep : Character;
 
       begin
+         if Separator = "" then
+            Sep := ASCII.NUL;
+         else
+            Sep := Separator (Separator'First);
+         end if;
+
          if Cmd.Expanded = null then
             Cmd.Expanded := new Argument_List'(1 .. 1 => new String'(Simple));
 
             if Param /= "" then
                Cmd.Params :=
-                 new Argument_List'(1 .. 1 => new String'(Separator & Param));
+                 new Argument_List'(1 .. 1 => new String'(Sep & Param));
             else
                Cmd.Params := new Argument_List'(1 .. 1 => null);
             end if;
@@ -2128,7 +2146,7 @@ package body GNAT.Command_Line is
                    ((Cmd.Params (C) = null and then Param = "")
                      or else
                        (Cmd.Params (C) /= null
-                         and then Cmd.Params (C).all = Separator & Param))
+                         and then Cmd.Params (C).all = Sep & Param))
                  and then
                    ((Cmd.Sections (C) = null and then Section = "")
                      or else
@@ -2147,7 +2165,7 @@ package body GNAT.Command_Line is
             if Param /= "" then
                Add
                  (Cmd.Params,
-                  new String'(Separator & Param),
+                  new String'(Sep & Param),
                   Add_Before);
             else
                Add

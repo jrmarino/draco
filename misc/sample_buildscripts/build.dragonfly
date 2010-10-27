@@ -2,8 +2,8 @@
 # If you want to build C++, change BUILD_CPP to "YES"
 
 GCC_VERSION=4.6.0
-SNAPSHOT=4.6-20100925
-NATIVE_HOST=i386-backplane-dragonfly2.6
+SNAPSHOT=4.6-20101023
+NATIVE_HOST=i386-backplane-dragonfly2.8
 OS_LABEL4VERS="[DragonFly BSD]"
 PREFIX=/usr/local
 PKG_PREFIX=/usr/pkg
@@ -75,6 +75,9 @@ mkdir -p $WRKSRC
 		--with-libiconv-prefix=$PKG_PREFIX \
 		--enable-threads=single \
 		--enable-shared \
+		--disable-bootstrap \
+		--disable-libgomp \
+		--disable-libssp \
 		--disable-nls
 )
 

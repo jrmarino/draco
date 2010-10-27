@@ -1739,11 +1739,7 @@ package body Exp_Ch7 is
          end if;
 
       else
-         if Is_Dynamic_Scope (E) then
-            S := E;
-         else
-            S := Enclosing_Dynamic_Scope (E);
-         end if;
+         S := Nearest_Dynamic_Scope (E);
 
          --  When the finalization chain entity is 'Error', it means that there
          --  should not be any chain at that level and that the enclosing one
@@ -2541,7 +2537,7 @@ package body Exp_Ch7 is
 
       function One_Component return List_Id;
       --  Create one statement to initialize/adjust/finalize one array
-      --  component, designated by a full set of indices.
+      --  component, designated by a full set of indexes.
 
       function One_Dimension (N : Int) return List_Id;
       --  Create loop to deal with one dimension of the array. The single
