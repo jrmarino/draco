@@ -1,0 +1,862 @@
+Test Run By root on Thu Oct 28 05:21:37 2010
+Native configuration is x86_64-backplane-dragonfly2.8
+
+		=== gnat tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+Running /home/marino/gnat_port/gen_3/work/gcc-4.6-20101023/gcc/testsuite/gnat.dg/dg.exp ...
+PASS: gnat.dg/abstract1.adb (test for excess errors)
+PASS: gnat.dg/abstract_with_anonymous_result.adb (test for excess errors)
+PASS: gnat.dg/abstract_with_anonymous_result.adb execution test
+PASS: gnat.dg/access1.adb (test for excess errors)
+PASS: gnat.dg/access2.adb (test for excess errors)
+PASS: gnat.dg/access3.adb (test for excess errors)
+PASS: gnat.dg/access4.adb (test for excess errors)
+PASS: gnat.dg/access4.adb execution test
+PASS: gnat.dg/access_discr.adb (test for excess errors)
+PASS: gnat.dg/access_discr2.adb (test for excess errors)
+PASS: gnat.dg/access_discr2.adb execution test
+PASS: gnat.dg/access_func.adb (test for excess errors)
+PASS: gnat.dg/access_test.adb (test for excess errors)
+PASS: gnat.dg/access_test.adb execution test
+PASS: gnat.dg/addr1.adb (test for excess errors)
+PASS: gnat.dg/addr2.adb (test for excess errors)
+PASS: gnat.dg/addr2.adb execution test
+PASS: gnat.dg/addr2_p.adb (test for excess errors)
+PASS: gnat.dg/addr3.adb (test for excess errors)
+PASS: gnat.dg/addr4.adb (test for excess errors)
+PASS: gnat.dg/addr5.adb (test for excess errors)
+PASS: gnat.dg/addr6.adb (test for excess errors)
+PASS: gnat.dg/addr_slice.adb (test for excess errors)
+PASS: gnat.dg/address_conversion.adb (test for excess errors)
+PASS: gnat.dg/address_conversion.adb execution test
+PASS: gnat.dg/aggr1.adb (test for excess errors)
+PASS: gnat.dg/aggr1.adb execution test
+PASS: gnat.dg/aggr10.adb  (test for bogus messages, line 19)
+PASS: gnat.dg/aggr10.adb (test for excess errors)
+PASS: gnat.dg/aggr11.adb (test for excess errors)
+PASS: gnat.dg/aggr12.adb (test for excess errors)
+PASS: gnat.dg/aggr12.adb scan-tree-dump-not original "{.i1=0, .i2=2}"
+PASS: gnat.dg/aggr13.adb (test for excess errors)
+PASS: gnat.dg/aggr13.adb scan-tree-dump-not gimple "= {}"
+PASS: gnat.dg/aggr14.adb (test for excess errors)
+PASS: gnat.dg/aggr14.adb execution test
+PASS: gnat.dg/aggr14_pkg.adb (test for excess errors)
+PASS: gnat.dg/aggr15.adb (test for excess errors)
+PASS: gnat.dg/aggr16.adb (test for excess errors)
+PASS: gnat.dg/aggr2.adb (test for excess errors)
+PASS: gnat.dg/aggr3.adb (test for excess errors)
+PASS: gnat.dg/aggr3.adb execution test
+PASS: gnat.dg/aggr4.adb (test for excess errors)
+PASS: gnat.dg/aggr7.adb (test for excess errors)
+PASS: gnat.dg/aggr8.adb (test for excess errors)
+PASS: gnat.dg/aggr9.adb (test for excess errors)
+PASS: gnat.dg/aliased1.adb (test for excess errors)
+PASS: gnat.dg/aliased_prefix_accessibility.adb (test for excess errors)
+PASS: gnat.dg/aliased_prefix_accessibility.adb execution test
+PASS: gnat.dg/aliasing1.adb (test for excess errors)
+PASS: gnat.dg/aliasing1.adb scan-tree-dump-not optimized "__gnat_rcheck"
+PASS: gnat.dg/aliasing2.adb (test for excess errors)
+PASS: gnat.dg/aliasing2.adb scan-tree-dump-not optimized "__gnat_rcheck"
+PASS: gnat.dg/aliasing3.adb (test for excess errors)
+PASS: gnat.dg/aliasing3.adb execution test
+PASS: gnat.dg/aliasing3_pkg.adb (test for excess errors)
+PASS: gnat.dg/align_check.adb (test for excess errors)
+PASS: gnat.dg/align_check.adb execution test
+PASS: gnat.dg/align_max.adb (test for excess errors)
+PASS: gnat.dg/align_max.adb execution test
+PASS: gnat.dg/aligned_vla.adb (test for excess errors)
+PASS: gnat.dg/aligned_vla.adb execution test
+PASS: gnat.dg/alignment1.adb (test for excess errors)
+PASS: gnat.dg/alignment1.adb execution test
+PASS: gnat.dg/alignment2.adb (test for excess errors)
+PASS: gnat.dg/alignment2.adb execution test
+PASS: gnat.dg/alignment3.adb (test for excess errors)
+PASS: gnat.dg/alignment4.adb (test for excess errors)
+PASS: gnat.dg/alignment4.adb scan-tree-dump-not gimple ".F"
+PASS: gnat.dg/alignment5.adb (test for excess errors)
+PASS: gnat.dg/alignment5.adb scan-tree-dump-not gimple ".F"
+PASS: gnat.dg/alignment6.adb (test for excess errors)
+PASS: gnat.dg/alignment6.adb scan-tree-dump-not gimple "VIEW_CONVERT_EXPR"
+PASS: gnat.dg/alignment7.adb (test for excess errors)
+PASS: gnat.dg/alignment7.adb execution test
+PASS: gnat.dg/alignment8.adb (test for excess errors)
+PASS: gnat.dg/alignment8.adb execution test
+PASS: gnat.dg/alignment9.adb (test for excess errors)
+PASS: gnat.dg/alignment9.adb execution test
+PASS: gnat.dg/allocator_maxalign1.adb (test for excess errors)
+PASS: gnat.dg/allocator_maxalign1.adb execution test
+PASS: gnat.dg/allocator_maxalign2.adb (test for excess errors)
+PASS: gnat.dg/ancestor_type.adb  (test for errors, line 8)
+PASS: gnat.dg/ancestor_type.adb (test for excess errors)
+PASS: gnat.dg/anon2.adb (test for excess errors)
+PASS: gnat.dg/array1.adb (test for excess errors)
+PASS: gnat.dg/array10.adb (test for excess errors)
+PASS: gnat.dg/array10.adb execution test
+PASS: gnat.dg/array11.adb  (test for warnings, line 8)
+PASS: gnat.dg/array11.adb  (test for warnings, line 9)
+PASS: gnat.dg/array11.adb  (test for warnings, line 12)
+PASS: gnat.dg/array11.adb (test for excess errors)
+PASS: gnat.dg/array12.adb (test for excess errors)
+PASS: gnat.dg/array12.adb execution test
+PASS: gnat.dg/array13.adb (test for excess errors)
+PASS: gnat.dg/array3.adb (test for excess errors)
+PASS: gnat.dg/array3.adb execution test
+PASS: gnat.dg/array4.adb (test for excess errors)
+PASS: gnat.dg/array4.adb execution test
+PASS: gnat.dg/array5.adb (test for excess errors)
+PASS: gnat.dg/array5.adb execution test
+PASS: gnat.dg/array6.adb (test for excess errors)
+PASS: gnat.dg/array6.adb execution test
+PASS: gnat.dg/array7.adb (test for excess errors)
+PASS: gnat.dg/array7.adb scan-tree-dump-not optimized "MAX_EXPR"
+PASS: gnat.dg/array8.adb (test for excess errors)
+PASS: gnat.dg/array9.adb (test for excess errors)
+PASS: gnat.dg/array9.adb execution test
+PASS: gnat.dg/array_bounds_test.adb (test for excess errors)
+PASS: gnat.dg/array_bounds_test.adb execution test
+PASS: gnat.dg/assert1.adb (test for excess errors)
+PASS: gnat.dg/assert1.adb execution test
+PASS: gnat.dg/assign_from_packed.adb (test for excess errors)
+PASS: gnat.dg/assign_from_packed.adb execution test
+PASS: gnat.dg/asynch.adb (test for excess errors)
+PASS: gnat.dg/atomic1.adb (test for excess errors)
+PASS: gnat.dg/atomic1.adb scan-tree-dump-times gimple "v_16" 1
+PASS: gnat.dg/atomic1.adb scan-tree-dump-times gimple "v_32" 1
+PASS: gnat.dg/atomic2.adb  (test for warnings, line 7)
+PASS: gnat.dg/atomic2.adb (test for excess errors)
+PASS: gnat.dg/atomic3.adb (test for excess errors)
+PASS: gnat.dg/bad_array.adb (test for excess errors)
+PASS: gnat.dg/biased_uc.adb (test for excess errors)
+PASS: gnat.dg/biased_uc.adb execution test
+PASS: gnat.dg/bip_aggregate_bug.adb (test for excess errors)
+PASS: gnat.dg/bip_aggregate_bug.adb execution test
+PASS: gnat.dg/bip_prim_func.adb (test for excess errors)
+PASS: gnat.dg/bit_packed_array1.adb (test for excess errors)
+PASS: gnat.dg/bit_packed_array2.adb (test for excess errors)
+PASS: gnat.dg/bit_packed_array3.adb (test for excess errors)
+PASS: gnat.dg/bit_packed_array3.adb execution test
+PASS: gnat.dg/bit_packed_array4.adb (test for excess errors)
+PASS: gnat.dg/blkextract_from_reg.adb (test for excess errors)
+PASS: gnat.dg/blkextract_from_reg.adb execution test
+PASS: gnat.dg/bltins.adb (test for excess errors)
+PASS: gnat.dg/bltins.adb execution test
+PASS: gnat.dg/boolean_bitfield.adb (test for excess errors)
+PASS: gnat.dg/boolean_bitfield.adb execution test
+PASS: gnat.dg/boolean_expr1.adb (test for excess errors)
+PASS: gnat.dg/boolean_expr2.adb (test for excess errors)
+PASS: gnat.dg/boolean_expr2.adb execution test
+PASS: gnat.dg/boolean_subtype.adb (test for excess errors)
+PASS: gnat.dg/bug_elaboration_code.adb (test for excess errors)
+PASS: gnat.dg/c_words.adb (test for excess errors)
+PASS: gnat.dg/capture_value.adb (test for excess errors)
+PASS: gnat.dg/capture_value.adb execution test
+PASS: gnat.dg/case_null.adb (test for excess errors)
+PASS: gnat.dg/case_optimization1.adb (test for excess errors)
+PASS: gnat.dg/case_optimization2.adb (test for excess errors)
+PASS: gnat.dg/case_optimization2.adb execution test
+PASS: gnat.dg/case_optimization_pkg2.adb (test for excess errors)
+PASS: gnat.dg/check1.adb (test for excess errors)
+PASS: gnat.dg/check_displace_generation.adb (test for excess errors)
+PASS: gnat.dg/check_displace_generation.adb execution test
+PASS: gnat.dg/check_elaboration_code.adb (test for excess errors)
+PASS: gnat.dg/check_elaboration_code.adb execution test
+PASS: gnat.dg/class_wide1.adb (test for excess errors)
+PASS: gnat.dg/class_wide2.adb (test for excess errors)
+PASS: gnat.dg/compose.adb (test for excess errors)
+PASS: gnat.dg/compose.adb execution test
+PASS: gnat.dg/concat1.adb (test for excess errors)
+PASS: gnat.dg/concat1.adb execution test
+PASS: gnat.dg/concat1_pkg.adb (test for excess errors)
+PASS: gnat.dg/concat_length.adb (test for excess errors)
+PASS: gnat.dg/concat_length.adb execution test
+PASS: gnat.dg/cond_expr1.adb (test for excess errors)
+PASS: gnat.dg/constant1.adb (test for excess errors)
+PASS: gnat.dg/constant2.adb (test for excess errors)
+PASS: gnat.dg/constant2.adb execution test
+PASS: gnat.dg/constant2_pkg2.adb (test for excess errors)
+PASS: gnat.dg/controlled2.adb (test for excess errors)
+PASS: gnat.dg/controlled4.adb (test for excess errors)
+PASS: gnat.dg/controlled5.adb (test for excess errors)
+PASS: gnat.dg/controlled5.adb execution test
+PASS: gnat.dg/controlled5_pkg.adb (test for excess errors)
+PASS: gnat.dg/controlled_record.adb (test for excess errors)
+PASS: gnat.dg/conv_bug.adb (test for excess errors)
+PASS: gnat.dg/conv_bug.adb execution test
+PASS: gnat.dg/conv_decimal.adb (test for excess errors)
+PASS: gnat.dg/conv_decimal.adb execution test
+PASS: gnat.dg/conv_integer.adb (test for excess errors)
+PASS: gnat.dg/conv_real.adb (test for excess errors)
+PASS: gnat.dg/conv_real.adb execution test
+PASS: gnat.dg/curr_task.adb (test for excess errors)
+PASS: gnat.dg/curr_task.adb execution test
+PASS: gnat.dg/decl_ctx_use.adb (test for excess errors)
+PASS: gnat.dg/deep_old.adb (test for excess errors)
+PASS: gnat.dg/deferred_const1.adb  (test for warnings, line 8)
+PASS: gnat.dg/deferred_const1.adb (test for excess errors)
+PASS: gnat.dg/deferred_const2.adb (test for excess errors)
+PASS: gnat.dg/deferred_const2.adb execution test
+PASS: gnat.dg/deferred_const2_pkg.adb (test for excess errors)
+PASS: gnat.dg/deferred_const3.adb (test for excess errors)
+PASS: gnat.dg/deferred_const3.adb execution test
+PASS: gnat.dg/deferred_const3_pkg.adb (test for excess errors)
+PASS: gnat.dg/deref3.adb (test for excess errors)
+PASS: gnat.dg/derived_aggregate.adb (test for excess errors)
+PASS: gnat.dg/derived_aggregate.adb execution test
+PASS: gnat.dg/derived_type1.adb (test for excess errors)
+PASS: gnat.dg/derived_type1.adb scan-tree-dump-not original "VIEW_CONVERT_EXPR<struct derived_type1__root>"
+PASS: gnat.dg/derived_type1.adb scan-tree-dump-not original "VIEW_CONVERT_EXPR<struct derived_type1__derived1>"
+PASS: gnat.dg/discr10.adb (test for excess errors)
+PASS: gnat.dg/discr11.adb (test for excess errors)
+PASS: gnat.dg/discr12.adb (test for excess errors)
+PASS: gnat.dg/discr13.adb (test for excess errors)
+PASS: gnat.dg/discr14.adb (test for excess errors)
+PASS: gnat.dg/discr15.adb (test for excess errors)
+PASS: gnat.dg/discr16.adb (test for excess errors)
+PASS: gnat.dg/discr17.adb (test for excess errors)
+PASS: gnat.dg/discr18.adb (test for excess errors)
+PASS: gnat.dg/discr19.adb (test for excess errors)
+PASS: gnat.dg/discr2.adb (test for excess errors)
+PASS: gnat.dg/discr20.adb (test for excess errors)
+PASS: gnat.dg/discr21.adb (test for excess errors)
+PASS: gnat.dg/discr22.adb (test for excess errors)
+PASS: gnat.dg/discr23.adb (test for excess errors)
+PASS: gnat.dg/discr24.adb (test for excess errors)
+PASS: gnat.dg/discr24.adb execution test
+PASS: gnat.dg/discr25.adb (test for excess errors)
+PASS: gnat.dg/discr25_pkg.adb (test for excess errors)
+PASS: gnat.dg/discr4.adb (test for excess errors)
+PASS: gnat.dg/discr4.adb execution test
+PASS: gnat.dg/discr5.adb (test for excess errors)
+PASS: gnat.dg/discr6.adb (test for excess errors)
+PASS: gnat.dg/discr7.adb (test for excess errors)
+PASS: gnat.dg/discr8.adb (test for excess errors)
+PASS: gnat.dg/discr9.adb (test for excess errors)
+PASS: gnat.dg/discr_range_check.adb (test for excess errors)
+PASS: gnat.dg/discr_test.adb (test for excess errors)
+PASS: gnat.dg/discr_test2.adb (test for excess errors)
+PASS: gnat.dg/dispatch1.adb (test for excess errors)
+PASS: gnat.dg/dispatch1.adb execution test
+PASS: gnat.dg/dispatch2.adb (test for excess errors)
+PASS: gnat.dg/dispatch2.adb execution test
+PASS: gnat.dg/dispatch2_p.adb (test for excess errors)
+PASS: gnat.dg/div_no_warning.adb (test for excess errors)
+PASS: gnat.dg/dse_step.adb (test for excess errors)
+PASS: gnat.dg/dynamic_bound.adb (test for excess errors)
+PASS: gnat.dg/dynamic_elab1.adb (test for excess errors)
+PASS: gnat.dg/dynamic_elab2.adb (test for excess errors)
+PASS: gnat.dg/elab2.adb (test for excess errors)
+PASS: gnat.dg/elim1.adb (test for excess errors)
+PASS: gnat.dg/elim2.adb (test for excess errors)
+PASS: gnat.dg/elim2.adb execution test
+PASS: gnat.dg/empty_vector_length.adb (test for excess errors)
+PASS: gnat.dg/empty_vector_length.adb execution test
+PASS: gnat.dg/enclosing_record_reference.adb (test for excess errors)
+PASS: gnat.dg/entry_queues.adb (test for excess errors)
+PASS: gnat.dg/entry_queues.adb execution test
+PASS: gnat.dg/enum1.adb (test for excess errors)
+PASS: gnat.dg/enum1.adb execution test
+PASS: gnat.dg/enum2.adb (test for excess errors)
+PASS: gnat.dg/enum2.adb execution test
+PASS: gnat.dg/env_compile_capacity.adb (test for excess errors)
+PASS: gnat.dg/equal_access.adb (test for excess errors)
+PASS: gnat.dg/exp0_eval.adb (test for excess errors)
+PASS: gnat.dg/exp0_eval.adb execution test
+PASS: gnat.dg/expect1.adb (test for excess errors)
+PASS: gnat.dg/expect1.adb execution test
+PASS: gnat.dg/fatp_sra.adb (test for excess errors)
+PASS: gnat.dg/finalized.adb (test for excess errors)
+PASS: gnat.dg/fixce.adb (test for excess errors)
+PASS: gnat.dg/fixce.adb execution test
+PASS: gnat.dg/fixedpnt.adb (test for excess errors)
+PASS: gnat.dg/fixedpnt.adb execution test
+PASS: gnat.dg/forward_anon.adb (test for excess errors)
+PASS: gnat.dg/forward_vla.adb (test for excess errors)
+PASS: gnat.dg/frame_overflow.adb  (test for errors, line 17)
+PASS: gnat.dg/frame_overflow.adb  (test for errors, line 24)
+PASS: gnat.dg/frame_overflow.adb (test for excess errors)
+PASS: gnat.dg/frunaligned.adb (test for excess errors)
+PASS: gnat.dg/g_tables.adb (test for excess errors)
+PASS: gnat.dg/gen_disp.adb (test for excess errors)
+PASS: gnat.dg/generic_dispatch.adb (test for excess errors)
+PASS: gnat.dg/generic_dispatch.adb execution test
+PASS: gnat.dg/generic_dispatch_p.adb (test for excess errors)
+PASS: gnat.dg/gnat_malloc.adb (test for excess errors)
+PASS: gnat.dg/gnat_malloc.adb execution test
+PASS: gnat.dg/gnatg.adb (test for excess errors)
+PASS: gnat.dg/graphic.adb (test for excess errors)
+PASS: gnat.dg/handle_and_return.adb (test for excess errors)
+PASS: gnat.dg/handle_and_return.adb execution test
+PASS: gnat.dg/handle_raise_from_pure.adb (test for excess errors)
+PASS: gnat.dg/handle_raise_from_pure.adb execution test
+PASS: gnat.dg/hyper_flat.adb (test for excess errors)
+PASS: gnat.dg/hyper_flat.adb execution test
+PASS: gnat.dg/ice_type.adb (test for excess errors)
+PASS: gnat.dg/iface2.adb (test for excess errors)
+PASS: gnat.dg/iface_test.adb (test for excess errors)
+PASS: gnat.dg/ifaces.adb (test for excess errors)
+PASS: gnat.dg/import1.adb (test for excess errors)
+PASS: gnat.dg/in_mod_conv.adb (test for excess errors)
+PASS: gnat.dg/in_out_parameter.adb (test for excess errors)
+PASS: gnat.dg/in_out_parameter.adb execution test
+XFAIL: gnat.dg/incomplete2.adb (test for excess errors)
+PASS: gnat.dg/init_scalar1.adb (test for excess errors)
+PASS: gnat.dg/init_scalar1.adb execution test
+PASS: gnat.dg/inline_scope.adb (test for excess errors)
+PASS: gnat.dg/inline_scope_p.adb (test for excess errors)
+PASS: gnat.dg/inline_tagged.adb (test for excess errors)
+PASS: gnat.dg/inline_tagged.adb execution test
+PASS: gnat.dg/interface1.adb (test for excess errors)
+PASS: gnat.dg/interface1.adb execution test
+PASS: gnat.dg/interface2.adb (test for excess errors)
+PASS: gnat.dg/interface2.adb execution test
+PASS: gnat.dg/interface3.adb (test for excess errors)
+PASS: gnat.dg/interface3.adb execution test
+PASS: gnat.dg/interface4.adb (test for excess errors)
+PASS: gnat.dg/interface5.adb (test for excess errors)
+PASS: gnat.dg/interface_conv.adb (test for excess errors)
+PASS: gnat.dg/interface_conv.adb execution test
+PASS: gnat.dg/invariant_index.adb (test for excess errors)
+PASS: gnat.dg/iprot_test.adb (test for excess errors)
+PASS: gnat.dg/iprot_test.adb execution test
+PASS: gnat.dg/itype.adb (test for excess errors)
+PASS: gnat.dg/itypes.adb (test for excess errors)
+PASS: gnat.dg/kill_value.adb (test for excess errors)
+PASS: gnat.dg/kill_value.adb execution test
+PASS: gnat.dg/late_overriding.adb (test for excess errors)
+PASS: gnat.dg/layered_abstraction.adb (test for excess errors)
+PASS: gnat.dg/layered_instance.adb (test for excess errors)
+PASS: gnat.dg/lhs_view_convert.adb (test for excess errors)
+PASS: gnat.dg/lhs_view_convert.adb execution test
+PASS: gnat.dg/limited_with.adb (test for excess errors)
+PASS: gnat.dg/loop_address.adb (test for excess errors)
+PASS: gnat.dg/loop_address2.adb (test for excess errors)
+PASS: gnat.dg/loop_boolean.adb (test for excess errors)
+PASS: gnat.dg/loop_boolean.adb execution test
+PASS: gnat.dg/loop_bound.adb (test for excess errors)
+PASS: gnat.dg/loop_optimization1.adb (test for excess errors)
+PASS: gnat.dg/loop_optimization2.adb (test for excess errors)
+PASS: gnat.dg/loop_optimization3.adb (test for excess errors)
+PASS: gnat.dg/loop_optimization3.adb execution test
+PASS: gnat.dg/loop_optimization3_pkg.adb (test for excess errors)
+PASS: gnat.dg/loop_optimization4.adb (test for excess errors)
+PASS: gnat.dg/loop_optimization4.adb execution test
+PASS: gnat.dg/loop_optimization4_pkg.adb (test for excess errors)
+PASS: gnat.dg/loop_optimization5.adb (test for excess errors)
+PASS: gnat.dg/loop_optimization6.adb (test for excess errors)
+PASS: gnat.dg/loop_optimization6.adb scan-tree-dump-not optimized "goto"
+UNSUPPORTED: gnat.dg/loop_optimization7.adb
+PASS: gnat.dg/loop_unchecked_conversion.adb (test for excess errors)
+PASS: gnat.dg/lto1.adb (test for excess errors)
+PASS: gnat.dg/lto1.adb execution test
+PASS: gnat.dg/lto10.adb (test for excess errors)
+PASS: gnat.dg/lto10.adb execution test
+PASS: gnat.dg/lto1_pkg.adb (test for excess errors)
+PASS: gnat.dg/lto2.adb (test for excess errors)
+PASS: gnat.dg/lto4.adb (test for excess errors)
+PASS: gnat.dg/lto5.adb (test for excess errors)
+PASS: gnat.dg/lto5.adb execution test
+PASS: gnat.dg/lto5_pkg.adb (test for excess errors)
+PASS: gnat.dg/lto6.adb (test for excess errors)
+PASS: gnat.dg/lto6.adb execution test
+PASS: gnat.dg/lto7.adb (test for excess errors)
+PASS: gnat.dg/lto7.adb execution test
+PASS: gnat.dg/lto7_pkg.adb (test for excess errors)
+PASS: gnat.dg/lto8.adb (test for excess errors)
+PASS: gnat.dg/lto8.adb execution test
+PASS: gnat.dg/lto8_pkg.adb (test for excess errors)
+PASS: gnat.dg/lto9.adb (test for excess errors)
+PASS: gnat.dg/lto9.adb execution test
+PASS: gnat.dg/lto9_pkg2.adb (test for excess errors)
+PASS: gnat.dg/machine_code1.adb (test for excess errors)
+PASS: gnat.dg/max_align.adb (test for excess errors)
+PASS: gnat.dg/md5_test.adb (test for excess errors)
+PASS: gnat.dg/md5_test.adb execution test
+PASS: gnat.dg/memtrap.adb (test for excess errors)
+PASS: gnat.dg/memtrap.adb scan-assembler __gnat_begin_handler|__gnat_raise_nodefer
+PASS: gnat.dg/misaligned_nest.adb (test for excess errors)
+PASS: gnat.dg/misaligned_nest.adb execution test
+PASS: gnat.dg/misaligned_param.adb (test for excess errors)
+PASS: gnat.dg/misaligned_param.adb execution test
+PASS: gnat.dg/misaligned_param_pkg.adb (test for excess errors)
+PASS: gnat.dg/missing_acc_check.adb (test for excess errors)
+PASS: gnat.dg/missing_acc_check.adb execution test
+PASS: gnat.dg/modify_a_constant.adb (test for excess errors)
+PASS: gnat.dg/modular1.adb (test for excess errors)
+PASS: gnat.dg/modular1.adb execution test
+PASS: gnat.dg/modular2.adb (test for excess errors)
+PASS: gnat.dg/modular2.adb execution test
+PASS: gnat.dg/modular3.adb (test for excess errors)
+PASS: gnat.dg/modular3.adb execution test
+PASS: gnat.dg/mutable1.adb (test for excess errors)
+PASS: gnat.dg/mutable1.adb execution test
+PASS: gnat.dg/named_test.adb (test for excess errors)
+PASS: gnat.dg/named_test.adb execution test
+PASS: gnat.dg/nat1r.adb (test for excess errors)
+PASS: gnat.dg/nat1r.adb execution test
+PASS: gnat.dg/nested_agg_bitfield_constructor.adb (test for excess errors)
+PASS: gnat.dg/nested_controlled_alloc.adb (test for excess errors)
+PASS: gnat.dg/nested_controlled_alloc.adb execution test
+PASS: gnat.dg/nested_proc1.adb (test for excess errors)
+PASS: gnat.dg/nested_proc1.adb execution test
+PASS: gnat.dg/nested_proc2.adb (test for excess errors)
+PASS: gnat.dg/nested_return_test.adb (test for excess errors)
+PASS: gnat.dg/nested_return_test.adb execution test
+PASS: gnat.dg/nested_subtype_byref.adb (test for excess errors)
+PASS: gnat.dg/no_exc_prop.adb (test for excess errors)
+PASS: gnat.dg/no_final.adb (test for excess errors)
+PASS: gnat.dg/no_final.adb execution test
+PASS: gnat.dg/noreturn1.adb (test for excess errors)
+PASS: gnat.dg/noreturn2.adb (test for excess errors)
+PASS: gnat.dg/noreturn3.adb (test for excess errors)
+PASS: gnat.dg/not_null.adb (test for excess errors)
+PASS: gnat.dg/not_null.adb execution test
+PASS: gnat.dg/notnot.adb  (test for warnings, line 6)
+PASS: gnat.dg/notnot.adb (test for excess errors)
+PASS: gnat.dg/null_pointer_deref1.adb (test for excess errors)
+PASS: gnat.dg/null_pointer_deref1.adb execution test
+PASS: gnat.dg/null_pointer_deref2.adb (test for excess errors)
+PASS: gnat.dg/null_pointer_deref2.adb execution test
+PASS: gnat.dg/object_overflow.adb  (test for warnings, line 8)
+PASS: gnat.dg/object_overflow.adb (test for excess errors)
+PASS: gnat.dg/oconst1.adb (test for excess errors)
+PASS: gnat.dg/oconst1.adb scan-assembler-not elabs
+PASS: gnat.dg/oconst2.adb (test for excess errors)
+PASS: gnat.dg/oconst2.adb scan-assembler-not elabs
+PASS: gnat.dg/oconst3.adb (test for excess errors)
+PASS: gnat.dg/oconst3.adb scan-assembler-not elabs
+PASS: gnat.dg/oconst4.adb (test for excess errors)
+PASS: gnat.dg/oconst4.adb scan-assembler-not elabs
+PASS: gnat.dg/oconst5.adb (test for excess errors)
+PASS: gnat.dg/oconst5.adb scan-assembler-not elabs
+PASS: gnat.dg/old_errors.adb  (test for errors, line 7)
+PASS: gnat.dg/old_errors.adb  (test for errors, line 16)
+PASS: gnat.dg/old_errors.adb  (test for errors, line 28)
+PASS: gnat.dg/old_errors.adb  (test for errors, line 34)
+PASS: gnat.dg/old_errors.adb  (test for errors, line 38)
+PASS: gnat.dg/old_errors.adb  (test for warnings, line 40)
+PASS: gnat.dg/old_errors.adb  (test for errors, line 44)
+PASS: gnat.dg/old_errors.adb (test for excess errors)
+PASS: gnat.dg/opt1.adb (test for excess errors)
+PASS: gnat.dg/opt2.adb (test for excess errors)
+PASS: gnat.dg/opt2.adb execution test
+PASS: gnat.dg/opt3.adb (test for excess errors)
+PASS: gnat.dg/opt4.adb (test for excess errors)
+PASS: gnat.dg/opt4.adb execution test
+PASS: gnat.dg/opt5.adb (test for excess errors)
+PASS: gnat.dg/opt5.adb execution test
+PASS: gnat.dg/opt6.adb (test for excess errors)
+PASS: gnat.dg/outer_agg_bitfield_constructor.adb (test for excess errors)
+PASS: gnat.dg/outer_agg_bitfield_constructor.adb execution test
+PASS: gnat.dg/overflow_sum.adb (test for excess errors)
+PASS: gnat.dg/overflow_sum.adb execution test
+PASS: gnat.dg/overflow_sum2.adb (test for excess errors)
+PASS: gnat.dg/overriding_ops.adb (test for excess errors)
+PASS: gnat.dg/pack10.adb (test for excess errors)
+PASS: gnat.dg/pack10.adb execution test
+PASS: gnat.dg/pack11.adb (test for excess errors)
+PASS: gnat.dg/pack11.adb execution test
+PASS: gnat.dg/pack12.adb (test for excess errors)
+PASS: gnat.dg/pack12.adb execution test
+PASS: gnat.dg/pack13.adb (test for excess errors)
+PASS: gnat.dg/pack14.adb (test for excess errors)
+PASS: gnat.dg/pack15.adb (test for excess errors)
+PASS: gnat.dg/pack2.adb (test for excess errors)
+PASS: gnat.dg/pack3.adb (test for excess errors)
+PASS: gnat.dg/pack3.adb execution test
+PASS: gnat.dg/pack4.adb (test for excess errors)
+PASS: gnat.dg/pack4.adb execution test
+PASS: gnat.dg/pack5.adb (test for excess errors)
+PASS: gnat.dg/pack6.adb (test for excess errors)
+PASS: gnat.dg/pack7.adb (test for excess errors)
+PASS: gnat.dg/pack8.adb  (test for errors, line 19)
+PASS: gnat.dg/pack8.adb (test for excess errors)
+PASS: gnat.dg/pack9.adb (test for excess errors)
+PASS: gnat.dg/pack9.adb scan-tree-dump-not optimized "__gnat_rcheck"
+PASS: gnat.dg/packed_subtype.adb (test for excess errors)
+PASS: gnat.dg/packed_subtype.adb execution test
+PASS: gnat.dg/pak.adb (test for excess errors)
+PASS: gnat.dg/parameterlessfunc.adb (test for excess errors)
+PASS: gnat.dg/parent_ltd_with-child_full_view.adb (test for excess errors)
+PASS: gnat.dg/pointer_array.adb (test for excess errors)
+PASS: gnat.dg/pointer_conversion.adb (test for excess errors)
+PASS: gnat.dg/pointer_conversion.adb execution test
+PASS: gnat.dg/pointer_protected.adb (test for excess errors)
+PASS: gnat.dg/pointer_variable_bounds.adb (test for excess errors)
+PASS: gnat.dg/prefix1.adb (test for excess errors)
+PASS: gnat.dg/prefix2.adb (test for excess errors)
+PASS: gnat.dg/profile_warning.adb (test for excess errors)
+PASS: gnat.dg/profile_warning_p.adb (test for excess errors)
+PASS: gnat.dg/prot1.adb (test for excess errors)
+PASS: gnat.dg/prot2.adb (test for excess errors)
+PASS: gnat.dg/prot2_pkg2.adb (test for excess errors)
+PASS: gnat.dg/prot_def.adb (test for excess errors)
+PASS: gnat.dg/prot_def.adb execution test
+PASS: gnat.dg/protected_self_ref1.adb (test for excess errors)
+PASS: gnat.dg/protected_self_ref1.adb execution test
+PASS: gnat.dg/protected_self_ref2.adb  (test for errors, line 12)
+PASS: gnat.dg/protected_self_ref2.adb (test for excess errors)
+PASS: gnat.dg/quote.adb (test for excess errors)
+PASS: gnat.dg/quote.adb execution test
+PASS: gnat.dg/raise_ce.adb (test for excess errors)
+PASS: gnat.dg/raise_from_pure.adb (test for excess errors)
+PASS: gnat.dg/range_check.adb (test for excess errors)
+PASS: gnat.dg/range_check.adb execution test
+PASS: gnat.dg/range_check2.adb (test for excess errors)
+PASS: gnat.dg/ref_type.adb (test for excess errors)
+PASS: gnat.dg/regpat1.adb (test for excess errors)
+PASS: gnat.dg/regpat1.adb execution test
+PASS: gnat.dg/release_unc_maxalign.adb (test for excess errors)
+PASS: gnat.dg/release_unc_maxalign.adb execution test
+PASS: gnat.dg/remote_type.adb (test for excess errors)
+PASS: gnat.dg/renaming1.adb (test for excess errors)
+PASS: gnat.dg/renaming2.adb (test for excess errors)
+PASS: gnat.dg/renaming2.adb execution test
+PASS: gnat.dg/renaming3.adb (test for excess errors)
+PASS: gnat.dg/renaming3.adb execution test
+PASS: gnat.dg/rep_clause1.adb (test for excess errors)
+PASS: gnat.dg/rep_clause2.adb (test for excess errors)
+PASS: gnat.dg/rep_clause3.adb (test for excess errors)
+PASS: gnat.dg/rep_clause4.adb (test for excess errors)
+PASS: gnat.dg/rep_clause4.adb execution test
+PASS: gnat.dg/rep_clause5.adb (test for excess errors)
+PASS: gnat.dg/requeue1.adb (test for excess errors)
+PASS: gnat.dg/requeue1.adb execution test
+PASS: gnat.dg/return1.adb (test for excess errors)
+PASS: gnat.dg/return2.adb (test for excess errors)
+PASS: gnat.dg/rt1.adb (test for excess errors)
+PASS: gnat.dg/scalar_mode_agg_compare.adb (test for excess errors)
+PASS: gnat.dg/scalar_mode_agg_compare.adb execution test
+PASS: gnat.dg/scalar_mode_agg_compare_loop.adb (test for excess errors)
+PASS: gnat.dg/self.adb (test for excess errors)
+PASS: gnat.dg/self1.adb (test for excess errors)
+PASS: gnat.dg/self_aggregate_with_array.adb (test for excess errors)
+PASS: gnat.dg/self_aggregate_with_array.adb execution test
+PASS: gnat.dg/self_aggregate_with_call.adb (test for excess errors)
+PASS: gnat.dg/self_aggregate_with_call.adb execution test
+PASS: gnat.dg/self_aggregate_with_pointer.adb (test for excess errors)
+PASS: gnat.dg/self_aggregate_with_pointer.adb execution test
+PASS: gnat.dg/self_aggregate_with_zeros.adb (test for excess errors)
+PASS: gnat.dg/self_aggregate_with_zeros.adb execution test
+PASS: gnat.dg/set_in_pproc.adb (test for excess errors)
+PASS: gnat.dg/show_deques_priority.adb (test for excess errors)
+PASS: gnat.dg/size_attribute.adb (test for excess errors)
+PASS: gnat.dg/sizetype1.adb (test for excess errors)
+PASS: gnat.dg/sizetype1.adb execution test
+PASS: gnat.dg/sizetype2.adb (test for excess errors)
+PASS: gnat.dg/sizetype2.adb execution test
+PASS: gnat.dg/sizetype3.adb (test for excess errors)
+PASS: gnat.dg/slice1.adb (test for excess errors)
+PASS: gnat.dg/slice2.adb (test for excess errors)
+PASS: gnat.dg/slice3.adb (test for excess errors)
+PASS: gnat.dg/slice3.adb execution test
+PASS: gnat.dg/slice4.adb (test for excess errors)
+PASS: gnat.dg/slice4.adb execution test
+PASS: gnat.dg/slice5.adb  (test for warnings, line 15)
+PASS: gnat.dg/slice5.adb  (test for warnings, line 21)
+PASS: gnat.dg/slice5.adb (test for excess errors)
+PASS: gnat.dg/slice6.adb (test for excess errors)
+PASS: gnat.dg/slice7.adb (test for excess errors)
+PASS: gnat.dg/slice8.adb (test for excess errors)
+PASS: gnat.dg/slice8_pkg3.adb (test for excess errors)
+PASS: gnat.dg/slice_enum.adb (test for excess errors)
+PASS: gnat.dg/small_alignment.adb (test for excess errors)
+PASS: gnat.dg/small_alignment.adb execution test
+PASS: gnat.dg/socket1.adb (test for excess errors)
+PASS: gnat.dg/socket1.adb execution test
+PASS: gnat.dg/sort1.adb (test for excess errors)
+PASS: gnat.dg/sort2.adb (test for excess errors)
+PASS: gnat.dg/sort2.adb execution test
+PASS: gnat.dg/spipaterr.adb (test for excess errors)
+PASS: gnat.dg/spipaterr.adb execution test
+UNSUPPORTED: gnat.dg/sse_nolib.adb
+PASS: gnat.dg/stack_check1.adb (test for excess errors)
+PASS: gnat.dg/stack_check1.adb execution test
+PASS: gnat.dg/stack_check2.adb (test for excess errors)
+PASS: gnat.dg/stack_check2.adb execution test
+PASS: gnat.dg/str1.adb (test for excess errors)
+PASS: gnat.dg/string_comparison.adb (test for excess errors)
+PASS: gnat.dg/string_slice.adb (test for excess errors)
+PASS: gnat.dg/string_slice.adb execution test
+PASS: gnat.dg/string_slice2.adb (test for excess errors)
+PASS: gnat.dg/subp_elim_errors.adb  (test for errors, line 25)
+PASS: gnat.dg/subp_elim_errors.adb  (test for errors, line 27)
+PASS: gnat.dg/subp_elim_errors.adb  (test for errors, line 29)
+PASS: gnat.dg/subp_elim_errors.adb  (test for errors, line 31)
+PASS: gnat.dg/subp_elim_errors.adb (test for excess errors)
+PASS: gnat.dg/sync1.adb (test for excess errors)
+PASS: gnat.dg/sync_iface_test.adb (test for excess errors)
+PASS: gnat.dg/tag1.adb (test for excess errors)
+PASS: gnat.dg/tag1.adb execution test
+PASS: gnat.dg/tagged_alloc_free.adb (test for excess errors)
+PASS: gnat.dg/tagged_alloc_free.adb execution test
+PASS: gnat.dg/tagged_type_pkg.adb (test for excess errors)
+PASS: gnat.dg/tail_call.adb (test for excess errors)
+PASS: gnat.dg/tail_call.adb execution test
+PASS: gnat.dg/tail_call_p.adb (test for excess errors)
+PASS: gnat.dg/tamdt.adb (test for excess errors)
+PASS: gnat.dg/task_name.adb (test for excess errors)
+PASS: gnat.dg/task_stack_align.adb (test for excess errors)
+PASS: gnat.dg/task_stack_align.adb execution test
+PASS: gnat.dg/test_8bitlong_overflow.adb (test for excess errors)
+PASS: gnat.dg/test_8bitlong_overflow.adb execution test
+PASS: gnat.dg/test_address_null_init.adb (test for excess errors)
+PASS: gnat.dg/test_address_null_init.adb execution test
+PASS: gnat.dg/test_ai254.adb (test for excess errors)
+PASS: gnat.dg/test_allocator_maxalign2.adb (test for excess errors)
+PASS: gnat.dg/test_allocator_maxalign2.adb execution test
+PASS: gnat.dg/test_bip_no_alloc.adb (test for excess errors)
+PASS: gnat.dg/test_bounded.adb (test for excess errors)
+PASS: gnat.dg/test_bounded.adb execution test
+PASS: gnat.dg/test_call.adb (test for excess errors)
+PASS: gnat.dg/test_debug1.adb (test for excess errors)
+PASS: gnat.dg/test_delay.adb (test for excess errors)
+PASS: gnat.dg/test_delay.adb execution test
+PASS: gnat.dg/test_direct_io.adb (test for excess errors)
+PASS: gnat.dg/test_direct_io.adb execution test
+PASS: gnat.dg/test_dse_step.adb (test for excess errors)
+PASS: gnat.dg/test_enum_io.adb (test for excess errors)
+PASS: gnat.dg/test_enum_io.adb execution test
+PASS: gnat.dg/test_equal1.adb (test for excess errors)
+PASS: gnat.dg/test_ext1.adb (test for excess errors)
+PASS: gnat.dg/test_fixed_io.adb (test for excess errors)
+PASS: gnat.dg/test_fixed_io.adb execution test
+PASS: gnat.dg/test_iface_aggr.adb (test for excess errors)
+PASS: gnat.dg/test_iface_aggr.adb execution test
+PASS: gnat.dg/test_ifaces.adb (test for excess errors)
+PASS: gnat.dg/test_ifaces.adb execution test
+PASS: gnat.dg/test_image.adb (test for excess errors)
+PASS: gnat.dg/test_image.adb execution test
+PASS: gnat.dg/test_image_p.adb (test for excess errors)
+PASS: gnat.dg/test_nested_subtype_byref.adb (test for excess errors)
+PASS: gnat.dg/test_nested_subtype_byref.adb execution test
+PASS: gnat.dg/test_oalign.adb (test for excess errors)
+PASS: gnat.dg/test_oalign.adb execution test
+PASS: gnat.dg/test_oconst.adb (test for excess errors)
+PASS: gnat.dg/test_oconst.adb execution test
+PASS: gnat.dg/test_prefix1.adb (test for excess errors)
+PASS: gnat.dg/test_prefix1.adb execution test
+PASS: gnat.dg/test_prio.adb (test for excess errors)
+PASS: gnat.dg/test_prio.adb execution test
+PASS: gnat.dg/test_prio_p.adb (test for excess errors)
+PASS: gnat.dg/test_raise_from_pure.adb (test for excess errors)
+PASS: gnat.dg/test_raise_from_pure.adb execution test
+PASS: gnat.dg/test_rational_arithmetic.adb (test for excess errors)
+PASS: gnat.dg/test_self.adb (test for excess errors)
+PASS: gnat.dg/test_self.adb execution test
+PASS: gnat.dg/test_self_ref.adb (test for excess errors)
+PASS: gnat.dg/test_self_ref.adb execution test
+PASS: gnat.dg/test_table1.adb (test for excess errors)
+PASS: gnat.dg/test_table1.adb execution test
+PASS: gnat.dg/test_tables.adb (test for excess errors)
+PASS: gnat.dg/test_tamdt.adb (test for excess errors)
+PASS: gnat.dg/test_tamdt.adb execution test
+PASS: gnat.dg/test_time_stamp.adb (test for excess errors)
+PASS: gnat.dg/test_time_stamp.adb execution test
+PASS: gnat.dg/test_unknown_discrs.adb (test for excess errors)
+PASS: gnat.dg/test_version.adb (test for excess errors)
+PASS: gnat.dg/test_version.adb execution test
+PASS: gnat.dg/testint.adb (test for excess errors)
+PASS: gnat.dg/testint.adb execution test
+PASS: gnat.dg/tf_interface_1.adb (test for excess errors)
+PASS: gnat.dg/tfren.adb (test for excess errors)
+PASS: gnat.dg/tfren.adb execution test
+PASS: gnat.dg/thin_pointer1.adb (test for excess errors)
+PASS: gnat.dg/thin_pointer2.adb (test for excess errors)
+PASS: gnat.dg/thin_pointer2.adb execution test
+PASS: gnat.dg/thin_pointer2_pkg.adb (test for excess errors)
+PASS: gnat.dg/timer_cancel.adb (test for excess errors)
+PASS: gnat.dg/timer_cancel.adb execution test
+PASS: gnat.dg/timing_events.adb (test for excess errors)
+PASS: gnat.dg/timing_events.adb execution test
+PASS: gnat.dg/trampoline1.adb (test for excess errors)
+PASS: gnat.dg/trampoline1.adb scan-assembler-not GNU-stack.*x
+PASS: gnat.dg/trampoline2.adb (test for excess errors)
+PASS: gnat.dg/trampoline2.adb execution test
+PASS: gnat.dg/tree_static_def.adb (test for excess errors)
+PASS: gnat.dg/tree_static_use.adb (test for excess errors)
+PASS: gnat.dg/tree_static_use.adb execution test
+PASS: gnat.dg/type_conv.adb (test for excess errors)
+PASS: gnat.dg/unaligned_rep_clause.adb (test for excess errors)
+PASS: gnat.dg/unc.adb (test for excess errors)
+PASS: gnat.dg/unc_memfree.adb (test for excess errors)
+PASS: gnat.dg/unc_memfree.adb execution test
+PASS: gnat.dg/unc_memops.adb (test for excess errors)
+PASS: gnat.dg/unchecked_convert1.adb (test for excess errors)
+PASS: gnat.dg/unchecked_convert1.adb execution test
+PASS: gnat.dg/unchecked_convert2.adb (test for excess errors)
+PASS: gnat.dg/unchecked_convert2.adb execution test
+PASS: gnat.dg/unchecked_convert3.adb (test for excess errors)
+PASS: gnat.dg/unchecked_convert3.adb execution test
+PASS: gnat.dg/unchecked_convert4.adb (test for excess errors)
+UNSUPPORTED: gnat.dg/unchecked_convert5.adb
+PASS: gnat.dg/unchecked_convert5b.adb  (test for warnings, line 9)
+PASS: gnat.dg/unchecked_convert5b.adb (test for excess errors)
+PASS: gnat.dg/unchecked_convert5b.adb execution test
+UNSUPPORTED: gnat.dg/unchecked_convert6.adb
+PASS: gnat.dg/unchecked_convert6b.adb  (test for warnings, line 9)
+PASS: gnat.dg/unchecked_convert6b.adb (test for excess errors)
+PASS: gnat.dg/unchecked_convert6b.adb execution test
+PASS: gnat.dg/unchecked_union1.adb (test for excess errors)
+PASS: gnat.dg/unchecked_union1.adb execution test
+PASS: gnat.dg/uninit_func.adb  (test for warnings, line 5)
+PASS: gnat.dg/uninit_func.adb (test for excess errors)
+PASS: gnat.dg/valid1.adb (test for excess errors)
+PASS: gnat.dg/valid1.adb execution test
+PASS: gnat.dg/varsize_copy.adb (test for excess errors)
+PASS: gnat.dg/varsize_temp.adb (test for excess errors)
+PASS: gnat.dg/volatile2.adb (test for excess errors)
+PASS: gnat.dg/volatile3.adb (test for excess errors)
+PASS: gnat.dg/volatile3.adb scan-assembler __gnat_rcheck
+PASS: gnat.dg/volatile_aggregate.adb (test for excess errors)
+PASS: gnat.dg/warn1.adb (test for excess errors)
+PASS: gnat.dg/warn1.adb execution test
+PASS: gnat.dg/warn2.adb (test for excess errors)
+PASS: gnat.dg/warn3.adb (test for excess errors)
+PASS: gnat.dg/warn4.adb  (test for warnings, line 14)
+PASS: gnat.dg/warn4.adb  (test for warnings, line 14)
+PASS: gnat.dg/warn4.adb (test for excess errors)
+PASS: gnat.dg/warn5.adb (test for excess errors)
+PASS: gnat.dg/wide_boolean.adb (test for excess errors)
+PASS: gnat.dg/wide_boolean.adb execution test
+PASS: gnat.dg/wide_boolean_pkg.adb (test for excess errors)
+PASS: gnat.dg/wide_pi.adb (test for excess errors)
+PASS: gnat.dg/wide_test.adb (test for excess errors)
+PASS: gnat.dg/wide_test.adb execution test
+Running /home/marino/gnat_port/gen_3/work/gcc-4.6-20101023/gcc/testsuite/gnat.dg/specs/specs.exp ...
+PASS: gnat.dg/specs/abstract_limited.ads (test for excess errors)
+PASS: gnat.dg/specs/abstract_private.ads  (test for errors, line 12)
+PASS: gnat.dg/specs/abstract_private.ads (test for excess errors)
+PASS: gnat.dg/specs/access3.ads (test for excess errors)
+PASS: gnat.dg/specs/access_constant.ads  (test for errors, line 10)
+PASS: gnat.dg/specs/access_constant.ads (test for excess errors)
+PASS: gnat.dg/specs/access_constant_decl.ads  (test for errors, line 9)
+PASS: gnat.dg/specs/access_constant_decl.ads (test for excess errors)
+PASS: gnat.dg/specs/addr1.ads  (test for bogus messages, line 21)
+PASS: gnat.dg/specs/addr1.ads  (test for bogus messages, line 24)
+PASS: gnat.dg/specs/addr1.ads  (test for bogus messages, line 27)
+PASS: gnat.dg/specs/addr1.ads  (test for warnings, line 30)
+PASS: gnat.dg/specs/addr1.ads  (test for bogus messages, line 33)
+PASS: gnat.dg/specs/addr1.ads (test for excess errors)
+PASS: gnat.dg/specs/aggr1.ads (test for excess errors)
+PASS: gnat.dg/specs/ai_116.ads (test for excess errors)
+PASS: gnat.dg/specs/alignment1.ads (test for excess errors)
+PASS: gnat.dg/specs/alignment2.ads  (test for warnings, line 12)
+PASS: gnat.dg/specs/alignment2.ads  (test for warnings, line 18)
+PASS: gnat.dg/specs/alignment2.ads  (test for warnings, line 36)
+PASS: gnat.dg/specs/alignment2.ads  (test for warnings, line 40)
+PASS: gnat.dg/specs/alignment2.ads (test for excess errors)
+PASS: gnat.dg/specs/array_no_def_init.ads (test for excess errors)
+PASS: gnat.dg/specs/attribute_parsing.ads (test for excess errors)
+PASS: gnat.dg/specs/box1.ads (test for excess errors)
+PASS: gnat.dg/specs/constant1.ads (test for excess errors)
+PASS: gnat.dg/specs/constant1_pkg.ads (test for excess errors)
+PASS: gnat.dg/specs/constructor.ads (test for excess errors)
+PASS: gnat.dg/specs/controlled1.ads (test for excess errors)
+XFAIL: gnat.dg/specs/controlled1_pkg.ads (test for excess errors)
+PASS: gnat.dg/specs/controller.ads (test for excess errors)
+PASS: gnat.dg/specs/corr_discr.ads (test for excess errors)
+PASS: gnat.dg/specs/cpp1.ads (test for excess errors)
+PASS: gnat.dg/specs/cpp_assignment.ads (test for excess errors)
+PASS: gnat.dg/specs/delta_small.ads (test for excess errors)
+PASS: gnat.dg/specs/discr_private.ads (test for excess errors)
+PASS: gnat.dg/specs/discr_record_constant.ads (test for excess errors)
+PASS: gnat.dg/specs/double_record_extension1.ads (test for excess errors)
+PASS: gnat.dg/specs/double_record_extension2.ads (test for excess errors)
+PASS: gnat.dg/specs/elab1.ads (test for excess errors)
+PASS: gnat.dg/specs/empty_variants.ads (test for excess errors)
+PASS: gnat.dg/specs/fe_inlining.ads (test for excess errors)
+XFAIL: gnat.dg/specs/fe_inlining_helper.ads (test for excess errors)
+PASS: gnat.dg/specs/formal_type.ads (test for excess errors)
+PASS: gnat.dg/specs/gen_interface.ads (test for excess errors)
+PASS: gnat.dg/specs/gen_interface_p.ads (test for excess errors)
+PASS: gnat.dg/specs/genericppc.ads (test for excess errors)
+PASS: gnat.dg/specs/gnati.ads (test for excess errors)
+PASS: gnat.dg/specs/iface_eq_test-child.ads (test for excess errors)
+PASS: gnat.dg/specs/iface_eq_test.ads (test for excess errors)
+PASS: gnat.dg/specs/import_abstract.ads  (test for errors, line 5)
+PASS: gnat.dg/specs/import_abstract.ads (test for excess errors)
+PASS: gnat.dg/specs/integer_value.ads  (test for errors, line 4)
+PASS: gnat.dg/specs/integer_value.ads (test for excess errors)
+PASS: gnat.dg/specs/interface5.ads (test for excess errors)
+PASS: gnat.dg/specs/limited1.ads (test for excess errors)
+PASS: gnat.dg/specs/linker_section.ads  (test for errors, line 6)
+PASS: gnat.dg/specs/linker_section.ads  (test for errors, line 10)
+PASS: gnat.dg/specs/linker_section.ads (test for excess errors)
+PASS: gnat.dg/specs/lto3.ads (test for excess errors)
+XFAIL: gnat.dg/specs/lto3_pkg1.ads (test for excess errors)
+XFAIL: gnat.dg/specs/lto3_pkg2.ads (test for excess errors)
+PASS: gnat.dg/specs/null_aggr_bug.ads (test for excess errors)
+PASS: gnat.dg/specs/oversize.ads  (test for errors, line 18)
+PASS: gnat.dg/specs/oversize.ads  (test for errors, line 25)
+PASS: gnat.dg/specs/oversize.ads  (test for errors, line 33)
+PASS: gnat.dg/specs/oversize.ads  (test for errors, line 44)
+PASS: gnat.dg/specs/oversize.ads (test for excess errors)
+PASS: gnat.dg/specs/pack2.ads (test for excess errors)
+PASS: gnat.dg/specs/pack3.ads (test for excess errors)
+PASS: gnat.dg/specs/pack33.ads (test for excess errors)
+XFAIL: gnat.dg/specs/pack3_pkg.ads (test for excess errors)
+PASS: gnat.dg/specs/pack4.ads (test for excess errors)
+PASS: gnat.dg/specs/pack5.ads (test for excess errors)
+PASS: gnat.dg/specs/pack6.ads (test for excess errors)
+PASS: gnat.dg/specs/pack6_pkg.ads (test for excess errors)
+PASS: gnat.dg/specs/preelab.ads (test for excess errors)
+PASS: gnat.dg/specs/private_with.ads (test for excess errors)
+PASS: gnat.dg/specs/renamings.ads  (test for errors, line 9)
+PASS: gnat.dg/specs/renamings.ads  (test for errors, line 13)
+PASS: gnat.dg/specs/renamings.ads (test for excess errors)
+PASS: gnat.dg/specs/rep_clause1.ads (test for excess errors)
+PASS: gnat.dg/specs/rep_clause2.ads (test for excess errors)
+PASS: gnat.dg/specs/rep_clause3.ads (test for excess errors)
+PASS: gnat.dg/specs/rep_clause4.ads (test for excess errors)
+PASS: gnat.dg/specs/restricted_pkg.ads (test for excess errors)
+PASS: gnat.dg/specs/root-level_1-level_2.ads (test for excess errors)
+PASS: gnat.dg/specs/root-level_1.ads (test for excess errors)
+PASS: gnat.dg/specs/root-level_2.ads (test for excess errors)
+PASS: gnat.dg/specs/root.ads (test for excess errors)
+PASS: gnat.dg/specs/self_class.ads (test for excess errors)
+PASS: gnat.dg/specs/size_attribute1.ads (test for excess errors)
+XFAIL: gnat.dg/specs/size_attribute1_pkg1.ads (test for excess errors)
+XFAIL: gnat.dg/specs/size_attribute1_pkg2.ads (test for excess errors)
+PASS: gnat.dg/specs/size_clause1.ads (test for excess errors)
+PASS: gnat.dg/specs/size_clause2.ads  (test for errors, line 40)
+PASS: gnat.dg/specs/size_clause2.ads (test for excess errors)
+PASS: gnat.dg/specs/size_clause3.ads  (test for errors, line 17)
+PASS: gnat.dg/specs/size_clause3.ads  (test for errors, line 47)
+PASS: gnat.dg/specs/size_clause3.ads (test for excess errors)
+PASS: gnat.dg/specs/small_alignment.ads (test for excess errors)
+PASS: gnat.dg/specs/static_initializer.ads (test for excess errors)
+PASS: gnat.dg/specs/static_initializer.ads scan-assembler-not elabs
+PASS: gnat.dg/specs/static_initializer2.ads (test for excess errors)
+PASS: gnat.dg/specs/static_initializer2.ads scan-assembler-not elabs
+PASS: gnat.dg/specs/static_initializer3.ads (test for excess errors)
+PASS: gnat.dg/specs/static_initializer4.ads (test for excess errors)
+PASS: gnat.dg/specs/storage.ads  (test for errors, line 6)
+PASS: gnat.dg/specs/storage.ads (test for excess errors)
+PASS: gnat.dg/specs/sync_iface_test.ads (test for excess errors)
+PASS: gnat.dg/specs/tag1.ads (test for excess errors)
+PASS: gnat.dg/specs/tag2.ads  (test for errors, line 11)
+PASS: gnat.dg/specs/tag2.ads  (test for errors, line 12)
+PASS: gnat.dg/specs/tag2.ads  (test for errors, line 13)
+PASS: gnat.dg/specs/tag2.ads (test for excess errors)
+PASS: gnat.dg/specs/uc1.ads (test for excess errors)
+PASS: gnat.dg/specs/unchecked_union.ads (test for excess errors)
+PASS: gnat.dg/specs/universal_fixed.ads (test for excess errors)
+PASS: gnat.dg/specs/variant_part.ads  (test for errors, line 4)
+PASS: gnat.dg/specs/variant_part.ads (test for excess errors)
+PASS: gnat.dg/specs/varsize_return.ads (test for excess errors)
+XFAIL: gnat.dg/specs/varsize_return_pkg1.ads (test for excess errors)
+XFAIL: gnat.dg/specs/varsize_return_pkg2.ads (test for excess errors)
+PASS: gnat.dg/specs/warnstar.ads (test for excess errors)
+PASS: gnat.dg/specs/weak1.ads (test for excess errors)
+PASS: gnat.dg/specs/with_containers.ads (test for excess errors)
+Running /home/marino/gnat_port/gen_3/work/gcc-4.6-20101023/gcc/testsuite/gnat.dg/style/style.exp ...
+
+		=== gnat Summary ===
+
+# of expected passes		830
+# of expected failures		10
+# of unsupported tests		4
