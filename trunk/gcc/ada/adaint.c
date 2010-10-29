@@ -709,7 +709,7 @@ __gnat_os_filename (char *filename ATTRIBUTE_UNUSED,
   strcpy (encoding, "encoding=utf8");
   *e_length = strlen (encoding);
 #else
-  strlcpy (os_name, filename, name_len);
+  strncpy (os_name, filename, name_len);
   *o_length = strlen (filename);
   *e_length = 0;
 #endif
@@ -1279,7 +1279,7 @@ __gnat_readdir (DIR *dirp, char *buffer, int *len)
 
   if (dirent != NULL)
     {
-      strlcpy (buffer, dirent->d_name, *len);
+      strncpy (buffer, dirent->d_name, *len);
       *len = strlen (buffer);
       return buffer;
     }
@@ -2701,7 +2701,7 @@ __gnat_locate_regular_file (char *file_name, char *path_val)
   if (*ptr == '"')
     ptr++;
 
-  strcpy (file_path, ptr, strlen (file_path) + 1);
+  strncpy (file_path, ptr, strlen (file_path) + 1);
 
   ptr = file_path + strlen (file_path) - 1;
 
@@ -2766,7 +2766,7 @@ __gnat_locate_regular_file (char *file_name, char *path_val)
       if (*ptr != '/' && *ptr != DIR_SEPARATOR)
         *++ptr = DIR_SEPARATOR;
 
-      strcpy (++ptr, file_name, (size_t)(ptr - file_path));
+      strncpy (++ptr, file_name, (size_t)(ptr - file_path));
 
       if (__gnat_is_regular_file (file_path))
         return xstrdup (file_path);
@@ -2796,8 +2796,8 @@ __gnat_locate_exec (char *exec_name, char *path_val)
       size_t name_len = strlen (exec_name) + strlen (HOST_EXECUTABLE_SUFFIX);
       char *full_exec_name = (char *) alloca (name_len + 1);
 
-      strlcpy (full_exec_name, exec_name, name_len + 1);
-      strlcat (full_exec_name, HOST_EXECUTABLE_SUFFIX, name_len + 1);
+      strncpy (full_exec_name, exec_name, name_len + 1);
+      strncat (full_exec_name, HOST_EXECUTABLE_SUFFIX, name_len + 1);
       ptr = __gnat_locate_regular_file (full_exec_name, path_val);
 
       if (ptr == 0)
@@ -2849,7 +2849,7 @@ __gnat_locate_exec_on_path (char *exec_name)
   if (path_val == NULL) return NULL;
   size_t name_len = strlen (path_val) + 1;
   apath_val = (char *) alloca (name_len);
-  strlcpy (apath_val, path_val, name_len);
+  strncpy (apath_val, path_val, name_len);
   return __gnat_locate_exec (exec_name, apath_val);
 #endif
 }
