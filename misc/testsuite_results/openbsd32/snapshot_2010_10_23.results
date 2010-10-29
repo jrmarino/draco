@@ -1,0 +1,153 @@
+Test Run By root on Fri Oct 29 02:06:07 CEST 2010
+		=== acats configuration ===
+target gcc is /home/marino/gnat_port/port/work/build/gcc/xgcc -B/home/marino/gnat_port/port/work/build/gcc/
+Reading specs from /home/marino/gnat_port/port/work/build/gcc/specs COLLECT_GCC=/home/marino/gnat_port/port/work/build/gcc/xgcc COLLECT_LTO_WRAPPER=/home/marino/gnat_port/port/work/build/gcc/lto-wrapper Target: i386-pc-openbsd4.7 Configured with: /home/marino/gnat_port/port/work/gcc-4.6-20101023/configure --enable-languages=c,ada --build=i386-pc-openbsd4.7 --program-prefix=gnat --prefix=/usr/local --with-system-zlib --with-gmp=/usr/local --with-mpfr=/usr/local --with-mpc=/usr/local --with-libiconv-prefix=/usr/local --enable-threads=single --enable-shared --disable-bootstrap --disable-libgomp --disable-libssp --disable-nls Thread model: single gcc version 4.6.0 20101023 (experimental) -=> GNAT AUX [OpenBSD] (GCC)
+host=i386-unknown-openbsd4.7
+target=i386-pc-openbsd4.7
+gnatmake is a tracked alias for /home/marino/gnat_port/port/work/build/gcc/gnatmake
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+Running chapter a ...
+Running chapter c2 ...
+Running chapter c3 ...
+FAIL:	c34007j
+FAIL:	c380004
+FAIL:	c393a06
+Running chapter c4 ...
+FAIL:	c460007
+Running chapter c5 ...
+FAIL:	c52008b
+FAIL:	c52104k
+FAIL:	c52104l
+FAIL:	c52104m
+FAIL:	c52104q
+FAIL:	c52104r
+Running chapter c6 ...
+FAIL:	c64201b
+FAIL:	c650001
+Running chapter c7 ...
+Running chapter c8 ...
+FAIL:	c85018b
+Running chapter c9 ...
+FAIL:	c91004b
+FAIL:	c93004b
+FAIL:	c93004c
+FAIL:	c93004d
+FAIL:	c93005a
+FAIL:	c93005b
+FAIL:	c93005c
+FAIL:	c93005d
+FAIL:	c93005e
+FAIL:	c93005f
+FAIL:	c93005g
+FAIL:	c93005h
+FAIL:	c940010
+FAIL:	c940013
+FAIL:	c940014
+FAIL:	c940016
+FAIL:	c94001a
+FAIL:	c94001b
+FAIL:	c94001c
+FAIL:	c94002a
+FAIL:	c94002f
+FAIL:	c94002g
+FAIL:	c94007a
+FAIL:	c94008b
+FAIL:	c94008d
+FAIL:	c94010a
+FAIL:	c94011a
+FAIL:	c95008a
+FAIL:	c95022b
+FAIL:	c95040d
+FAIL:	c95065a
+FAIL:	c95065b
+FAIL:	c95065c
+FAIL:	c95065d
+FAIL:	c95065e
+FAIL:	c95065f
+FAIL:	c95085a
+FAIL:	c95085b
+FAIL:	c95085c
+FAIL:	c95085d
+FAIL:	c95085e
+FAIL:	c95085f
+FAIL:	c95085g
+FAIL:	c953001
+FAIL:	c954016
+FAIL:	c954017
+FAIL:	c954018
+FAIL:	c954019
+FAIL:	c954023
+FAIL:	c954024
+FAIL:	c954025
+FAIL:	c97204b
+FAIL:	c97304b
+FAIL:	c97307a
+FAIL:	c99004a
+FAIL:	c99005a
+FAIL:	c9a007a
+FAIL:	c9a009a
+FAIL:	c9a009c
+FAIL:	c9a009f
+FAIL:	c9a009g
+FAIL:	c9a009h
+FAIL:	c9a011b
+Running chapter ca ...
+Running chapter cb ...
+FAIL:	cb1010a
+FAIL:	cb20001
+FAIL:	cb5001b
+FAIL:	cb5002a
+Running chapter cc ...
+FAIL:	cc3019c
+FAIL:	cc3120a
+FAIL:	cc3120b
+Running chapter cd ...
+Running chapter ce ...
+Running chapter cxa ...
+FAIL:	cxa4034
+Running chapter cxb ...
+Running chapter cxf ...
+Running chapter cxg ...
+Running chapter cxh ...
+Running chapter cz ...
+Running chapter d ...
+Running chapter e ...
+Running chapter gcc ...
+Running chapter l ...
+		=== acats Summary ===
+# of expected passes		2237
+# of unexpected failures	84
+*** FAILURES: c34007j c380004 c393a06 c460007 c52008b c52104k c52104l c52104m c52104q c52104r c64201b c650001 c85018b c91004b c93004b c93004c c93004d c93005a c93005b c93005c c93005d c93005e c93005f c93005g c93005h c940010 c940013 c940014 c940016 c94001a c94001b c94001c c94002a c94002f c94002g c94007a c94008b c94008d c94010a c94011a c95008a c95022b c95040d c95065a c95065b c95065c c95065d c95065e c95065f c95085a c95085b c95085c c95085d c95085e c95085f c95085g c953001 c954016 c954017 c954018 c954019 c954023 c954024 c954025 c97204b c97304b c97307a c99004a c99005a c9a007a c9a009a c9a009c c9a009f c9a009g c9a009h c9a011b cb1010a cb20001 cb5001b cb5002a cc3019c cc3120a cc3120b cxa4034 
+/home/marino/gnat_port/port/work/gcc-4.6-20101023/gcc/testsuite/ada/acats/run_all.sh completed at Fri Oct 29 10:08:19 CEST 2010
+
+Test Run By root on Fri Oct 29 10:08:20 2010
+Native configuration is i386-pc-openbsd4.7
+
+		=== gnat tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+Running /home/marino/gnat_port/port/work/gcc-4.6-20101023/gcc/testsuite/gnat.dg/dg.exp ...
+UNSUPPORTED: gnat.dg/loop_optimization7.adb
+UNSUPPORTED: gnat.dg/sse_nolib.adb
+FAIL: gnat.dg/test_image.adb execution test
+FAIL: gnat.dg/timer_cancel.adb execution test
+UNSUPPORTED: gnat.dg/unchecked_convert5.adb
+UNSUPPORTED: gnat.dg/unchecked_convert6.adb
+Running /home/marino/gnat_port/port/work/gcc-4.6-20101023/gcc/testsuite/gnat.dg/specs/specs.exp ...
+Running /home/marino/gnat_port/port/work/gcc-4.6-20101023/gcc/testsuite/gnat.dg/style/style.exp ...
+
+		=== gnat Summary ===
+
+# of expected passes		828
+# of unexpected failures	2
+# of expected failures		10
+# of unsupported tests		4
+
