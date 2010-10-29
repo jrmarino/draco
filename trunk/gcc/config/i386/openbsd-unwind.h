@@ -1,4 +1,4 @@
-/* DWARF2 EH unwinding support for DragonFly BSD: AMD x86-64 and x86.
+/* DWARF2 EH unwinding support for OpenBSD: AMD x86-64 and x86.
    Copyright (C) 2010 John Marino <draco@marino.st> */
 
 /* Do code reading to identify a signal frame, and set the frame
@@ -34,10 +34,10 @@ x86_sigtramp_range (unsigned char **start, unsigned char **end)
 
 #ifdef __x86_64__
 
-#define MD_FALLBACK_FRAME_STATE_FOR x86_64_dragonfly_fallback_frame_state
+#define MD_FALLBACK_FRAME_STATE_FOR x86_64_openbsd_fallback_frame_state
 
 static _Unwind_Reason_Code
-x86_64_dragonfly_fallback_frame_state
+x86_64_openbsd_fallback_frame_state
 (struct _Unwind_Context *context, _Unwind_FrameState *fs)
 {
   unsigned char *pc = context->ra;
@@ -96,10 +96,10 @@ x86_64_dragonfly_fallback_frame_state
 
 #else /* Next section is for i386  */
 
-#define MD_FALLBACK_FRAME_STATE_FOR x86_dragonfly_fallback_frame_state
+#define MD_FALLBACK_FRAME_STATE_FOR x86_openbsd_fallback_frame_state
 
 static _Unwind_Reason_Code
-x86_dragonfly_fallback_frame_state
+x86_openbsd_fallback_frame_state
 (struct _Unwind_Context *context, _Unwind_FrameState *fs)
 {
   unsigned char *pc = context->ra;
