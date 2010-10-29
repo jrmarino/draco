@@ -523,7 +523,7 @@ __gnat_try_lock (char *dir, char *file)
 #else
   char full_path[256];
 
-  sprintf (full_path, "%s%c%s", dir, DIR_SEPARATOR, file);
+  snprintf (full_path, sizeof (full_path), "%s%c%s", dir, DIR_SEPARATOR, file);
   fd = open (full_path, O_CREAT | O_EXCL, 0600);
 #endif
 
@@ -547,8 +547,8 @@ __gnat_try_lock (char *dir, char *file)
   GNAT_STRUCT_STAT stat_result;
   int fd;
 
-  sprintf (full_path, "%s%c%s", dir, DIR_SEPARATOR, file);
-  sprintf (temp_file, "%s%cTMP-%ld-%ld",
+  snprintf (full_path, sizeof (full_path), "%s%c%s", dir, DIR_SEPARATOR, file);
+  snprintf (temp_file, sizeof (temp_file), "%s%cTMP-%ld-%ld",
            dir, DIR_SEPARATOR, (long)getpid(), (long)getppid ());
 
   /* Create the temporary file and write the process number.  */
@@ -700,7 +700,7 @@ __gnat_get_debuggable_suffix_ptr (int *len, const char **value)
 void
 __gnat_os_filename (char *filename ATTRIBUTE_UNUSED,
 		    char *w_filename ATTRIBUTE_UNUSED,
-		    char *os_name, int *o_length,
+		    char *os_name, size_t name_len, int *o_length,
 		    char *encoding ATTRIBUTE_UNUSED, int *e_length)
 {
 #if defined (_WIN32) && ! defined (__vxworks) && ! defined (IS_CROSS)
@@ -709,7 +709,7 @@ __gnat_os_filename (char *filename ATTRIBUTE_UNUSED,
   strcpy (encoding, "encoding=utf8");
   *e_length = strlen (encoding);
 #else
-  strcpy (os_name, filename);
+  strlcpy (os_name, filename, name_len);
   *o_length = strlen (filename);
   *e_length = 0;
 #endif
@@ -1161,7 +1161,7 @@ __gnat_named_file_length (char *name)
    TMP_FILENAME.  */
 
 void
-__gnat_tmp_name (char *tmp_filename)
+__gnat_tmp_name (char *tmp_filename, size_t name_len)
 {
 #ifdef RTX
   /* Variable used to create a series of unique names */
@@ -1210,9 +1210,9 @@ __gnat_tmp_name (char *tmp_filename)
   /* If tmpdir is longer than MAX_SAFE_PATH, revert to default value to avoid
      a buffer overflow.  */
   if (tmpdir == NULL || strlen (tmpdir) > MAX_SAFE_PATH)
-    strcpy (tmp_filename, "/tmp/gnat-XXXXXX");
+    strncpy (tmp_filename, "/tmp/gnat-XXXXXX", name_len);
   else
-    sprintf (tmp_filename, "%s/gnat-XXXXXX", tmpdir);
+    snprintf (tmp_filename, name_len, "%s/gnat-XXXXXX", tmpdir);
 
   close (mkstemp(tmp_filename));
 #else
@@ -1279,7 +1279,7 @@ __gnat_readdir (DIR *dirp, char *buffer, int *len)
 
   if (dirent != NULL)
     {
-      strcpy (buffer, dirent->d_name);
+      strlcpy (buffer, dirent->d_name, *len);
       *len = strlen (buffer);
       return buffer;
     }
@@ -2701,7 +2701,7 @@ __gnat_locate_regular_file (char *file_name, char *path_val)
   if (*ptr == '"')
     ptr++;
 
-  strcpy (file_path, ptr);
+  strcpy (file_path, ptr, strlen (file_path) + 1);
 
   ptr = file_path + strlen (file_path) - 1;
 
@@ -2766,7 +2766,7 @@ __gnat_locate_regular_file (char *file_name, char *path_val)
       if (*ptr != '/' && *ptr != DIR_SEPARATOR)
         *++ptr = DIR_SEPARATOR;
 
-      strcpy (++ptr, file_name);
+      strcpy (++ptr, file_name, (size_t)(ptr - file_path));
 
       if (__gnat_is_regular_file (file_path))
         return xstrdup (file_path);
@@ -2793,12 +2793,11 @@ __gnat_locate_exec (char *exec_name, char *path_val)
   char *ptr;
   if (!strstr (exec_name, HOST_EXECUTABLE_SUFFIX))
     {
-      char *full_exec_name =
-        (char *) alloca
-	  (strlen (exec_name) + strlen (HOST_EXECUTABLE_SUFFIX) + 1);
+      size_t name_len = strlen (exec_name) + strlen (HOST_EXECUTABLE_SUFFIX);
+      char *full_exec_name = (char *) alloca (name_len + 1);
 
-      strcpy (full_exec_name, exec_name);
-      strcat (full_exec_name, HOST_EXECUTABLE_SUFFIX);
+      strlcpy (full_exec_name, exec_name, name_len + 1);
+      strlcat (full_exec_name, HOST_EXECUTABLE_SUFFIX, name_len + 1);
       ptr = __gnat_locate_regular_file (full_exec_name, path_val);
 
       if (ptr == 0)
@@ -2848,8 +2847,9 @@ __gnat_locate_exec_on_path (char *exec_name)
   char *path_val = getenv ("PATH");
 #endif
   if (path_val == NULL) return NULL;
-  apath_val = (char *) alloca (strlen (path_val) + 1);
-  strcpy (apath_val, path_val);
+  size_t name_len = strlen (path_val) + 1;
+  apath_val = (char *) alloca (name_len);
+  strlcpy (apath_val, path_val, name_len);
   return __gnat_locate_exec (exec_name, apath_val);
 #endif
 }

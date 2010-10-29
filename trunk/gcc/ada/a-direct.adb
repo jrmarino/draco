@@ -27,6 +27,7 @@
 -- GNAT was originally developed  by the GNAT team at  New York University. --
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
+-- Copyright (C) John Marino <draco@marino.st>                              --
 ------------------------------------------------------------------------------
 
 with Ada.Calendar;               use Ada.Calendar;
@@ -716,6 +717,7 @@ package body Ada.Directories is
       --  Search.Value.Is_Valid is always True when Fetch_Next_Entry is called
 
       loop
+         Filename_Len := Filename_Max + 12;
          Filename_Addr :=
            readdir_gnat
              (System.Address (Search.Value.Dir),

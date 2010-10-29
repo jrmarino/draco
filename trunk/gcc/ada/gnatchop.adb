@@ -21,7 +21,7 @@
 -- GNAT was originally developed  by the GNAT team at  New York University. --
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
--- Copyright (C) 2010 John Marino <draco@marino.st>                      --
+-- Copyright (C) 2010 John Marino <draco@marino.st>                         --
 ------------------------------------------------------------------------------
 
 with Ada.Characters.Conversions; use Ada.Characters.Conversions;
@@ -1648,6 +1648,7 @@ procedure Gnatchop is
         (Name     : String;
          W_Name   : Wide_String;
          OS_Name  : Address;
+         Name_Len : Interfaces.C.size_t;
          N_Length : access Natural;
          Encoding : Address;
          E_Length : access Natural);
@@ -1685,7 +1686,8 @@ procedure Gnatchop is
 
       OS_Filename
         (Name, W_Name,
-         OS_Name'Address, O_Length'Access,
+         OS_Name'Address, Interfaces.C_size_t (Name'Length * 2),
+         O_Length'Access,
          Encoding'Address, E_Length'Access);
 
       declare
