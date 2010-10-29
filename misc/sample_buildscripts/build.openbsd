@@ -7,7 +7,7 @@ NATIVE_HOST=i386-pc-openbsd4.7
 OS_LABEL4VERS="[OpenBSD]"
 PREFIX=/usr/local
 PKG_PREFIX=/usr/local
-GNATGCC=$PREFIX/bin/egcc
+GNATGCC=$PREFIX/bin/gnatgcc
 BUILD_CPP=no
 
 TARGLIB=$PREFIX/lib/gcc/$NATIVE_HOST/$GCC_VERSION
@@ -73,7 +73,7 @@ mkdir -p $WRKSRC
 		--with-mpfr=$PKG_PREFIX \
 		--with-mpc=$PKG_PREFIX \
 		--with-libiconv-prefix=$PKG_PREFIX \
-		--enable-threads=single \
+		--enable-threads=yes \
 		--enable-shared \
 		--disable-bootstrap \
 		--disable-libgomp \
