@@ -106,6 +106,10 @@ along with GCC; see the file COPYING3.  If not see
 #undef  NO_IMPLICIT_EXTERN_C
 #define NO_IMPLICIT_EXTERN_C	1
 
+/* Make gree agree with OpenBSD's standard headers <machine/_types.h>  */
+
+#undef  WCHAR_TYPE
+#define WCHAR_TYPE "int"
 
 /* Code generation parameters.  */
 

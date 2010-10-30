@@ -35,21 +35,12 @@ along with GCC; see the file COPYING3.  If not see
 #undef  ASM_APP_OFF
 #define ASM_APP_OFF "#NO_APP\n"
 
+#undef  SET_ASM_OP
+#define SET_ASM_OP "\t.set\t"
+
 #undef  DBX_REGISTER_NUMBER
 #define DBX_REGISTER_NUMBER(n) \
   (TARGET_64BIT ? dbx64_register_map[n] : svr4_dbx_register_map[n])
-
-#undef  NO_PROFILE_COUNTERS
-#define NO_PROFILE_COUNTERS	1
-
-/* Tell final.c that we don't need a label passed to mcount.  */
-
-#undef  MCOUNT_NAME
-#define MCOUNT_NAME ".mcount"
-
-/* mcount may clobber caller-saved registers, so ... */
-#undef  MCOUNT_PRESERVES_ALL_REGS
-#define MCOUNT_PRESERVES_ALL_REGS 0
 
 /* Make gcc agree with <machine/ansi.h>.  */
 
@@ -69,6 +60,7 @@ along with GCC; see the file COPYING3.  If not see
 /* Assembler format: alignment output.  */
 
 #ifdef HAVE_GAS_MAX_SKIP_P2ALIGN
+#undef  ASM_OUTPUT_MAX_SKIP_ALIGN
 #define ASM_OUTPUT_MAX_SKIP_ALIGN(FILE,LOG,MAX_SKIP) \
   if ((LOG) != 0) {\
     if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG)); \
@@ -95,3 +87,12 @@ along with GCC; see the file COPYING3.  If not see
 /* Define location of OS-specific unwind support configuration. */
 /*#define MD_UNWIND_SUPPORT "config/i386/openbsd-unwind.h" */
 
+/* Stack & calling: profiling.  */
+
+/* OpenBSD's profiler recovers all information from the stack pointer.
+   The icky part is not her, but in machine/profile.h  */
+
+#undef  FUNCTION_PROFILER
+#define FUNCTION_PROFILER(FILE, LABELNO)  \
+  fputs (flag_pic ? "\tcall __mcount@PLT\n" : "\tcall __mcount\n", FILE);
+  
