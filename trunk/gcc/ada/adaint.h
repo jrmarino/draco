@@ -241,7 +241,7 @@ extern int    __gnat_dup2			   (int, int);
 extern int    __gnat_number_of_cpus                (void);
 
 extern void   __gnat_os_filename                   (char *, char *, char *,
-                                                    size_t, int *, char *, 
+                                                    size_t, int *, char *,
                                                     int *);
 #if defined (linux)
 extern void   *__gnat_lwp_self			   (void);
@@ -255,8 +255,9 @@ __gnat_win32_remove_handle (HANDLE h, int pid);
 #endif
 
 #ifdef IN_RTS
-/* Portable definition of strdup, which is not available on all systems.  */
-#define xstrdup(S)  strcpy ((char *) malloc (strlen (S) + 1), S)
+/* Previously was a custom strcpy-based macro meant to make it portable within
+   all systems, but strdup available on Linux, all BSDs, and Solaris. */
+#define xstrdup(S)  strdup (S);
 #endif
 
 /* This function returns the version of GCC being used.  Here it's GCC 3.  */

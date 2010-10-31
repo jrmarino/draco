@@ -1203,7 +1203,7 @@ __gnat_tmp_name (char *tmp_filename, size_t name_len)
   /* If tmpdir is longer than MAX_SAFE_PATH, revert to default value to avoid
      a buffer overflow.  */
   if (tmpdir == NULL || strlen (tmpdir) > MAX_SAFE_PATH)
-    bsd_strlcpy (tmp_filename, "/tmp/gnat-XXXXXX", name_len);
+    strncpy (tmp_filename, "/tmp/gnat-XXXXXX", name_len);
   else
     snprintf (tmp_filename, name_len, "%s/gnat-XXXXXX", tmpdir);
 
