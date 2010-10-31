@@ -2321,7 +2321,8 @@ __gnat_install_handler (void)
 
 #if defined (_WIN32) || defined (__INTERIX) \
   || defined (__Lynx__) || defined(__NetBSD__) || defined(__FreeBSD__) \
-  || defined (__OpenBSD__) || defined (__DragonFly__)
+  || defined (__DragonFly__) \
+  || defined (__OpenBSD__)
 
 #define HAVE_GNAT_INIT_FLOAT
 

@@ -256,7 +256,8 @@ __gnat_initialize (void *eh ATTRIBUTE_UNUSED)
 /******************************************/
 
 #elif defined (__Lynx__) || defined (__FreeBSD__) || defined(__NetBSD__) \
-  || defined (__OpenBSD__) || defined (__DragonFly__)
+  || defined (__DragonFly__) \
+  || defined (__OpenBSD__)
 
 extern void __gnat_init_float (void);
 

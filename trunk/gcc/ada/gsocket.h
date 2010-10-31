@@ -196,9 +196,9 @@
 #endif
 
 #if defined (_AIX) || defined (__FreeBSD__) || defined (__hpux__) || \
-    defined (__osf__) || defined (_WIN32) || defined (__APPLE__) \
-    || defined (__OpenBSD__) \
-    || defined (__DragonFly__)
+    defined (__OpenBSD__) || \
+    defined (__DragonFly__) || \
+    defined (__osf__) || defined (_WIN32) || defined (__APPLE__)
 # define HAVE_THREAD_SAFE_GETxxxBYyyy 1
 
 #elif defined (sgi) || defined (linux) || defined (__GLIBC__) || \
