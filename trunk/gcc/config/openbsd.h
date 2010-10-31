@@ -43,7 +43,7 @@ along with GCC; see the file COPYING3.  If not see
 
 
 #undef  CPP_SPEC
-#define CPP_SPEC "%(cpp_cpu) %{posix:-D_POSIX_SOURCE} %{pthread:-D_POSIX_THREADS}"
+#define CPP_SPEC "%{posix:-D_POSIX_SOURCE} %{pthread:-D_POSIX_THREADS}"
 
 
 /* As an elf system, we need crtbegin/crtend stuff.  */
@@ -53,10 +53,6 @@ along with GCC; see the file COPYING3.  If not see
 	crtbegin%O%s} %{shared:crtbeginS%O%s}"
 #undef  STARTFILE_SPEC
 
-/* Under OpenBSD, the normal location of the various *crt*.o files is the
-   /usr/lib directory.  */
-#undef  STANDARD_STARTFILE_PREFIX
-#define STANDARD_STARTFILE_PREFIX	"/usr/local/lib/"
 
 #undef  ENDFILE_SPEC
 #define ENDFILE_SPEC "%{!shared:crtend%O%s} %{shared:crtendS%O%s}"
@@ -87,9 +83,10 @@ along with GCC; see the file COPYING3.  If not see
 
 
 /* Use --as-needed -lgcc_s for eh support. */
-#ifdef HAVE_LD_AS_NEEDED
-#define USE_LD_AS_NEEDED 1
-#endif
+/* #ifdef  HAVE_LD_AS_NEEDED
+  #define USE_LD_AS_NEEDED 1
+  #endif
+*/
 
 
 /* Since we use gas, stdin -> - is a good idea.  */
@@ -103,13 +100,13 @@ along with GCC; see the file COPYING3.  If not see
 /************************[  Target stuff  ]***********************************/
 
 /* Draco / GNAT AUX only supports ELF for now */
-#undef  OBJECT_FORMAT_ELF
-#define OBJECT_FORMAT_ELF
+/* #undef  OBJECT_FORMAT_ELF
+   #define OBJECT_FORMAT_ELF */
 
 
 /* Don't assume anything about the header files.  */
-#undef  NO_IMPLICIT_EXTERN_C
-#define NO_IMPLICIT_EXTERN_C	1
+/* #undef  NO_IMPLICIT_EXTERN_C
+   #define NO_IMPLICIT_EXTERN_C	1  */
 
 /* Make gree agree with OpenBSD's standard headers <machine/_types.h>  */
 
@@ -132,10 +129,10 @@ along with GCC; see the file COPYING3.  If not see
 
 
 /* OpenBSD assembler is hacked to have .type & .size support even in a.out
-   format object files.  Functions size are supported but not activated 
-   yet (look for GRACE_PERIOD_EXPIRED in gas/config/obj-aout.c).  
+   format object files.  Functions size are supported but not activated
+   yet (look for GRACE_PERIOD_EXPIRED in gas/config/obj-aout.c).
    SET_ASM_OP is needed for attribute alias to work.  */
-         
+
 #undef  TYPE_ASM_OP
 #define TYPE_ASM_OP     "\t.type\t"
 
@@ -147,8 +144,8 @@ along with GCC; see the file COPYING3.  If not see
 
 #undef GLOBAL_ASM_OP
 #define GLOBAL_ASM_OP   "\t.globl\t"
-  
-  
+
+
 /* The following macro defines the format used to output the second
    operand of the .type assembler directive.  */
 #undef  TYPE_OPERAND_FMT
@@ -156,11 +153,11 @@ along with GCC; see the file COPYING3.  If not see
 
 /* These macros generate the special .type and .size directives which
    are used to set the corresponding fields of the linker symbol table
-   entries under OpenBSD.  These macros also have to output the starting 
-   labels for the relevant functions/objects.  */  
-   
+   entries under OpenBSD.  These macros also have to output the starting
+   labels for the relevant functions/objects.  */
+
 /* Extra assembler code needed to declare a function properly.
-   Some assemblers may also need to also have something extra said 
+   Some assemblers may also need to also have something extra said
    about the function's return value.  We allow for that here.  */
 #undef  ASM_DECLARE_FUNCTION_NAME
 #define ASM_DECLARE_FUNCTION_NAME(FILE, NAME, DECL)			\
@@ -169,7 +166,7 @@ along with GCC; see the file COPYING3.  If not see
     ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));			\
     ASM_OUTPUT_FUNCTION_LABEL (FILE, NAME, DECL);			\
   } while (0)
-         
+
 
 /* Declare the size of a function.  */
 #undef  ASM_DECLARE_FUNCTION_SIZE
@@ -178,7 +175,8 @@ along with GCC; see the file COPYING3.  If not see
     if (!flag_inhibit_size_directive)				\
       ASM_OUTPUT_MEASURED_SIZE (FILE, FNAME);			\
   } while (0)
-  
+
+
 /* Extra assembler code needed to declare an object properly.  */
 #undef  ASM_DECLARE_OBJECT_NAME
 #define ASM_DECLARE_OBJECT_NAME(FILE, NAME, DECL)      \
@@ -195,11 +193,12 @@ along with GCC; see the file COPYING3.  If not see
       }                                                \
       ASM_OUTPUT_LABEL (FILE, NAME);                   \
   } while (0)
-  
+
+
 /* Output the size directive for a decl in rest_of_decl_compilation
    in the case where we did not do so before the initializer.
    Once we find the error_mark_node, we know that the value of
-   size_directive_output was set by ASM_DECLARE_OBJECT_NAME 
+   size_directive_output was set by ASM_DECLARE_OBJECT_NAME
    when it was run for the same decl.  */
 #undef  ASM_FINISH_DECLARE_OBJECT
 #define ASM_FINISH_DECLARE_OBJECT(FILE, DECL, TOP_LEVEL, AT_END)  \
@@ -216,19 +215,19 @@ along with GCC; see the file COPYING3.  If not see
         ASM_OUTPUT_SIZE_DIRECTIVE (FILE, name, size);             \
       }                                                           \
   } while (0)
-  
-  
 
-/* Those are eneric' ways to weaken/globalize a label. We shouldn't need
+
+/* Those are 'generic' ways to weaken/globalize a label. We shouldn't need
    to override a processor specific definition. Hence, #ifndef ASM_*
-   In case overriding turns out to be needed, one can always #undef ASM_* 
+   In case overriding turns out to be needed, one can always #undef ASM_*
    before including this file.  */
-         
-/* Tell the assembler that a symbol is weak.  
-   Note: netbsd arm32 assembler needs a .globl here. An override may 
+
+/* Tell the assembler that a symbol is weak.
+   Note: netbsd arm32 assembler needs a .globl here. An override may
    be needed when/if we go for arm32 support.  */
 #ifndef ASM_WEAKEN_LABEL
 #define ASM_WEAKEN_LABEL(FILE,NAME) \
   do {fputs ("\t.weak\t", FILE); assemble_name (FILE, NAME); \
       fputc ('\n', FILE); } while (0)
-#endif  
+#endif
+

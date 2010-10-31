@@ -81,8 +81,16 @@ along with GCC; see the file COPYING3.  If not see
 /* Define this to be nonzero if static stack checking is supported. */
 #define STACK_CHECK_STATIC_BUILTIN 1
 
+
+
 /* Define location of OS-specific unwind support configuration. */
 /*#define MD_UNWIND_SUPPORT "config/i386/openbsd-unwind.h" */
+
+/* our configuration still doesn't handle dwarf2 correctly */
+#undef  DWARF2_UNWIND_INFO
+#define DWARF2_UNWIND_INFO 0
+
+
 
 /* Stack & calling: profiling.  */
 
@@ -92,4 +100,11 @@ along with GCC; see the file COPYING3.  If not see
 #undef  FUNCTION_PROFILER
 #define FUNCTION_PROFILER(FILE, LABELNO)  \
   fputs (flag_pic ? "\tcall __mcount@PLT\n" : "\tcall __mcount\n", FILE);
-  
+
+
+/* This goes away when the math-emulator is fixed */
+#undef TARGET_DEFAULT
+#define TARGET_DEFAULT \
+  (MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_NO_FANCY_MATH_387)
+
+
