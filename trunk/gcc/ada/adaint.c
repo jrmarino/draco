@@ -549,7 +549,7 @@ __gnat_try_lock (char *dir, char *file)
 
   snprintf (full_path, sizeof (full_path), "%s%c%s", dir, DIR_SEPARATOR, file);
   snprintf (temp_file, sizeof (temp_file), "%s%cTMP-%ld-%ld",
-           dir, DIR_SEPARATOR, (long)getpid(), (long)getppid ());
+            dir, DIR_SEPARATOR, (long)getpid(), (long)getppid ());
 
   /* Create the temporary file and write the process number.  */
   fd = open (temp_file, O_CREAT | O_WRONLY, 0600);
@@ -709,7 +709,7 @@ __gnat_os_filename (char *filename ATTRIBUTE_UNUSED,
   strcpy (encoding, "encoding=utf8");
   *e_length = strlen (encoding);
 #else
-  strncpy (os_name, filename, name_len);
+  bsd_strlcpy (os_name, filename, name_len);
   *o_length = strlen (filename);
   *e_length = 0;
 #endif
@@ -1210,7 +1210,7 @@ __gnat_tmp_name (char *tmp_filename, size_t name_len)
   /* If tmpdir is longer than MAX_SAFE_PATH, revert to default value to avoid
      a buffer overflow.  */
   if (tmpdir == NULL || strlen (tmpdir) > MAX_SAFE_PATH)
-    strncpy (tmp_filename, "/tmp/gnat-XXXXXX", name_len);
+    bsd_strlcpy (tmp_filename, "/tmp/gnat-XXXXXX", name_len);
   else
     snprintf (tmp_filename, name_len, "%s/gnat-XXXXXX", tmpdir);
 
@@ -1279,7 +1279,7 @@ __gnat_readdir (DIR *dirp, char *buffer, int *len)
 
   if (dirent != NULL)
     {
-      strncpy (buffer, dirent->d_name, *len);
+      bsd_strlcpy (buffer, dirent->d_name, *len);
       *len = strlen (buffer);
       return buffer;
     }
@@ -2701,7 +2701,7 @@ __gnat_locate_regular_file (char *file_name, char *path_val)
   if (*ptr == '"')
     ptr++;
 
-  strncpy (file_path, ptr, strlen (file_path) + 1);
+  bsd_strlcpy (file_path, ptr, strlen (file_path) + 1);
 
   ptr = file_path + strlen (file_path) - 1;
 
@@ -2766,7 +2766,7 @@ __gnat_locate_regular_file (char *file_name, char *path_val)
       if (*ptr != '/' && *ptr != DIR_SEPARATOR)
         *++ptr = DIR_SEPARATOR;
 
-      strncpy (++ptr, file_name, (size_t)(ptr - file_path));
+      bsd_strlcpy (++ptr, file_name, (size_t)(ptr - file_path));
 
       if (__gnat_is_regular_file (file_path))
         return xstrdup (file_path);
@@ -2796,8 +2796,8 @@ __gnat_locate_exec (char *exec_name, char *path_val)
       size_t name_len = strlen (exec_name) + strlen (HOST_EXECUTABLE_SUFFIX);
       char *full_exec_name = (char *) alloca (name_len + 1);
 
-      strncpy (full_exec_name, exec_name, name_len + 1);
-      strncat (full_exec_name, HOST_EXECUTABLE_SUFFIX, name_len + 1);
+      bsd_strlcpy (full_exec_name, exec_name, name_len + 1);
+      bsd_strlcat (full_exec_name, HOST_EXECUTABLE_SUFFIX, name_len + 1);
       ptr = __gnat_locate_regular_file (full_exec_name, path_val);
 
       if (ptr == 0)
@@ -2849,7 +2849,7 @@ __gnat_locate_exec_on_path (char *exec_name)
   if (path_val == NULL) return NULL;
   size_t name_len = strlen (path_val) + 1;
   apath_val = (char *) alloca (name_len);
-  strncpy (apath_val, path_val, name_len);
+  bsd_strlcpy (apath_val, path_val, name_len);
   return __gnat_locate_exec (exec_name, apath_val);
 #endif
 }
@@ -3686,3 +3686,102 @@ void *__gnat_lwp_self (void)
    return (void *) syscall (__NR_gettid);
 }
 #endif
+
+
+
+
+
+/*
+ * Copyright (c) 1998 Todd C. Miller <Todd.Miller@courtesan.com>
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+/*
+ * original function name: strlcpy
+ * Copy src to string dst of size siz.  At most siz-1 characters
+ * will be copied.  Always NUL terminates (unless siz == 0).
+ * Returns strlen(src); if retval >= siz, truncation occurred.
+ *
+ * $OpenBSD: strlcpy.c,v 1.11 2006/05/05 15:27:38 millert Exp $
+ * $FreeBSD: src/lib/libc/string/strlcpy.c,v 1.10 2008/10/19 delphij Exp $
+ * $DragonFly: src/lib/libc/string/strlcpy.c,v 1.4 2005/09/18 asmodai Exp $
+ */
+
+size_t
+bsd_strlcpy(char *dst, const char *src, size_t siz)
+{
+	char *d = dst;
+	const char *s = src;
+	size_t n = siz;
+
+	/* Copy as many bytes as will fit */
+	if (n != 0) {
+		while (--n != 0) {
+			if ((*d++ = *s++) == '\0')
+				break;
+		}
+	}
+
+	/* Not enough room in dst, add NUL and traverse rest of src */
+	if (n == 0) {
+		if (siz != 0)
+			*d = '\0';		/* NUL-terminate dst */
+		while (*s++)
+			;
+	}
+
+	return(s - src - 1);	/* count does not include NUL */
+}
+
+
+/*
+ * Original function name: strlcat
+ * Appends src to string dst of size siz (unlike strncat, siz is the
+ * full size of dst, not space left).  At most siz-1 characters
+ * will be copied.  Always NUL terminates (unless siz <= strlen(dst)).
+ * Returns strlen(src) + MIN(siz, strlen(initial dst)).
+ * If retval >= siz, truncation occurred.
+ *
+ * $OpenBSD: strlcat.c,v 1.13 2005/08/08 08:05:37 espie Exp $
+ * $FreeBSD: src/lib/libc/string/strlcat.c,v 1.11 2009/01/12 delphij Exp $
+ * $DragonFly: src/lib/libc/string/strlcat.c,v 1.4 2004/12/18 asmodai Exp $
+ */
+
+size_t
+bsd_strlcat(char *dst, const char *src, size_t siz)
+{
+	char *d = dst;
+	const char *s = src;
+	size_t n = siz;
+	size_t dlen;
+
+	/* Find the end of dst and adjust bytes left but don't go past end */
+	while (n-- != 0 && *d != '\0')
+		d++;
+	dlen = d - dst;
+	n = siz - dlen;
+
+	if (n == 0)
+		return(dlen + strlen(s));
+	while (*s != '\0') {
+		if (n != 1) {
+			*d++ = *s;
+			n--;
+		}
+		s++;
+	}
+	*d = '\0';
+
+	return(dlen + (s - src));	/* count does not include NUL */
+}
