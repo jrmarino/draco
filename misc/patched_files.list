@@ -1,0 +1,26 @@
+# List of patched GNAT files #
+
+a-direct.adb
+adaint.c
+adaint.h
+cstreams.c
+env.c
+g-comlin.adb
+g-dirope.adb
+g-expect.adb
+gnatchop.adb
+gnatlink.adb
+gsocket.h
+init.c
+initialize.c
+link.c
+make.adb
+mlib-utl.adb
+prj-makr.adb
+s-fileio.adb
+s-stusta.adb
+sysdep.c
+
+
+gcc-interface/Makefile.in
+
