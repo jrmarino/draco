@@ -35,9 +35,6 @@ along with GCC; see the file COPYING3.  If not see
 #undef  ASM_APP_OFF
 #define ASM_APP_OFF "#NO_APP\n"
 
-#undef  SET_ASM_OP
-#define SET_ASM_OP "\t.set\t"
-
 #undef  DBX_REGISTER_NUMBER
 #define DBX_REGISTER_NUMBER(n) \
   (TARGET_64BIT ? dbx64_register_map[n] : svr4_dbx_register_map[n])

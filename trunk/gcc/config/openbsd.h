@@ -27,14 +27,14 @@ along with GCC; see the file COPYING3.  If not see
    || (CHAR) == 'R')
 
 
-/* Controlling the compilation driver.  */
-/* TARGET_OS_CPP_BUILTINS() common to all OpenBSD targets.  */
-#define OPENBSD_OS_CPP_BUILTINS()        \
-  do						                    \
-    {						                    \
+#undef  TARGET_OS_CPP_BUILTINS
+#define TARGET_OS_CPP_BUILTINS()         \
+  do                                     \
+    {                                    \
       builtin_define ("__OpenBSD__");    \
       builtin_define ("__unix__");       \
       builtin_define ("__ANSI_COMPAT");  \
+      builtin_define ("__ELF__");        \
       builtin_assert ("system=unix");    \
       builtin_assert ("system=bsd");     \
       builtin_assert ("system=OpenBSD"); \
@@ -53,15 +53,20 @@ along with GCC; see the file COPYING3.  If not see
 	crtbegin%O%s} %{shared:crtbeginS%O%s}"
 #undef  STARTFILE_SPEC
 
-#undef ENDFILE_SPEC
+/* Under OpenBSD, the normal location of the various *crt*.o files is the
+   /usr/lib directory.  */
+#undef  STANDARD_STARTFILE_PREFIX
+#define STANDARD_STARTFILE_PREFIX	"/usr/local/lib/"
+
+#undef  ENDFILE_SPEC
 #define ENDFILE_SPEC "%{!shared:crtend%O%s} %{shared:crtendS%O%s}"
 
 
-#undef LIB_SPEC
+#undef  LIB_SPEC
 #define LIB_SPEC "%{!shared:%{pthread:-lpthread} -lc}"
 
 
-#undef LINK_SPEC
+#undef  LINK_SPEC
 #define LINK_SPEC \
   "%{!shared:%{!nostdlib:%{!r*:%{!e*:-e __start}}}} \
    %{shared:-shared} %{R*} \
@@ -119,3 +124,111 @@ along with GCC; see the file COPYING3.  If not see
 #undef NO_DOLLAR_IN_LABEL
 
 
+/* bug work around: we don't want to support #pragma weak, but the current
+   code layout needs HANDLE_PRAGMA_WEAK asserted for __attribute((weak)) to
+   work.  On the other hand, we don't define HANDLE_PRAGMA_WEAK directly,
+   as this depends on a few other details as well...  */
+#define HANDLE_SYSV_PRAGMA 1
+
+
+/* OpenBSD assembler is hacked to have .type & .size support even in a.out
+   format object files.  Functions size are supported but not activated 
+   yet (look for GRACE_PERIOD_EXPIRED in gas/config/obj-aout.c).  
+   SET_ASM_OP is needed for attribute alias to work.  */
+         
+#undef  TYPE_ASM_OP
+#define TYPE_ASM_OP     "\t.type\t"
+
+#undef  SIZE_ASM_OP
+#define SIZE_ASM_OP     "\t.size\t"
+
+#undef  SET_ASM_OP
+#define SET_ASM_OP      "\t.set\t"
+
+#undef GLOBAL_ASM_OP
+#define GLOBAL_ASM_OP   "\t.globl\t"
+  
+  
+/* The following macro defines the format used to output the second
+   operand of the .type assembler directive.  */
+#undef  TYPE_OPERAND_FMT
+#define TYPE_OPERAND_FMT  "@%s"
+
+/* These macros generate the special .type and .size directives which
+   are used to set the corresponding fields of the linker symbol table
+   entries under OpenBSD.  These macros also have to output the starting 
+   labels for the relevant functions/objects.  */  
+   
+/* Extra assembler code needed to declare a function properly.
+   Some assemblers may also need to also have something extra said 
+   about the function's return value.  We allow for that here.  */
+#undef  ASM_DECLARE_FUNCTION_NAME
+#define ASM_DECLARE_FUNCTION_NAME(FILE, NAME, DECL)			\
+  do {									\
+    ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "function");			\
+    ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));			\
+    ASM_OUTPUT_FUNCTION_LABEL (FILE, NAME, DECL);			\
+  } while (0)
+         
+
+/* Declare the size of a function.  */
+#undef  ASM_DECLARE_FUNCTION_SIZE
+#define ASM_DECLARE_FUNCTION_SIZE(FILE, FNAME, DECL)		\
+  do {								\
+    if (!flag_inhibit_size_directive)				\
+      ASM_OUTPUT_MEASURED_SIZE (FILE, FNAME);			\
+  } while (0)
+  
+/* Extra assembler code needed to declare an object properly.  */
+#undef  ASM_DECLARE_OBJECT_NAME
+#define ASM_DECLARE_OBJECT_NAME(FILE, NAME, DECL)      \
+  do {                                                 \
+    HOST_WIDE_INT size;                                \
+    ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "object");  \
+    size_directive_output = 0;                         \
+    if (!flag_inhibit_size_directive                   \
+        && (DECL) && DECL_SIZE (DECL))                 \
+      {                                                \
+        size_directive_output = 1;                     \
+        size = int_size_in_bytes (TREE_TYPE (DECL));   \
+        ASM_OUTPUT_SIZE_DIRECTIVE (FILE, NAME, size);  \
+      }                                                \
+      ASM_OUTPUT_LABEL (FILE, NAME);                   \
+  } while (0)
+  
+/* Output the size directive for a decl in rest_of_decl_compilation
+   in the case where we did not do so before the initializer.
+   Once we find the error_mark_node, we know that the value of
+   size_directive_output was set by ASM_DECLARE_OBJECT_NAME 
+   when it was run for the same decl.  */
+#undef  ASM_FINISH_DECLARE_OBJECT
+#define ASM_FINISH_DECLARE_OBJECT(FILE, DECL, TOP_LEVEL, AT_END)  \
+  do {                                                            \
+    const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);       \
+    HOST_WIDE_INT size;                                           \
+    if (!flag_inhibit_size_directive && DECL_SIZE (DECL)          \
+        && ! AT_END && TOP_LEVEL                                  \
+        && DECL_INITIAL (DECL) == error_mark_node                 \
+        && !size_directive_output)                                \
+      {                                                           \
+        size_directive_output = 1;                                \
+        size = int_size_in_bytes (TREE_TYPE (DECL));              \
+        ASM_OUTPUT_SIZE_DIRECTIVE (FILE, name, size);             \
+      }                                                           \
+  } while (0)
+  
+  
+
+/* Those are eneric' ways to weaken/globalize a label. We shouldn't need
+   to override a processor specific definition. Hence, #ifndef ASM_*
+   In case overriding turns out to be needed, one can always #undef ASM_* 
+   before including this file.  */
+         
+/* Tell the assembler that a symbol is weak.  
+   Note: netbsd arm32 assembler needs a .globl here. An override may 
+   be needed when/if we go for arm32 support.  */
+#ifndef ASM_WEAKEN_LABEL
+#define ASM_WEAKEN_LABEL(FILE,NAME) \
+  do {fputs ("\t.weak\t", FILE); assemble_name (FILE, NAME); \
+      fputc ('\n', FILE); } while (0)
+#endif  
