@@ -27,7 +27,6 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
- * Copyright (C) 2010 John Marino <draco@marino.st                          *
  ****************************************************************************/
 
 #include <sys/stat.h>
@@ -137,7 +136,7 @@ extern int    __gnat_create_output_file_new        (char *);
 extern int    __gnat_open_append                   (char *, int);
 extern long   __gnat_file_length                   (int);
 extern long   __gnat_named_file_length             (char *);
-extern void   __gnat_tmp_name                      (char *, size_t);
+extern void   __gnat_tmp_name			   (char *);
 extern DIR   *__gnat_opendir                       (char *);
 extern char  *__gnat_readdir                       (DIR *, char *, int *);
 extern int    __gnat_closedir                      (DIR *);
@@ -241,8 +240,7 @@ extern int    __gnat_dup2			   (int, int);
 extern int    __gnat_number_of_cpus                (void);
 
 extern void   __gnat_os_filename                   (char *, char *, char *,
-                                                    size_t, int *, char *,
-                                                    int *);
+						    int *, char *, int *);
 #if defined (linux)
 extern void   *__gnat_lwp_self			   (void);
 #endif
@@ -255,9 +253,8 @@ __gnat_win32_remove_handle (HANDLE h, int pid);
 #endif
 
 #ifdef IN_RTS
-/* Previously was a custom strcpy-based macro meant to make it portable within
-   all systems, but strdup available on Linux, all BSDs, and Solaris. */
-#define xstrdup(S)  strdup (S);
+/* Portable definition of strdup, which is not available on all systems.  */
+#define xstrdup(S)  strcpy ((char *) malloc (strlen (S) + 1), S)
 #endif
 
 /* This function returns the version of GCC being used.  Here it's GCC 3.  */
@@ -265,12 +262,3 @@ extern int    get_gcc_version                      (void);
 
 extern int    __gnat_binder_supports_auto_init     (void);
 extern int    __gnat_sals_init_using_constructors  (void);
-
-
-/* These functions aren't available in glibc C.  strcpy and strcat only appear
-   in adaint.c, so it's reasonable to copy these small functions from the BSD
-   c library to make sure we have them on all systems, including Linux */
-
-size_t        bsd_strlcpy (char *dst, const char *src, size_t siz);
-size_t        bsd_strlcat (char *dst, const char *src, size_t siz);
-

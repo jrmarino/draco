@@ -40,7 +40,6 @@ with GNAT.Table;
 with Hostparm;
 with Switch;                     use Switch;
 with Types;
-with Interfaces.C;
 
 procedure Gnatchop is
 
@@ -1649,7 +1648,6 @@ procedure Gnatchop is
         (Name     : String;
          W_Name   : Wide_String;
          OS_Name  : Address;
-         Name_Len : Interfaces.C.size_t;
          N_Length : access Natural;
          Encoding : Address;
          E_Length : access Natural);
@@ -1687,8 +1685,7 @@ procedure Gnatchop is
 
       OS_Filename
         (Name, W_Name,
-         OS_Name'Address, Interfaces.C.size_t (Name'Length * 2),
-         O_Length'Access,
+         OS_Name'Address, O_Length'Access,
          Encoding'Address, E_Length'Access);
 
       declare

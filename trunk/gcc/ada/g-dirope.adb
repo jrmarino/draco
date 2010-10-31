@@ -29,7 +29,6 @@
 -- GNAT was originally developed  by the GNAT team at  New York University. --
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
--- Copywrite (C) 2010 John Marino <draco@marino.st>                         --
 ------------------------------------------------------------------------------
 
 with Ada.Characters.Handling;
@@ -667,7 +666,6 @@ package body GNAT.Directory_Operations is
          raise Directory_Error;
       end if;
 
-      Filename_Len := Filename_Max + 12;
       Filename_Addr :=
         readdir_gnat
           (System.Address (Dir.all), Buffer'Address, Filename_Len'Access);

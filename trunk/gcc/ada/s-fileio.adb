@@ -27,7 +27,6 @@
 -- GNAT was originally developed  by the GNAT team at  New York University. --
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
--- Copyright (C) 2010 John Marino <draco@marino.st>                         --
 ------------------------------------------------------------------------------
 
 with Ada.Finalization;            use Ada.Finalization;
@@ -754,7 +753,7 @@ package body System.File_IO is
       --  Yes we know this is never assigned a value. That's intended, since
       --  all we ever use of this value is the tag for dispatching purposes.
 
-      procedure Tmp_Name (Buffer : Address; Name_Len : Interfaces.C.size_t);
+      procedure Tmp_Name (Buffer : Address);
       pragma Import (C, Tmp_Name, "__gnat_tmp_name");
       --  Set buffer (a String address) with a temporary filename
 
@@ -886,7 +885,7 @@ package body System.File_IO is
                raise Name_Error with "opening temp file without creating it";
             end if;
 
-            Tmp_Name (Namestr'Address, Interfaces.C.size_t (Namelen));
+            Tmp_Name (Namestr'Address);
 
             if Namestr (1) = ASCII.NUL then
                raise Use_Error with "invalid temp file name";

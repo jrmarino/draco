@@ -523,7 +523,7 @@ __gnat_try_lock (char *dir, char *file)
 #else
   char full_path[256];
 
-  snprintf (full_path, sizeof (full_path), "%s%c%s", dir, DIR_SEPARATOR, file);
+  sprintf (full_path, "%s%c%s", dir, DIR_SEPARATOR, file);
   fd = open (full_path, O_CREAT | O_EXCL, 0600);
 #endif
 
@@ -547,9 +547,9 @@ __gnat_try_lock (char *dir, char *file)
   GNAT_STRUCT_STAT stat_result;
   int fd;
 
-  snprintf (full_path, sizeof (full_path), "%s%c%s", dir, DIR_SEPARATOR, file);
-  snprintf (temp_file, sizeof (temp_file), "%s%cTMP-%ld-%ld",
-            dir, DIR_SEPARATOR, (long)getpid(), (long)getppid ());
+  sprintf (full_path, "%s%c%s", dir, DIR_SEPARATOR, file);
+  sprintf (temp_file, "%s%cTMP-%ld-%ld",
+           dir, DIR_SEPARATOR, (long)getpid(), (long)getppid ());
 
   /* Create the temporary file and write the process number.  */
   fd = open (temp_file, O_CREAT | O_WRONLY, 0600);
@@ -700,7 +700,7 @@ __gnat_get_debuggable_suffix_ptr (int *len, const char **value)
 void
 __gnat_os_filename (char *filename ATTRIBUTE_UNUSED,
 		    char *w_filename ATTRIBUTE_UNUSED,
-		    char *os_name, size_t name_len, int *o_length,
+		    char *os_name, int *o_length,
 		    char *encoding ATTRIBUTE_UNUSED, int *e_length)
 {
 #if defined (_WIN32) && ! defined (__vxworks) && ! defined (IS_CROSS)
@@ -709,7 +709,7 @@ __gnat_os_filename (char *filename ATTRIBUTE_UNUSED,
   strcpy (encoding, "encoding=utf8");
   *e_length = strlen (encoding);
 #else
-  bsd_strlcpy (os_name, filename, name_len);
+  strcpy (os_name, filename);
   *o_length = strlen (filename);
   *e_length = 0;
 #endif
@@ -1153,7 +1153,7 @@ __gnat_named_file_length (char *name)
    TMP_FILENAME.  */
 
 void
-__gnat_tmp_name (char *tmp_filename, size_t name_len)
+__gnat_tmp_name (char *tmp_filename)
 {
 #ifdef RTX
   /* Variable used to create a series of unique names */
@@ -1203,9 +1203,9 @@ __gnat_tmp_name (char *tmp_filename, size_t name_len)
   /* If tmpdir is longer than MAX_SAFE_PATH, revert to default value to avoid
      a buffer overflow.  */
   if (tmpdir == NULL || strlen (tmpdir) > MAX_SAFE_PATH)
-    strncpy (tmp_filename, "/tmp/gnat-XXXXXX", name_len);
+    strcpy (tmp_filename, "/tmp/gnat-XXXXXX");
   else
-    snprintf (tmp_filename, name_len, "%s/gnat-XXXXXX", tmpdir);
+    sprintf (tmp_filename, "%s/gnat-XXXXXX", tmpdir);
 
   close (mkstemp(tmp_filename));
 #else
@@ -1272,7 +1272,7 @@ __gnat_readdir (DIR *dirp, char *buffer, int *len)
 
   if (dirent != NULL)
     {
-      bsd_strlcpy (buffer, dirent->d_name, *len);
+      strcpy (buffer, dirent->d_name);
       *len = strlen (buffer);
       return buffer;
     }
@@ -2704,7 +2704,7 @@ __gnat_locate_regular_file (char *file_name, char *path_val)
   if (*ptr == '"')
     ptr++;
 
-  bsd_strlcpy (file_path, ptr, strlen (file_path) + 1);
+  strcpy (file_path, ptr);
 
   ptr = file_path + strlen (file_path) - 1;
 
@@ -2769,7 +2769,7 @@ __gnat_locate_regular_file (char *file_name, char *path_val)
       if (*ptr != '/' && *ptr != DIR_SEPARATOR)
         *++ptr = DIR_SEPARATOR;
 
-      bsd_strlcpy (++ptr, file_name, (size_t)(ptr - file_path));
+      strcpy (++ptr, file_name);
 
       if (__gnat_is_regular_file (file_path))
         return xstrdup (file_path);
@@ -2796,11 +2796,12 @@ __gnat_locate_exec (char *exec_name, char *path_val)
   char *ptr;
   if (!strstr (exec_name, HOST_EXECUTABLE_SUFFIX))
     {
-      size_t name_len = strlen (exec_name) + strlen (HOST_EXECUTABLE_SUFFIX);
-      char *full_exec_name = (char *) alloca (name_len + 1);
+      char *full_exec_name =
+        (char *) alloca
+	  (strlen (exec_name) + strlen (HOST_EXECUTABLE_SUFFIX) + 1);
 
-      bsd_strlcpy (full_exec_name, exec_name, name_len + 1);
-      bsd_strlcat (full_exec_name, HOST_EXECUTABLE_SUFFIX, name_len + 1);
+      strcpy (full_exec_name, exec_name);
+      strcat (full_exec_name, HOST_EXECUTABLE_SUFFIX);
       ptr = __gnat_locate_regular_file (full_exec_name, path_val);
 
       if (ptr == 0)
@@ -2850,9 +2851,8 @@ __gnat_locate_exec_on_path (char *exec_name)
   char *path_val = getenv ("PATH");
 #endif
   if (path_val == NULL) return NULL;
-  size_t name_len = strlen (path_val) + 1;
-  apath_val = (char *) alloca (name_len);
-  bsd_strlcpy (apath_val, path_val, name_len);
+  apath_val = (char *) alloca (strlen (path_val) + 1);
+  strcpy (apath_val, path_val);
   return __gnat_locate_exec (exec_name, apath_val);
 #endif
 }
@@ -3693,6 +3693,11 @@ void *__gnat_lwp_self (void)
 
 
 
+#ifdef MARINO_DISABLED_THIS
+/* JRM 31 OCT 2010: For some reason, gnatmake wouldn't function correct when
+   strcpy or sprintf & friends were replaced.  I had to back out the patches.
+   I'll leave the BSD routines here in case we ever want to try again. */
+
 
 /*
  * Copyright (c) 1998 Todd C. Miller <Todd.Miller@courtesan.com>
@@ -3748,6 +3753,7 @@ bsd_strlcpy(char *dst, const char *src, size_t siz)
 }
 
 
+
 /*
  * Original function name: strlcat
  * Appends src to string dst of size siz (unlike strncat, siz is the
@@ -3788,3 +3794,5 @@ bsd_strlcat(char *dst, const char *src, size_t siz)
 
 	return(dlen + (s - src));	/* count does not include NUL */
 }
+#endif
+
