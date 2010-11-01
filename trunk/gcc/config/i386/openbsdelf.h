@@ -1,7 +1,23 @@
-/* Definitions for AMD x86_64 running OpenBSD BSD with ELF Format */
+/* Configuration for an OpenBSD i386 target.
 
-#undef TARGET_VERSION
-#define TARGET_VERSION fprintf (stderr, " (OpenBSD/x86-64 ELF)")
+   Copyright (C) 2005, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2010 John Marino <draco@marino.st>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* This gets defined in tm.h->linux.h->svr4.h, and keeps us from using
    libraries compiled with the native cc, so undef it. */
@@ -11,14 +27,20 @@
 #undef ASM_COMMENT_START
 #define ASM_COMMENT_START "#"
 
+#undef DBX_REGISTER_NUMBER
+#define DBX_REGISTER_NUMBER(n)  svr4_dbx_register_map[n]
+
+/* This goes away when the math-emulator is fixed */
+#undef TARGET_DEFAULT
+#define TARGET_DEFAULT \
+  (MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_NO_FANCY_MATH_387)
+
 /* Run-time target specifications */
 
 #define TARGET_OS_CPP_BUILTINS()		\
   do						\
     {						\
-    	OPENBSD_OS_CPP_BUILTINS_ELF();		\
-	if (TARGET_64BIT)			\
-		OPENBSD_OS_CPP_BUILTINS_LP64();	\
+    	OPENBSD_OS_CPP_BUILTINS();		\
     }						\
   while (0)
 
@@ -32,7 +54,7 @@
 
 /* Layout of source language data types.  */
 
-/* This must agree with <machine/_types.h> */
+/* This must agree with <machine/ansi.h> */
 #undef SIZE_TYPE
 #define SIZE_TYPE "long unsigned int"
 
@@ -43,7 +65,10 @@
 #define WCHAR_TYPE "int"
 
 #undef WCHAR_TYPE_SIZE
-#define WCHAR_TYPE_SIZE 32
+#define WCHAR_TYPE_SIZE BITS_PER_WORD
+
+#undef WINT_TYPE
+#define WINT_TYPE "int"
 
 /* Assembler format: overall framework.  */
 
@@ -71,6 +96,14 @@
 
 /* Assembler format: alignment output.  */
 
+#ifdef HAVE_GAS_MAX_SKIP_P2ALIGN
+#define ASM_OUTPUT_MAX_SKIP_ALIGN(FILE,LOG,MAX_SKIP) \
+  if ((LOG) != 0) {\
+    if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG)); \
+    else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP)); \
+  }
+#endif
+
 /* Stack & calling: profiling.  */
 
 /* OpenBSD's profiler recovers all information from the stack pointer.
@@ -80,6 +113,9 @@
   fputs (flag_pic ? "\tcall __mcount@PLT\n": "\tcall __mcount\n", FILE);
 
 /* Assembler format: exception region output.  */
+
+/* our configuration still doesn't handle dwarf2 correctly */
+#define DWARF2_UNWIND_INFO 0
 
 /* Assembler format: alignment output.  */
 
@@ -98,18 +134,16 @@
 
 #define OBSD_HAS_CORRECT_SPECS
 
-#undef JUMP_TABLES_IN_TEXT_SECTION
-#define JUMP_TABLES_IN_TEXT_SECTION (flag_pic)
+
 
 /* Define this to be nonzero if static stack checking is supported */
 #undef  STACK_CHECK_STATIC_BUILTIN
 #define STACK_CHECK_STATIC_BUILTIN 1
 
-/* Ensure rounding is left to GNAT (Not required for AMD64) */
+/* Ensure rounding is left to GNAT (i386 only) */
 #undef  TARGET_96_ROUND_53_LONG_DOUBLE
-#define TARGET_96_ROUND_53_LONG_DOUBLE 1
+#define TARGET_96_ROUND_53_LONG_DOUBLE 0
 
 /* Define location of OS-specific unwind support configuration
 #define MD_UNWIND_SUPPORT "config/i386/openbsd-unwind.h"
 */
-
