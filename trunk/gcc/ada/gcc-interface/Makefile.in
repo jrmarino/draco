@@ -1239,6 +1239,8 @@ endif
 # TOOL_TARGET_PAIRS probably does nothing, moved to gnattools/configure.ac
 ifeq ($(strip $(filter-out %86 dragonfly%,$(arch) $(osys))),)
   LIBGNAT_TARGET_PAIRS = \
+  a-exetim.adb<a-exetim-posix.adb \
+  a-exetim.ads<a-exetim-default.ads \
   a-intnam.ads<a-intnam-dragonfly.ads \
   a-numaux.adb<a-numaux-x86.adb \
   a-numaux.ads<a-numaux-x86.ads \
@@ -1256,6 +1258,9 @@ ifeq ($(strip $(filter-out %86 dragonfly%,$(arch) $(osys))),)
   TOOLS_TARGET_PAIRS = \
   mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
   GNATLIB_SHARED = gnatlib-shared-dual
+
+  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
+  EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
 
   EH_MECHANISM=-gcc
   THREADSLIB= -lpthread
@@ -2177,7 +2182,7 @@ ifeq ($(strip $(filter-out sh4% linux%,$(arch) $(osys))),)
   TOOLS_TARGET_PAIRS =  \
     mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
     indepsw.adb<indepsw-linux.adb
- 
+
   EXTRA_GNATRTL_TASKING_OBJS=s-linux.o
   EH_MECHANISM=-gcc
   MISCLIB=
@@ -2500,12 +2505,12 @@ common-tools:
 	$(GNATLINK) -v gnatclean -o ../../gnatclean$(exeext) \
 		--GCC="$(GCC_LINK)" $(TOOLS_LIBS)
 
-../../gnatsym$(exeext): 
+../../gnatsym$(exeext):
 	$(GNATMAKE) -c $(ADA_INCLUDES) gnatsym --GCC="$(CC) $(ALL_ADAFLAGS)"
 	$(GNATBIND) $(ADA_INCLUDES) $(GNATBIND_FLAGS) gnatsym
 	$(GNATLINK) -v gnatsym -o $@ --GCC="$(GCC_LINK)" $(TOOLS_LIBS)
 
-../../gnatdll$(exeext): 
+../../gnatdll$(exeext):
 	$(GNATMAKE) -c $(ADA_INCLUDES) gnatdll --GCC="$(CC) $(ALL_ADAFLAGS)"
 	$(GNATBIND) $(ADA_INCLUDES) $(GNATBIND_FLAGS) gnatdll
 	$(GNATLINK) -v gnatdll -o $@ --GCC="$(GCC_LINK)" $(TOOLS_LIBS)
