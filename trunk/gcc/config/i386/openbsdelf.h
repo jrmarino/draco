@@ -138,7 +138,7 @@ along with GCC; see the file COPYING3.  If not see
 
 /* Define this to be nonzero if static stack checking is supported */
 #undef  STACK_CHECK_STATIC_BUILTIN
-#define STACK_CHECK_STATIC_BUILTIN 1
+#define STACK_CHECK_STATIC_BUILTIN 0
 
 /* Ensure rounding is left to GNAT (i386 only) */
 #undef  TARGET_96_ROUND_53_LONG_DOUBLE
