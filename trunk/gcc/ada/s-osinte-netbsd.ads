@@ -34,7 +34,8 @@
 -- Copyright (C) 2010 John Marino <draco@marino.st>                         --
 ------------------------------------------------------------------------------
 
---  This is the DragonFly BSD PTHREADS version of this package
+--  This is the NetBSD PTHREADS version of this package.
+--  It is based off of the FreeBSD PTHREADS as of 4.2.3.
 
 --  This package encapsulates all direct interfaces to OS services
 --  that are needed by the tasking run-time (libgnarl).
@@ -78,7 +79,7 @@ package System.OS_Interface is
    -- Signals --
    -------------
 
-   Max_Interrupt : constant := 31;
+   Max_Interrupt : constant := 63;
    type Signal is new int range 0 .. Max_Interrupt;
    for Signal'Size use int'Size;
 
@@ -115,6 +116,7 @@ package System.OS_Interface is
    SIGINFO    : constant := 29; --  information request (BSD)
    SIGUSR1    : constant := 30; --  user defined signal 1
    SIGUSR2    : constant := 31; --  user defined signal 2
+   SIGPWR     : constant := 32; --  power fail/restart (not reset when caught)
 
    SIGADAABORT : constant := SIGABRT;
    --  Change this if you want to use another signal for task abort.
@@ -137,23 +139,23 @@ package System.OS_Interface is
    function sigaddset
      (set : access sigset_t;
       sig : Signal) return int;
-   pragma Import (C, sigaddset, "sigaddset");
+   pragma Import (C, sigaddset, "__sigaddset14");
 
    function sigdelset
      (set : access sigset_t;
       sig : Signal) return int;
-   pragma Import (C, sigdelset, "sigdelset");
+   pragma Import (C, sigdelset, "__sigdelset14");
 
    function sigfillset (set : access sigset_t) return int;
-   pragma Import (C, sigfillset, "sigfillset");
+   pragma Import (C, sigfillset, "__sigfillset14");
 
    function sigismember
      (set : access sigset_t;
       sig : Signal) return int;
-   pragma Import (C, sigismember, "sigismember");
+   pragma Import (C, sigismember, "__sigismember14");
 
    function sigemptyset (set : access sigset_t) return int;
-   pragma Import (C, sigemptyset, "sigemptyset");
+   pragma Import (C, sigemptyset, "__sigemptyset14");
 
    --  sigcontext is architecture dependent, so define it private
    type struct_sigcontext is private;
@@ -179,8 +181,10 @@ package System.OS_Interface is
    SIG_UNBLOCK : constant := 2;
    SIG_SETMASK : constant := 3;
 
-   SIG_DFL : constant := 0;
-   SIG_IGN : constant := 1;
+   SIG_DFL  : constant := 0;
+   SIG_IGN  : constant := 1;
+   SIG_ERR  : constant := -1;
+   SIG_HOLD : constant := 3;
 
    SA_SIGINFO : constant := 16#0040#;
    SA_ONSTACK : constant := 16#0001#;
@@ -189,7 +193,7 @@ package System.OS_Interface is
      (sig  : Signal;
       act  : struct_sigaction_ptr;
       oact : struct_sigaction_ptr) return int;
-   pragma Import (C, sigaction, "sigaction");
+   pragma Import (C, sigaction, "__sigaction14");
 
    ----------
    -- Time --
@@ -327,7 +331,7 @@ package System.OS_Interface is
    function Get_Page_Size return size_t;
    function Get_Page_Size return Address;
    pragma Import (C, Get_Page_Size, "getpagesize");
-   --  Returns the size of a page
+   --  returns the size of a page, or 0 if this is not relevant on this target
 
    PROT_NONE  : constant := 0;
    PROT_READ  : constant := 1;
@@ -526,7 +530,7 @@ package System.OS_Interface is
    pragma Import (C, pthread_attr_getschedparam, "pthread_attr_getschedparam");
 
    function sched_yield return int;
-   pragma Import (C, sched_yield, "pthread_yield");
+   pragma Import (C, sched_yield, "sched_yield");
 
    --------------------------
    -- P1003.1c  Section 16 --
@@ -640,12 +644,61 @@ private
    type clockid_t is new int;
    CLOCK_REALTIME : constant clockid_t := 0;
 
+   type struct_timeval is record
+      tv_sec  : long;
+      tv_usec : long;
+   end record;
+   pragma Convention (C, struct_timeval);
+
    type pthread_t           is new System.Address;
-   type pthread_attr_t      is new System.Address;
-   type pthread_mutex_t     is new System.Address;
-   type pthread_mutexattr_t is new System.Address;
-   type pthread_cond_t      is new System.Address;
-   type pthread_condattr_t  is new System.Address;
+   type pthread_attr_t      is record
+      Pta_Magic   : unsigned;
+      Pta_Flags   : int;
+      Pta_Private : System.Address;
+   end record;
+   pragma Convention (C, pthread_attr_t);
+
+   --  PORT NOTE:  The size of pthread_spin_t is defined in
+   --  /src/sys/arch/*/include/types.h
+   type pthread_spin_t is new unsigned_char;
+
+   type pthread_queue_t is record
+      Pthqh_First : pthread_t;
+      Pthqh_Last  : System.Address;
+   end record;
+   pragma Convention (C, pthread_queue_t);
+
+   type pthread_mutex_t     is record
+      Ptm_Majic     : unsigned;
+      Ptm_Lock      : pthread_spin_t;
+      Ptm_Interlock : pthread_spin_t;
+      Ptm_Owner     : pthread_t;
+      Ptm_Block     : pthread_queue_t;
+      Ptm_Private   : System.Address;
+   end record;
+   pragma Convention (C, pthread_mutex_t);
+
+   type pthread_mutexattr_t is record
+      Ptma_Majic   : unsigned;
+      Ptma_Private : System.Address;
+   end record;
+   pragma Convention (C, pthread_mutexattr_t);
+
+   type pthread_cond_t      is record
+      Ptc_Magic   : unsigned;
+      Ptc_Lock    : pthread_spin_t;
+      Ptc_Waiters : pthread_queue_t;
+      Ptc_Mutex   : pthread_mutex_t;
+      Ptc_Private : System.Address;
+   end record;
+   pragma Convention (C, pthread_cond_t);
+
+   type pthread_condattr_t  is record
+      Ptca_Magic   : unsigned;
+      Ptca_Private : System.Address;
+   end record;
+   pragma Convention (C, pthread_condattr_t);
+
    type pthread_key_t       is new int;
 
 end System.OS_Interface;

@@ -130,4 +130,7 @@ package Ada.Interrupts.Names is
    SIGUSR2 : constant Interrupt_ID :=
      System.OS_Interface.SIGUSR2;     --  user defined signal 2
 
+   SIGPWR : constant Interrupt_ID :=
+     System.OS_Interface.SIGPWR;      --  power fail/restart
+
 end Ada.Interrupts.Names;

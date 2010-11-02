@@ -45,7 +45,7 @@ package body System.OS_Interface is
       type int_ptr is access all int;
 
       function internal_errno return int_ptr;
-      pragma Import (C, internal_errno, "__get_errno");
+      pragma Import (C, internal_errno, "__errno");
 
    begin
       return (internal_errno.all);
