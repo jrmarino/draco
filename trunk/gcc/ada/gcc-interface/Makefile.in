@@ -1401,7 +1401,7 @@ ifeq ($(strip $(filter-out x86_64 netbsd%,$(arch) $(osys))),)
 
   EH_MECHANISM=-gcc
   THREADSLIB= -lpthread
-  GMEM_LIB =
+  GMEM_LIB = gmemlib
   LIBRARY_VERSION := $(LIB_VERSION)
 endif
 
