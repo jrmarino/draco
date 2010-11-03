@@ -110,7 +110,6 @@ SOME_ADAFLAGS =-gnata
 FORCE_DEBUG_ADAFLAGS = -g
 GNATLIBFLAGS = -gnatpg -nostdinc
 GNATLIBCFLAGS = -g -O2
-GNATLIBPIC =
 # Pretend that _Unwind_GetIPInfo is available for the target by default.  This
 # should be autodetected during the configuration of libada and passed down to
 # here, but we need something for --disable-libada and hope for the best.
@@ -1362,8 +1361,6 @@ ifeq ($(strip $(filter-out x86_64 openbsd%,$(arch) $(osys))),)
   THREADSLIB= -lpthread
   GMEM_LIB =
   LIBRARY_VERSION := $(LIB_VERSION)
-
-  GNATLIBPIC = -fPIC
 endif
 
 
@@ -2741,7 +2738,7 @@ gnatlib-shared-default:
 gnatlib-shared-dual:
 	$(MAKE) $(FLAGS_TO_PASS) \
              GNATLIBFLAGS="$(GNATLIBFLAGS)" \
-	     GNATLIBCFLAGS="$(GNATLIBCFLAGS) $(GNATLIBPIC)" \
+	     GNATLIBCFLAGS="$(GNATLIBCFLAGS)" \
 	     GNATLIBCFLAGS_FOR_C="$(GNATLIBCFLAGS_FOR_C)" \
 	     MULTISUBDIR="$(MULTISUBDIR)" \
 	     THREAD_KIND="$(THREAD_KIND)" \
