@@ -110,6 +110,7 @@ SOME_ADAFLAGS =-gnata
 FORCE_DEBUG_ADAFLAGS = -g
 GNATLIBFLAGS = -gnatpg -nostdinc
 GNATLIBCFLAGS = -g -O2
+GNATLIBPIC =
 # Pretend that _Unwind_GetIPInfo is available for the target by default.  This
 # should be autodetected during the configuration of libada and passed down to
 # here, but we need something for --disable-libada and hope for the best.
@@ -1301,6 +1302,8 @@ endif
 # TOOL_TARGET_PAIRS probably does nothing, moved to gnattools/configure.ac
 ifeq ($(strip $(filter-out %86 openbsd%,$(arch) $(osys))),)
   LIBGNAT_TARGET_PAIRS = \
+  a-exetim.adb<a-exetim-posix.adb \
+  a-exetim.ads<a-exetim-default.ads \
   a-intnam.ads<a-intnam-openbsd.ads \
   a-numaux.adb<a-numaux-x86.adb \
   a-numaux.ads<a-numaux-x86.ads \
@@ -1319,7 +1322,10 @@ ifeq ($(strip $(filter-out %86 openbsd%,$(arch) $(osys))),)
   mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
   GNATLIB_SHARED = gnatlib-shared-dual
 
-  EH_MECHANISM=-gcc
+  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
+  EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
+
+  EH_MECHANISM=
   THREADSLIB= -lpthread
   GMEM_LIB =
   LIBRARY_VERSION := $(LIB_VERSION)
@@ -1330,6 +1336,8 @@ endif
 # TOOL_TARGET_PAIRS probably does nothing, moved to gnattools/configure.ac
 ifeq ($(strip $(filter-out x86_64 openbsd%,$(arch) $(osys))),)
   LIBGNAT_TARGET_PAIRS = \
+  a-exetim.adb<a-exetim-posix.adb \
+  a-exetim.ads<a-exetim-default.ads \
   a-intnam.ads<a-intnam-openbsd.ads \
   a-numaux.adb<a-numaux-x86.adb \
   a-numaux.ads<a-numaux-x86.ads \
@@ -1347,10 +1355,15 @@ ifeq ($(strip $(filter-out x86_64 openbsd%,$(arch) $(osys))),)
   TOOLS_TARGET_PAIRS=mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
   GNATLIB_SHARED = gnatlib-shared-dual
 
-  EH_MECHANISM=-gcc
+  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
+  EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
+
+  EH_MECHANISM=
   THREADSLIB= -lpthread
   GMEM_LIB =
   LIBRARY_VERSION := $(LIB_VERSION)
+
+  GNATLIBPIC = -fPIC
 endif
 
 
@@ -2728,7 +2741,7 @@ gnatlib-shared-default:
 gnatlib-shared-dual:
 	$(MAKE) $(FLAGS_TO_PASS) \
              GNATLIBFLAGS="$(GNATLIBFLAGS)" \
-	     GNATLIBCFLAGS="$(GNATLIBCFLAGS)" \
+	     GNATLIBCFLAGS="$(GNATLIBCFLAGS) $(GNATLIBPIC)" \
 	     GNATLIBCFLAGS_FOR_C="$(GNATLIBCFLAGS_FOR_C)" \
 	     MULTISUBDIR="$(MULTISUBDIR)" \
 	     THREAD_KIND="$(THREAD_KIND)" \
