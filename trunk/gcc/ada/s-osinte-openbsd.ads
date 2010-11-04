@@ -34,7 +34,7 @@
 -- Copyright (C) 2010 John Marino <draco@marino.st>                         --
 ------------------------------------------------------------------------------
 
---  This is the DragonFly BSD PTHREADS version of this package
+--  This is the OpenBSD PTHREADS version of this package
 
 --  This package encapsulates all direct interfaces to OS services
 --  that are needed by the tasking run-time (libgnarl).
