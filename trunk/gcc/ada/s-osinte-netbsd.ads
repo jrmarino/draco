@@ -250,8 +250,6 @@ package System.OS_Interface is
 
    type pid_t is private;
 
-   Self_PID : constant pid_t;
-
    function kill (pid : pid_t; sig : Signal) return int;
    pragma Import (C, kill, "kill");
 
@@ -331,7 +329,7 @@ package System.OS_Interface is
    function Get_Page_Size return size_t;
    function Get_Page_Size return Address;
    pragma Import (C, Get_Page_Size, "getpagesize");
-   --  returns the size of a page, or 0 if this is not relevant on this target
+   --  Returns the size of a page
 
    PROT_NONE  : constant := 0;
    PROT_READ  : constant := 1;
@@ -631,13 +629,12 @@ private
    pragma Convention (C, struct_sigcontext);
 
    type pid_t is new int;
-   Self_PID : constant pid_t := 0;
 
    type time_t is new long;
 
    type timespec is record
-      ts_sec  : time_t;
-      ts_nsec : long;
+      tv_sec  : time_t;
+      tv_nsec : long;
    end record;
    pragma Convention (C, timespec);
 

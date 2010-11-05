@@ -56,9 +56,10 @@ package body System.OS_Interface is
    --------------------
 
    function Get_Stack_Base (thread : pthread_t) return Address is
-      pragma Unreferenced (thread);
+      pragma Warnings (Off, thread);
+
    begin
-      return (0);
+      return Null_Address;
    end Get_Stack_Base;
 
    ------------------
@@ -76,7 +77,7 @@ package body System.OS_Interface is
 
    function To_Duration (TS : timespec) return Duration is
    begin
-      return Duration (TS.ts_sec) + Duration (TS.ts_nsec) / 10#1#E9;
+      return Duration (TS.tv_sec) + Duration (TS.tv_nsec) / 10#1#E9;
    end To_Duration;
 
    ------------------------
@@ -103,14 +104,15 @@ package body System.OS_Interface is
       F := D - Duration (S);
 
       --  If F has negative value due to a round-up, adjust for positive F
+      --  value.
 
       if F < 0.0 then
          S := S - 1;
          F := F + 1.0;
       end if;
 
-      return timespec'(ts_sec => S,
-                       ts_nsec => long (Long_Long_Integer (F * 10#1#E9)));
+      return timespec'(tv_sec => S,
+                       tv_nsec => long (Long_Long_Integer (F * 10#1#E9)));
    end To_Timespec;
 
 end System.OS_Interface;
