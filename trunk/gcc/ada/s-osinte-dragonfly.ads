@@ -112,7 +112,7 @@ package System.OS_Interface is
    SIGVTALRM  : constant := 26; --  virtual timer expired
    SIGPROF    : constant := 27; --  profiling timer expired
    SIGWINCH   : constant := 28; --  window size change
-   SIGINFO    : constant := 29; --  information request (NetBSD/FreeBSD)
+   SIGINFO    : constant := 29; --  information request (BSD)
    SIGUSR1    : constant := 30; --  user defined signal 1
    SIGUSR2    : constant := 31; --  user defined signal 2
 
@@ -122,13 +122,13 @@ package System.OS_Interface is
 
    type Signal_Set is array (Natural range <>) of Signal;
 
-   --  Interrupts that must be unmasked at all times.  FreeBSD
+   --  Interrupts that must be unmasked at all times.  DragonFlyBSD
    --  pthreads will not allow an application to mask out any
    --  interrupt needed by the threads library.
    Unmasked : constant Signal_Set :=
      (SIGTRAP, SIGBUS, SIGTTIN, SIGTTOU, SIGTSTP);
 
-   --  FreeBSD will uses SIGPROF for timing.  Do not allow a
+   --  DragonFlyBSD will uses SIGPROF for timing.  Do not allow a
    --  handler to attach to this signal.
    Reserved : constant Signal_Set := (0 .. 0 => SIGPROF);
 
@@ -347,7 +347,7 @@ package System.OS_Interface is
    --  FSU_THREADS requires pthread_init, which is nonstandard and this should
    --  be invoked during the elaboration of s-taprop.adb.
 
-   --  FreeBSD does not require this so we provide an empty Ada body
+   --  DragonFlyBSD does not require this so we provide an empty Ada body
 
    procedure pthread_init;
 
@@ -612,7 +612,7 @@ private
 
    type sigset_t is array (1 .. 4) of unsigned;
 
-   --  In FreeBSD the component sa_handler turns out to
+   --  In DragonFlyBSD the component sa_handler turns out to
    --  be one a union type, and the selector is a macro:
    --  #define sa_handler __sigaction_u._handler
    --  #define sa_sigaction __sigaction_u._sigaction

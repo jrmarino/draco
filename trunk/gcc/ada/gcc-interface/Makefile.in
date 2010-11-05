@@ -1172,8 +1172,13 @@ ifeq ($(strip $(filter-out x86_64 kfreebsd%,$(arch) $(osys))),)
   LIBRARY_VERSION := $(LIB_VERSION)
 endif
 
+
+# FREEBSD i386
+# TOOL_TARGET_PAIRS probably does nothing, moved to gnattools/configure.ac
 ifeq ($(strip $(filter-out %86 freebsd%,$(arch) $(osys))),)
   LIBGNAT_TARGET_PAIRS = \
+  a-exetim.adb<a-exetim-posix.adb \
+  a-exetim.ads<a-exetim-default.ads \
   a-intnam.ads<a-intnam-freebsd.ads \
   a-numaux.adb<a-numaux-x86.adb \
   a-numaux.ads<a-numaux-x86.ads \
@@ -1192,14 +1197,22 @@ ifeq ($(strip $(filter-out %86 freebsd%,$(arch) $(osys))),)
   mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
   GNATLIB_SHARED = gnatlib-shared-dual
 
+  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
+  EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
+
   EH_MECHANISM=-gcc
   THREADSLIB= -lpthread
   GMEM_LIB = gmemlib
   LIBRARY_VERSION := $(LIB_VERSION)
 endif
 
-ifeq ($(strip $(filter-out %x86_64 freebsd%,$(arch) $(osys))),)
+
+# FREEBSD AMD64
+# TOOL_TARGET_PAIRS probably does nothing, moved to gnattools/configure.ac
+ifeq ($(strip $(filter-out x86_64 freebsd%,$(arch) $(osys))),)
   LIBGNAT_TARGET_PAIRS = \
+  a-exetim.adb<a-exetim-posix.adb \
+  a-exetim.ads<a-exetim-default.ads \
   a-intnam.ads<a-intnam-freebsd.ads \
   a-numaux.adb<a-numaux-x86.adb \
   a-numaux.ads<a-numaux-x86.ads \
@@ -1214,9 +1227,11 @@ ifeq ($(strip $(filter-out %x86_64 freebsd%,$(arch) $(osys))),)
   s-tpopsp.adb<s-tpopsp-posix.adb \
   system.ads<system-freebsd-x86_64.ads
 
-  TOOLS_TARGET_PAIRS = \
-  mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
+  TOOLS_TARGET_PAIRS=mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
   GNATLIB_SHARED = gnatlib-shared-dual
+
+  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
+  EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
 
   EH_MECHANISM=-gcc
   THREADSLIB= -lpthread
@@ -1224,8 +1239,13 @@ ifeq ($(strip $(filter-out %x86_64 freebsd%,$(arch) $(osys))),)
   LIBRARY_VERSION := $(LIB_VERSION)
 endif
 
+
+# DRAGONFLY i386
+# TOOL_TARGET_PAIRS probably does nothing, moved to gnattools/configure.ac
 ifeq ($(strip $(filter-out %86 dragonfly%,$(arch) $(osys))),)
   LIBGNAT_TARGET_PAIRS = \
+  a-exetim.adb<a-exetim-posix.adb \
+  a-exetim.ads<a-exetim-default.ads \
   a-intnam.ads<a-intnam-dragonfly.ads \
   a-numaux.adb<a-numaux-x86.adb \
   a-numaux.ads<a-numaux-x86.ads \
@@ -1244,14 +1264,22 @@ ifeq ($(strip $(filter-out %86 dragonfly%,$(arch) $(osys))),)
   mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
   GNATLIB_SHARED = gnatlib-shared-dual
 
+  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
+  EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
+
   EH_MECHANISM=-gcc
   THREADSLIB= -lpthread
   GMEM_LIB = gmemlib
   LIBRARY_VERSION := $(LIB_VERSION)
 endif
 
-ifeq ($(strip $(filter-out %x86_64 dragonfly%,$(arch) $(osys))),)
+
+# DRAGONFLY AMD64
+# TOOL_TARGET_PAIRS probably does nothing, moved to gnattools/configure.ac
+ifeq ($(strip $(filter-out x86_64 dragonfly%,$(arch) $(osys))),)
   LIBGNAT_TARGET_PAIRS = \
+  a-exetim.adb<a-exetim-posix.adb \
+  a-exetim.ads<a-exetim-default.ads \
   a-intnam.ads<a-intnam-dragonfly.ads \
   a-numaux.adb<a-numaux-x86.adb \
   a-numaux.ads<a-numaux-x86.ads \
@@ -1266,9 +1294,145 @@ ifeq ($(strip $(filter-out %x86_64 dragonfly%,$(arch) $(osys))),)
   s-tpopsp.adb<s-tpopsp-posix.adb \
   system.ads<system-dragonfly-x86_64.ads
 
+  TOOLS_TARGET_PAIRS=mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
+  GNATLIB_SHARED = gnatlib-shared-dual
+
+  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
+  EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
+
+  EH_MECHANISM=-gcc
+  THREADSLIB= -lpthread
+  GMEM_LIB = gmemlib
+  LIBRARY_VERSION := $(LIB_VERSION)
+endif
+
+
+# OPENBSD i386
+# TOOL_TARGET_PAIRS probably does nothing, moved to gnattools/configure.ac
+ifeq ($(strip $(filter-out %86 openbsd%,$(arch) $(osys))),)
+  LIBGNAT_TARGET_PAIRS = \
+  a-exetim.adb<a-exetim-posix.adb \
+  a-exetim.ads<a-exetim-default.ads \
+  a-intnam.ads<a-intnam-openbsd.ads \
+  a-numaux.adb<a-numaux-x86.adb \
+  a-numaux.ads<a-numaux-x86.ads \
+  g-bytswa.adb<g-bytswa-x86.adb \
+  s-inmaop.adb<s-inmaop-posix.adb \
+  s-intman.adb<s-intman-posix.adb \
+  s-osinte.adb<s-osinte-openbsd.adb \
+  s-osinte.ads<s-osinte-openbsd.ads \
+  s-osprim.adb<s-osprim-posix.adb \
+  s-taprop.adb<s-taprop-posix.adb \
+  s-taspri.ads<s-taspri-posix.ads \
+  s-tpopsp.adb<s-tpopsp-posix.adb \
+  system.ads<system-openbsd-x86.ads
+
   TOOLS_TARGET_PAIRS = \
   mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
   GNATLIB_SHARED = gnatlib-shared-dual
+
+  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
+  EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
+
+  EH_MECHANISM=
+  THREADSLIB= -lpthread
+  GMEM_LIB =
+  LIBRARY_VERSION := $(LIB_VERSION)
+endif
+
+
+# OPENBSD AMD64
+# TOOL_TARGET_PAIRS probably does nothing, moved to gnattools/configure.ac
+ifeq ($(strip $(filter-out x86_64 openbsd%,$(arch) $(osys))),)
+  LIBGNAT_TARGET_PAIRS = \
+  a-exetim.adb<a-exetim-posix.adb \
+  a-exetim.ads<a-exetim-default.ads \
+  a-intnam.ads<a-intnam-openbsd.ads \
+  a-numaux.adb<a-numaux-x86.adb \
+  a-numaux.ads<a-numaux-x86.ads \
+  g-bytswa.adb<g-bytswa-x86.adb \
+  s-inmaop.adb<s-inmaop-posix.adb \
+  s-intman.adb<s-intman-posix.adb \
+  s-osinte.adb<s-osinte-openbsd.adb \
+  s-osinte.ads<s-osinte-openbsd.ads \
+  s-osprim.adb<s-osprim-posix.adb \
+  s-taprop.adb<s-taprop-posix.adb \
+  s-taspri.ads<s-taspri-posix.ads \
+  s-tpopsp.adb<s-tpopsp-posix.adb \
+  system.ads<system-openbsd-x86_64.ads
+
+  TOOLS_TARGET_PAIRS=mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
+  GNATLIB_SHARED = gnatlib-shared-dual
+
+  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
+  EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
+
+  EH_MECHANISM=
+  THREADSLIB= -lpthread
+  GMEM_LIB =
+  LIBRARY_VERSION := $(LIB_VERSION)
+endif
+
+
+# NETBSD i386
+# TOOL_TARGET_PAIRS probably does nothing, moved to gnattools/configure.ac
+ifeq ($(strip $(filter-out %86 netbsd%,$(arch) $(osys))),)
+  LIBGNAT_TARGET_PAIRS = \
+  a-exetim.adb<a-exetim-posix.adb \
+  a-exetim.ads<a-exetim-default.ads \
+  a-intnam.ads<a-intnam-netbsd.ads \
+  a-numaux.adb<a-numaux-x86.adb \
+  a-numaux.ads<a-numaux-x86.ads \
+  g-bytswa.adb<g-bytswa-x86.adb \
+  s-inmaop.adb<s-inmaop-posix.adb \
+  s-intman.adb<s-intman-posix.adb \
+  s-osinte.adb<s-osinte-netbsd.adb \
+  s-osinte.ads<s-osinte-netbsd.ads \
+  s-osprim.adb<s-osprim-posix.adb \
+  s-taprop.adb<s-taprop-netbsd.adb \
+  s-taspri.ads<s-taspri-posix.ads \
+  s-tpopsp.adb<s-tpopsp-posix.adb \
+  system.ads<system-netbsd-x86.ads
+
+  TOOLS_TARGET_PAIRS = \
+  mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
+  GNATLIB_SHARED = gnatlib-shared-dual
+
+  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
+  EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
+
+  EH_MECHANISM=-gcc
+  THREADSLIB= -lpthread
+  GMEM_LIB = gmemlib
+  LIBRARY_VERSION := $(LIB_VERSION)
+endif
+
+
+# NETBSD AMD64
+# TOOL_TARGET_PAIRS probably does nothing, moved to gnattools/configure.ac
+ifeq ($(strip $(filter-out x86_64 netbsd%,$(arch) $(osys))),)
+  LIBGNAT_TARGET_PAIRS = \
+  a-exetim.adb<a-exetim-posix.adb \
+  a-exetim.ads<a-exetim-default.ads \
+  a-intnam.ads<a-intnam-netbsd.ads \
+  a-numaux.adb<a-numaux-x86.adb \
+  a-numaux.ads<a-numaux-x86.ads \
+  g-bytswa.adb<g-bytswa-x86.adb \
+  s-inmaop.adb<s-inmaop-posix.adb \
+  s-intman.adb<s-intman-posix.adb \
+  s-osinte.adb<s-osinte-netbsd.adb \
+  s-osinte.ads<s-osinte-netbsd.ads \
+  s-osprim.adb<s-osprim-posix.adb \
+  s-taprop.adb<s-taprop-netbsd.adb \
+  s-taspri.ads<s-taspri-posix.ads \
+  s-tpopsp.adb<s-tpopsp-posix.adb \
+  system.ads<system-netbsd-x86_64.ads
+
+  TOOLS_TARGET_PAIRS=mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
+  GNATLIB_SHARED = gnatlib-shared-dual
+
+  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
+  EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
 
   EH_MECHANISM=-gcc
   THREADSLIB= -lpthread
@@ -1870,31 +2034,15 @@ ifeq ($(strip $(filter-out powerpc% linux%,$(arch) $(osys))),)
   s-intman.adb<s-intman-posix.adb \
   s-linux.ads<s-linux.ads \
   s-osinte.adb<s-osinte-posix.adb \
-  s-osinte.ads<s-osinte-linux.ads \
-  s-osprim.adb<s-osprim-posix.adb \
-  s-taprop.adb<s-taprop-linux.adb \
-  s-tasinf.ads<s-tasinf-linux.ads \
-  s-tasinf.adb<s-tasinf-linux.adb \
-  s-taspri.ads<s-taspri-posix-noaltstack.ads \
   s-tpopsp.adb<s-tpopsp-posix-foreign.adb \
   g-sercom.adb<g-sercom-linux.adb \
+  g-trasym.adb<g-trasym-dwarf.adb \
   $(ATOMICS_TARGET_PAIRS)
 
-  LIBGNAT_TARGET_PAIRS_32 = \
-  system.ads<system-linux-ppc.ads
-
-  LIBGNAT_TARGET_PAIRS_64 = \
-  system.ads<system-linux-ppc64.ads
-
-  ifeq ($(strip $(shell $(GCC_FOR_TARGET) $(GNATLIBCFLAGS) -print-multi-os-directory)),../lib64)
-    LIBGNAT_TARGET_PAIRS = \
-    $(LIBGNAT_TARGET_PAIRS_COMMON) $(LIBGNAT_TARGET_PAIRS_64)
-  else
-    LIBGNAT_TARGET_PAIRS = \
-    $(LIBGNAT_TARGET_PAIRS_COMMON) $(LIBGNAT_TARGET_PAIRS_32)
-  endif
-
   ifeq ($(strip $(filter-out xenomai,$(THREAD_KIND))),)
+    LIBGNAT_TARGET_PAIRS = \
+      $(LIBGNAT_TARGET_PAIRS_COMMON)
+
     LIBGNAT_TARGET_PAIRS += \
     s-osinte.ads<s-osinte-linux-xenomai.ads \
     s-osprim.adb<s-osprim-linux-xenomai.adb \
@@ -1902,14 +2050,27 @@ ifeq ($(strip $(filter-out powerpc% linux%,$(arch) $(osys))),)
     s-taspri.ads<s-taspri-linux-xenomai.ads \
     system.ads<system-linux-ppc-xenomai.ads
   else
+    LIBGNAT_TARGET_PAIRS_32 = \
+    system.ads<system-linux-ppc.ads
+
+    LIBGNAT_TARGET_PAIRS_64 = \
+    system.ads<system-linux-ppc64.ads
+
+    ifeq ($(strip $(shell $(GCC_FOR_TARGET) $(GNATLIBCFLAGS) -print-multi-os-directory)),../lib64)
+      LIBGNAT_TARGET_PAIRS = \
+      $(LIBGNAT_TARGET_PAIRS_COMMON) $(LIBGNAT_TARGET_PAIRS_64)
+    else
+      LIBGNAT_TARGET_PAIRS = \
+      $(LIBGNAT_TARGET_PAIRS_COMMON) $(LIBGNAT_TARGET_PAIRS_32)
+    endif
+
     LIBGNAT_TARGET_PAIRS += \
     s-osinte.ads<s-osinte-linux.ads \
     s-osprim.adb<s-osprim-posix.adb \
     s-taprop.adb<s-taprop-linux.adb \
     s-tasinf.ads<s-tasinf-linux.ads \
     s-tasinf.adb<s-tasinf-linux.adb \
-    s-taspri.ads<s-taspri-posix-noaltstack.ads \
-    system.ads<system-linux-ppc.ads
+    s-taspri.ads<s-taspri-posix-noaltstack.ads
   endif
 
   TOOLS_TARGET_PAIRS =  \
@@ -2051,7 +2212,7 @@ ifeq ($(strip $(filter-out sh4% linux%,$(arch) $(osys))),)
   TOOLS_TARGET_PAIRS =  \
     mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
     indepsw.adb<indepsw-linux.adb
- 
+
   EXTRA_GNATRTL_TASKING_OBJS=s-linux.o
   EH_MECHANISM=-gcc
   MISCLIB=
@@ -2374,12 +2535,12 @@ common-tools:
 	$(GNATLINK) -v gnatclean -o ../../gnatclean$(exeext) \
 		--GCC="$(GCC_LINK)" $(TOOLS_LIBS)
 
-../../gnatsym$(exeext): 
+../../gnatsym$(exeext):
 	$(GNATMAKE) -c $(ADA_INCLUDES) gnatsym --GCC="$(CC) $(ALL_ADAFLAGS)"
 	$(GNATBIND) $(ADA_INCLUDES) $(GNATBIND_FLAGS) gnatsym
 	$(GNATLINK) -v gnatsym -o $@ --GCC="$(GCC_LINK)" $(TOOLS_LIBS)
 
-../../gnatdll$(exeext): 
+../../gnatdll$(exeext):
 	$(GNATMAKE) -c $(ADA_INCLUDES) gnatdll --GCC="$(CC) $(ALL_ADAFLAGS)"
 	$(GNATBIND) $(ADA_INCLUDES) $(GNATBIND_FLAGS) gnatdll
 	$(GNATLINK) -v gnatdll -o $@ --GCC="$(GCC_LINK)" $(TOOLS_LIBS)

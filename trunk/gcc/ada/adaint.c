@@ -1045,8 +1045,8 @@ __gnat_open_new_temp (char *path, int fmode)
   strcpy (path, "GNAT-XXXXXX");
 
 #if (defined (__FreeBSD__) || defined (__NetBSD__) || defined (__OpenBSD__) \
-  || defined (__DragonFly__) || defined (linux) || defined(__GLIBC__)) \
-  && !defined (__vxworks)
+  || defined (__DragonFly__) \
+  || defined (linux) || defined(__GLIBC__)) && !defined (__vxworks)
   return mkstemp (path);
 #elif defined (__Lynx__)
   mktemp (path);
@@ -1098,11 +1098,7 @@ __gnat_stat_to_attr (int fd, char* name, struct file_attributes* attr)
        either case. */
     attr->file_length = statbuf.st_size;  /* all systems */
 
-#ifndef __MINGW32__
-  /* on Windows requires extra system call, see comment in
-     __gnat_file_exists_attr */
   attr->exists = !ret;
-#endif
 
 #if !defined (_WIN32) || defined (RTX)
   /* on Windows requires extra system call, see __gnat_is_readable_file_attr */
@@ -1111,8 +1107,6 @@ __gnat_stat_to_attr (int fd, char* name, struct file_attributes* attr)
   attr->executable = (!ret && (statbuf.st_mode & S_IXUSR));
 #endif
 
-#if !defined (_WIN32) || defined (RTX)
-  /* on Windows requires extra system call, see __gnat_file_time_name_attr */
   if (ret != 0) {
      attr->timestamp = (OS_Time)-1;
   } else {
@@ -1123,8 +1117,6 @@ __gnat_stat_to_attr (int fd, char* name, struct file_attributes* attr)
      attr->timestamp = (OS_Time)statbuf.st_mtime;
 #endif
   }
-#endif
-
 }
 
 /****************************************************************
@@ -1203,7 +1195,8 @@ __gnat_tmp_name (char *tmp_filename)
   }
 
 #elif defined (linux) || defined (__FreeBSD__) || defined (__NetBSD__) \
-  || defined (__OpenBSD__) || defined(__GLIBC__) || defined (__DragonFly__)
+  || defined (__DragonFly__) \
+  || defined (__OpenBSD__) || defined(__GLIBC__)
 #define MAX_SAFE_PATH 1000
   char *tmpdir = getenv ("TMPDIR");
 
@@ -1344,6 +1337,20 @@ win32_filetime (HANDLE h)
     return (time_t) (t_write.ull_time / 10000000ULL - w32_epoch_offset);
   return (time_t) 0;
 }
+
+/* As above but starting from a FILETIME.  */
+static void
+f2t (const FILETIME *ft, time_t *t)
+{
+  union
+  {
+    FILETIME ft_time;
+    unsigned long long ull_time;
+  } t_write;
+
+  t_write.ft_time = *ft;
+  *t = (time_t) (t_write.ull_time / 10000000ULL - w32_epoch_offset);
+}
 #endif
 
 /* Return a GNAT time stamp given a file name.  */
@@ -1353,18 +1360,14 @@ __gnat_file_time_name_attr (char* name, struct file_attributes* attr)
 {
    if (attr->timestamp == (OS_Time)-2) {
 #if defined (_WIN32) && !defined (RTX)
+      BOOL res;
+      WIN32_FILE_ATTRIBUTE_DATA fad;
       time_t ret = -1;
       TCHAR wname[GNAT_MAX_PATH_LEN];
       S2WSC (wname, name, GNAT_MAX_PATH_LEN);
 
-      HANDLE h = CreateFile
-        (wname, GENERIC_READ, FILE_SHARE_READ, 0,
-         OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0);
-
-      if (h != INVALID_HANDLE_VALUE) {
-         ret = win32_filetime (h);
-         CloseHandle (h);
-      }
+      if (res = GetFileAttributesEx (wname, GetFileExInfoStandard, &fad))
+	f2t (&fad.ftLastWriteTime, &ret);
       attr->timestamp = (OS_Time) ret;
 #else
       __gnat_stat_to_attr (-1, name, attr);
@@ -1686,15 +1689,10 @@ int
 __gnat_stat (char *name, GNAT_STRUCT_STAT *statbuf)
 {
 #ifdef __MINGW32__
-  /* Under Windows the directory name for the stat function must not be
-     terminated by a directory separator except if just after a drive name
-     or with UNC path without directory (only the name of the shared
-     resource), for example: \\computer\share\  */
-
+  WIN32_FILE_ATTRIBUTE_DATA fad;
   TCHAR wname [GNAT_MAX_PATH_LEN + 2];
-  int name_len, k;
-  TCHAR last_char;
-  int dirsep_count = 0;
+  int name_len;
+  BOOL res;
 
   S2WSC (wname, name, GNAT_MAX_PATH_LEN + 2);
   name_len = _tcslen (wname);
@@ -1702,29 +1700,43 @@ __gnat_stat (char *name, GNAT_STRUCT_STAT *statbuf)
   if (name_len > GNAT_MAX_PATH_LEN)
     return -1;
 
-  last_char = wname[name_len - 1];
+  ZeroMemory (statbuf, sizeof(GNAT_STRUCT_STAT));
 
-  while (name_len > 1 && (last_char == _T('\\') || last_char == _T('/')))
-    {
-      wname[name_len - 1] = _T('\0');
-      name_len--;
-      last_char = wname[name_len - 1];
+  res = GetFileAttributesEx (wname, GetFileExInfoStandard, &fad);
+
+  if (res == FALSE)
+    switch (GetLastError()) {
+      case ERROR_ACCESS_DENIED:
+      case ERROR_SHARING_VIOLATION:
+      case ERROR_LOCK_VIOLATION:
+      case ERROR_SHARING_BUFFER_EXCEEDED:
+	return EACCES;
+      case ERROR_BUFFER_OVERFLOW:
+	return ENAMETOOLONG;
+      case ERROR_NOT_ENOUGH_MEMORY:
+	return ENOMEM;
+      default:
+	return ENOENT;
     }
 
-  /* Count back-slashes.  */
+  f2t (&fad.ftCreationTime, &statbuf->st_ctime);
+  f2t (&fad.ftLastWriteTime, &statbuf->st_mtime);
+  f2t (&fad.ftLastAccessTime, &statbuf->st_atime);
 
-  for (k=0; k<name_len; k++)
-    if (wname[k] == _T('\\') || wname[k] == _T('/'))
-      dirsep_count++;
+  statbuf->st_size = (off_t)fad.nFileSizeLow;
 
-  /* Only a drive letter followed by ':', we must add a directory separator
-     for the stat routine to work properly.  */
-  if ((name_len == 2 && wname[1] == _T(':'))
-      || (name_len > 3 && wname[0] == _T('\\') && wname[1] == _T('\\')
-	  && dirsep_count == 3))
-    _tcscat (wname, _T("\\"));
+  /* We do not have the S_IEXEC attribute, but this is not used on GNAT.  */
+  statbuf->st_mode = S_IREAD;
 
-  return _tstat (wname, (struct _stat *)statbuf);
+  if (fad.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+    statbuf->st_mode |= S_IFDIR;
+  else
+    statbuf->st_mode |= S_IFREG;
+
+  if (!(fad.dwFileAttributes & FILE_ATTRIBUTE_READONLY))
+    statbuf->st_mode |= S_IWRITE;
+
+  return 0;
 
 #else
   return GNAT_STAT (name, statbuf);
@@ -1739,16 +1751,7 @@ int
 __gnat_file_exists_attr (char* name, struct file_attributes* attr)
 {
    if (attr->exists == ATTR_UNSET) {
-#ifdef __MINGW32__
-      /*  On Windows do not use __gnat_stat() because of a bug in Microsoft
-         _stat() routine. When the system time-zone is set with a negative
-         offset the _stat() routine fails on specific files like CON:  */
-      TCHAR wname [GNAT_MAX_PATH_LEN + 2];
-      S2WSC (wname, name, GNAT_MAX_PATH_LEN + 2);
-      attr->exists = GetFileAttributes (wname) != INVALID_FILE_ATTRIBUTES;
-#else
       __gnat_stat_to_attr (-1, name, attr);
-#endif
    }
 
    return attr->exists;
@@ -3686,3 +3689,110 @@ void *__gnat_lwp_self (void)
    return (void *) syscall (__NR_gettid);
 }
 #endif
+
+
+
+
+#ifdef MARINO_DISABLED_THIS
+/* JRM 31 OCT 2010: For some reason, gnatmake wouldn't function correct when
+   strcpy or sprintf & friends were replaced.  I had to back out the patches.
+   I'll leave the BSD routines here in case we ever want to try again. */
+
+
+/*
+ * Copyright (c) 1998 Todd C. Miller <Todd.Miller@courtesan.com>
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+/*
+ * original function name: strlcpy
+ * Copy src to string dst of size siz.  At most siz-1 characters
+ * will be copied.  Always NUL terminates (unless siz == 0).
+ * Returns strlen(src); if retval >= siz, truncation occurred.
+ *
+ * $OpenBSD: strlcpy.c,v 1.11 2006/05/05 15:27:38 millert Exp $
+ * $FreeBSD: src/lib/libc/string/strlcpy.c,v 1.10 2008/10/19 delphij Exp $
+ * $DragonFly: src/lib/libc/string/strlcpy.c,v 1.4 2005/09/18 asmodai Exp $
+ */
+
+size_t
+bsd_strlcpy(char *dst, const char *src, size_t siz)
+{
+	char *d = dst;
+	const char *s = src;
+	size_t n = siz;
+
+	/* Copy as many bytes as will fit */
+	if (n != 0) {
+		while (--n != 0) {
+			if ((*d++ = *s++) == '\0')
+				break;
+		}
+	}
+
+	/* Not enough room in dst, add NUL and traverse rest of src */
+	if (n == 0) {
+		if (siz != 0)
+			*d = '\0';		/* NUL-terminate dst */
+		while (*s++)
+			;
+	}
+
+	return(s - src - 1);	/* count does not include NUL */
+}
+
+
+
+/*
+ * Original function name: strlcat
+ * Appends src to string dst of size siz (unlike strncat, siz is the
+ * full size of dst, not space left).  At most siz-1 characters
+ * will be copied.  Always NUL terminates (unless siz <= strlen(dst)).
+ * Returns strlen(src) + MIN(siz, strlen(initial dst)).
+ * If retval >= siz, truncation occurred.
+ *
+ * $OpenBSD: strlcat.c,v 1.13 2005/08/08 08:05:37 espie Exp $
+ * $FreeBSD: src/lib/libc/string/strlcat.c,v 1.11 2009/01/12 delphij Exp $
+ * $DragonFly: src/lib/libc/string/strlcat.c,v 1.4 2004/12/18 asmodai Exp $
+ */
+
+size_t
+bsd_strlcat(char *dst, const char *src, size_t siz)
+{
+	char *d = dst;
+	const char *s = src;
+	size_t n = siz;
+	size_t dlen;
+
+	/* Find the end of dst and adjust bytes left but don't go past end */
+	while (n-- != 0 && *d != '\0')
+		d++;
+	dlen = d - dst;
+	n = siz - dlen;
+
+	if (n == 0)
+		return(dlen + strlen(s));
+	while (*s != '\0') {
+		if (n != 1) {
+			*d++ = *s;
+			n--;
+		}
+		s++;
+	}
+	*d = '\0';
+
+	return(dlen + (s - src));	/* count does not include NUL */
+}
+#endif
+

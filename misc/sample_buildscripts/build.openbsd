@@ -1,0 +1,92 @@
+#!/bin/sh
+# If you want to build C++, change BUILD_CPP to "YES"
+
+GCC_VERSION=4.6.0
+SNAPSHOT=4.6-20101023
+NATIVE_HOST=i386-pc-openbsd4.7
+OS_LABEL4VERS="[OpenBSD]"
+PREFIX=/usr/local
+PKG_PREFIX=/usr/local
+GNATGCC=$PREFIX/bin/gnatgcc
+BUILD_CPP=no
+
+TARGLIB=$PREFIX/lib/gcc/$NATIVE_HOST/$GCC_VERSION
+TARGLIBEXEC=$PREFIX/libexec/gcc/$NATIVE_HOST/$GCC_VERSION
+
+GCC_SRCDIR=gcc-$SNAPSHOT
+CORE_TARBALL=gcc-core-$SNAPSHOT.tar.bz2
+LCPP_TARBALL=gcc-g++-$SNAPSHOT.tar.bz2
+LADA_TARBALL=gnat-aux-$SNAPSHOT.tar.bz2
+
+CURDIR=`pwd`
+WRKDIR=$CURDIR/work
+DISTFILES=$CURDIR/../source-files
+FILESDIR=$CURDIR/files
+PATCHDIR=$CURDIR/patches
+WRKSRC=$WRKDIR/build
+GCC_WRKSRC=$WRKDIR/$GCC_SRCDIR
+GNAT_WRKSRC=$WRKDIR/$GNAT_SRCDIR
+PATCH_WRKSRC=$GCC_WRKSRC
+CONFIGURE_SCRIPT=$GCC_WRKSRC/configure
+
+PATCH_ARGS="-d $PATCH_WRKSRC --forward --quiet -E -p0"
+
+BOOTPATH=$PATH
+CONFIGURE_ENV="CC=$GNATGCC PATH=$BOOTPATH"
+
+
+echo "===> Extracting the source files..."
+mkdir -p $WRKDIR
+cd $WRKDIR
+bunzip2 -c $DISTFILES/$CORE_TARBALL | gtar -xf -
+if [ "$BUILD_CPP" = "YES" ]; then
+	bunzip2 -c $DISTFILES/$LCPP_TARBALL | gtar -xf -
+	BUILD_LANGS=c,ada,c++
+else
+	BUILD_LANGS=c,ada
+fi
+cd $GCC_WRKSRC
+bunzip2 -c $DISTFILES/$LADA_TARBALL | gtar -xf -
+
+
+#Let's modify GNAT to display what OS it was build for.
+NEWREV=`sed '$s/$'"/& $OS_LABEL4VERS/" $GCC_WRKSRC/gcc/REVISION`
+echo "$NEWREV" > $GCC_WRKSRC/gcc/REVISION
+
+#configure stage
+#The next line causes problems with dragonfly builds, overwrites config.guess, etc.
+cd $GCC_WRKSRC; contrib/gcc_update --touch
+rm -f $GCC_WRKSRC/gcc/*/*.info*
+touch $GCC_WRKSRC/gcc/cstamp-h.in
+echo "STARTING CONFIGURATION:"
+
+mkdir -p $WRKSRC
+(	cd $WRKSRC && \
+	env $CONFIGURE_ENV \
+	$CONFIGURE_SCRIPT \
+		--enable-languages=$BUILD_LANGS  \
+		--build=$NATIVE_HOST \
+		--program-prefix=gnat \
+		--prefix=$PREFIX \
+		--with-system-zlib \
+		--with-gmp=$PKG_PREFIX \
+		--with-mpfr=$PKG_PREFIX \
+		--with-mpc=$PKG_PREFIX \
+		--with-libiconv-prefix=$PKG_PREFIX \
+		--enable-threads=yes \
+		--enable-shared \
+		--disable-bootstrap \
+		--disable-libgomp \
+		--disable-libssp \
+		--disable-nls
+)
+
+
+#build stage.
+CC=$GNATGCC
+export CC
+
+( cd $WRKSRC; gmake CC=$GNATGCC all )
+
+echo "Build complete.  You can test or install GNAT now"
+

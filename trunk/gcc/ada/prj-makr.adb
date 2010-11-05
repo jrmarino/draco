@@ -21,6 +21,7 @@
 -- GNAT was originally developed  by the GNAT team at  New York University. --
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
+-- Copyright (C) 2010 John Marino <draco@marino.st>                         --
 ------------------------------------------------------------------------------
 
 with Csets;
@@ -110,7 +111,7 @@ package body Prj.Makr is
 
    procedure Dup2 (Old_Fd, New_Fd : File_Descriptor);
 
-   Gcc      : constant String := "gcc";
+   Gcc      : constant String := "gnatgcc";
    Gcc_Path : String_Access := null;
 
    Non_Empty_Node : constant Project_Node_Id := 1;

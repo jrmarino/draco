@@ -1,0 +1,9 @@
+The test "unchecked_converted6.adb" was deleted because it only
+supportes the following targets:
+
+  hppa*
+  sparc*
+  powerpc*
+
+Currently I'm not working with any of those, so until that changes, the
+test will be absent to lower the "unsupported" test number.

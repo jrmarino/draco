@@ -21,6 +21,7 @@
 -- GNAT was originally developed  by the GNAT team at  New York University. --
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
+-- Copyright (C) 2010 John Marino <draco@marino.st>                         --
 ------------------------------------------------------------------------------
 
 with MLib.Fil; use MLib.Fil;
@@ -412,7 +413,7 @@ package body MLib.Utl is
       if Driver_Name = No_Name then
          if Gcc_Exec = null then
             if Gcc_Name = null then
-               Gcc_Name := Osint.Program_Name ("gcc", "gnatmake");
+               Gcc_Name := Osint.Program_Name ("gnatgcc", "gnatmake");
             end if;
 
             Gcc_Exec := Locate_Exec_On_Path (Gcc_Name.all);

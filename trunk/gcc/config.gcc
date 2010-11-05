@@ -522,7 +522,7 @@ case ${target} in
           ;;
       esac
       ;;
-    no | gnat | single)
+    gnat | single)
       # Let these non-posix thread selections fall through if requested
       ;;
     *)
@@ -654,11 +654,21 @@ case ${target} in
   esac
   ;;
 *-*-openbsd*)
+  gas=yes
+  gnu_ld=yes
+  # Do NOT add crt*.o extra parts!
   tmake_file="t-libc-ok t-openbsd t-libgcc-pic"
   case ${enable_threads} in
-    yes)
+    "" | yes | posix)
       thread_file='posix'
       tmake_file="${tmake_file} t-openbsd-thread"
+      ;;
+    no | gnat | single)
+      # Let these non-posix thread selections fall through
+      ;;
+    *)
+      echo 'Unknown thread configuration for OpenBSD'
+      exit 1
       ;;
   esac
   case ${target} in
@@ -1235,8 +1245,11 @@ i[34567]86-*-openbsd2.*|i[34567]86-*openbsd3.[0123])
 i[34567]86-*-openbsd*)
 	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h"
 	tm_file="${tm_file} openbsd.h openbsd-stdint.h openbsd-libpthread.h i386/openbsdelf.h"
-	gas=yes
-	gnu_ld=yes
+	;;
+x86_64-*-openbsd*)
+	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h"
+	tm_file="${tm_file} openbsd.h openbsd-libpthread.h i386/x86-64.h i386/openbsd64.h exec-stack.h"
+	tmake_file="${tmake_file} i386/t-crtstuff"
 	;;
 i[34567]86-*-linux* | i[34567]86-*-kfreebsd*-gnu | i[34567]86-*-knetbsd*-gnu | i[34567]86-*-gnu* | i[34567]86-*-kopensolaris*-gnu)
 			# Intel 80386's running GNU/*
@@ -3561,6 +3574,8 @@ case ${target} in
 		;;
 	i[34567]86-*-dragonfly* | x86_64-*-dragonfly*)
 		tmake_file="${tmake_file} i386/t-fprules-softfp soft-fp/t-softfp"
+		;;
+	i[34567]86-*-openbsd* | x86_64-*-openbsd*)
 		;;
 	ia64*-*-linux*)
 		tmake_file="${tmake_file} ia64/t-fprules-softfp soft-fp/t-softfp"

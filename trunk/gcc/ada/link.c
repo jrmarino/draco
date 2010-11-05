@@ -188,7 +188,9 @@ const char *__gnat_default_libgcc_subdir = "lib/amd64";
 const char *__gnat_default_libgcc_subdir = "lib";
 #endif
 
-#elif defined (__FreeBSD__) || defined (__DragonFly__)
+#elif defined (__FreeBSD__) \
+   || defined (__OpenBSD__) \
+   || defined (__DragonFly__)
 const char *__gnat_object_file_option = "";
 const char *__gnat_run_path_option = "-Wl,-rpath,";
 char __gnat_shared_libgnat_default = STATIC;

@@ -2059,12 +2059,22 @@ case "${target}" in
   s390*-*-linux*)
     TOOLS_TARGET_PAIRS="mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb"
     ;;
-  *86-*-freebsd*)
+  *86-*-freebsd* | x86_64-*-freebsd*)
     TOOLS_TARGET_PAIRS="\
     mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
     indepsw.adb<indepsw-gnu.adb"
     ;;
-  *86-*-dragonfly*)
+  *86-*-dragonfly* | x86_64-*-dragonfly*)
+    TOOLS_TARGET_PAIRS="\
+    mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
+    indepsw.adb<indepsw-gnu.adb"
+    ;;
+  *86-*-openbsd* | x86_64-*-openbsd*)
+    TOOLS_TARGET_PAIRS="\
+    mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
+    indepsw.adb<indepsw-gnu.adb"
+    ;;
+  *86-*-netbsd* | x86_64-*-netbsd*)
     TOOLS_TARGET_PAIRS="\
     mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
     indepsw.adb<indepsw-gnu.adb"
