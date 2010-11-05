@@ -56,8 +56,7 @@ package body System.OS_Interface is
    --------------------
 
    function Get_Stack_Base (thread : pthread_t) return Address is
-      pragma Warnings (Off, thread);
-
+      pragma Unreferenced (thread);
    begin
       return Null_Address;
    end Get_Stack_Base;
