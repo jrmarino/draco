@@ -281,7 +281,7 @@ package body System.Task_Primitives.Operations is
      (Prio : System.Any_Priority;
       L    : not null access Lock)
    is
-      pragma Unreferenced (L, Prio);
+      pragma Unreferenced (Prio);
       Attributes : aliased pthread_mutexattr_t;
       Result : Interfaces.C.int;
 
@@ -753,7 +753,7 @@ package body System.Task_Primitives.Operations is
             Result := sigaltstack (Stack'Access, null);
             pragma Assert (Result = 0);
          end;
-         end if;
+      end if;
    end Enter_Task;
 
    --------------
@@ -943,7 +943,7 @@ package body System.Task_Primitives.Operations is
       pragma Assert (Result = 0);
 
       if Succeeded then
-      Set_Priority (T, Priority);
+         Set_Priority (T, Priority);
       end if;
    end Create_Task;
 
@@ -1002,8 +1002,8 @@ package body System.Task_Primitives.Operations is
          Result :=
            pthread_kill
              (T.Common.LL.Thread,
-        Signal (System.Interrupt_Management.Abort_Task_Interrupt));
-      pragma Assert (Result = 0);
+              Signal (System.Interrupt_Management.Abort_Task_Interrupt));
+         pragma Assert (Result = 0);
       end if;
    end Abort_Task;
 
@@ -1203,7 +1203,7 @@ package body System.Task_Primitives.Operations is
                --  Loop in case pthread_cond_wait returns earlier than expected
                --  (e.g. in case of EINTR caused by a signal).
 
-            Result := pthread_cond_wait (S.CV'Access, S.L'Access);
+               Result := pthread_cond_wait (S.CV'Access, S.L'Access);
                pragma Assert (Result = 0 or else Result = EINTR);
 
                exit when not S.Waiting;
@@ -1381,7 +1381,7 @@ package body System.Task_Primitives.Operations is
 
       Enter_Task (Environment_Task);
 
-      if State 
+      if State
           (System.Interrupt_Management.Abort_Task_Interrupt) /= Default
       then
          act.sa_flags := 0;
