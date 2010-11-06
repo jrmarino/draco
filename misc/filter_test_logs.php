@@ -70,15 +70,25 @@ class TFilterLogs
 
 	private function filter_acat_log ()
 	{
-		$pattern = "/^PASS:\t[[:digit:][:lower:]]{6}/";
+		$pattern1 = "/^PASS:\t[[:digit:][:lower:]]{6}/";
+		$pattern2 = "/^Running chapter /";
+		$pattern3 = "/^\*\*\* FAILURES: /";
+		$pattern4 = "/^.+ completed at (.+)/";
 
 		$result = "";
 		$lines = explode ("\n", $this->acat_file_contents);
 		foreach ($lines as $line)
 		{
-			if (!preg_match($pattern, $line))
+			if (!preg_match($pattern1, $line) && 
+			    !preg_match($pattern2, $line) &&
+			    !preg_match($pattern3, $line) &&
+			    !preg_match($pattern4, $line))
 			{
 				$result .= $line . "\n";
+			}
+			else if (preg_match ($pattern4, $line, $matches))
+			{
+				$result .= "\n=== Completed: " . $matches [1] . " ===\n\n";
 			}
 		}
 		return $result;
@@ -86,13 +96,15 @@ class TFilterLogs
 
 	private function filter_gnat_log ()
 	{
-		$pattern = "/^(PASS|XFAIL):\s.+/";
+		$pattern1 = "/^(PASS|XFAIL):\s.+/";
+		$pattern2 = "/^Running .+ \.\.\.$/";
 
 		$result = "";
 		$lines = explode ("\n", $this->gnat_file_contents);
 		foreach ($lines as $line)
 		{
-			if (!preg_match($pattern, $line))
+			if (!preg_match($pattern1, $line) && 
+			    !preg_match($pattern2, $line))
 			{
 				$result .= $line . "\n";
 			}
