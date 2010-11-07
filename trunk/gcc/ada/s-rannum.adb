@@ -27,6 +27,7 @@
 -- GNAT was originally developed  by the GNAT team at  New York University. --
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
+-- Copyright (C) 2010 John Marino <draco@marino.st>                         --
 ------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
@@ -294,7 +295,7 @@ package body System.Random_Numbers is
             X      : Real;            --  Scaled mantissa
             R      : Unsigned_32;     --  Supply of random bits
             R_Bits : Natural;         --  Number of bits left in R
-            K      : Bit_Count;       --  Next decrement to exponent
+            K      : Bit_Count := 0;  --  Next decrement to exponent
 
          begin
             Mantissa := Random (Gen) / 2**Extra_Bits;

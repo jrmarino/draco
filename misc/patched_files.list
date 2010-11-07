@@ -15,6 +15,7 @@ make.adb
 mlib-utl.adb
 prj-makr.adb
 s-stusta.adb
+s-rannum.adb
 sysdep.c
 
 
