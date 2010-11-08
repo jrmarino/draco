@@ -626,7 +626,7 @@ private
 
    type pid_t is new int;
 
-   type time_t is new long;
+   type time_t is new int;
 
    type timespec is record
       tv_sec  : time_t;
