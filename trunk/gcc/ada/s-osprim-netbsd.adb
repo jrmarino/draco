@@ -30,7 +30,7 @@
 -- Copyright (C) 2010 John Marino <draco@marino.st>                         --
 ------------------------------------------------------------------------------
 
---  This version is for BSD operating systems using 64-bit time types.
+--  This version is for NetBSD operating system (Differs from other BSDs)
 
 with Interfaces.C;
 
@@ -61,7 +61,7 @@ package body System.OS_Primitives is
    
    type timeval is record
       tv_sec  : time_t;
-      tv_usec : long;   -- Not for NetBSD! FreeBSD/DragonFly
+      tv_usec : int;   
    end record;
    pragma Convention (C, timeval);
 

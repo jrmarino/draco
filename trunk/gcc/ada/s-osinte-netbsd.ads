@@ -61,6 +61,7 @@ package System.OS_Interface is
    subtype unsigned_char  is Interfaces.C.unsigned_char;
    subtype plain_char     is Interfaces.C.plain_char;
    subtype size_t         is Interfaces.C.size_t;
+   subtype int64_t        is Interfaces.Integer_64;
 
    -----------
    -- Errno --
@@ -630,7 +631,7 @@ private
 
    type pid_t is new int;
 
-   type time_t is new long;
+   type time_t is new int64_t;
 
    type timespec is record
       tv_sec  : time_t;
@@ -640,12 +641,6 @@ private
 
    type clockid_t is new int;
    CLOCK_REALTIME : constant clockid_t := 0;
-
-   type struct_timeval is record
-      tv_sec  : long;
-      tv_usec : long;
-   end record;
-   pragma Convention (C, struct_timeval);
 
    type pthread_t           is new System.Address;
    type pthread_attr_t      is record

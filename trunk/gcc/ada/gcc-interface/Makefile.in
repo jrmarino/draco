@@ -1388,7 +1388,7 @@ ifeq ($(strip $(filter-out %86 netbsd%,$(arch) $(osys))),)
   s-intman.adb<s-intman-posix.adb \
   s-osinte.adb<s-osinte-netbsd.adb \
   s-osinte.ads<s-osinte-netbsd.ads \
-  s-osprim.adb<s-osprim-posix.adb \
+  s-osprim.adb<s-osprim-netbsd.adb \
   s-taprop.adb<s-taprop-netbsd.adb \
   s-taspri.ads<s-taspri-posix.ads \
   s-tpopsp.adb<s-tpopsp-posix.adb \
@@ -1422,7 +1422,7 @@ ifeq ($(strip $(filter-out x86_64 netbsd%,$(arch) $(osys))),)
   s-intman.adb<s-intman-posix.adb \
   s-osinte.adb<s-osinte-netbsd.adb \
   s-osinte.ads<s-osinte-netbsd.ads \
-  s-osprim.adb<s-osprim-posix.adb \
+  s-osprim.adb<s-osprim-netbsd.adb \
   s-taprop.adb<s-taprop-netbsd.adb \
   s-taspri.ads<s-taspri-posix.ads \
   s-tpopsp.adb<s-tpopsp-posix.adb \

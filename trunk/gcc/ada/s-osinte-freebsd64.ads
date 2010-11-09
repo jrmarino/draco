@@ -60,6 +60,7 @@ package System.OS_Interface is
    subtype unsigned_char  is Interfaces.C.unsigned_char;
    subtype plain_char     is Interfaces.C.plain_char;
    subtype size_t         is Interfaces.C.size_t;
+   subtype int64_t        is Interfaces.Integer_64;
 
    -----------
    -- Errno --
@@ -626,7 +627,7 @@ private
 
    type pid_t is new int;
 
-   type time_t is new long;
+   type time_t is new int64_t;
 
    type timespec is record
       tv_sec  : time_t;
