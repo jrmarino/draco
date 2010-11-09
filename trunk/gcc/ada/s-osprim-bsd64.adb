@@ -30,7 +30,7 @@
 -- Copyright (C) 2010 John Marino <draco@marino.st>                         --
 ------------------------------------------------------------------------------
 
---  This version is for the OpenBSD operating systems
+--  This version is for BSD operating systems using 64-bit time types.
 
 with Interfaces.C;
 
@@ -44,7 +44,7 @@ package body System.OS_Primitives is
    subtype int  is Interfaces.C.int;
    subtype long is Interfaces.C.long;
 
-   type time_t is new int;
+   type time_t is new long;
 
    type timespec is record
       tv_sec  : time_t;
