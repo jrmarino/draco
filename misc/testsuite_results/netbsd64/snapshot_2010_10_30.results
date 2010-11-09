@@ -1,10 +1,10 @@
-Test Run By root on Sun Nov  7 23:52:36 CET 2010
+Test Run By root on Tue Nov  9 17:28:29 CET 2010
 		=== acats configuration ===
-target gcc is /workzone/gen_3/work/build/gcc/xgcc -B/workzone/gen_3/work/build/gcc/
-Reading specs from /workzone/gen_3/work/build/gcc/specs COLLECT_GCC=/workzone/gen_3/work/build/gcc/xgcc COLLECT_LTO_WRAPPER=/workzone/gen_3/work/build/gcc/lto-wrapper Target: x86_64-pc-netbsd5.1 Configured with: /workzone/gen_3/work/gcc-4.6-20101030/configure --enable-languages=c,ada --build=x86_64-pc-netbsd5.1 --program-prefix=gnat --prefix=/usr/local --with-system-zlib --with-gmp=/usr/pkg --with-mpfr=/usr/pkg --with-mpc=/usr/pkg --with-libiconv-prefix=/usr/pkg --enable-threads=yes --enable-shared --disable-bootstrap --disable-libgomp --disable-libssp --disable-nls Thread model: posix gcc version 4.6.0 20101030 (experimental) -=> GNAT AUX [NetBSD64] (GCC)
+target gcc is /workzone/gen_4/work/build/gcc/xgcc -B/workzone/gen_4/work/build/gcc/
+Reading specs from /workzone/gen_4/work/build/gcc/specs COLLECT_GCC=/workzone/gen_4/work/build/gcc/xgcc COLLECT_LTO_WRAPPER=/workzone/gen_4/work/build/gcc/lto-wrapper Target: x86_64-pc-netbsd5.1 Configured with: /workzone/gen_4/work/gcc-4.6-20101030/configure --enable-languages=c,ada --build=x86_64-pc-netbsd5.1 --program-prefix=gnat --prefix=/usr/local --with-system-zlib --with-gmp=/usr/pkg --with-mpfr=/usr/pkg --with-mpc=/usr/pkg --with-libiconv-prefix=/usr/pkg --enable-threads=yes --enable-shared --disable-bootstrap --disable-libgomp --disable-libssp --disable-nls Thread model: posix gcc version 4.6.0 20101030 (experimental) -=> GNAT AUX [NetBSD64] (GCC)
 host=x86_64--netbsd
 target=x86_64-pc-netbsd5.1
-gnatmake is /workzone/gen_3/work/build/gcc/gnatmake
+gnatmake is /workzone/gen_4/work/build/gcc/gnatmake
 
 		=== acats support ===
 Generating support files... done.
@@ -14,33 +14,17 @@ Compiling support files... done.
 FAIL:	c52103x
 FAIL:	c52104x
 FAIL:	c52104y
-FAIL:	c94007a
-FAIL:	c94007b
-FAIL:	c954025
-FAIL:	c954026
-FAIL:	c960001
-FAIL:	c960004
-FAIL:	c97112a
-FAIL:	c97301a
-FAIL:	c97301d
-FAIL:	c97305c
-FAIL:	c974001
-FAIL:	c974002
-FAIL:	c974013
-FAIL:	c974014
-FAIL:	c9a007a
-FAIL:	c9a011b
 FAIL:	cb1010a
 FAIL:	cb1010c
 FAIL:	cb1010d
 		=== acats Summary ===
-# of expected passes		2299
-# of unexpected failures	22
+# of expected passes		2315
+# of unexpected failures	6
 
-=== Completed: Mon Nov  8 00:52:49 CET 2010 ===
+=== Completed: Tue Nov  9 18:15:28 CET 2010 ===
 
 
-Test Run By root on Mon Nov  8 00:52:50 2010
+Test Run By root on Tue Nov  9 18:15:29 2010
 Native configuration is x86_64-pc-netbsd5.1
 
 		=== gnat tests ===
