@@ -1233,7 +1233,7 @@ ifeq ($(strip $(filter-out x86_64 freebsd%,$(arch) $(osys))),)
   EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
   EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
 
-  EH_MECHANISM=-gcc
+  EH_MECHANISM=
   THREADSLIB= -lpthread
   GMEM_LIB = gmemlib
   LIBRARY_VERSION := $(LIB_VERSION)

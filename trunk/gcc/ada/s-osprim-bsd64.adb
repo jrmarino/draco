@@ -58,10 +58,10 @@ package body System.OS_Primitives is
       tz_distime     : int;
    end record;
    pragma Convention (C, timezone);
-   
+
    type timeval is record
       tv_sec  : time_t;
-      tv_usec : long;   -- Not for NetBSD! FreeBSD/DragonFly
+      tv_usec : long;   --  Not for NetBSD! FreeBSD/DragonFly
    end record;
    pragma Convention (C, timeval);
 
