@@ -101,6 +101,7 @@
 #undef JUMP_TABLES_IN_TEXT_SECTION
 #define JUMP_TABLES_IN_TEXT_SECTION (flag_pic)
 
+/* ADDED FOR GNAT AUX SUPPORT */
 /* Define this to be nonzero if static stack checking is supported */
 #undef  STACK_CHECK_STATIC_BUILTIN
 #define STACK_CHECK_STATIC_BUILTIN 1
@@ -108,8 +109,4 @@
 /* Ensure rounding is left to GNAT (Not required for AMD64) */
 #undef  TARGET_96_ROUND_53_LONG_DOUBLE
 #define TARGET_96_ROUND_53_LONG_DOUBLE 1
-
-/* Define location of OS-specific unwind support configuration
-#define MD_UNWIND_SUPPORT "config/i386/openbsd-unwind.h"
-*/
 

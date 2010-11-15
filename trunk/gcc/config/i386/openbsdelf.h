@@ -135,7 +135,7 @@ along with GCC; see the file COPYING3.  If not see
 #define OBSD_HAS_CORRECT_SPECS
 
 
-
+/* ADDED FOR GNAT AUX SUPPORT */
 /* Define this to be nonzero if static stack checking is supported */
 #undef  STACK_CHECK_STATIC_BUILTIN
 #define STACK_CHECK_STATIC_BUILTIN 0
@@ -144,6 +144,3 @@ along with GCC; see the file COPYING3.  If not see
 #undef  TARGET_96_ROUND_53_LONG_DOUBLE
 #define TARGET_96_ROUND_53_LONG_DOUBLE 0
 
-/* Define location of OS-specific unwind support configuration
-#define MD_UNWIND_SUPPORT "config/i386/openbsd-unwind.h"
-*/

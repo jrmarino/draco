@@ -1,72 +1,38 @@
-Test Run By marino on Mon Nov  1 04:41:20 CDT 2010
+Test Run By marino on Tue Nov  9 18:57:31 CST 2010
 		=== acats configuration ===
-target gcc is /external/draco_build/port2/work/build/gcc/xgcc -B/external/draco_build/port2/work/build/gcc/
-Reading specs from /external/draco_build/port2/work/build/gcc/specs COLLECT_GCC=/external/draco_build/port2/work/build/gcc/xgcc COLLECT_LTO_WRAPPER=/external/draco_build/port2/work/build/gcc/lto-wrapper Target: x86_64-portbld-freebsd8.0 Configured with: /external/draco_build/port2/work/gcc-4.6-20101030/configure --enable-languages=c,ada --build=x86_64-portbld-freebsd8.0 --program-prefix=gnat --prefix=/usr/local --with-system-zlib --with-gmp=/usr/local --with-mpfr=/usr/local --with-mpc=/usr/local --with-libiconv-prefix=/usr/local --enable-shared --disable-nls --disable-bootstrap --disable-libssp --disable-libgomp Thread model: posix gcc version 4.6.0 20101030 (experimental) -=> GNAT AUX [FreeBSD64] (GCC)
+target gcc is /usr/home/marino/workzone/port2/work/build/gcc/xgcc -B/usr/home/marino/workzone/port2/work/build/gcc/
+Reading specs from /usr/home/marino/workzone/port2/work/build/gcc/specs COLLECT_GCC=/usr/home/marino/workzone/port2/work/build/gcc/xgcc COLLECT_LTO_WRAPPER=/usr/home/marino/workzone/port2/work/build/gcc/lto-wrapper Target: x86_64-portbld-freebsd8.0 Configured with: /usr/home/marino/workzone/port2/work/gcc-4.6-20101030/configure --enable-languages=c,ada --build=x86_64-portbld-freebsd8.0 --program-prefix=gnat --prefix=/usr/local --with-system-zlib --with-gmp=/usr/local --with-mpfr=/usr/local --with-mpc=/usr/local --with-libiconv-prefix=/usr/local --enable-shared --disable-nls --disable-bootstrap --disable-libssp --disable-libgomp Thread model: posix gcc version 4.6.0 20101030 (experimental) -=> GNAT AUX [FreeBSD64] (GCC)
 host=amd64-undermydesk-freebsd
 target=x86_64-portbld-freebsd8.0
-gnatmake is /external/draco_build/port2/work/build/gcc/gnatmake
+gnatmake is /usr/home/marino/workzone/port2/work/build/gcc/gnatmake
 
 		=== acats support ===
 Generating support files... done.
 Compiling support files... done.
 
 		=== acats tests ===
-Running chapter a ...
-Running chapter c2 ...
-Running chapter c3 ...
-Running chapter c4 ...
-Running chapter c5 ...
-Running chapter c6 ...
-Running chapter c7 ...
 FAIL:	c761007
-Running chapter c8 ...
 FAIL:	c85005c
 FAIL:	c85006c
-Running chapter c9 ...
 FAIL:	c910002
-FAIL:	c93004b
-FAIL:	c93004c
-FAIL:	c93004d
-FAIL:	c93005a
-FAIL:	c93005b
 FAIL:	c94001c
-FAIL:	c94002b
-FAIL:	c94002e
-FAIL:	c94002f
 FAIL:	c94002g
 FAIL:	c94007a
 FAIL:	c94007b
 FAIL:	c94008c
 FAIL:	c94008d
-FAIL:	c94020a
-FAIL:	c95040c
 FAIL:	c97203c
 FAIL:	c97303c
-FAIL:	c9a007a
 FAIL:	c9a009c
 FAIL:	c9a009g
-Running chapter ca ...
-Running chapter cb ...
-Running chapter cc ...
-Running chapter cd ...
-Running chapter ce ...
-Running chapter cxa ...
-Running chapter cxb ...
-Running chapter cxf ...
-Running chapter cxg ...
-Running chapter cxh ...
-Running chapter cz ...
-Running chapter d ...
-Running chapter e ...
-Running chapter gcc ...
-Running chapter l ...
 		=== acats Summary ===
-# of expected passes		2296
-# of unexpected failures	25
-*** FAILURES: c761007 c85005c c85006c c910002 c93004b c93004c c93004d c93005a c93005b c94001c c94002b c94002e c94002f c94002g c94007a c94007b c94008c c94008d c94020a c95040c c97203c c97303c c9a007a c9a009c c9a009g 
-/external/draco_build/port2/work/gcc-4.6-20101030/gcc/testsuite/ada/acats/run_all.sh completed at Mon Nov  1 05:44:07 CDT 2010
+# of expected passes		2307
+# of unexpected failures	14
 
-Test Run By marino on Mon Nov  1 05:44:08 2010
+=== Completed: Tue Nov  9 20:30:56 CST 2010 ===
+
+
+Test Run By marino on Tue Nov  9 20:30:56 2010
 Native configuration is x86_64-portbld-freebsd8.0
 
 		=== gnat tests ===
@@ -75,18 +41,15 @@ Schedule of variations:
     unix
 
 Running target unix
-Running /external/draco_build/port2/work/gcc-4.6-20101030/gcc/testsuite/gnat.dg/dg.exp ...
 UNSUPPORTED: gnat.dg/loop_optimization7.adb
-WARNING: program timed out.
 FAIL: gnat.dg/lto8.adb execution test
 UNSUPPORTED: gnat.dg/sse_nolib.adb
-Running /external/draco_build/port2/work/gcc-4.6-20101030/gcc/testsuite/gnat.dg/specs/specs.exp ...
-Running /external/draco_build/port2/work/gcc-4.6-20101030/gcc/testsuite/gnat.dg/style/style.exp ...
+FAIL: gnat.dg/test_raise_from_pure.adb execution test
 
 		=== gnat Summary ===
 
-# of expected passes		839
-# of unexpected failures	1
+# of expected passes		838
+# of unexpected failures	2
 # of expected failures		10
 # of unsupported tests		2
 

@@ -31,6 +31,7 @@
 -- now maintained by Ada Core Technologies Inc. in cooperation with Florida --
 -- State University (http://www.gnat.com).                                  --
 --                                                                          --
+-- Copyright (C) 2010 John Marino <draco@marino.st>                         --
 ------------------------------------------------------------------------------
 
 --  This is the FreeBSD PTHREADS version of this package
@@ -111,7 +112,7 @@ package System.OS_Interface is
    SIGVTALRM  : constant := 26; --  virtual timer expired
    SIGPROF    : constant := 27; --  profiling timer expired
    SIGWINCH   : constant := 28; --  window size change
-   SIGINFO    : constant := 29; --  information request (NetBSD/FreeBSD)
+   SIGINFO    : constant := 29; --  information request (BSD)
    SIGUSR1    : constant := 30; --  user defined signal 1
    SIGUSR2    : constant := 31; --  user defined signal 2
 
@@ -244,8 +245,6 @@ package System.OS_Interface is
    -------------
 
    type pid_t is private;
-
-   Self_PID : constant pid_t;
 
    function kill (pid : pid_t; sig : Signal) return int;
    pragma Import (C, kill, "kill");
@@ -626,13 +625,12 @@ private
    pragma Convention (C, struct_sigcontext);
 
    type pid_t is new int;
-   Self_PID : constant pid_t := 0;
 
-   type time_t is new long;
+   type time_t is new int;
 
    type timespec is record
-      ts_sec  : time_t;
-      ts_nsec : long;
+      tv_sec  : time_t;
+      tv_nsec : long;
    end record;
    pragma Convention (C, timespec);
 

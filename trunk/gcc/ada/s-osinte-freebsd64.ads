@@ -34,7 +34,7 @@
 -- Copyright (C) 2010 John Marino <draco@marino.st>                         --
 ------------------------------------------------------------------------------
 
---  This is the OpenBSD PTHREADS version of this package
+--  This is the FreeBSD PTHREADS version of this package
 
 --  This package encapsulates all direct interfaces to OS services
 --  that are needed by the tasking run-time (libgnarl).
@@ -60,6 +60,7 @@ package System.OS_Interface is
    subtype unsigned_char  is Interfaces.C.unsigned_char;
    subtype plain_char     is Interfaces.C.plain_char;
    subtype size_t         is Interfaces.C.size_t;
+   subtype int64_t        is Interfaces.Integer_64;
 
    -----------
    -- Errno --
@@ -122,13 +123,13 @@ package System.OS_Interface is
 
    type Signal_Set is array (Natural range <>) of Signal;
 
-   --  Interrupts that must be unmasked at all times.  OpenBSD
+   --  Interrupts that must be unmasked at all times.  FreeBSD
    --  pthreads will not allow an application to mask out any
    --  interrupt needed by the threads library.
    Unmasked : constant Signal_Set :=
      (SIGTRAP, SIGBUS, SIGTTIN, SIGTTOU, SIGTSTP);
 
-   --  OpenBSD will uses SIGPROF for timing.  Do not allow a
+   --  FreeBSD will uses SIGPROF for timing.  Do not allow a
    --  handler to attach to this signal.
    Reserved : constant Signal_Set := (0 .. 0 => SIGPROF);
 
@@ -345,7 +346,7 @@ package System.OS_Interface is
    --  FSU_THREADS requires pthread_init, which is nonstandard and this should
    --  be invoked during the elaboration of s-taprop.adb.
 
-   --  OpenBSD does not require this so we provide an empty Ada body
+   --  FreeBSD does not require this so we provide an empty Ada body
 
    procedure pthread_init;
 
@@ -610,7 +611,7 @@ private
 
    type sigset_t is array (1 .. 4) of unsigned;
 
-   --  In OpenBSD the component sa_handler turns out to
+   --  In FreeBSD the component sa_handler turns out to
    --  be one a union type, and the selector is a macro:
    --  #define sa_handler __sigaction_u._handler
    --  #define sa_sigaction __sigaction_u._sigaction
@@ -626,7 +627,7 @@ private
 
    type pid_t is new int;
 
-   type time_t is new int;
+   type time_t is new int64_t;
 
    type timespec is record
       tv_sec  : time_t;

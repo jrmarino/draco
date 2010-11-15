@@ -2,7 +2,7 @@
 # If you want to build C++, change BUILD_CPP to "YES"
 
 GCC_VERSION=4.6.0
-SNAPSHOT=4.6-20101023
+SNAPSHOT=4.6-20101030
 NATIVE_HOST=i386-portbld-freebsd8.0
 OS_LABEL4VERS="[FreeBSD]"
 PREFIX=/usr/local
