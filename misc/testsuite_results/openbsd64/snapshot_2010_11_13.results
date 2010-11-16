@@ -27,7 +27,7 @@ FAIL:	la14006
 === Completed: Tue Nov 16 01:01:57 CST 2010 ===
 
 
-Test Run By root on Tue Nov 16 01:02:00 2010
+Test Run By root on Tue Nov 16 07:29:33 2010
 Native configuration is x86_64-pc-openbsd4.7
 
 		=== gnat tests ===
@@ -38,12 +38,10 @@ Schedule of variations:
 Running target unix
 UNSUPPORTED: gnat.dg/loop_optimization7.adb
 UNSUPPORTED: gnat.dg/sse_nolib.adb
-FAIL: gnat.dg/test_raise_from_pure.adb execution test
 
 		=== gnat Summary ===
 
 # of expected passes		849
-# of unexpected failures	1
-# of expected failures		10
+# of expected failures		11
 # of unsupported tests		2
 
