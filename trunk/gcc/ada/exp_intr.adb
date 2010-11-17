@@ -884,6 +884,11 @@ package body Exp_Intr is
       --  them to the tree, and that can disturb current value settings.
 
    begin
+      if No_Pool_Assigned (Rtyp) then
+         Error_Msg_N ("?Suppressed fatal error (issue 157), deallocation " &
+                      "from empty storage pool.  Avoid if possible!", N);
+      end if;
+   
       --  Nothing to do if we know the argument is null
 
       if Known_Null (N) then

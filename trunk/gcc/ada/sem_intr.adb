@@ -174,7 +174,11 @@ package body Sem_Intr is
       elsif Cnam = Name_Unchecked_Deallocation
         and then No_Pool_Assigned (Rtyp)
       then
-         Error_Msg_N ("deallocation from empty storage pool!", N);
+      --  AI-0157 implementation reversed until further notice
+      --  gprbuild 2010 can't be built with it present, and attempts to build
+      --  gprbuild with "gnat mode" were not successful. 
+      --  Error_Msg_N ("deallocation from empty storage pool!", N);
+         null;
 
       --  For now, no other special checks are required
 
