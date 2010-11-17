@@ -1,4 +1,4 @@
-Test Run By root on Mon Nov 15 04:45:53 CST 2010
+Test Run By root on Tue Nov 16 21:33:04 CST 2010
 		=== acats configuration ===
 target gcc is /home/marino/gnat_port/gen_x/work/build/gcc/xgcc -B/home/marino/gnat_port/gen_x/work/build/gcc/
 Reading specs from /home/marino/gnat_port/gen_x/work/build/gcc/specs
@@ -18,15 +18,14 @@ Generating support files... done.
 Compiling support files... done.
 
 		=== acats tests ===
-FAIL:	c460007
 		=== acats Summary ===
-# of expected passes		2320
-# of unexpected failures	1
+# of expected passes		2321
+# of unexpected failures	0
 
-=== Completed: Mon Nov 15 06:07:31 CST 2010 ===
+=== Completed: Tue Nov 16 22:55:07 CST 2010 ===
 
 
-Test Run By root on Mon Nov 15 06:07:32 2010
+Test Run By root on Tue Nov 16 22:55:08 2010
 Native configuration is i386-backplane-dragonfly2.6
 
 		=== gnat tests ===
@@ -40,6 +39,7 @@ UNSUPPORTED: gnat.dg/sse_nolib.adb
 
 		=== gnat Summary ===
 
-# of expected passes		850
+# of expected passes		853
 # of expected failures		10
 # of unsupported tests		2
+
