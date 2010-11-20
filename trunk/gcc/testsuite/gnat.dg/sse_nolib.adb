@@ -1,6 +1,5 @@
 --  { dg-do run { target i?86-*-* x86_64-*-* } }
 --  { dg-options "-O1 -msse" }
---  { dg-require-effective-target sse } 
 
 with Ada.Unchecked_Conversion;
 
