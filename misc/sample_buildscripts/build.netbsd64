@@ -3,10 +3,10 @@
 
 GCC_VERSION=4.6.0
 SNAPSHOT=4.6-20101113
-NATIVE_HOST=i386-aux-openbsd4.7
-OS_LABEL4VERS="[OpenBSD]"
+NATIVE_HOST=x86_64-aux-netbsd5.1
+OS_LABEL4VERS="[NetBSD64]"
 PREFIX=/usr/local
-PKG_PREFIX=/usr/local
+PKG_PREFIX=/usr/pkg
 GNATGCC=$PREFIX/bin/gnatgcc
 BUILD_CPP=no
 
@@ -35,15 +35,15 @@ CONFIGURE_ENV="CC=$GNATGCC PATH=$BOOTPATH"
 echo "===> Extracting the source files..."
 mkdir -p $WRKDIR
 cd $WRKDIR
-bunzip2 -c $DISTFILES/$CORE_TARBALL | gtar -xf -
+tar -xzf $DISTFILES/$CORE_TARBALL
 if [ "$BUILD_CPP" = "YES" ]; then
-	bunzip2 -c $DISTFILES/$LCPP_TARBALL | gtar -xf -
+	tar -xzf $DISTFILES/$LCPP_TARBALL
 	BUILD_LANGS=c,ada,c++
 else
 	BUILD_LANGS=c,ada
 fi
 cd $GCC_WRKSRC
-bunzip2 -c $DISTFILES/$LADA_TARBALL | gtar -xf -
+tar -xzf $DISTFILES/$LADA_TARBALL
 
 
 #Let's modify GNAT to display what OS it was build for.
