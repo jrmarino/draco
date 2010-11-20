@@ -4,7 +4,6 @@ gcc-interface/Makefile.in
 adaint.c
 cstreams.c
 env.c
-exp_intr.adb
 g-comlin.adb
 g-expect.adb
 gnatchop.adb
@@ -18,7 +17,6 @@ mlib-utl.adb
 prj-makr.adb
 s-rannum.adb
 s-stusta.adb
-sem_intr.adb
 sysdep.c
 system-freebsd-x86.ads
 system-freebsd-x86_64.ads
@@ -67,3 +65,9 @@ Files I deleted
 s-osinte-freebsd
 gnat.dg/unchecked_convert5.ads (renamed to .txt)
 gnat.dg/unchecked_convert6.ads (renamed to .txt)
+
+
+Testsuite Files
+===============
+loop_optimization7.adb
+sse_nolib.adb
