@@ -1,0 +1,42 @@
+Test Run By root on Sat Nov 20 14:45:22 CST 2010
+		=== acats configuration ===
+target gcc is /home/marino/gnat_port/gen_5/work/build/gcc/xgcc -B/home/marino/gnat_port/gen_5/work/build/gcc/
+Reading specs from /home/marino/gnat_port/gen_5/work/build/gcc/specs
+  COLLECT_GCC=/home/marino/gnat_port/gen_5/work/build/gcc/xgcc
+  COLLECT_LTO_WRAPPER=/home/marino/gnat_port/gen_5/work/build/gcc/lto-wrapper Target: x86_64-aux-dragonfly2.8
+   Configured with: /home/marino/gnat_port/gen_5/work/gcc-4.6-20101113/configure --enable-languages=c,ada
+   --build=x86_64-aux-dragonfly2.8 --program-prefix=gnat --prefix=/usr/local --with-system-zlib --with-gmp=/usr/pkg
+   --with-mpfr=/usr/pkg --with-mpc=/usr/pkg --with-libiconv-prefix=/usr/pkg --enable-threads=single --enable-shared
+   --disable-bootstrap --disable-libgomp --disable-libssp --disable-nls Thread model: single gcc version
+   4.6.0 20101113 (experimental) -=> GNAT AUX [DragonFly BSD] (GCC)
+host=x86_64-pc-dragonflybsd
+target=x86_64-aux-dragonfly2.8
+gnatmake is /home/marino/gnat_port/gen_5/work/build/gcc/gnatmake
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+		=== acats Summary ===
+# of expected passes		2321
+# of unexpected failures	0
+
+=== Completed: Sat Nov 20 16:08:31 CST 2010 ===
+
+
+Test Run By root on Sat Nov 20 16:08:32 2010
+Native configuration is x86_64-aux-dragonfly2.8
+
+		=== gnat tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+
+		=== gnat Summary ===
+
+# of expected passes		856
+# of expected failures		10
+
