@@ -1,0 +1,53 @@
+Test Run By root on Sun Nov 21 01:17:25 CET 2010
+		=== acats configuration ===
+target gcc is /workzone/gen_5/work/build/gcc/xgcc -B/workzone/gen_5/work/build/gcc/
+Reading specs from /workzone/gen_5/work/build/gcc/specs COLLECT_GCC=/workzone/gen_5/work/build/gcc/xgcc
+   COLLECT_LTO_WRAPPER=/workzone/gen_5/work/build/gcc/lto-wrapper Target: x86_64-aux-netbsd5.1 Configured
+   with: /workzone/gen_5/work/gcc-4.6-20101113/configure --enable-languages=c,ada --build=x86_64-aux-netbsd5.1
+   --program-prefix=gnat --prefix=/usr/local --with-system-zlib --with-gmp=/usr/pkg --with-mpfr=/usr/pkg
+   --with-mpc=/usr/pkg --with-libiconv-prefix=/usr/pkg --enable-threads=yes --enable-shared --disable-bootstrap
+   --disable-libgomp --disable-libssp --disable-nls Thread model: posix gcc version 4.6.0 20101113 (experimental)
+   -=> GNAT AUX [NetBSD64] (GCC)
+host=x86_64--netbsd
+target=x86_64-aux-netbsd5.1
+gnatmake is /workzone/gen_5/work/build/gcc/gnatmake
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+FAIL:	c52103x
+FAIL:	c52104x
+FAIL:	c52104y
+FAIL:	cb1010a
+FAIL:	cb1010c
+FAIL:	cb1010d
+		=== acats Summary ===
+# of expected passes		2315
+# of unexpected failures	6
+
+=== Completed: Sun Nov 21 02:05:54 CET 2010 ===
+
+
+Test Run By root on Sun Nov 21 02:05:54 2010
+Native configuration is x86_64-aux-netbsd5.1
+
+		=== gnat tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+FAIL: gnat.dg/entry_queues.adb execution test
+FAIL: gnat.dg/null_pointer_deref1.adb execution test
+FAIL: gnat.dg/null_pointer_deref2.adb execution test
+FAIL: gnat.dg/stack_check1.adb execution test
+FAIL: gnat.dg/stack_check2.adb execution test
+
+		=== gnat Summary ===
+
+# of expected passes		851
+# of unexpected failures	5
+# of expected failures		10
+

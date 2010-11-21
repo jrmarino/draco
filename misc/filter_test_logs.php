@@ -79,12 +79,12 @@ class TFilterLogs
 		$lines = explode ("\n", $this->acat_file_contents);
 		foreach ($lines as $line)
 		{
-			if (!preg_match($pattern1, $line) && 
+			if (!preg_match($pattern1, $line) &&
 			    !preg_match($pattern2, $line) &&
 			    !preg_match($pattern3, $line) &&
 			    !preg_match($pattern4, $line))
 			{
-				$result .= $line . "\n";
+				$result .= $this->format_line ($line);
 			}
 			else if (preg_match ($pattern4, $line, $matches))
 			{
@@ -103,10 +103,10 @@ class TFilterLogs
 		$lines = explode ("\n", $this->gnat_file_contents);
 		foreach ($lines as $line)
 		{
-			if (!preg_match($pattern1, $line) && 
+			if (!preg_match($pattern1, $line) &&
 			    !preg_match($pattern2, $line))
 			{
-				$result .= $line . "\n";
+				$result .= $this->format_line ($line);
 			}
 		}
 		return $result;
@@ -122,6 +122,46 @@ class TFilterLogs
 	public function generate_output ()
 	{
 		echo $this->resultant_contents;
+	}
+
+	/**
+	* @desc For lines > 100 characters, the first space after the 80th character
+	* on the line is replaced with a newline + 2 paces.   This is repeated until
+	* the line is complete.
+	*/
+	public function format_line ($line)
+	{
+		$maxlen = 120;
+		$stdlen = 100;
+		$len = strlen($line);
+		if ($len <= $maxlen)
+		{
+			return $line . "\n";
+		}
+		$parts = explode (' ', $line);
+		$num_parts = count ($parts);
+
+		$result = $parts[0];
+		$current_line_length = strlen ($result);
+		for ($x = 1; $x < $num_parts; $x++)
+		{
+			$xlen = strlen ($parts[$x]);
+			if ($current_line_length + $xlen > $maxlen)
+			{
+				$result .= "\n  " . $parts[$x];
+				$current_line_length = 2 + $xlen;
+				continue;
+			}
+			$result .= ' ' . $parts[$x];
+			$current_line_length += $xlen + 1;
+			if ($current_line_length > $stdlen)
+			{
+				$result .= "\n  ";
+				$current_line_length = 2;
+			}
+		}
+
+ 		return $result . "\n";
 	}
 }
 

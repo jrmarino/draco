@@ -2,16 +2,13 @@
 # If you want to build C++, change BUILD_CPP to "YES"
 
 GCC_VERSION=4.6.0
-SNAPSHOT=4.6-20101030
-NATIVE_HOST=x86_64-portbld-freebsd8.0
+SNAPSHOT=4.6-20101113
+NATIVE_HOST=x86_64-aux-freebsd8.0
 OS_LABEL4VERS="[FreeBSD64]"
 PREFIX=/usr/local
 PKG_PREFIX=/usr/local
 GNATGCC=$PREFIX/bin/gnatgcc
 BUILD_CPP=no
-
-TARGLIB=$PREFIX/lib/gcc/$NATIVE_HOST/$GCC_VERSION
-TARGLIBEXEC=$PREFIX/libexec/gcc/$NATIVE_HOST/$GCC_VERSION
 
 GCC_SRCDIR=gcc-$SNAPSHOT
 CORE_TARBALL=gcc-core-$SNAPSHOT.tar.bz2
@@ -32,7 +29,7 @@ CONFIGURE_SCRIPT=$GCC_WRKSRC/configure
 PATCH_ARGS="-d $PATCH_WRKSRC --forward --quiet -E -p0"
 
 BOOTPATH=$PATH
-CONFIGURE_ENV="CC=$GNATGCC PATH=$BOOTPATH CFLAGS=-fPIC"
+CONFIGURE_ENV="CC=$GNATGCC PATH=$BOOTPATH"
 
 
 echo "===> Extracting the source files..."
@@ -52,6 +49,15 @@ tar -xyf $DISTFILES/$LADA_TARBALL
 #Let's modify GNAT to display what OS it was build for.
 NEWREV=`sed '$s/$'"/& $OS_LABEL4VERS/" $GCC_WRKSRC/gcc/REVISION`
 echo "$NEWREV" > $GCC_WRKSRC/gcc/REVISION
+
+
+# Apply any patches
+echo "===> Applying any present patches..."
+cd $GCC_WRKSRC
+for k in $PATCHDIR/patch* ; do 
+    patch $PATCH_ARGS < $k
+done
+
 
 #configure stage
 #The next line causes problems with dragonfly builds, overwrites config.guess, etc.
