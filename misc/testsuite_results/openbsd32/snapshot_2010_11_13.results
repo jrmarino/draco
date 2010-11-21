@@ -1,0 +1,45 @@
+Test Run By root on Sun Nov 21 02:03:12 CET 2010
+		=== acats configuration ===
+target gcc is /home/marino/gnat_port/gen_4/work/build/gcc/xgcc -B/home/marino/gnat_port/gen_4/work/build/gcc/
+Reading specs from /home/marino/gnat_port/gen_4/work/build/gcc/specs
+  COLLECT_GCC=/home/marino/gnat_port/gen_4/work/build/gcc/xgcc
+  COLLECT_LTO_WRAPPER=/home/marino/gnat_port/gen_4/work/build/gcc/lto-wrapper Target: i386-aux-openbsd4.7
+   Configured with: /home/marino/gnat_port/gen_4/work/gcc-4.6-20101113/configure --enable-languages=c,ada
+   --build=i386-aux-openbsd4.7 --program-prefix=gnat --prefix=/usr/local --with-system-zlib --with-gmp=/usr/local
+   --with-mpfr=/usr/local --with-mpc=/usr/local --with-libiconv-prefix=/usr/local --enable-threads=yes
+   --enable-shared --disable-bootstrap --disable-libgomp --disable-libssp --disable-nls Thread model:
+   posix gcc version 4.6.0 20101113 (experimental) -=> GNAT AUX [OpenBSD] (GCC)
+host=i386-unknown-openbsd4.7
+target=i386-aux-openbsd4.7
+gnatmake is a tracked alias for /home/marino/gnat_port/gen_4/work/build/gcc/gnatmake
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+FAIL:	c390a03
+FAIL:	c62002a
+FAIL:	cb1010a
+		=== acats Summary ===
+# of expected passes		2318
+# of unexpected failures	3
+
+=== Completed: Sun Nov 21 03:52:22 CET 2010 ===
+
+
+Test Run By root on Sun Nov 21 03:52:23 2010
+Native configuration is i386-aux-openbsd4.7
+
+		=== gnat tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+
+		=== gnat Summary ===
+
+# of expected passes		855
+# of expected failures		11
+
