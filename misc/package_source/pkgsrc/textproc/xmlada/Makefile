@@ -24,7 +24,7 @@ USE_TOOLS=		gmake
 
 GENERATE_PLIST=  cd ${PREFIX};
 GENERATE_PLIST+= ${FIND} bin/xmlada-config;
-GENERATE_PLIST+= ${FIND} lib/gnat/*.gpr	          -type f | ${SORT};
+GENERATE_PLIST+= ${FIND} lib/gnat/*.gpr           -type f | ${SORT};
 GENERATE_PLIST+= ${FIND} lib/gnat/xmlada/*.lgpr   -type f | ${SORT};
 GENERATE_PLIST+= ${FIND} lib/xmlada/relocatable/* -type f | ${SORT};
 GENERATE_PLIST+= ${FIND} lib/xmlada/static/*      -type f | ${SORT};
