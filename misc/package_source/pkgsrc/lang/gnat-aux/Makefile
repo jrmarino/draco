@@ -151,6 +151,19 @@ CONFIGURE_ARGS+=	--disable-libssp
 CONFIGURE_ARGS+=	--disable-nls
 
 
+# Automatic package list generation
+GENERATE_PLIST=  cd ${PREFIX};
+GENERATE_PLIST+= ${FIND} bin/gnat* | ${SORT};
+GENERATE_PLIST+= ${FIND} bin/${BLD_TARGET}* | ${SORT};
+GENERATE_PLIST+= ${FIND} ${LPATH}/*     -type f | ${SORT};
+GENERATE_PLIST+= ${FIND} ${LEPATH}/*    -type f | ${SORT};
+GENERATE_PLIST+= ${FIND} ${SINFO}/gnat* -type f | ${SORT};
+GENERATE_PLIST+= ${FIND} ${SMAN1}/gnat* -type f | ${SORT};
+.for k in ${MAN7}
+GENERATE_PLIST+= ${FIND} ${SMAN7}/${k};
+.endfor
+
+
 
 post-extract:
 .if ${INTENDED_COMPILER} == "BOOTSTRAP"
@@ -196,18 +209,6 @@ post-install:
 	${STRIP} ${PREFIX}/bin/gnat*
 .for k in ${LELIST}
 	${STRIP} ${PREFIX}/${LEPATH}/${k}
-.endfor
-
-# PLIST generation not used until after the post-install phase
-GENERATE_PLIST=  cd ${PREFIX};
-GENERATE_PLIST+= ${FIND} bin/gnat* | ${SORT};
-GENERATE_PLIST+= ${FIND} bin/${BLD_TARGET}* | ${SORT};
-GENERATE_PLIST+= ${FIND} ${LPATH}/*     -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} ${LEPATH}/*    -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} ${SINFO}/gnat* -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} ${SMAN1}/gnat* -type f | ${SORT};
-.for k in ${MAN7}
-GENERATE_PLIST+= ${FIND} ${SMAN7}/${k};
 .endfor
 
 
