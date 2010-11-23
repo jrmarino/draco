@@ -69,7 +69,7 @@ BOOTSTRAP_COMPILER=	gnat-aux-460.${MACHINE_ARCH}.netbsd.tar.bz2
 
 
 
-# Let's try to build this without BASH
+# Let's build this without bash
 CONFIG_SHELL=		${TOOLS_PATH.sh}
 
 
@@ -134,7 +134,6 @@ MY_MAKE_ENV=		PATH=${FULL_PATH}
 
 
 # The standard configuration options
-
 CONFIGURE_ARGS=		--enable-languages=c,ada
 CONFIGURE_ARGS+=	--build=${BLD_TARGET}
 CONFIGURE_ARGS+=	--program-prefix=gnat
@@ -150,19 +149,6 @@ CONFIGURE_ARGS+=	--disable-bootstrap
 CONFIGURE_ARGS+=	--disable-libgomp
 CONFIGURE_ARGS+=	--disable-libssp
 CONFIGURE_ARGS+=	--disable-nls
-
-
-
-GENERATE_PLIST=  cd ${PREFIX};
-GENERATE_PLIST+= ${FIND} bin/gnat* | ${SORT};
-GENERATE_PLIST+= ${FIND} bin/${BLD_TARGET}* | ${SORT};
-GENERATE_PLIST+= ${FIND} ${LPATH}/*     -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} ${LEPATH}/*    -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} ${SINFO}/gnat* -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} ${SMAN1}/gnat* -type f | ${SORT};
-.for k in ${MAN7}
-GENERATE_PLIST+= ${FIND} ${SMAN7}/${k};
-.endfor
 
 
 
@@ -210,6 +196,18 @@ post-install:
 	${STRIP} ${PREFIX}/bin/gnat*
 .for k in ${LELIST}
 	${STRIP} ${PREFIX}/${LEPATH}/${k}
+.endfor
+
+# PLIST generation not used until after the post-install phase
+GENERATE_PLIST=  cd ${PREFIX};
+GENERATE_PLIST+= ${FIND} bin/gnat* | ${SORT};
+GENERATE_PLIST+= ${FIND} bin/${BLD_TARGET}* | ${SORT};
+GENERATE_PLIST+= ${FIND} ${LPATH}/*     -type f | ${SORT};
+GENERATE_PLIST+= ${FIND} ${LEPATH}/*    -type f | ${SORT};
+GENERATE_PLIST+= ${FIND} ${SINFO}/gnat* -type f | ${SORT};
+GENERATE_PLIST+= ${FIND} ${SMAN1}/gnat* -type f | ${SORT};
+.for k in ${MAN7}
+GENERATE_PLIST+= ${FIND} ${SMAN7}/${k};
 .endfor
 
 

@@ -1,4 +1,4 @@
-The GNAT AUX Ada compiler targetted at *BSD and *Solaris platforms
+The GNAT AUX Ada compiler targeted at *BSD and *Solaris platforms
 
 GNAT AUX is based on the trunk version of Free Software Foundation's GNU
 Compiler Collection.  It carries with it the GMGPL license, the modified
@@ -8,4 +8,6 @@ GCC Runtime Library Exception, so the resulting binaries have no licensing
 requirements.  Binaries produced by GNAT AUX should be handled the same as
 binaries produced by any FSF GNAT compiler.
 
-http://www.dragonlace.com/
+GNAT AUX implements the full Ada-83, Ada-95, and Ada-2005 language standards.
+It also implements some features of the draft Ada-2012 standard, which are
+optionally accessible via the -gnat2012 switch or Ada_2012 pragma.
