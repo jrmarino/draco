@@ -3,7 +3,8 @@
 
 DISTNAME=	gnat-aux-${SNAPSHOT}
 CATEGORIES=	lang
-MASTER_SITES=	http://downloads.dragonlace.net/src/
+MASTER_SITES=	http://downloads.dragonlace.net/src/ \
+		http://dragonlace.mirrors.ada.cx/src/
 EXTRACT_SUFX=	.tar.bz2
 
 MAINTAINER=	draco@marino.st
@@ -37,8 +38,7 @@ BOOTSTRAP_COMPILER=	NOT_REQUIRED
 INTENDED_COMPILER=	NATIVE
 BOOTSTRAP_TRIPLET=      NOT SET
 FULL_GNATGCC=		NOT SET
-COMPILE_ITEMS=
-FULL_PATH=		${PATH}
+FULL_PATH=		/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:${PREFIX}/bin
 
 
 .if ${OPSYS} == "DragonFly"
@@ -113,11 +113,9 @@ FULL_GNATGCC=${PREFIX}/bin/gnatgcc
 
 .if ${FULL_GNATGCC} == "NOT SET"
 # here we know we need to install the bootstrap compiler
-INTENDED_COMPILER=	BOOTSTRAP
+INTENDED_COMPILER=BOOTSTRAP
 FULL_GNATGCC=${BOOTSTRAP_PREFIX}/bin/gnatgcc
-COMPILE_ITEMS+= ADA_INCLUDE_PATH=${BOOTSTRAP_PREFIX}/lib/gcc/${BOOTSTRAP_TRIPLET}/adainclude
-COMPILE_ITEMS+= ADA_OBJECTS_PATH=${BOOTSTRAP_PREFIX}/lib/gcc/${BOOTSTRAP_TRIPLET}/adalib
-DISTFILES=      ${DISTNAME}${EXTRACT_SUFX} ${BOOTSTRAP_COMPILER}
+DISTFILES= ${DISTNAME}${EXTRACT_SUFX} ${BOOTSTRAP_COMPILER}
 FULL_PATH=${BOOTSTRAP_PREFIX}/bin:/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:${PREFIX}/bin
 .endif
 
@@ -131,9 +129,8 @@ FULL_PATH=${BOOTSTRAP_PREFIX}/bin:/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:$
 
 
 # establish ada-aware compiler for use
-MY_CONFIGURE_ENV=	${COMPILE_ITEMS} CC=${FULL_GNATGCC} PATH=${FULL_PATH}
-MY_CONFIGURE_ENV+=	CONFIG_SHELL=${CONFIG_SHELL}
-MY_MAKE_ENV=		${COMPILE_ITEMS} PATH=${FULL_PATH}
+MY_CONFIGURE_ENV=	CC=${FULL_GNATGCC} PATH=${FULL_PATH} CONFIG_SHELL=${CONFIG_SHELL}
+MY_MAKE_ENV=		PATH=${FULL_PATH}
 
 
 # The standard configuration options
