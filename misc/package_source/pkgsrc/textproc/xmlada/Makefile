@@ -41,6 +41,11 @@ pre-configure:
 	${SETENV} CC=gnatgcc
 
 
+post-wrapper:
+	# We disable at least the wrapper binaries on all GNAT AUX ports to
+	# avoid potential linkage problems
+	${RM} ${WRKDIR}/.wrapper/bin/*
+
 
 .include "../../lang/gnat-aux/buildlink3.mk"
 .include "../../mk/bsd.pkg.mk"
