@@ -20,8 +20,6 @@ USE_TOOLS=		gmake
 
 
 
-# GPRbuild needs to know where XML/Ada resides
-MAKE_ENV+=	ADA_PROJECT_PATH=${PREFIX}/lib/gnat
 
 
 # Note: share/examples/gprbuild has several empty directories and due to this
