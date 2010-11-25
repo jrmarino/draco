@@ -1,12 +1,12 @@
 # $NetBSD$
 #
 
-DISTNAME=	xmlada-gpl-${XMLADA_VERS}-src
+DISTNAME=	xmlada-${XMLADA_VERS}-${SNAPSHOT}
 PKGNAME=	xmlada-${XMLADA_VERS}
 CATEGORIES=	textproc
 MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 		http://dragonlace.mirrors.ada.cx/src/
-EXTRACT_SUFX=	.tgz
+EXTRACT_SUFX=	.tar.bz2
 
 MAINTAINER=	draco@marino.st
 HOMEPAGE=	http://libre.adacore.com/libre/tools/xmlada/
@@ -14,8 +14,9 @@ COMMENT=	Adacore XML suite for the Ada language
 LICENSE=	gnu-gpl-v2
 
 PKG_DESTDIR_SUPPORT=	user-destdir
-XMLADA_VERS=		3.2.1
-WRKSRC=			${WRKDIR}/xmlada-${XMLADA_VERS}-src
+XMLADA_VERS=		4.1w
+SNAPSHOT=		20101125
+WRKSRC=			${WRKDIR}/${PKGNAME}
 GNU_CONFIGURE=		yes
 USE_LANGUAGES=		c # ada is not valid enumeration
 USE_TOOLS=		gmake
