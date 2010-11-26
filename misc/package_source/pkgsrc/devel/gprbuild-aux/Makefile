@@ -19,7 +19,7 @@ USE_LANGUAGES=		c # Ada is not option.
 USE_TOOLS=		gmake
 
 
-
+MAKE_ENV+=		ADA_PROJECT_PATH=${PREFIX}/lib/gnat
 
 
 # Note: share/examples/gprbuild has several empty directories and due to this
