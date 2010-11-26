@@ -6,15 +6,15 @@
 # ASIS is not supported right now (custom build, requires part of GNAT)
 
 PKG_OPTIONS_VAR=	PKG_OPTIONS.aws
-PKG_SUPPORTED_OPTIONS=	ssl demos ldap inet6 debug disable-shared-rt relocatable
-PKG_SUGGESTED_OPTIONS=	ssl demos
+PKG_SUPPORTED_OPTIONS=	demos ssl ldap inet6 debug disable-shared-rt relocatable
+PKG_SUGGESTED_OPTIONS=	demos
 
 
 .include "../../mk/bsd.prefs.mk"
 .include "../../mk/bsd.options.mk"
 
 
-DOTBUILD=	release
+DOTBUILD=release
 
 ###################
 ##  SSL Support  ##
@@ -64,7 +64,7 @@ CONFIGURE_ARGS+= IPv6=true
 
 .if !empty(PKG_OPTIONS:Mdebug)
 CONFIGURE_ARGS+= DEBUG=true
-DOTBUILD= debug
+DOTBUILD=debug
 .endif
 
 

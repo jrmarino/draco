@@ -3,3 +3,4 @@ $NetBSD$
 SHA1 (aws-gpl-2.8.0-src.tgz) = f38a9839106102d9bbc362d193276f98fc8307e0
 RMD160 (aws-gpl-2.8.0-src.tgz) = 6367050ffe56bb0697ef2771ccc172371db8bfb5
 Size (aws-gpl-2.8.0-src.tgz) = 8387505 bytes
+SHA1 (patch-aa) = 290ec01fb9375a52b3140531f39772ed340fc5e1
