@@ -231,7 +231,12 @@
 # endif
 #endif
 
-#if defined (__FreeBSD__) || defined (__DragonFly__) || defined (__vxworks) || defined(__rtems__)
+#if defined (__FreeBSD__)   \
+ || defined (__DragonFly__) \
+ || defined (__OpenBSD__)   \
+ || defined (__NetBSD__)    \
+ || defined (__vxworks)     \
+ || defined(__rtems__)
 # define Has_Sockaddr_Len 1
 #else
 # define Has_Sockaddr_Len 0
