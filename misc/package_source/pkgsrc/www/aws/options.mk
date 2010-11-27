@@ -6,7 +6,7 @@
 # ASIS is not supported right now (custom build, requires part of GNAT)
 
 PKG_OPTIONS_VAR=	PKG_OPTIONS.aws
-PKG_SUPPORTED_OPTIONS=	demos ssl ldap inet6 debug disable-shared-rt relocatable
+PKG_SUPPORTED_OPTIONS=	demos ssl ldap ipv6 debug disable-shared-rt relocatable
 PKG_SUGGESTED_OPTIONS=	demos
 
 
@@ -52,7 +52,7 @@ CONFIGURE_ARGS+= DEMOS=true
 ##  IPv6 Support  ##
 ####################
 
-.if !empty(PKG_OPTIONS:Minet6)
+.if !empty(PKG_OPTIONS:Mipv6)
 CONFIGURE_ARGS+= IPv6=true
 .endif
 
