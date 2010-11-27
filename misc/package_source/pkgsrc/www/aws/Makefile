@@ -64,11 +64,11 @@ do-install:
 .if !empty(PKG_OPTIONS:Mdemos)
 .if !empty(PKG_OPTIONS:Mrelocatable)
 	${MKDIR} -p ${PREFIX}/share/examples/aws/reloc_demos
-	${CP} ${WRKSRC}/.build/native/${DOTBUILD}/relocatable/demos/* \
+	${INSTALL} ${WRKSRC}/.build/native/${DOTBUILD}/relocatable/demos/* \
 	      ${PREFIX}/share/examples/aws/reloc_demos/
 .else
 	${MKDIR} -p ${PREFIX}/share/examples/aws/static_demos
-	${CP} ${WRKSRC}/.build/native/${DOTBUILD}/static/demos/* \
+	${INSTALL} ${WRKSRC}/.build/native/${DOTBUILD}/static/demos/* \
 	      ${PREFIX}/share/examples/aws/static_demos/
 .endif
 .endif

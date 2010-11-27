@@ -50,7 +50,6 @@ FULL_PATH=		/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:${PREFIX}/bin
    OS_LABEL4VERS=	[DragonFly64]
    BOOTSTRAP_TRIPLET=	x86_64-aux-dragonfly2.8/4.6.0
 .endif
-THREAD_MODEL=		single
 BOOTSTRAP_COMPILER=	gnat-aux-460.${MACHINE_ARCH}.dragonfly.tar.bz2
 .endif
 
@@ -205,7 +204,7 @@ do-install:
 	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} install
 
 
-post-install:
+strip-exec:
 	${STRIP} ${PREFIX}/bin/gnat*
 .for k in ${LELIST}
 	${STRIP} ${PREFIX}/${LEPATH}/${k}
