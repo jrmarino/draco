@@ -13,8 +13,9 @@ PKG_SUGGESTED_OPTIONS=	demos
 .include "../../mk/bsd.prefs.mk"
 .include "../../mk/bsd.options.mk"
 
-
-DOTBUILD=release
+CONFIGURE_ARGS+=	CJOBS=1
+CONFIGURE_ARGS+=	PYTHON=python2.6
+DOTBUILD=		release
 
 ###################
 ##  SSL Support  ##

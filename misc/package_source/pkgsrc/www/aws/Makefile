@@ -15,6 +15,7 @@ PKG_DESTDIR_SUPPORT=	user-destdir
 AWS_VERSION=		2.8.0
 USE_TOOLS+=		gmake
 
+
 .include "options.mk"
 
 
@@ -57,6 +58,9 @@ do-build:
 	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${GMAKE} build
 
 
+do-test:
+	cd ${WRKSRC}/regtests && python2.6 testsuite.py
+
 
 do-install:
 	cd ${WRKSRC} && ${GMAKE} install;
@@ -75,5 +79,6 @@ do-install:
 
 
 .include "../../devel/zlib/buildlink3.mk"
+.include "../../devel/gnatpython/buildlink3.mk"
 .include "../../devel/gprbuild-aux/buildlink3.mk"
 .include "../../mk/bsd.pkg.mk"
