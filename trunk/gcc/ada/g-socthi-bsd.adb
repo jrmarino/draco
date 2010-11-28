@@ -231,17 +231,23 @@ package body GNAT.Sockets.Thin is
       Req : C.int;
       Arg : access C.int) return C.int
    is
+      --  Currently all requests are of the FIONBIO type, so always calc flags
+      use Interfaces;
+      flags    : constant Unsigned_32 :=
+                          Unsigned_32 (C_Fcntl (S, SOSC.F_GETFL, 0));
+      nonblock : constant Unsigned_32 := Unsigned_32 (SOSC.FNDELAY);
+      enabled  : constant Boolean := Arg.all = 1;
+      newval   : C.int;
    begin
       if Req = SOSC.FIONBIO then
-         declare
-            use Interfaces;
-            flags   : constant C.int := C_Fcntl (S, SOSC.F_GETFL, 0);
-            newval  : constant C.int := C.int (
-                               Unsigned_32 (flags) or
-                               Unsigned_32 (SOSC.FNDELAY));
-         begin
-            return C_Fcntl (Fd => S, Cmd => SOSC.F_SETFL, Val => newval);
-         end;
+         if enabled then
+            newval := C.int (flags or nonblock);
+         elsif (flags and nonblock) > 0 then
+            newval := C.int (flags - nonblock);
+         else
+            newval := C.int (flags);
+         end if;
+         return C_Fcntl (Fd => S, Cmd => SOSC.F_SETFL, Val => newval);
       else
          return C_Ioctl (Fd => S, Req => Req, Arg => Arg);
       end if;
