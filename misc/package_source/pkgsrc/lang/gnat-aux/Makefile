@@ -2,6 +2,7 @@
 #
 
 DISTNAME=	gnat-aux-${SNAPSHOT}
+PKGREVISION=	1
 CATEGORIES=	lang
 MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 		http://dragonlace.mirrors.ada.cx/src/
