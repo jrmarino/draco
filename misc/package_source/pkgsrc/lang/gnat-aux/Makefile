@@ -98,11 +98,12 @@ LELIST=			cc1 collect2 gnat1 lto1
 # bootstrap is determined necessary.
 
 
-#testing if gnatgcc, gnatlink, gnatbind and gnatmake are in standard location
-.if exists (${PREFIX}/bin/gnatgcc)
-.if exists (${PREFIX}/bin/gnatbind)
-.if exists (${PREFIX}/bin/gnatlink)
-.if exists (${PREFIX}/bin/gnatmake)
+# testing if gnatgcc, gnatlink, gnatbind and gnatmake are in standard location
+# exists function will NOT expand any variable, so it has to be hard-coded
+.if exists(/usr/pkg/bin/gnatgcc)
+.if exists(/usr/pkg/bin/gnatbind)
+.if exists(/usr/pkg/bin/gnatlink)
+.if exists(/usr/pkg/bin/gnatmake)
 FULL_GNATGCC=${PREFIX}/bin/gnatgcc
 .endif #gnatmake
 .endif #gnatlink
