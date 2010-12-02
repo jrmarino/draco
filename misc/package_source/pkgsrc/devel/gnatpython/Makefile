@@ -3,7 +3,8 @@
 
 DISTNAME=	gnatpython-20101122
 CATEGORIES=	devel
-MASTER_SITES=	http://downloads.dragonlace.net/src/
+MASTER_SITES=	http://downloads.dragonlace.net/src/ \
+		http://dragonlace.mirrors.ada.cx/src/
 EXTRACT_SUFX=	.tar.bz2
 
 MAINTAINER= 	draco@marino.st
