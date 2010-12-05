@@ -27,6 +27,7 @@
 -- GNAT was originally developed  by the GNAT team at  New York University. --
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
+-- Copyright (C) 2010 John Marino <draco@marino.st>                         --
 ------------------------------------------------------------------------------
 
 --  This package spec holds version information for the GNAT tools.
@@ -34,7 +35,7 @@
 
 package Gnatvsn is
 
-   Gnat_Static_Version_String : constant String := "GNU Ada";
+   Gnat_Static_Version_String : constant String := "GNAT AUX";
    --  Static string identifying this version, that can be used as an argument
    --  to e.g. pragma Ident.
 

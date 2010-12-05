@@ -1,6 +1,6 @@
 /* DWARF2 EH unwinding support for FreeBSD: AMD x86-64 and x86.
    Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
-   Copyright (C) 2010 John Marino (www.auroraux.org)
+   Copyright (C) 2010 John Marino <draco@marino.st>
 
 This file is part of GCC.
 
@@ -39,28 +39,26 @@ Boston, MA 02110-1301, USA.  */
 
 #define REG_NAME(reg)	sf_uc.uc_mcontext.mc_## reg
 
+#ifdef __x86_64__
+#define MD_FALLBACK_FRAME_STATE_FOR x86_64_freebsd_fallback_frame_state
+
+
 static void
-x86_sigtramp_range (unsigned char **start, unsigned char **end)
+x86_64_sigtramp_range (unsigned char **start, unsigned char **end)
 {
-  static unsigned long ps_strings = 0;
+  unsigned long ps_strings;
   int mib[2];
   size_t len;
 
-  if (ps_strings == 0)
-    {
-     mib[0] = CTL_KERN;
-     mib[1] = KERN_PS_STRINGS;
-     len = sizeof (ps_strings);
-     sysctl (mib, 2, &ps_strings, &len, NULL, 0);
-    }
+  mib[0] = CTL_KERN;
+  mib[1] = KERN_PS_STRINGS;
+  len = sizeof (ps_strings);
+  sysctl (mib, 2, &ps_strings, &len, NULL, 0);
 
-  *start = (unsigned char *)ps_strings - 128;
-  *end = (unsigned char *)ps_strings;
+  *start = (unsigned char *)ps_strings - 32;
+  *end   = (unsigned char *)ps_strings;
 }
 
-#ifdef __x86_64__
-
-#define MD_FALLBACK_FRAME_STATE_FOR x86_64_freebsd_fallback_frame_state
 
 static _Unwind_Reason_Code
 x86_64_freebsd_fallback_frame_state
@@ -71,7 +69,7 @@ x86_64_freebsd_fallback_frame_state
   struct sigframe *sf;
   long new_cfa;
 
-  x86_sigtramp_range(&sigtramp_start, &sigtramp_end);
+  x86_64_sigtramp_range(&sigtramp_start, &sigtramp_end);
   if (pc >= sigtramp_end || pc < sigtramp_start)
     return _URC_END_OF_STACK;
 
@@ -123,6 +121,24 @@ x86_64_freebsd_fallback_frame_state
 #else /* Next section is for i386  */
 
 #define MD_FALLBACK_FRAME_STATE_FOR x86_freebsd_fallback_frame_state
+
+
+static void
+x86_sigtramp_range (unsigned char **start, unsigned char **end)
+{
+  unsigned long ps_strings;
+  int mib[2];
+  size_t len;
+
+  mib[0] = CTL_KERN;
+  mib[1] = KERN_PS_STRINGS;
+  len = sizeof (ps_strings);
+  sysctl (mib, 2, &ps_strings, &len, NULL, 0);
+
+  *start = (unsigned char *)ps_strings - 128;
+  *end   = (unsigned char *)ps_strings;
+}
+
 
 static _Unwind_Reason_Code
 x86_freebsd_fallback_frame_state

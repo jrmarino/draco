@@ -8,6 +8,7 @@ g-comlin.adb
 g-expect.adb
 gnatchop.adb
 gnatlink.adb
+gnatvsn.ads
 gsocket.h
 init.c
 initialize.c
@@ -40,6 +41,7 @@ Files I added
 a-intnam-dragonfly.ads
 a-intnam-netbsd.ads
 a-intnam-openbsd.ads
+g-socthi-bsd.adb
 s-osinte-dragonfly.adb
 s-osinte-dragonfly.ads
 s-osinte-freebsd32.ads
