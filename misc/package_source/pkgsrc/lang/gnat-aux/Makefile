@@ -2,7 +2,7 @@
 #
 
 DISTNAME=	gnat-aux-${SNAPSHOT}
-PKGREVISION=	1
+#PKGREVISION=
 CATEGORIES=	lang
 MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 		http://dragonlace.mirrors.ada.cx/src/
@@ -13,7 +13,7 @@ HOMEPAGE=	http://www.dragonlace.net/
 COMMENT=	GNAT Ada compiler based on GCC ${GCC_BRANCH}
 LICENSE=	gnu-gpl-v3 AND gnu-lgpl-v3
 
-SNAPSHOT=	20101120
+SNAPSHOT=	20101204
 GCC_BRANCH=     4.6
 GCC_POINT=      0
 
@@ -60,6 +60,7 @@ BOOTSTRAP_COMPILER=	gnat-aux-460.${MACHINE_ARCH}.dragonfly.tar.bz2
 .if ${MACHINE_ARCH} == "i386"
    OS_LABEL4VERS=	[NetBSD]
    BOOTSTRAP_TRIPLET=	i386-aux-netbsd5.1/4.6.0
+   BLD_TARGET=		${MACHINE_ARCH}-aux-netbsdelf${OS_VERSION}
 .endif
 .if ${MACHINE_ARCH} == "x86_64"
    OS_LABEL4VERS=	[NetBSD64]
