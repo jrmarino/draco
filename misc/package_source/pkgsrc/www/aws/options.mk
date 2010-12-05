@@ -7,7 +7,7 @@
 
 PKG_OPTIONS_VAR=	PKG_OPTIONS.aws
 PKG_SUPPORTED_OPTIONS=	demos ssl ldap ipv6 debug disable-shared-rt relocatable
-PKG_SUGGESTED_OPTIONS=	demos
+PKG_SUGGESTED_OPTIONS=	demos ssl
 
 
 .include "../../mk/bsd.prefs.mk"
