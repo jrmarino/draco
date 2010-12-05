@@ -71,5 +71,4 @@ gnat.dg/unchecked_convert6.ads (renamed to .txt)
 
 Testsuite Files
 ===============
-loop_optimization7.adb
-sse_nolib.adb
+test_raise_from_pure.adb
