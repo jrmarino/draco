@@ -1,0 +1,9 @@
+$NetBSD$
+
+SHA1 (gps-5.0.0.tar.bz2) = d643a77ba59ae1030ed0cc0929de82ddd165f5ea
+RMD160 (gps-5.0.0.tar.bz2) = e8a9e7224587191d790bb78ab0519111ba5eb0d4
+Size (gps-5.0.0.tar.bz2) = 14505074 bytes
+SHA1 (patch-aa) = 0f361b4be86052efb2926659a025b611e4d339eb
+SHA1 (patch-ab) = 59c13a902436f3953a467b914e8b3c01443263c6
+SHA1 (patch-ac) = 4c350aa10b82aef2baaf29465ffec30942ed6c0d
+SHA1 (patch-ad) = 058f89c0fa9bf2c2d4baca8d35ce11c97086697a

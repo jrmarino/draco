@@ -1,0 +1,86 @@
+# $NetBSD$
+#
+
+DISTNAME=	gps-${GPS_VERSION}
+CATEGORIES=	devel
+MASTER_SITES=	http://downloads.dragonlace.net/src/
+EXTRACT_SUFX=	.tar.bz2
+
+MAINTAINER=	draco@marino.st
+HOMEPAGE=	http://downloads.dragonlace.net/src/
+COMMENT=	TODO: Short description of the package
+LICENSE=	gnu-gpl-v2
+
+PKG_DESTDIR_SUPPORT=	user-destdir
+
+GNU_CONFIGURE=		yes
+USE_TOOLS+=		gmake sed perl awk
+
+GPS_VERSION=		5.0.0
+FULL_PATH=		/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:${PREFIX}/bin:${PREFIX}/lib/pkgconfig
+MY_CONFIGURE_ENV=	PATH=${FULL_PATH}
+APP=			${PREFIX}/lib/gnat
+TPLS=			${PREFIX}/share/gps/templates
+
+
+.include "options.mk"
+
+
+# Do to hardcoding on GPS' part, can't get python to work yet
+CONFIGURE_ARGS+=	--with-gmp=${PREFIX}
+CONFIGURE_ARGS+=	--with-python=no
+CONFIGURE_ARGS+=	--enable-shared-python=yes
+
+
+# We've got a big problem here.  The make file wipes out share/gps/plugs-ins
+# but packages like xmlada, gtkada, and aws may (and have) already put files
+# that make the delete pattern there (*.xml, *.py).  There's really no
+# obvious way to prevent this, and it may cause uninstall problems for those
+# packages later.
+GENERATE_PLIST=  cd ${PREFIX};
+GENERATE_PLIST+= ${FIND} bin/gps;
+GENERATE_PLIST+= ${FIND} share/doc/gps/      -name \* -type f | ${SORT} -dr;
+GENERATE_PLIST+= ${FIND} share/gps/          -name \* -type f | ${SORT} -dr;
+GENERATE_PLIST+= ${FIND} share/examples/gps/ -name \* -type f | ${SORT} -dr;
+
+
+do-wrapper:
+	# Disable problematic wrappers
+	@${ECHO} "###  Pkgsrc wrappers disabled  ###"
+
+
+pre-configure:
+	# Explicitly request GNAT-AUX compiler
+	# It is done to fool tough pkgsrc compiler checks
+	${SETENV} CC=gnatgcc
+
+
+do-configure:
+	cd ${WRKSRC} && ${SETENV} ${MY_CONFIGURE_ENV} ./configure ${CONFIGURE_ARGS}
+
+
+do-build:
+	cd ${WRKSRC} && ${SETENV} ADA_PROJECT_PATH=${APP} gmake default
+
+# "scripts" directory does not exist, tests disable
+#do-test:
+#	cd ${WRKSRC}/scripts && ./testsuites
+#test-clean:
+#	cd ${WRKSRC}/scripts && ./testsuites clean
+
+post-install:
+	${TOUCH} ${PREFIX}/share/doc/gps/pdf/IGNORE.ME
+	${TOUCH} ${PREFIX}/share/doc/gps/txt/IGNORE.ME
+	${TOUCH} ${PREFIX}/share/examples/gps/tutorial/matrix_handling/IGNORE.ME
+	${TOUCH} ${TPLS}/ajis_hello/obj/IGNORE.ME
+	${TOUCH} ${TPLS}/ajis_hello/bin/IGNORE.ME
+	${TOUCH} ${TPLS}/ajis_hello/binding/IGNORE.ME
+	${TOUCH} ${TPLS}/gtkada_minimal/obj/IGNORE.ME
+	${TOUCH} ${TPLS}/simple_project/obj/IGNORE.ME
+
+
+.include "../../x11/gtkada/buildlink3.mk"
+.include "../../textproc/xmlada/buildlink3.mk"
+.include "../../devel/gprbuild-aux/buildlink3.mk"
+#.include "../../lang/python26/buildlink3.mk"
+.include "../../mk/bsd.pkg.mk"
