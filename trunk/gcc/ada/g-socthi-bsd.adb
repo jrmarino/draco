@@ -42,7 +42,6 @@
 --  one it replaces.
 
 with GNAT.OS_Lib; use GNAT.OS_Lib;
-with GNAT.Task_Lock;
 
 with Interfaces.C; use Interfaces.C;
 
@@ -340,7 +339,6 @@ package body GNAT.Sockets.Thin is
    procedure Initialize is
    begin
       Disable_All_SIGPIPEs;
-      Reset_Socket_Set (Non_Blocking_Sockets'Access);
    end Initialize;
 
    --------------------
