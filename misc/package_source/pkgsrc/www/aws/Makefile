@@ -1,10 +1,10 @@
 # $NetBSD$
 #
 
-DISTNAME=	aws-gpl-${AWS_VERSION}-src
+DISTNAME=	aws-${AWS_VERSION}
 CATEGORIES=	www
 MASTER_SITES=	http://downloads.dragonlace.net/src/
-EXTRACT_SUFX=	.tgz
+EXTRACT_SUFX=	.tar.bz2
 
 MAINTAINER=	draco@marino.st
 HOMEPAGE=	http://libre.adacore.com/libre/tools/aws/
@@ -12,9 +12,8 @@ COMMENT=	Adacore Ada Web Server and framework
 LICENSE=	gnu-gpl-v2
 
 PKG_DESTDIR_SUPPORT=	user-destdir
-AWS_VERSION=		2.8.0
-USE_TOOLS+=		gmake
-
+AWS_VERSION=		2.10.0
+USE_TOOLS+=		gmake makeinfo sed gawk
 
 .include "options.mk"
 
@@ -55,7 +54,7 @@ do-configure:
 
 
 do-build:
-	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${GMAKE} build
+	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${GMAKE} build build_doc
 
 
 do-test:
