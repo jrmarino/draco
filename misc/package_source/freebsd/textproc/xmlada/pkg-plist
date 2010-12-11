@@ -1,3 +1,4 @@
+@comment $FreeBSD$
 bin/xmlada-config
 lib/gnat/xmlada.gpr
 lib/gnat/xmlada_dom.gpr
