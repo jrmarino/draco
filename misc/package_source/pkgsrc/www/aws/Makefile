@@ -76,12 +76,19 @@ demos:
 .for dd in ${DEMO_DIRS}
 	cd ${WRKSRC}/demos/${dd} && gnatmake -P ${dd}.gpr
 .endfor
+.for dd in ${DEMO_DIRS_MK}
+	cd ${WRKSRC}/demos/${dd} && ${MAKE}
+.endfor
 
 
 demos-install:
 .if !empty (BUILD_DEMOS)
 	${MKDIR} ${PREFIX}/share/examples/aws/demos
 .for dd in ${DEMO_DIRS}
+	${FIND} ${WRKSRC}/demos/${dd} -type f -perm -0001 \
+	-exec ${INSTALL} {} ${PREFIX}/share/examples/aws/demos/ \;
+.endfor
+.for dd in ${DEMO_DIRS_MK}
 	${FIND} ${WRKSRC}/demos/${dd} -type f -perm -0001 \
 	-exec ${INSTALL} {} ${PREFIX}/share/examples/aws/demos/ \;
 .endfor
