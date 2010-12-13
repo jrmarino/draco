@@ -8,7 +8,7 @@ MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 EXTRACT_SUFX=	.tar.bz2
 
 MAINTAINER=	draco@marino.st
-HOMEPAGE=	http://downloads.dragonlace.net/src/
+HOMEPAGE=	http://libre.adacore.com/libre/tools/gtkada/
 COMMENT=	Ada graphical toolkit based on Gtk+
 LICENSE=	gnu-gpl-v2
 
