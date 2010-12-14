@@ -7,8 +7,8 @@ MASTER_SITES=	http://downloads.dragonlace.net/src/
 EXTRACT_SUFX=	.tar.bz2
 
 MAINTAINER=	draco@marino.st
-HOMEPAGE=	http://downloads.dragonlace.net/src/
-COMMENT=	TODO: Short description of the package
+HOMEPAGE=	http://www.adacore.com/home/products/gnatpro/toolsuite/gps/
+COMMENT=	GNAT Programming Studio - IDE for Ada and many other languages
 LICENSE=	gnu-gpl-v2
 
 PKG_DESTDIR_SUPPORT=	user-destdir
