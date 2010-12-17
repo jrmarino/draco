@@ -23,4 +23,6 @@ USE_GMAKE=	yes
 USE_BZIP2=	yes
 CC=		gnatgcc
 
+CONFIGURE_ARGS+=	--disable-nls
+
 .include <bsd.port.mk>

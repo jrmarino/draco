@@ -19,6 +19,7 @@ USE_TOOLS+=		gmake pkg-config
 
 FULL_PATH=		/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:${PREFIX}/bin:${PREFIX}/lib/pkgconfig
 MY_CONFIGURE_ENV+=	PATH=${FULL_PATH}
+CONFIGURE_ARGS+=	--disable-nls
 PKGCONFIG_OVERRIDE+=	projects/gtkada.pc.in
 
 
