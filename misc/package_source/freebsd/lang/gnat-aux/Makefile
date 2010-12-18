@@ -57,12 +57,13 @@ PLIST_SUB+=		GCC_VER=${GCC_BRANCH}.${GCC_POINT}
 
 WRKSRC=			${WRKDIR}/build
 GCC_WRKSRC=		${WRKDIR}/gcc-${GCC_BRANCH}-${SNAPSHOT}
+BOOTSTRAP_PREFIX=	${WRKDIR}/bootstrap
 PKG_PREFIX=		${PREFIX}
 CONFIGURE_SCRIPT=	${GCC_WRKSRC}/configure
 REVFILE=		${GCC_WRKSRC}/REVISION
 LPATH=			lib/gcc/${BLD_TARGET}/${GCC_BRANCH}.${GCC_POINT}
 LEPATH=			libexec/gcc/${BLD_TARGET}/${GCC_BRANCH}.${GCC_POINT}
-BOOTSTRAP_PREFIX=	${WRKDIR}/bootstrap
+LELIST=			cc1 collect2 gnat1 lto1
 MAN1=			gnatcpp.1 gnatgcc.1 gnatgcov.1
 MAN7=			fsf-funding.7 gfdl.7 gpl.7
 MAN1PREFIX=		${PREFIX}/share
@@ -130,11 +131,11 @@ post-extract:
 .if !exists(${PREFIX}/lib/libmpc.so.2)
 	${LN} -s ${PREFIX}/lib/libmpc.so ${PREFIX}/lib/libmpc.so.2
 .endif
-.if !exists(${PREFIX}/lib/libgmp.so.8)
-	${LN} -s ${PREFIX}/lib/libgmp.so ${PREFIX}/lib/libgmp.so.8
+.if !exists(${PREFIX}/lib/libgmp.so.10)
+	${LN} -s ${PREFIX}/lib/libgmp.so ${PREFIX}/lib/libgmp.so.10
 .endif
-.if !exists(${PREFIX}/lib/libmpfr.so.3)
-	${LN} -s ${PREFIX}/lib/libmpfr.so ${PREFIX}/lib/libmpfr.so.3
+.if !exists(${PREFIX}/lib/libmpfr.so.4)
+	${LN} -s ${PREFIX}/lib/libmpfr.so ${PREFIX}/lib/libmpfr.so.4
 .endif
 .endif
 
@@ -163,6 +164,7 @@ do-install:
 	cd ${WRKSRC} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} install
 
 post-install:
+	strip-exec
 	${RM} -f ${WRKDIR}/PLIST.lib
 .for d in ${LPATH} ${LEPATH}
 	cd ${PREFIX} ; ${FIND} $d \( -type f -or -type l \) | ${SORT} >> ${WRKDIR}/PLIST.lib
@@ -174,6 +176,12 @@ post-install:
 	${ECHO_CMD} "@unexec ${RMDIR} %D/libexec/gcc/${BLD_TARGET} 2>/dev/null || true" >> ${WRKDIR}/PLIST.lib
 	${ECHO_CMD} "@unexec ${RMDIR} %D/libexec/gcc               2>/dev/null || true" >> ${WRKDIR}/PLIST.lib
 
-	cd ${WRKDIR}; ${SED} -i -e "/PLIST.lib/ r PLIST.lib" ${TMPPLIST}	
+	cd ${WRKDIR}; ${SED} -i -e "/PLIST.lib/ r PLIST.lib" ${TMPPLIST}
+
+strip-exec:
+	${STRIP_CMD} ${PREFIX}/bin/gnat*
+.for k in ${LELIST}
+	${STRIP_CMD} ${PREFIX}/${LEPATH}/${k}
+.endfor
 
 .include <bsd.port.post.mk>
