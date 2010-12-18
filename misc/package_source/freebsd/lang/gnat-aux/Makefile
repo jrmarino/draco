@@ -156,15 +156,13 @@ do-configure:
 do-build:
 	cd ${WRKSRC} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} all
 
-test:
-	build
+test: build
 	cd ${WRKSRC} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} -sk check-ada
 
 do-install:
 	cd ${WRKSRC} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} install
 
-post-install:
-	strip-exec
+post-install: strip-exec
 	${RM} -f ${WRKDIR}/PLIST.lib
 .for d in ${LPATH} ${LEPATH}
 	cd ${PREFIX} ; ${FIND} $d \( -type f -or -type l \) | ${SORT} >> ${WRKDIR}/PLIST.lib
