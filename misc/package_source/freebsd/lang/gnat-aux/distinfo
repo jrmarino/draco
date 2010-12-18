@@ -1,0 +1,6 @@
+SHA256 (gnat-aux-20101211.tar.bz2) = debb000f57bb3fd3d0f9e662cf2aae282b27e0fdc720bfbbe877b2b5018f8fe0
+SIZE (gnat-aux-20101211.tar.bz2) = 25832102
+SHA256 (gnat-aux-460.i386.freebsd.tar.bz2) = 6f451bff21f51b908c0a3508c207a581c4d9b1b200bc6eb881f3e297167e66b0
+SIZE (gnat-aux-460.i386.freebsd.tar.bz2) = 28231251
+SHA256 (gnat-aux-460.x86_64.freebsd.tar.bz2) = d6fc49b931dda069fa0af47f34b66380a3d9ca6771391ee26268f1186cec19d1
+SIZE (gnat-aux-460.x86_64.freebsd.tar.bz2) = 31824603

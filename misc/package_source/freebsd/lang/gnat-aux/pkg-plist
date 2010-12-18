@@ -1,0 +1,29 @@
+@comment $FreeBSD
+bin/gnat
+bin/gnatbind
+bin/gnatchop
+bin/gnatclean
+bin/gnatcpp
+bin/gnatfind
+bin/gnatgcc
+bin/gnatgcov
+bin/gnatkr
+bin/gnatlink
+bin/gnatls
+bin/gnatmake
+bin/gnatname
+bin/gnatprep
+bin/gnatxref
+bin/%%GNU_HOST%%-gcc-%%GCC_VER%%
+bin/%%GNU_HOST%%-gnatgcc
+share/info/cpp.info
+share/info/cppinternals.info
+share/info/dir
+share/info/gcc.info
+share/info/gccinstall.info
+share/info/gccint.info
+share/info/gnat-style.info
+share/info/gnat_rm.info
+share/info/gnat_ugn.info
+share/info/libquadmath.info
+@comment PLIST.lib attached below
