@@ -14,7 +14,7 @@ MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 MAINTAINER=	draco@marino.st
 COMMENT=	Adacore Ada Web Server and framework
 
-#BUILD_DEPENDS=	gnat-aux>=20101204:${PORTSDIR}/lang/gnat-aux
+BUILD_DEPENDS=	gnat-aux>=20101204:${PORTSDIR}/lang/gnat-aux
 BUILD_DEPENDS+= gprbuild-aux>=20101120:${PORTSDIR}/devel/gprbuild-aux
 BUILD_DEPENDS+= python26>=2.6:${PORTSDIR}/lang/python26
 

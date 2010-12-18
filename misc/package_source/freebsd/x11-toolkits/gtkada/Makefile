@@ -14,7 +14,7 @@ MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 MAINTAINER=	draco@marino.st
 COMMENT=	Ada graphical toolkit based on Gtk2+
 
-#BUILD_DEPENDS=	gnat-aux>20101204:${PORTSDIR}/lang/gnat-aux
+BUILD_DEPENDS=	gnat-aux>20101204:${PORTSDIR}/lang/gnat-aux
 BUILD_DEPENDS+=	gtk>=2.22:${PORTSDIR}/x11-toolkits/gtk20
 RUN_DEPENDS+=	gtk>=2.22:${PORTSDIR}/x11-toolkits/gtk20
 

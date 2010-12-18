@@ -16,7 +16,7 @@ MAINTAINER=	draco@marino.st
 COMMENT=	Adacore XML suite for the Ada language
 
 SNAPSHOT=	20101125
-#BUILD_DEPENDS=	gnat-aux:${PORTSDIR}/lang/gnat-aux
+BUILD_DEPENDS=	gnat-aux>=20101204:${PORTSDIR}/lang/gnat-aux
 
 GNU_CONFIGURE=	yes
 USE_GMAKE=	yes

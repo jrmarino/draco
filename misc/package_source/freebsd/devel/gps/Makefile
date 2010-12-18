@@ -14,9 +14,9 @@ MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 MAINTAINER=	draco@marino.st
 COMMENT=	GNAT Programming Studio - IDE for Ada and many other languages
 
-#BUILD_DEPENDS=	gnat-aux>20101204:${PORTSDIR}/lang/gnat-aux
 #xmlada is also required, but it's a dependency of gprbuild-aux too
 #libgmp is also required, but it's a dependency of gnat-aux too
+BUILD_DEPENDS=	gnat-aux>20101204:${PORTSDIR}/lang/gnat-aux
 BUILD_DEPENDS+=	gtkada>=2.22:${PORTSDIR}/x11-toolkits/gtkada
 BUILD_DEPENDS+= gprbuild-aux>=20101120:${PORTSDIR}/devel/gprbuild-aux
 RUN_DEPENDS+=	gtkada>=2.22:${PORTSDIR}/x11-toolkits/gtkada

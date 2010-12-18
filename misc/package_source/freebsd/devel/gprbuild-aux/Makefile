@@ -15,7 +15,7 @@ MAINTAINER=	draco@marino.st
 COMMENT=	Adacore multi-language software build tool
 
 SNAPSHOT=	20101120
-#BUILD_DEPENDS=	gnat-aux>=20101204:${PORTSDIR}/lang/gnat-aux
+BUILD_DEPENDS=	gnat-aux>=20101204:${PORTSDIR}/lang/gnat-aux
 BUILD_DEPENDS+=	xmlada>=3.2:${PORTSDIR}/textproc/xmlada
 
 GNU_CONFIGURE=	yes
