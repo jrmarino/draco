@@ -1,0 +1,56 @@
+Test Run By root on Sun Dec 19 04:06:14 CET 2010
+		=== acats configuration ===
+target gcc is /usr/ports/lang/gnat-aux/work/build/gcc/xgcc -B/usr/ports/lang/gnat-aux/work/build/gcc/
+Reading specs from /usr/ports/lang/gnat-aux/work/build/gcc/specs COLLECT_GCC=/usr/ports/lang/gnat-aux/work/build/gcc/xgcc
+   COLLECT_LTO_WRAPPER=/usr/ports/lang/gnat-aux/work/build/gcc/lto-wrapper Target: x86_64-aux-freebsd8.1
+   Configured with: /usr/ports/lang/gnat-aux/work/gcc-4.6-20101218/configure --enable-languages=c,ada
+   --build=x86_64-aux-freebsd8.1 --program-prefix=gnat --prefix=/usr/local --with-system-zlib --with-gmp=/usr/local
+   --with-mpfr=/usr/local --with-mpc=/usr/local --with-libiconv-prefix=/usr/local --enable-shared --enable-threads=posix
+   --disable-bootstrap --disable-libgomp --disable-libssp --disable-nls --prefix=/usr/local Thread model:
+   posix gcc version 4.6.0 20101218 (experimental) -=> GNAT AUX (GCC)
+host=amd64-undermydesk-freebsd
+target=x86_64-aux-freebsd8.1
+gnatmake is /usr/ports/lang/gnat-aux/work/build/gcc/gnatmake
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+FAIL:	c34011b
+FAIL:	c761007
+FAIL:	c85005c
+FAIL:	c85006c
+FAIL:	c910002
+FAIL:	c94001c
+FAIL:	c94002g
+FAIL:	c94007a
+FAIL:	c94007b
+FAIL:	c94008c
+FAIL:	c94008d
+FAIL:	c97203c
+FAIL:	c97303c
+FAIL:	c9a009c
+FAIL:	c9a009g
+		=== acats Summary ===
+# of expected passes		2306
+# of unexpected failures	15
+
+=== Completed: Sun Dec 19 06:11:16 CET 2010 ===
+
+
+Test Run By root on Sun Dec 19 06:11:17 2010
+Native configuration is x86_64-aux-freebsd8.1
+
+		=== gnat tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+
+		=== gnat Summary ===
+
+# of expected passes		861
+# of expected failures		12
+

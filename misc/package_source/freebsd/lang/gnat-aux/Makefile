@@ -29,7 +29,7 @@ USE_BISON=		build
 USE_PERL5_BUILD=	yes
 ALL_TARGET=		default
 
-SNAPSHOT=		20101211
+SNAPSHOT=		20101218
 GCC_BRANCH=		4.6
 GCC_POINT=		0
 
@@ -140,16 +140,16 @@ post-extract:
 .endif
 .endif
 
-pre-configure:
+post-extract:
 	# Personalize GNAT for each different machine
 	@${ECHO} "-=> GNAT AUX ${OS_LABEL4VERS}" > ${REVFILE}
 
+do-configure:
 	#reset timestamps
 	cd ${GCC_WRKSRC}; contrib/gcc_update --touch
 	${RM} -f ${GCC_WRKSRC}/gcc/*/*.info*
 	${TOUCH} ${GCC_WRKSRC}/gcc/cstamp-h.in
-
-do-configure:
+	
 	${MKDIR} ${WRKSRC}
 	cd ${WRKSRC} && ${SETENV} ${ADA_CONFIGURE_ENV} \
 	${SH} ${CONFIGURE_SCRIPT} ${CONFIGURE_ARGS}
