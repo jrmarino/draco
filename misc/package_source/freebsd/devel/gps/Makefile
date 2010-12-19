@@ -36,10 +36,15 @@ OPTIONS+=		PGSQL  "Enable PostgreSQL database support" off
 OPTIONS+=		PYTHON "Enable Python scripts support" off
 OPTIONS+=		PYGTK  "Enable Python bindings to GTK" off
 
+.include <bsd.port.pre.mk>
+.include <bsd.port.options.mk>
+
+.if ${ARCH} == "amd64"
+CONFIGURE_TARGET=	x86_64-portbld-freebsd${OSREL}
+.endif
+
 CONFIGURE_ARGS+=	--with-gmp=${PREFIX}
 CONFIGURE_ARGS+=	--enable-shared-python=yes
-
-.include <bsd.port.options.mk>
 
 ##############
 ##  SYSLOG  ##
@@ -94,4 +99,4 @@ RUN_DEPENDS+=		py-gtk2>=2.22:${PORTSDIR}/x11-toolkits/py-gtk2
 CONFIGURE_ARGS+=	--disable-pygtk
 .endif
 
-.include <bsd.port.mk>
+.include <bsd.port.post.mk>
