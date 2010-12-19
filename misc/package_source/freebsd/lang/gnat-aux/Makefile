@@ -127,15 +127,16 @@ post-extract:
 	${MV} ${BOOTSTRAP_PREFIX}/../libexec ${BOOTSTRAP_PREFIX}
 
 	# protect bootstrap compiler from future breakage
-	# We know gmp, mpc, and mpfr are already installed at this point
-.if !exists(${PREFIX}/lib/libmpc.so.2)
-	${LN} -s ${PREFIX}/lib/libmpc.so ${PREFIX}/lib/libmpc.so.2
+	# gmp, mpc, and mpfr should already installed at this point
+   # Hardlinks are used to protext against dangling references which confuse makefiles
+.if exists(${PREFIX}/lib/libmpc.so) && !exists(${PREFIX}/lib/libmpc.so.2)
+	${LN} ${PREFIX}/lib/libmpc.so ${PREFIX}/lib/libmpc.so.2
 .endif
-.if !exists(${PREFIX}/lib/libgmp.so.10)
-	${LN} -s ${PREFIX}/lib/libgmp.so ${PREFIX}/lib/libgmp.so.10
+.if exists(${PREFIX}/lib/libgmp.so) && !exists(${PREFIX}/lib/libgmp.so.10)
+	${LN} ${PREFIX}/lib/libgmp.so ${PREFIX}/lib/libgmp.so.10
 .endif
-.if !exists(${PREFIX}/lib/libmpfr.so.4)
-	${LN} -s ${PREFIX}/lib/libmpfr.so ${PREFIX}/lib/libmpfr.so.4
+.if exists(${PREFIX}/lib/libmpfr.so) && !exists(${PREFIX}/lib/libmpfr.so.4)
+	${LN} ${PREFIX}/lib/libmpfr.so ${PREFIX}/lib/libmpfr.so.4
 .endif
 .endif
 

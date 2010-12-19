@@ -16,6 +16,7 @@ ROOT_FILES="
    config.sub
    configure
    configure.ac
+   install-sh
    libtool-ldflags
    libtool.m4
    ltgcc.m4
