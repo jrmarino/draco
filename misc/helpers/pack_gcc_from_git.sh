@@ -16,6 +16,7 @@ ROOT_FILES="
    config.sub
    configure
    configure.ac
+   depcomp
    install-sh
    libtool-ldflags
    libtool.m4
