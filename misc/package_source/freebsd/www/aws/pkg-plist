@@ -656,11 +656,9 @@ include/aws/aws.ads
 share/doc/aws/aws.html
 share/doc/aws/aws.info
 share/doc/aws/aws.txt
-share/doc/aws/aws.pdf
 share/doc/aws/templates_parser.html
 share/doc/aws/templates_parser.info
 share/doc/aws/templates_parser.txt
-share/doc/aws/templates_parser.pdf
 share/examples/aws/web_elements/rounded_boxes/rounded_boxes.tcss
 share/examples/aws/web_elements/rounded_boxes/rcorner.gif
 share/examples/aws/web_elements/readme.txt

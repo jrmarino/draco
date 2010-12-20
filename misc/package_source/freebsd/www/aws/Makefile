@@ -18,7 +18,7 @@ COMMENT=	Adacore Ada Web Server and framework
 BUILD_DEPENDS=  gnat-aux>=20101204:${PORTSDIR}/lang/gnat-aux
 BUILD_DEPENDS+= gprbuild-aux>=20101120:${PORTSDIR}/devel/gprbuild-aux
 BUILD_DEPENDS+= python26>=2.6:${PORTSDIR}/lang/python26
-BUILD_DEPENDS+= texinfo>=4:${PORTSDIR}/print/texinfo
+BUILD_DEPENDS+= gnatpython>=20101207:${PORTSDIR}/devel/gnatpython
 
 USE_BZIP2=	yes
 GNU_CONFIGURE=	yes
@@ -150,6 +150,8 @@ do-configure:
 	${GMAKE} setup ${CONF_ARGS}
 
 do-build:
+	# docs are built, but the .pdf format is intentionally disabled
+	# The taTeX dependency brings in ~100MB so it's not worth it.
 	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${GMAKE} build build_doc
 
 test: install
