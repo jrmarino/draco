@@ -14,6 +14,7 @@ PKG_SUGGESTED_OPTIONS=	ssl
 .include "../../mk/bsd.options.mk"
 
 
+CONFIGURE_ARGS+=	GCC=gnatgcc
 CONFIGURE_ARGS+=	CJOBS=1
 CONFIGURE_ARGS+=	PYTHON=python2.6
 DOTBUILD=		release
@@ -53,12 +54,12 @@ DEMO_DIRS+=	auth
 DEMO_DIRS+=	com
 DEMO_DIRS+=	dispatch
 DEMO_DIRS+=	hello_world
-DEMO_DIRS_MK+=	hello_wsdl
+DEMO_DIRS+=	hello_wsdl
 DEMO_DIRS+=	hotplug
-DEMO_DIRS_MK+=	interoplab
+DEMO_DIRS+=	interoplab
 DEMO_DIRS+=	jabber_demo
 DEMO_DIRS+=	multiple_sessions
-DEMO_DIRS_MK+=	res_demo
+DEMO_DIRS+=	res_demo
 DEMO_DIRS+=	runme
 DEMO_DIRS+=	soap_demo
 DEMO_DIRS+=	soap_disp
@@ -69,7 +70,7 @@ DEMO_DIRS+=	text_input
 DEMO_DIRS+=	vh_demo
 DEMO_DIRS+=	web_block
 DEMO_DIRS+=	web_block_ajax
-DEMO_DIRS_MK+=	web_block_ajax_templates
+DEMO_DIRS+=	web_block_ajax_templates
 DEMO_DIRS+=	web_elements
 DEMO_DIRS+=	web_mail
 DEMO_DIRS+=	wps
