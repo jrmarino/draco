@@ -57,7 +57,7 @@ s-taprop-netbsd.adb
 system-dragonfly-x86.ads
 system-dragonfly-x86_64.ads
 system-netbsd-x86.ads
-system-netbsd0x86_64.ads
+system-netbsd-x86_64.ads
 system-openbsd-x86.ads
 system-openbsd-x86_64.ads
 
