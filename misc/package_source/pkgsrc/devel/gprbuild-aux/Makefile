@@ -17,8 +17,6 @@ SNAPSHOT=		20101120
 GNU_CONFIGURE=		yes
 USE_LANGUAGES=		c # Ada is not option.
 USE_TOOLS=		gmake
-
-
 MAKE_ENV+=		ADA_PROJECT_PATH=${PREFIX}/lib/gnat
 
 
@@ -26,15 +24,6 @@ MAKE_ENV+=		ADA_PROJECT_PATH=${PREFIX}/lib/gnat
 # the automatic pruning doesn't work during the deinstall phase.  There is no
 # post-deinstall target either so it can't be cleaned up via brute force.
 # Looks like a weakness of pkgsrc to not recognize this likely common case.
-GENERATE_PLIST=  cd ${PREFIX};
-GENERATE_PLIST+= ${FIND} bin/gprbuild;
-GENERATE_PLIST+= ${FIND} bin/gprclean;
-GENERATE_PLIST+= ${FIND} bin/gprconfig;
-GENERATE_PLIST+= ${FIND} share/gprconfig/*.xml    -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} share/examples/gprbuild/ -name \* \( -type f -or -type l \) | ${SORT} -dr;
-GENERATE_PLIST+= ${FIND} share/doc/gprbuild/      -name \*    -type f | ${SORT} -dr;
-GENERATE_PLIST+= ${FIND} libexec/gprbuild/        -name gpr\* -type f | ${SORT} -dr;
-
 
 
 # no special configuration options necessary

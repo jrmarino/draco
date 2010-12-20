@@ -1,7 +1,5 @@
 $NetBSD$
 
-SHA1 (gnatpython-20101122.tar.bz2) = 6ae906753ef5658e1ae6f0026191d6b6bb3da16a
-RMD160 (gnatpython-20101122.tar.bz2) = 7bba41b8ded3de0fe46261f05cf3bc8f853ae02b
-Size (gnatpython-20101122.tar.bz2) = 66583 bytes
-SHA1 (patch-aa) = b009ad23bdc41caa911ff23658707a2031f786d4
-SHA1 (patch-ab) = 3016dc40f7fdfc66556cdea80e1b50c7f6faa43f
+SHA1 (gnatpython-20101207.tar.bz2) = e4623395ff55502f277a46f2e71e832989c26c07
+RMD160 (gnatpython-20101207.tar.bz2) = 7cc8382ec1867fd80d4e2ee9ad3e9f3abd45b3b6
+Size (gnatpython-20101207.tar.bz2) = 84745 bytes

@@ -290,6 +290,24 @@ struct layout
    window of frame N-1 (positive offset from fp), in which we retrieve the
    saved return address. We then end up with our caller's return address.  */
 
+/*---------------------------- x86 *BSD --------------------------------*/
+
+#elif defined (__i386__) &&   \
+    ( defined (__NetBSD__)    \
+   || defined (__FreeBSD__)   \
+   || defined (__OpenBSD__)   \
+   || defined (__DragonFly__) )
+  
+#define USE_GCC_UNWINDER
+/* The generic unwinder is not used for this target because the default
+   implementation doesn't unwind on the BSD platforms.  AMD64 targets use the
+   gcc unwinder for all platforms, so let's keep i386 consistent with that.
+*/
+
+#define PC_ADJUST -2
+/* The minimum size of call instructions on this architecture is 2 bytes */
+
+
 /*------------------------------- x86 ----------------------------------*/
 
 #elif defined (i386)

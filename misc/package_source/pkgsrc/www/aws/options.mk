@@ -6,24 +6,27 @@
 # ASIS is not supported right now (custom build, requires part of GNAT)
 
 PKG_OPTIONS_VAR=	PKG_OPTIONS.aws
-PKG_SUPPORTED_OPTIONS=	demos ssl ldap ipv6 debug disable-shared-rt relocatable
-PKG_SUGGESTED_OPTIONS=	demos ssl
+PKG_SUPPORTED_OPTIONS=	ssl demos ldap ipv6 debug disable-shared-rt relocatable
+PKG_SUGGESTED_OPTIONS=	ssl
 
 
 .include "../../mk/bsd.prefs.mk"
 .include "../../mk/bsd.options.mk"
 
-CONFIGURE_ARGS+=	CJOBS=1
+
+CONFIGURE_ARGS+=	GCC=gnatgcc
+CONFIGURE_ARGS+=	PROCESSORS=1
 CONFIGURE_ARGS+=	PYTHON=python2.6
 DOTBUILD=		release
+DEMO_DIRS=
 
 ###################
 ##  SSL Support  ##
 ###################
 
 .if !empty(PKG_OPTIONS:Mssl)
-CONFIGURE_ARGS+= SOCKET=openssl
 .include "../../security/openssl/buildlink3.mk"
+CONFIGURE_ARGS+= SOCKET=openssl
 .endif
 
 
@@ -34,7 +37,7 @@ CONFIGURE_ARGS+= SOCKET=openssl
 
 .if !empty(PKG_OPTIONS:Mldap)
 CONFIGURE_ARGS+= LDAP=true
-	DEPENDS+= openldap>=2.4:/../../databases/openldap
+DEPENDS+= openldap>=2.4:/../../databases/openldap
 .endif
 
 
@@ -44,7 +47,39 @@ CONFIGURE_ARGS+= LDAP=true
 #####################
 
 .if !empty(PKG_OPTIONS:Mdemos)
-CONFIGURE_ARGS+= DEMOS=true
+BUILD_DEMOS=	YES
+
+DEMO_DIRS+=	agent
+DEMO_DIRS+=	auth
+DEMO_DIRS+=	com
+DEMO_DIRS+=	dispatch
+DEMO_DIRS+=	hello_world
+DEMO_DIRS+=	hello_wsdl
+DEMO_DIRS+=	hotplug
+DEMO_DIRS+=	interoplab
+DEMO_DIRS+=	jabber_demo
+DEMO_DIRS+=	multiple_sessions
+DEMO_DIRS+=	res_demo
+DEMO_DIRS+=	runme
+DEMO_DIRS+=	soap_demo
+DEMO_DIRS+=	soap_disp
+DEMO_DIRS+=	soap_vs
+DEMO_DIRS+=	split
+DEMO_DIRS+=	test_mail
+DEMO_DIRS+=	text_input
+DEMO_DIRS+=	vh_demo
+DEMO_DIRS+=	web_block
+DEMO_DIRS+=	web_block_ajax
+DEMO_DIRS+=	web_block_ajax_templates
+DEMO_DIRS+=	web_elements
+DEMO_DIRS+=	web_mail
+DEMO_DIRS+=	wps
+DEMO_DIRS+=	ws
+DEMO_DIRS+=	zdemo
+
+.if !empty(PKG_OPTIONS:Mldap)
+DEMO_DIRS+=	test_ldap
+.endif
 .endif
 
 

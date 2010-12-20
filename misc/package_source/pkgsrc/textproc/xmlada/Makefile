@@ -16,22 +16,10 @@ LICENSE=	gnu-gpl-v2
 PKG_DESTDIR_SUPPORT=	user-destdir
 XMLADA_VERS=		4.1w
 SNAPSHOT=		20101125
-WRKSRC=			${WRKDIR}/${PKGNAME}
+WRKSRC=			${WRKDIR}/${PKGNAME_NOREV}
 GNU_CONFIGURE=		yes
 USE_LANGUAGES=		c # ada is not valid enumeration
 USE_TOOLS=		gmake
-
-
-
-GENERATE_PLIST=  cd ${PREFIX};
-GENERATE_PLIST+= ${FIND} bin/xmlada-config;
-GENERATE_PLIST+= ${FIND} lib/gnat/*.gpr           -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} lib/gnat/xmlada/*.lgpr   -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} lib/xmlada/relocatable/* -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} lib/xmlada/static/*      -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} include/xmlada/*         -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} share/doc/xmlada/xml.*   -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} share/gps/plug-ins/xmlada_gps.py;
 
 
 

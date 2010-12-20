@@ -37,45 +37,38 @@
 --  should not be directly with'ed by an applications program.
 
 --  This is the *BSD version which uses fcntl rather than ioctl
+--  The constant SCON.Thread_Blocking_IO is always true (for all platforms, not
+--  just *BSD), so this binding is significantly simpler than the standard
+--  one it replaces.
 
 with GNAT.OS_Lib; use GNAT.OS_Lib;
-with GNAT.Task_Lock;
 
 with Interfaces.C; use Interfaces.C;
 
 package body GNAT.Sockets.Thin is
 
-   Non_Blocking_Sockets : aliased Fd_Set;
-   --  When this package is initialized with Process_Blocking_IO set
-   --  to True, sockets are set in non-blocking mode to avoid blocking
-   --  the whole process when a thread wants to perform a blocking IO
-   --  operation. But the user can also set a socket in non-blocking
-   --  mode by purpose. In order to make a difference between these
-   --  two situations, we track the origin of non-blocking mode in
-   --  Non_Blocking_Sockets. If S is in Non_Blocking_Sockets, it has
-   --  been set in non-blocking mode by the user.
-
-   Quantum : constant Duration := 0.2;
-   --  When SOSC.Thread_Blocking_IO is False, we set sockets in
-   --  non-blocking mode and we spend a period of time Quantum between
-   --  two attempts on a blocking operation.
-
    Unknown_System_Error : constant C.Strings.chars_ptr :=
                             C.Strings.New_String ("Unknown system error");
-
-   --  Comments required for following functions ???
 
    function Syscall_Accept
      (S       : C.int;
       Addr    : System.Address;
       Addrlen : not null access C.int) return C.int;
    pragma Import (C, Syscall_Accept, "accept");
+   --  The accept() function accepts a connection on a socket.  An incoming
+   --  connection is acknowledged and associated with an immediately created
+   --  socket.  The original socket is returned to the listening state.
 
    function Syscall_Connect
      (S       : C.int;
       Name    : System.Address;
       Namelen : C.int) return C.int;
    pragma Import (C, Syscall_Connect, "connect");
+   --  The connect() system call initiates a connection on a socket.  If the
+   --  parameter S is of type SOCK_DGRAM then connect() permanently specifies
+   --  the peer to which datagrams are to be sent.  If S is type SOCK_STREAM
+   --  then connect() attempts to make a connection with another socket, which
+   --  is identified by the parameter Name.
 
    function Syscall_Recv
      (S     : C.int;
@@ -83,6 +76,11 @@ package body GNAT.Sockets.Thin is
       Len   : C.int;
       Flags : C.int) return C.int;
    pragma Import (C, Syscall_Recv, "recv");
+   --  The recv() function receives a message from a socket.  The call can be
+   --  used on a connection mode socket or a bound, connectionless socket.  If
+   --  no messages are available at the socket, the recv() call waits for a
+   --  message to arrive unless the socket is non-blocking.  If a socket is
+   --  non-blocking, the call returns a -1 and ERRNO is set to EWOULDBLOCK.
 
    function Syscall_Recvfrom
      (S       : C.int;
@@ -92,18 +90,33 @@ package body GNAT.Sockets.Thin is
       From    : System.Address;
       Fromlen : not null access C.int) return C.int;
    pragma Import (C, Syscall_Recvfrom, "recvfrom");
+   --  The recvfrom() system call receives a message from a socket and captures
+   --  the address from which the data was sent.  It can be used to receive
+   --  data on an unconnected socket as well.  If no messages are available,
+   --  the call waits for a message to arrive on blocking sockets.  For
+   --  non-blocking sockets without messages, -1 is returned and ERRNO is set
+   --  to EAGAIN or EWOULDBLOCK.
 
    function Syscall_Recvmsg
      (S     : C.int;
       Msg   : System.Address;
       Flags : C.int) return System.CRTL.ssize_t;
    pragma Import (C, Syscall_Recvmsg, "recvmsg");
+   --  The recvmsg call receives a message from a socket, and can be used to
+   --  receive data on an unconnected socket as well.  If no messages are
+   --  available, the call waits for a message to arrive on blocking sockets.
+   --  For non-blocking sockets without messages, -1 is returned and ERRNO is
+   --  set to EAGAIN or EWOULDBLOCK.
 
    function Syscall_Sendmsg
      (S     : C.int;
       Msg   : System.Address;
       Flags : C.int) return System.CRTL.ssize_t;
    pragma Import (C, Syscall_Sendmsg, "sendmsg");
+   --  The sendmsg() function sends a message to a socket, and can be used with
+   --  unconnected sockets as well (the msg is ignored in this case).  The
+   --  function returns the number of bytes sent when successful, otherwise it
+   --  returns -1 and ERRNO is set (many possible values).
 
    function Syscall_Sendto
      (S     : C.int;
@@ -113,12 +126,18 @@ package body GNAT.Sockets.Thin is
       To    : System.Address;
       Tolen : C.int) return C.int;
    pragma Import (C, Syscall_Sendto, "sendto");
+   --  The sendto() function only works for connected sockets and it initiates
+   --  the transmission of a message.  A successful call returns the numbers of
+   --  bytes sent, and a failure returns a -1 and ERRNO is set.
 
    function Syscall_Socket
      (Domain   : C.int;
       Typ      : C.int;
       Protocol : C.int) return C.int;
    pragma Import (C, Syscall_Socket, "socket");
+   --  The socket() function is used to create an unbound socket and returns a
+   --  file descriptor that can be used with other socket functions.  Upon
+   --  failure, a -1 is returned and ERRNO is set.
 
    procedure Disable_SIGPIPE (S : C.int);
    pragma Import (C, Disable_SIGPIPE, "__gnat_disable_sigpipe");
@@ -127,8 +146,6 @@ package body GNAT.Sockets.Thin is
    pragma Import (C, Disable_All_SIGPIPEs, "__gnat_disable_all_sigpipes");
    --  Sets the process to ignore all SIGPIPE signals on platforms that
    --  don't support Disable_SIGPIPE for particular streams.
-
-   function Non_Blocking_Socket (S : C.int) return Boolean;
 
    function C_Fcntl
      (Fd  : C.int;
@@ -147,20 +164,12 @@ package body GNAT.Sockets.Thin is
       Addr    : System.Address;
       Addrlen : not null access C.int) return C.int
    is
-      R : C.int;
+      Res : constant C.int := Syscall_Accept (S, Addr, Addrlen);
    begin
-      loop
-         R := Syscall_Accept (S, Addr, Addrlen);
-         exit when SOSC.Thread_Blocking_IO
-           or else R /= Failure
-           or else Non_Blocking_Socket (S)
-           or else Errno /= SOSC.EWOULDBLOCK;
-         delay Quantum;
-      end loop;
 
-      --  SOSC.Thread_Blocking_IO is always true for *BSD, condition removed
-      Disable_SIGPIPE (R);
-      return R;
+      Disable_SIGPIPE (Res);
+      return Res;
+
    end C_Accept;
 
    ---------------
@@ -172,54 +181,10 @@ package body GNAT.Sockets.Thin is
       Name    : System.Address;
       Namelen : C.int) return C.int
    is
-      Res : C.int;
-
    begin
-      Res := Syscall_Connect (S, Name, Namelen);
 
-      if SOSC.Thread_Blocking_IO
-        or else Res /= Failure
-        or else Non_Blocking_Socket (S)
-        or else Errno /= SOSC.EINPROGRESS
-      then
-         return Res;
-      end if;
+      return Syscall_Connect (S, Name, Namelen);
 
-      declare
-         WSet : aliased Fd_Set;
-         Now  : aliased Timeval;
-
-      begin
-         Reset_Socket_Set (WSet'Access);
-         loop
-            Insert_Socket_In_Set (WSet'Access, S);
-            Now := Immediat;
-            Res := C_Select
-              (S + 1,
-               No_Fd_Set_Access,
-               WSet'Access,
-               No_Fd_Set_Access,
-               Now'Unchecked_Access);
-
-            exit when Res > 0;
-
-            if Res = Failure then
-               return Res;
-            end if;
-
-            delay Quantum;
-         end loop;
-      end;
-
-      Res := Syscall_Connect (S, Name, Namelen);
-
-      if Res = Failure
-        and then Errno = SOSC.EISCONN
-      then
-         return Thin_Common.Success;
-      else
-         return Res;
-      end if;
    end C_Connect;
 
    ------------------
@@ -263,19 +228,10 @@ package body GNAT.Sockets.Thin is
       Len   : C.int;
       Flags : C.int) return C.int
    is
-      Res : C.int;
-
    begin
-      loop
-         Res := Syscall_Recv (S, Msg, Len, Flags);
-         exit when SOSC.Thread_Blocking_IO
-           or else Res /= Failure
-           or else Non_Blocking_Socket (S)
-           or else Errno /= SOSC.EWOULDBLOCK;
-         delay Quantum;
-      end loop;
 
-      return Res;
+      return Syscall_Recv (S, Msg, Len, Flags);
+
    end C_Recv;
 
    ----------------
@@ -290,19 +246,10 @@ package body GNAT.Sockets.Thin is
       From    : System.Address;
       Fromlen : not null access C.int) return C.int
    is
-      Res : C.int;
-
    begin
-      loop
-         Res := Syscall_Recvfrom (S, Msg, Len, Flags, From, Fromlen);
-         exit when SOSC.Thread_Blocking_IO
-           or else Res /= Failure
-           or else Non_Blocking_Socket (S)
-           or else Errno /= SOSC.EWOULDBLOCK;
-         delay Quantum;
-      end loop;
 
-      return Res;
+      return Syscall_Recvfrom (S, Msg, Len, Flags, From, Fromlen);
+
    end C_Recvfrom;
 
    ---------------
@@ -314,19 +261,10 @@ package body GNAT.Sockets.Thin is
       Msg   : System.Address;
       Flags : C.int) return System.CRTL.ssize_t
    is
-      Res : System.CRTL.ssize_t;
-
    begin
-      loop
-         Res := Syscall_Recvmsg (S, Msg, Flags);
-         exit when SOSC.Thread_Blocking_IO
-           or else Res /= System.CRTL.ssize_t (Failure)
-           or else Non_Blocking_Socket (S)
-           or else Errno /= SOSC.EWOULDBLOCK;
-         delay Quantum;
-      end loop;
 
-      return Res;
+      return  Syscall_Recvmsg (S, Msg, Flags);
+
    end C_Recvmsg;
 
    ---------------
@@ -338,19 +276,10 @@ package body GNAT.Sockets.Thin is
       Msg   : System.Address;
       Flags : C.int) return System.CRTL.ssize_t
    is
-      Res : System.CRTL.ssize_t;
-
    begin
-      loop
-         Res := Syscall_Sendmsg (S, Msg, Flags);
-         exit when SOSC.Thread_Blocking_IO
-           or else Res /= System.CRTL.ssize_t (Failure)
-           or else Non_Blocking_Socket (S)
-           or else Errno /= SOSC.EWOULDBLOCK;
-         delay Quantum;
-      end loop;
 
-      return Res;
+      return Syscall_Sendmsg (S, Msg, Flags);
+
    end C_Sendmsg;
 
    --------------
@@ -365,19 +294,10 @@ package body GNAT.Sockets.Thin is
       To    : System.Address;
       Tolen : C.int) return C.int
    is
-      Res : C.int;
-
    begin
-      loop
-         Res := Syscall_Sendto (S, Msg, Len, Flags, To, Tolen);
-         exit when SOSC.Thread_Blocking_IO
-           or else Res /= Failure
-           or else Non_Blocking_Socket (S)
-           or else Errno /= SOSC.EWOULDBLOCK;
-         delay Quantum;
-      end loop;
 
-      return Res;
+      return Syscall_Sendto (S, Msg, Len, Flags, To, Tolen);
+
    end C_Sendto;
 
    --------------
@@ -389,13 +309,12 @@ package body GNAT.Sockets.Thin is
       Typ      : C.int;
       Protocol : C.int) return C.int
    is
-      R : C.int;
+      Res : constant C.int := Syscall_Socket (Domain, Typ, Protocol);
    begin
-      R := Syscall_Socket (Domain, Typ, Protocol);
 
-      --  SOSC.Thread_Blocking_IO is always true for *BSD, condition removed
-      Disable_SIGPIPE (R);
-      return R;
+      Disable_SIGPIPE (Res);
+      return Res;
+
    end C_Socket;
 
    --------------
@@ -420,21 +339,7 @@ package body GNAT.Sockets.Thin is
    procedure Initialize is
    begin
       Disable_All_SIGPIPEs;
-      Reset_Socket_Set (Non_Blocking_Sockets'Access);
    end Initialize;
-
-   -------------------------
-   -- Non_Blocking_Socket --
-   -------------------------
-
-   function Non_Blocking_Socket (S : C.int) return Boolean is
-      R : Boolean;
-   begin
-      Task_Lock.Lock;
-      R := (Is_Socket_In_Set (Non_Blocking_Sockets'Access, S) /= 0);
-      Task_Lock.Unlock;
-      return R;
-   end Non_Blocking_Socket;
 
    --------------------
    -- Signalling_Fds --

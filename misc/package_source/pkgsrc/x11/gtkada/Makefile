@@ -8,7 +8,7 @@ MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 EXTRACT_SUFX=	.tar.bz2
 
 MAINTAINER=	draco@marino.st
-HOMEPAGE=	http://downloads.dragonlace.net/src/
+HOMEPAGE=	http://libre.adacore.com/libre/tools/gtkada/
 COMMENT=	Ada graphical toolkit based on Gtk+
 LICENSE=	gnu-gpl-v2
 
@@ -19,6 +19,7 @@ USE_TOOLS+=		gmake pkg-config
 
 FULL_PATH=		/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:${PREFIX}/bin:${PREFIX}/lib/pkgconfig
 MY_CONFIGURE_ENV+=	PATH=${FULL_PATH}
+CONFIGURE_ARGS+=	--disable-nls
 PKGCONFIG_OVERRIDE+=	projects/gtkada.pc.in
 
 

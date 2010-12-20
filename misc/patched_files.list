@@ -21,6 +21,7 @@ s-stusta.adb
 sysdep.c
 system-freebsd-x86.ads
 system-freebsd-x86_64.ads
+tracebak.c
 
 
 
@@ -56,7 +57,7 @@ s-taprop-netbsd.adb
 system-dragonfly-x86.ads
 system-dragonfly-x86_64.ads
 system-netbsd-x86.ads
-system-netbsd0x86_64.ads
+system-netbsd-x86_64.ads
 system-openbsd-x86.ads
 system-openbsd-x86_64.ads
 
@@ -71,5 +72,4 @@ gnat.dg/unchecked_convert6.ads (renamed to .txt)
 
 Testsuite Files
 ===============
-loop_optimization7.adb
-sse_nolib.adb
+test_raise_from_pure.adb

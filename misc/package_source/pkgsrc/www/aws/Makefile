@@ -1,10 +1,11 @@
 # $NetBSD$
 #
 
-DISTNAME=	aws-gpl-${AWS_VERSION}-src
+DISTNAME=	aws-${AWS_VERSION}
+PKGREVISION=	2
 CATEGORIES=	www
 MASTER_SITES=	http://downloads.dragonlace.net/src/
-EXTRACT_SUFX=	.tgz
+EXTRACT_SUFX=	.tar.bz2
 
 MAINTAINER=	draco@marino.st
 HOMEPAGE=	http://libre.adacore.com/libre/tools/aws/
@@ -12,9 +13,9 @@ COMMENT=	Adacore Ada Web Server and framework
 LICENSE=	gnu-gpl-v2
 
 PKG_DESTDIR_SUPPORT=	user-destdir
-AWS_VERSION=		2.8.0
-USE_TOOLS+=		gmake
-
+AWS_VERSION=		2.10.0
+USE_TOOLS+=		gmake makeinfo sed
+BUILD_DEPENDS+=		gawk:../../lang/gawk
 
 .include "options.mk"
 
@@ -55,7 +56,7 @@ do-configure:
 
 
 do-build:
-	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${GMAKE} build
+	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${GMAKE} build build_doc
 
 
 do-test:
@@ -65,16 +66,26 @@ do-test:
 do-install:
 	cd ${WRKSRC} && ${GMAKE} install;
 	${TOUCH} ${PREFIX}/share/examples/aws/bin/IGNORE.ME
-.if !empty(PKG_OPTIONS:Mdemos)
-.if !empty(PKG_OPTIONS:Mrelocatable)
-	${MKDIR} -p ${PREFIX}/share/examples/aws/reloc_demos
-	${INSTALL} ${WRKSRC}/.build/native/${DOTBUILD}/relocatable/demos/* \
-	      ${PREFIX}/share/examples/aws/reloc_demos/
-.else
-	${MKDIR} -p ${PREFIX}/share/examples/aws/static_demos
-	${INSTALL} ${WRKSRC}/.build/native/${DOTBUILD}/static/demos/* \
-	      ${PREFIX}/share/examples/aws/static_demos/
+.if !empty (BUILD_DEMOS)
+	${MAKE} demos
+	${MAKE} demos-install
 .endif
+
+
+	
+demos:
+.for dd in ${DEMO_DIRS}
+	cd ${WRKSRC}/demos/${dd} && ${GMAKE}
+.endfor
+
+
+demos-install:
+.if !empty (BUILD_DEMOS)
+	${MKDIR} ${PREFIX}/share/examples/aws/demos
+.for dd in ${DEMO_DIRS}
+	${FIND} ${WRKSRC}/demos/${dd} -type f -perm -0001 \
+	-exec ${INSTALL} {} ${PREFIX}/share/examples/aws/demos/ \;
+.endfor
 .endif
 
 
