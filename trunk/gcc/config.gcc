@@ -806,6 +806,7 @@ arm*-*-netbsdelf*)
 	;;
 arm*-*-netbsd*)
 	tm_file="arm/aout.h arm/arm.h netbsd.h netbsd-aout.h arm/netbsd.h"
+	extra_options="${extra_options} netbsd.opt"
 	tmake_file="t-netbsd arm/t-arm arm/t-netbsd"
 	extra_parts=""
 	use_collect2=yes
@@ -1093,6 +1094,10 @@ hppa[12]*-*-hpux10*)
 	fi
 	use_collect2=yes
 	gas=yes
+	if test "x$with_dwarf2" != x; then
+		echo "Warning: dwarf2 debug format is not supported for this target, --with-dwarf2 ignored" 1>&2
+		dwarf2=no
+	fi
 	;;
 hppa*64*-*-hpux11*)
 	target_cpu_default="MASK_PA_11|MASK_PA_20"
@@ -1733,6 +1738,7 @@ m68k*-*-netbsdelf*)
 	default_m68k_cpu=68020
 	default_cf_cpu=5475
 	tm_file="${tm_file} dbxelf.h elfos.h netbsd.h netbsd-elf.h m68k/netbsd-elf.h"
+	extra_options="${extra_options} netbsd.opt netbsd-elf.opt"
 	tm_defines="${tm_defines} MOTOROLA=1"
 	;;
 m68k*-*-openbsd*)
@@ -1847,6 +1853,7 @@ mips-sgi-irix6.5*)
 mips*-*-netbsd*)			# NetBSD/mips, either endian.
 	target_cpu_default="MASK_ABICALLS"
 	tm_file="elfos.h ${tm_file} mips/elf.h netbsd.h netbsd-elf.h mips/netbsd.h"
+	extra_options="${extra_options} netbsd.opt netbsd-elf.opt"
 	;;
 mips64*-*-linux* | mipsisa64*-*-linux*)
 	tm_file="dbxelf.h elfos.h linux.h glibc-stdint.h ${tm_file} mips/linux.h mips/linux64.h"
@@ -2065,57 +2072,58 @@ powerpc*-*-freebsd*)
 	;;
 powerpc-*-netbsd*)
 	tm_file="${tm_file} dbxelf.h elfos.h netbsd.h netbsd-elf.h freebsd-spec.h rs6000/sysv4.h rs6000/netbsd.h"
+	extra_options="${extra_options} netbsd.opt netbsd-elf.opt"
 	tmake_file="${tmake_file} rs6000/t-netbsd"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	;;
 powerpc-*-eabispe*)
-	tm_file="${tm_file} dbxelf.h elfos.h svr4.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/eabi.h rs6000/e500.h rs6000/eabispe.h"
+	tm_file="${tm_file} dbxelf.h elfos.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/eabi.h rs6000/e500.h rs6000/eabispe.h"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	tmake_file="rs6000/t-spe rs6000/t-ppccomm"
 	use_gcc_stdint=wrap
 	;;
 powerpc-*-eabisimaltivec*)
-	tm_file="${tm_file} dbxelf.h elfos.h svr4.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/eabi.h rs6000/e500.h rs6000/eabisim.h rs6000/eabialtivec.h"
+	tm_file="${tm_file} dbxelf.h elfos.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/eabi.h rs6000/e500.h rs6000/eabisim.h rs6000/eabialtivec.h"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	tmake_file="rs6000/t-fprules rs6000/t-fprules-fpbit rs6000/t-ppcendian rs6000/t-ppccomm"
 	use_gcc_stdint=wrap
 	;;
 powerpc-*-eabisim*)
-	tm_file="${tm_file} dbxelf.h elfos.h usegas.h svr4.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/eabi.h rs6000/e500.h rs6000/eabisim.h"
+	tm_file="${tm_file} dbxelf.h elfos.h usegas.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/eabi.h rs6000/e500.h rs6000/eabisim.h"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	tmake_file="rs6000/t-fprules rs6000/t-fprules-fpbit rs6000/t-ppcgas rs6000/t-ppccomm"
 	use_gcc_stdint=wrap
 	;;
 powerpc-*-elf*)
-	tm_file="${tm_file} dbxelf.h elfos.h usegas.h svr4.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h"
+	tm_file="${tm_file} dbxelf.h elfos.h usegas.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	tmake_file="rs6000/t-fprules rs6000/t-fprules-fpbit rs6000/t-ppcgas rs6000/t-ppccomm"
 	;;
 powerpc-*-eabialtivec*)
-	tm_file="${tm_file} dbxelf.h elfos.h svr4.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/eabi.h rs6000/e500.h rs6000/eabialtivec.h"
+	tm_file="${tm_file} dbxelf.h elfos.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/eabi.h rs6000/e500.h rs6000/eabialtivec.h"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	tmake_file="rs6000/t-fprules rs6000/t-fprules-fpbit rs6000/t-ppcendian rs6000/t-ppccomm"
 	use_gcc_stdint=wrap
 	;;
 powerpc-xilinx-eabi*)
-	tm_file="${tm_file} dbxelf.h elfos.h usegas.h svr4.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/eabi.h rs6000/singlefp.h rs6000/xfpu.h rs6000/xilinx.h"
+	tm_file="${tm_file} dbxelf.h elfos.h usegas.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/eabi.h rs6000/singlefp.h rs6000/xfpu.h rs6000/xilinx.h"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	tmake_file="rs6000/t-fprules rs6000/t-fprules-fpbit rs6000/t-ppcgas rs6000/t-ppccomm rs6000/t-xilinx"
 	use_gcc_stdint=wrap
 	;;
 powerpc-*-eabi*)
-	tm_file="${tm_file} dbxelf.h elfos.h usegas.h svr4.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/eabi.h rs6000/e500.h"
+	tm_file="${tm_file} dbxelf.h elfos.h usegas.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/eabi.h rs6000/e500.h"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	tmake_file="rs6000/t-fprules rs6000/t-fprules-fpbit rs6000/t-ppcgas rs6000/t-ppccomm"
 	use_gcc_stdint=wrap
 	;;
 powerpc-*-rtems*)
-	tm_file="${tm_file} dbxelf.h elfos.h svr4.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/eabi.h rs6000/e500.h rs6000/rtems.h rtems.h"
+	tm_file="${tm_file} dbxelf.h elfos.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/eabi.h rs6000/e500.h rs6000/rtems.h rtems.h"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	tmake_file="rs6000/t-fprules rs6000/t-fprules-fpbit rs6000/t-rtems t-rtems rs6000/t-ppccomm"
 	;;
 powerpc-*-linux* | powerpc64-*-linux*)
-	tm_file="${tm_file} dbxelf.h elfos.h svr4.h freebsd-spec.h rs6000/sysv4.h"
+	tm_file="${tm_file} dbxelf.h elfos.h freebsd-spec.h rs6000/sysv4.h"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	tmake_file="t-dfprules rs6000/t-fprules rs6000/t-ppcos ${tmake_file} rs6000/t-ppccomm"
 	maybe_biarch=yes
@@ -2159,12 +2167,12 @@ powerpc-*-linux* | powerpc64-*-linux*)
 	fi
 	;;
 powerpc64-*-gnu*)
-	tm_file="${tm_file} elfos.h svr4.h freebsd-spec.h gnu.h rs6000/sysv4.h rs6000/default64.h rs6000/linux64.h rs6000/gnu.h glibc-stdint.h"
+	tm_file="${tm_file} elfos.h freebsd-spec.h gnu.h rs6000/sysv4.h rs6000/default64.h rs6000/linux64.h rs6000/gnu.h glibc-stdint.h"
 	extra_options="${extra_options} rs6000/sysv4.opt rs6000/linux64.opt"
 	tmake_file="t-slibgcc-elf-ver t-slibgcc-libgcc t-gnu"
 	;;
 powerpc-*-gnu-gnualtivec*)
-	tm_file="${cpu_type}/${cpu_type}.h elfos.h svr4.h freebsd-spec.h gnu.h rs6000/sysv4.h rs6000/linux.h rs6000/linuxaltivec.h rs6000/gnu.h glibc-stdint.h"
+	tm_file="${cpu_type}/${cpu_type}.h elfos.h freebsd-spec.h gnu.h rs6000/sysv4.h rs6000/linux.h rs6000/linuxaltivec.h rs6000/gnu.h glibc-stdint.h"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	tmake_file="rs6000/t-fprules rs6000/t-fprules-fpbit rs6000/t-ppcos t-slibgcc-elf-ver t-slibgcc-libgcc t-gnu rs6000/t-ppccomm"
 	if test x$enable_threads = xyes; then
@@ -2172,7 +2180,7 @@ powerpc-*-gnu-gnualtivec*)
 	fi
 	;;
 powerpc-*-gnu*)
-	tm_file="${cpu_type}/${cpu_type}.h elfos.h svr4.h freebsd-spec.h gnu.h rs6000/sysv4.h rs6000/linux.h rs6000/gnu.h glibc-stdint.h"
+	tm_file="${cpu_type}/${cpu_type}.h elfos.h freebsd-spec.h gnu.h rs6000/sysv4.h rs6000/linux.h rs6000/gnu.h glibc-stdint.h"
 	tmake_file="rs6000/t-fprules rs6000/t-fprules-fpbit rs6000/t-ppcos t-slibgcc-elf-ver t-slibgcc-libgcc t-gnu rs6000/t-ppccomm"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	if test x$enable_threads = xyes; then
@@ -2180,7 +2188,7 @@ powerpc-*-gnu*)
 	fi
 	;;
 powerpc-wrs-vxworks|powerpc-wrs-vxworksae)
-	tm_file="${tm_file} elfos.h svr4.h freebsd-spec.h rs6000/sysv4.h"
+	tm_file="${tm_file} elfos.h freebsd-spec.h rs6000/sysv4.h"
 	tmake_file="${tmake_file} rs6000/t-fprules rs6000/t-fprules-fpbit rs6000/t-ppccomm rs6000/t-vxworks"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	extra_headers=ppc-asm.h
@@ -2205,18 +2213,18 @@ powerpc-*-lynxos*)
 	gas=yes
 	;;
 powerpcle-*-elf*)
-	tm_file="${tm_file} dbxelf.h elfos.h usegas.h svr4.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/sysv4le.h"
+	tm_file="${tm_file} dbxelf.h elfos.h usegas.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/sysv4le.h"
 	tmake_file="rs6000/t-fprules rs6000/t-fprules-fpbit rs6000/t-ppcgas rs6000/t-ppccomm"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	;;
 powerpcle-*-eabisim*)
-	tm_file="${tm_file} dbxelf.h elfos.h usegas.h svr4.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/sysv4le.h rs6000/eabi.h rs6000/e500.h rs6000/eabisim.h"
+	tm_file="${tm_file} dbxelf.h elfos.h usegas.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/sysv4le.h rs6000/eabi.h rs6000/e500.h rs6000/eabisim.h"
 	tmake_file="rs6000/t-fprules rs6000/t-fprules-fpbit rs6000/t-ppcgas rs6000/t-ppccomm"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	use_gcc_stdint=wrap
 	;;
 powerpcle-*-eabi*)
-	tm_file="${tm_file} dbxelf.h elfos.h usegas.h svr4.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/sysv4le.h rs6000/eabi.h rs6000/e500.h"
+	tm_file="${tm_file} dbxelf.h elfos.h usegas.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/sysv4le.h rs6000/eabi.h rs6000/e500.h"
 	tmake_file="rs6000/t-fprules rs6000/t-fprules-fpbit rs6000/t-ppcgas rs6000/t-ppccomm"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	use_gcc_stdint=wrap
@@ -2697,6 +2705,7 @@ vax-*-linux*)
 	;;
 vax-*-netbsdelf*)
 	tm_file="${tm_file} elfos.h netbsd.h netbsd-elf.h vax/elf.h vax/netbsd-elf.h"
+	extra_options="${extra_options} netbsd.opt netbsd-elf.opt"
 	;;
 vax-*-netbsd*)
 	tm_file="${tm_file} netbsd.h netbsd-aout.h vax/netbsd.h"
@@ -2884,6 +2893,10 @@ case ${target} in
 	arch=corei7
 	cpu=corei7
 	;;
+      corei7_avx-*)
+	arch=corei7-avx
+	cpu=corei7-avx
+	;;
       pentium_m-*)
 	arch=pentium-m
 	cpu=pentium-m
@@ -2983,6 +2996,9 @@ if test x$with_cpu = x ; then
       ;;
     mips*-*-vxworks)
       with_arch=mips2
+      ;;
+    sparc-leon*-*)
+      with_cpu=v8;
       ;;
     sparc*-*-*)
       with_cpu="`echo ${target} | sed 's/-.*$//'`"
