@@ -7,6 +7,7 @@
 
 PORTNAME=	aws
 PORTVERSION=	2.10.0
+PORTREVISION=	1
 CATEGORIES=	www
 MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 		http://dragonlace.mirrors.ada.cx/src/
@@ -33,7 +34,8 @@ OPTIONS+=	LDAP  "Enable LDAP support" off
 OPTIONS+=	DSRT  "Disable shared runtime" off
 OPTIONS+=	RELOC "Build shared libraries (default is static)" off
 
-CONF_ARGS= 	CJOBS=1
+CONF_ARGS= 	PROCESSORS=1
+CONF_ARGS+=	GCC=gnatgcc
 CONF_ARGS+=	PYTHON=python2.6
 
 .include <bsd.port.options.mk>
@@ -46,6 +48,11 @@ CONF_ARGS+=	PYTHON=python2.6
 CONF_ARGS+=	SOCKET=openssl
 BUILD_DEPENDS+= openssl>=1:${PORTSDIR}/security/openssl
 RUN_DEPENDS+=	openssl>=1:${PORTSDIR}/security/openssl
+PLIST_SUB+=	YSSL=""
+PLIST_SUB+=	NSSL="@comment "
+.else
+PLIST_SUB+=	YSSL="@comment "
+PLIST_SUB+=	NSSL=""
 .endif
 
 ####################
@@ -99,12 +106,12 @@ DEMO_DIRS+=	auth
 DEMO_DIRS+=	com
 DEMO_DIRS+=	dispatch
 DEMO_DIRS+=	hello_world
-DEMO_DIRS_MK+=	hello_wsdl
+DEMO_DIRS+=	hello_wsdl
 DEMO_DIRS+=	hotplug
-DEMO_DIRS_MK+=	interoplab
+DEMO_DIRS+=	interoplab
 DEMO_DIRS+=	jabber_demo
 DEMO_DIRS+=	multiple_sessions
-DEMO_DIRS_MK+=	res_demo
+DEMO_DIRS+=	res_demo
 DEMO_DIRS+=	runme
 DEMO_DIRS+=	soap_demo
 DEMO_DIRS+=	soap_disp
@@ -115,7 +122,7 @@ DEMO_DIRS+=	text_input
 DEMO_DIRS+=	vh_demo
 DEMO_DIRS+=	web_block
 DEMO_DIRS+=	web_block_ajax
-DEMO_DIRS_MK+=	web_block_ajax_templates
+DEMO_DIRS+=	web_block_ajax_templates
 DEMO_DIRS+=	web_elements
 DEMO_DIRS+=	web_mail
 DEMO_DIRS+=	wps
@@ -144,7 +151,7 @@ do-configure:
 do-build:
 	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${GMAKE} build build_doc
 
-test:
+test: install
 	cd ${WRKSRC}/regtests && python2.6 testsuite.py
 
 do-install:
@@ -156,19 +163,12 @@ do-install:
 
 demos:
 .for dd in ${DEMO_DIRS}
-	cd ${WRKSRC}/demos/${dd} && gnatmake -P ${dd}.gpr
-.endfor
-.for dd in ${DEMO_DIRS_MK}
 	cd ${WRKSRC}/demos/${dd} && ${GMAKE}
 .endfor
 
 demos-install:
 	${MKDIR} ${PREFIX}/share/examples/aws/demos
 .for dd in ${DEMO_DIRS}
-	${FIND} ${WRKSRC}/demos/${dd} -type f -perm -0001 \
-	-exec ${INSTALL} {} ${PREFIX}/share/examples/aws/demos/ \;
-.endfor
-.for dd in ${DEMO_DIRS_MK}
 	${FIND} ${WRKSRC}/demos/${dd} -type f -perm -0001 \
 	-exec ${INSTALL} {} ${PREFIX}/share/examples/aws/demos/ \;
 .endfor
