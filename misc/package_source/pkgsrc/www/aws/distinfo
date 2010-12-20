@@ -1,6 +1,8 @@
 $NetBSD$
 
-SHA1 (aws-2.10.0.tar.bz2) = eb0ca1627c5666e185fdba1f8c805f7856c42c33
-RMD160 (aws-2.10.0.tar.bz2) = 5469e34e487fd28d2b8eb47e6323c8c2b9e9753b
-Size (aws-2.10.0.tar.bz2) = 1396802 bytes
+SHA1 (aws-2.10.0.tar.bz2) = e1db1c3673e75a1cfd6256bbc3489900caf696f0
+RMD160 (aws-2.10.0.tar.bz2) = 36e0fc1dbd4f66f29f2e190898c7ae121219da6d
+Size (aws-2.10.0.tar.bz2) = 1384791 bytes
 SHA1 (patch-ac) = 1985aca4185538590cea3d939f095b69495eb0fa
+SHA1 (patch-ad) = 6bfa89f2837cc0dca4f5c391b7e05e74a3d85181
+SHA1 (patch-ae) = 44f66219a999b90d626f8f581942ae4f406e6c18

@@ -75,7 +75,7 @@ do-install:
 	
 demos:
 .for dd in ${DEMO_DIRS}
-	cd ${WRKSRC}/demos/${dd} && ${MAKE}
+	cd ${WRKSRC}/demos/${dd} && ${GMAKE}
 .endfor
 
 
