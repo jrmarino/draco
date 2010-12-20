@@ -60,7 +60,7 @@ GCC_WRKSRC=		${WRKDIR}/gcc-${GCC_BRANCH}-${SNAPSHOT}
 BOOTSTRAP_PREFIX=	${WRKDIR}/bootstrap
 PKG_PREFIX=		${PREFIX}
 CONFIGURE_SCRIPT=	${GCC_WRKSRC}/configure
-REVFILE=		${GCC_WRKSRC}/REVISION
+REVFILE=		${GCC_WRKSRC}/gcc/REVISION
 LPATH=			lib/gcc/${BLD_TARGET}/${GCC_BRANCH}.${GCC_POINT}
 LEPATH=			libexec/gcc/${BLD_TARGET}/${GCC_BRANCH}.${GCC_POINT}
 LELIST=			cc1 collect2 gnat1 lto1
@@ -120,6 +120,9 @@ CONFIGURE_ARGS+=	--disable-nls
 MAKE_ARGS+=		MAKEINFOFLAGS="--no-split"
 
 post-extract:
+	# Personalize GNAT for each different machine
+	@${ECHO} "-=> GNAT AUX ${OS_LABEL4VERS}" > ${REVFILE}
+
 .if ${INTENDED_COMPILER} == "BOOTSTRAP"
 	${MKDIR} ${BOOTSTRAP_PREFIX}
 	${MV} ${BOOTSTRAP_PREFIX}/../bin ${BOOTSTRAP_PREFIX}
@@ -128,7 +131,8 @@ post-extract:
 
 	# protect bootstrap compiler from future breakage
 	# gmp, mpc, and mpfr should already installed at this point
-   # Hardlinks are used to protext against dangling references which confuse makefiles
+	# Hardlinks are used to protext against dangling references 
+	# which confuse makefiles
 .if exists(${PREFIX}/lib/libmpc.so) && !exists(${PREFIX}/lib/libmpc.so.2)
 	${LN} ${PREFIX}/lib/libmpc.so ${PREFIX}/lib/libmpc.so.2
 .endif
@@ -139,10 +143,6 @@ post-extract:
 	${LN} ${PREFIX}/lib/libmpfr.so ${PREFIX}/lib/libmpfr.so.4
 .endif
 .endif
-
-post-extract:
-	# Personalize GNAT for each different machine
-	@${ECHO} "-=> GNAT AUX ${OS_LABEL4VERS}" > ${REVFILE}
 
 do-configure:
 	#reset timestamps
