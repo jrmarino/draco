@@ -13,7 +13,7 @@ HOMEPAGE=	http://www.dragonlace.net/
 COMMENT=	GNAT Ada compiler based on GCC ${GCC_BRANCH}
 LICENSE=	gnu-gpl-v3 AND gnu-lgpl-v3
 
-SNAPSHOT=	20101204
+SNAPSHOT=	20101218
 GCC_BRANCH=     4.6
 GCC_POINT=      0
 
@@ -200,7 +200,7 @@ do-build:
 	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} all
 
 
-do-test:
+do-test: build
 	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-ada
 
 
