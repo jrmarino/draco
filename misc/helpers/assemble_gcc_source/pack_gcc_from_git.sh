@@ -4,7 +4,7 @@
 # C languages.  The ability to build C++ will be maintained, but this will
 # have to be added externally.
 
-SNAPSHOT=20101218
+SNAPSHOT=20101221
 TRUNKVER=4.6
 GITREPOS=/export/home/marino/shallow_gcc
 DRACOREPOS=/export/home/marino/draco/trunk
@@ -68,7 +68,8 @@ SPECIAL_DIRS="
    gcc
    gcc/config
    libgcc
-   libgcc/config"
+   libgcc/config
+   libgcc/config/i386"
 
 BASEDIR=gcc-$TRUNKVER-$SNAPSHOT
 TARBALL=gnat-aux-$SNAPSHOT.tar
