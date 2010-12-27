@@ -13,7 +13,7 @@ HOMEPAGE=	http://www.dragonlace.net/
 COMMENT=	GNAT Ada compiler based on GCC ${GCC_BRANCH}
 LICENSE=	gnu-gpl-v3 AND gnu-lgpl-v3
 
-SNAPSHOT=	20101218
+SNAPSHOT=	20101221
 GCC_BRANCH=     4.6
 GCC_POINT=      0
 
@@ -154,6 +154,10 @@ CONFIGURE_ARGS+=	--disable-libssp
 CONFIGURE_ARGS+=	--disable-nls
 
 
+# The standard make options
+MAKE_ARGS=		MAKEINFOFLAGS="--no-split"
+
+
 # Automatic package list generation
 GENERATE_PLIST=  cd ${PREFIX};
 GENERATE_PLIST+= ${FIND} bin/gnat* | ${SORT};
@@ -169,18 +173,36 @@ GENERATE_PLIST+= ${FIND} ${SMAN7}/${k};
 
 
 post-extract:
+	# Personalize GNAT for each different machine
+	@${ECHO} "-=> GNAT AUX ${OS_LABEL4VERS}" > ${REVFILE}
+
 .if ${INTENDED_COMPILER} == "BOOTSTRAP"
 	${MKDIR} ${BOOTSTRAP_PREFIX}
 	mv ${BOOTSTRAP_PREFIX}/../bin ${BOOTSTRAP_PREFIX}
 	mv ${BOOTSTRAP_PREFIX}/../lib ${BOOTSTRAP_PREFIX}
 	mv ${BOOTSTRAP_PREFIX}/../libexec ${BOOTSTRAP_PREFIX}
+
+	# Protect bootstrap compiler from future breakage
+	# gmp, mpc, mpfr, and iconv should already be installed at this point
+	# Hardlinks are used to protect against dangling references
+	# which confuse makefiles
+.if exists(/usr/pkg/lib/libmpc.so) && !exists(/usr/pkg/lib/libmpc.so.2)
+	$(LN) /usr/pkg/lib/libmpc.so /usr/pkg/lib/libmpc.so.2
+.endif
+.if exists(/usr/pkg/lib/libgmp.so) && !exists(/usr/pkg/lib/libgmp.so.10)
+	$(LN) /usr/pkg/lib/libgmp.so /usr/pkg/lib/libgmp.so.10
+.endif
+.if exists(/usr/pkg/lib/libmpfr.so) && !exists(/usr/pkg/lib/libmpfr.so.4)
+	$(LN) /usr/pkg/lib/libmpfr.so /usr/pkg/lib/libmpfr.so.4
+.endif
+.if exists(/usr/pkg/lib/libiconv.so) && !exists(/usr/pkg/lib/libiconv.so.2)
+	$(LN) /usr/pkg/lib/libiconv.so /usr/pkg/lib/libiconv.so.2
+.endif
 .endif
 
 
-pre-configure:
-	# Personalize GNAT for each different machine
-	@${ECHO} "-=> GNAT AUX ${OS_LABEL4VERS}" > ${REVFILE}
 
+do-configure:
 	#late switch of compiler to fool default depends checking
 	${SETENV} CC=${FULL_GNATGCC}
 
@@ -189,15 +211,13 @@ pre-configure:
 	${RM} -f ${GCC_WRKSRC}/gcc/*/*.info*
 	${TOUCH} ${GCC_WRKSRC}/gcc/cstamp-h.in
 
-
-do-configure:
 	${MKDIR} ${WRKSRC}
 	cd ${WRKSRC} && ${SETENV} ${MY_CONFIGURE_ENV} ${CONFIG_SHELL} \
 	${CONFIGURE_SCRIPT} ${CONFIGURE_ARGS}
 
 
 do-build:
-	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} all
+	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} all ${MAKE_ARGS}
 
 
 do-test: build
