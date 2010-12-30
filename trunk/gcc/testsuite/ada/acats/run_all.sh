@@ -36,11 +36,11 @@ log () {
 }
 
 inform () {
-  printf "Exec %7s" $@
+  printf "Exec    %7s" $@
 }
 
 disinform () {
-  printf "\b\b\b\b\b\b\b\b\b\b\b\b"
+  printf "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
 }
 
 dir=`${PWDCMD-pwd}`
