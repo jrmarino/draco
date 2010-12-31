@@ -141,12 +141,7 @@ private
    Always_Compatible_Rep     : constant Boolean := False;
    Suppress_Standard_Library : constant Boolean := False;
    Use_Ada_Main_Program_Name : constant Boolean := False;
-
-   --  FreeBSD64 is basically unusable and all the failures see to involve
-   --  exception handling.  Let's disable Zero-Cost exceptions and see what
-   --  happens.
-
-   ZCX_By_Default            : constant Boolean := False;
-   GCC_ZCX_Support           : constant Boolean := False;
+   ZCX_By_Default            : constant Boolean := True;
+   GCC_ZCX_Support           : constant Boolean := True;
 
 end System;
