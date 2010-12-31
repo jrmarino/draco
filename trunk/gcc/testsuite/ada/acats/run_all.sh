@@ -40,7 +40,7 @@ inform () {
 }
 
 disinform () {
-  printf "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
+  printf "\r"
 }
 
 dir=`${PWDCMD-pwd}`
