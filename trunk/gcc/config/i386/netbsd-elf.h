@@ -127,3 +127,7 @@ along with GCC; see the file COPYING3.  If not see
 /* ADDED FOR GNAT AUX SUPPORT */
 /* Define this to be nonzero if static stack checking is supported. */
 #define STACK_CHECK_STATIC_BUILTIN 1
+
+/* Define location of OS-specific unwind support configuration. */
+#define MD_UNWIND_SUPPORT "config/i386/netbsd-unwind.h"
+
