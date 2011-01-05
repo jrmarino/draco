@@ -14,12 +14,18 @@
 
 
 
+#define MD_FALLBACK_FRAME_STATE_FOR x86_64_netbsd_fallback_frame_state
 
 static _Unwind_Reason_Code
 x86_64_netbsd_fallback_frame_state
 (struct _Unwind_Context *context, _Unwind_FrameState *fs)
 {
-  struct sigframe_siginfo *sf;
+  /* signal_frame is sigframe_siginfo minus sf_ra handler return address */
+  struct signal_frame {
+         siginfo_t    sf_si;   /* actual saved siginfo  */
+         ucontext_t   sf_uc;   /* actual saved ucontext */
+  };
+  struct signal_frame *sf;
   long new_cfa;
 
   /*  We are looking for the following signal trampoline pattern. If we don't
@@ -35,7 +41,7 @@ x86_64_netbsd_fallback_frame_state
       && *(unsigned int   *) (context->ra + 20) == 0x0001c0c7
       && *(unsigned int   *) (context->ra + 24) == 0x050f0000 )
   {
-    sf = (struct sigframe_siginfo *) context->cfa;
+    sf = (struct signal_frame *) context->cfa;
     new_cfa = sf->REG_NAME(RSP);
     fs->regs.cfa_how = CFA_REG_OFFSET;
     fs->regs.cfa_reg = 7;
@@ -98,7 +104,15 @@ static _Unwind_Reason_Code
 x86_netbsd_fallback_frame_state
 (struct _Unwind_Context *context, _Unwind_FrameState *fs)
 {
-  struct sigframe_siginfo *sf;
+  /* signal_frame is sigframe_siginfo minus sf_ra handler return address */
+  struct signal_frame {
+         int          sf_signum;  /* "signum" argument for handler" */
+         siginfo_t   *sf_sip;     /* "sip"    argument for handler" */
+         ucontext_t  *sf_ucp;     /* "ucp"    argument for handler" */
+         siginfo_t    sf_si;      /* actual saved siginfo  */
+         ucontext_t   sf_uc;      /* actual saved ucontext */
+  };
+  struct signal_frame *sf;
   long new_cfa;
 
   /*  We are looking for the following signal trampoline pattern. If we don't
@@ -115,7 +129,7 @@ x86_netbsd_fallback_frame_state
       && *(unsigned int   *) (context->ra + 27) == 0x00000001
       && *(unsigned short *) (context->ra + 31) == 0x80cd     )
   {
-    sf = (struct sigframe_siginfo *) (context->cfa - 4);
+    sf = (struct signal_frame *) context->cfa;
     new_cfa = sf->REG_NAME(ESP);
     fs->regs.cfa_how = CFA_REG_OFFSET;
     fs->regs.cfa_reg = 4;
