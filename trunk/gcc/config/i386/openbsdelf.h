@@ -136,5 +136,8 @@ along with GCC; see the file COPYING3.  If not see
 #undef  TARGET_96_ROUND_53_LONG_DOUBLE
 #define TARGET_96_ROUND_53_LONG_DOUBLE 0
 
-/* Define location of OS-specific unwind support configuration. */
-#define MD_UNWIND_SUPPORT "config/i386/openbsd-unwind32.h"
+/* Define location of OS-specific unwind support configuration. 
+   Not required until OpenBSD changes from SJLJ to ZCX exceptions 
+   When that happens, remove comments from first line and delete second line. */
+/*#define MD_UNWIND_SUPPORT "config/i386/openbsd-unwind32.h" */
+#define DWARF2_UNWIND_INFO 0
