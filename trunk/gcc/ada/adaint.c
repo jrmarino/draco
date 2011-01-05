@@ -189,6 +189,9 @@ struct vstring
   char string[NAM$C_MAXRSS+1];
 };
 
+#define SYI$_ACTIVECPU_CNT 0x111e
+extern int LIB$GETSYI (int *, unsigned int *);
+
 #else
 #include <utime.h>
 #endif
