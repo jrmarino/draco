@@ -114,7 +114,7 @@ case "${target}" in
     mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
     indepsw.adb<indepsw-gnu.adb"
     ;;
-  *86-*-netbsd* | x86_64-*-netbsd*)
+  *86-*-netbsdelf* | x86_64-*-netbsd*)
     TOOLS_TARGET_PAIRS="\
     mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
     indepsw.adb<indepsw-gnu.adb"
