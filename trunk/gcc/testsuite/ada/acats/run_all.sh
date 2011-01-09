@@ -35,6 +35,14 @@ log () {
   echo "$@" >> $dir/acats.log
 }
 
+inform () {
+  printf "Exec    %7s" $@
+}
+
+disinform () {
+  printf "\r"
+}
+
 dir=`${PWDCMD-pwd}`
 
 if [ "$testdir" = "" ]; then
@@ -233,10 +241,12 @@ for chapter in $chapters; do
       if [ $? -eq 0 ]; then
          extraflags="$extraflags -gnat95"
       fi
+      inform $i
       test=$dir/tests/$chapter/$i
       mkdir $test && cd $test >> $dir/acats.log 2>&1
 
       if [ $? -ne 0 ]; then
+         disinform
          display "FAIL:	$i"
          failed="${failed}${i} "
          clean_dir
@@ -260,6 +270,7 @@ for chapter in $chapters; do
         cxh1001) extraflags="-a -f"; echo "pragma Normalize_Scalars;" > gnat.adc
       esac
       if [ "$main" = "" ]; then
+         disinform
          display "FAIL:	$i"
          failed="${failed}${i} "
          clean_dir
@@ -268,6 +279,7 @@ for chapter in $chapters; do
 
       target_gnatmake $extraflags -I$dir/support $main >> $dir/acats.log 2>&1
       if [ $? -ne 0 ]; then
+         disinform
          display "FAIL:	$i"
          failed="${failed}${i} "
          clean_dir
@@ -282,6 +294,7 @@ for chapter in $chapters; do
       target_run $dir/tests/$chapter/$i/$binmain > $dir/tests/$chapter/$i/${i}.log 2>&1
       cd $dir/tests/$chapter/$i
       cat ${i}.log >> $dir/acats.log
+      disinform
       egrep -e '(==== |\+\+\+\+ |\!\!\!\! )' ${i}.log > /dev/null 2>&1
       if [ $? -ne 0 ]; then
          grep 'tasking not implemented' ${i}.log > /dev/null 2>&1

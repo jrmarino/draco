@@ -1,0 +1,45 @@
+Test Run By root on Thu Jan  6 00:33:20 CST 2011
+		=== acats configuration ===
+target gcc is /home/workzone/gnat_port/gen_6/work/build/gcc/xgcc -B/home/workzone/gnat_port/gen_6/work/build/gcc/
+Reading specs from /home/workzone/gnat_port/gen_6/work/build/gcc/specs
+  COLLECT_GCC=/home/workzone/gnat_port/gen_6/work/build/gcc/xgcc
+  COLLECT_LTO_WRAPPER=/home/workzone/gnat_port/gen_6/work/build/gcc/lto-wrapper Target: x86_64-aux-openbsd4.7
+   Configured with: /home/workzone/gnat_port/gen_6/work/gcc-4.6-20110104/configure --enable-languages=c,ada
+   --build=x86_64-aux-openbsd4.7 --program-prefix=gnat --prefix=/usr/local --with-system-zlib --with-gmp=/usr/local
+   --with-mpfr=/usr/local --with-mpc=/usr/local --with-libiconv-prefix=/usr/local --enable-threads=yes
+   --enable-shared --disable-bootstrap --disable-libgomp --disable-libssp --disable-nls Thread model:
+   posix gcc version 4.6.0 20110105 (experimental) -=> GNAT AUX [OpenBSD64] (GCC)
+host=amd64-unknown-openbsd4.7
+target=x86_64-aux-openbsd4.7
+gnatmake is a tracked alias for /home/workzone/gnat_port/gen_6/work/build/gcc/gnatmake
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+FAIL:	cb1010a
+		=== acats Summary ===
+# of expected passes		2320
+# of unexpected failures	1
+
+=== Completed: Thu Jan  6 03:26:44 CST 2011 ===
+
+
+Test Run By root on Thu Jan  6 03:26:47 2011
+Native configuration is x86_64-aux-openbsd4.7
+
+		=== gnat tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+UNSUPPORTED: gnat.dg/sse_nolib.adb
+
+		=== gnat Summary ===
+
+# of expected passes		863
+# of expected failures		11
+# of unsupported tests		1
+

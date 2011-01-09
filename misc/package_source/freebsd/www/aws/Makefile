@@ -7,7 +7,7 @@
 
 PORTNAME=	aws
 PORTVERSION=	2.10.0
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	www
 MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 		http://dragonlace.mirrors.ada.cx/src/

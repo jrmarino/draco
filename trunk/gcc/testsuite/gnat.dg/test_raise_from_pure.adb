@@ -1,4 +1,4 @@
--- { dg-do run { xfail arm*-*-* *-*-openbsd* x86_64-*-freebsd* } }
+-- { dg-do run { xfail arm*-*-* *-*-openbsd* } }
 -- { dg-options "-O2" }
 
 -- This is an optimization test and its failure is only a missed optimization.

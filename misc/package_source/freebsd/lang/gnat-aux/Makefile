@@ -29,7 +29,7 @@ USE_BISON=		build
 USE_PERL5_BUILD=	yes
 ALL_TARGET=		default
 
-SNAPSHOT=		20101218
+SNAPSHOT=		20110107
 GCC_BRANCH=		4.6
 GCC_POINT=		0
 
@@ -44,13 +44,13 @@ FULL_GNATGCC=		NOT_SET
 .if ${ARCH} == "amd64"
 BLD_TARGET=		x86_64-aux-freebsd${OSREL}
 OS_LABEL4VERS=		[FreeBSD64]
-BOOTSTRAP_TRIPLET=	x86_64-aux-freebsd8.0/4.6.0
-BOOTSTRAP_COMPILER=	gnat-aux-460.x86_64.freebsd.tar.bz2
+BOOTSTRAP_TRIPLET=	x86_64-bootstrap-freebsd8.1/4.6.0
+BOOTSTRAP_COMPILER=	gnat-bootstrap.x86_64.freebsd.tar.bz2
 .else
 BLD_TARGET=		i386-aux-freebsd${OSREL}
 OS_LABEL4VERS=		[FreeBSD]
-BOOTSTRAP_TRIPLET=	i386-aux-freebsd8.0/4.6.0
-BOOTSTRAP_COMPILER=	gnat-aux-460.i386.freebsd.tar.bz2
+BOOTSTRAP_TRIPLET=	i386-bootstrap-freebsd8.0/4.6.0
+BOOTSTRAP_COMPILER=	gnat-bootstrap.i386.freebsd.tar.bz2
 .endif
 PLIST_SUB=		GNU_HOST=${BLD_TARGET}
 PLIST_SUB+=		GCC_VER=${GCC_BRANCH}.${GCC_POINT}
@@ -113,6 +113,7 @@ CONFIGURE_ARGS+=	--with-libiconv-prefix=${PKG_PREFIX}
 CONFIGURE_ARGS+=	--enable-shared
 CONFIGURE_ARGS+=	--enable-threads=${THREAD_MODEL}
 CONFIGURE_ARGS+=	--disable-bootstrap
+CONFIGURE_ARGS+=	--disable-libmudflap
 CONFIGURE_ARGS+=	--disable-libgomp
 CONFIGURE_ARGS+=	--disable-libssp
 CONFIGURE_ARGS+=	--disable-nls
@@ -129,19 +130,10 @@ post-extract:
 	${MV} ${BOOTSTRAP_PREFIX}/../lib ${BOOTSTRAP_PREFIX}
 	${MV} ${BOOTSTRAP_PREFIX}/../libexec ${BOOTSTRAP_PREFIX}
 
-	# protect bootstrap compiler from future breakage
-	# gmp, mpc, and mpfr should already installed at this point
-	# Hardlinks are used to protext against dangling references 
-	# which confuse makefiles
-.if exists(${PREFIX}/lib/libmpc.so) && !exists(${PREFIX}/lib/libmpc.so.2)
-	${LN} ${PREFIX}/lib/libmpc.so ${PREFIX}/lib/libmpc.so.2
-.endif
-.if exists(${PREFIX}/lib/libgmp.so) && !exists(${PREFIX}/lib/libgmp.so.10)
-	${LN} ${PREFIX}/lib/libgmp.so ${PREFIX}/lib/libgmp.so.10
-.endif
-.if exists(${PREFIX}/lib/libmpfr.so) && !exists(${PREFIX}/lib/libmpfr.so.4)
-	${LN} ${PREFIX}/lib/libmpfr.so ${PREFIX}/lib/libmpfr.so.4
-.endif
+	# Bootstrap compiler has statically linked z, gmp, mpc, mpfr and iconv
+	# The only shared lib is libc.so.7, so it should work for a long time.
+	# if FBSD 9.0 upgrades libc, a compat8x requirement could be added
+	# for FreeBSD 7.x and 8.x
 .endif
 
 do-configure:

@@ -76,3 +76,4 @@ along with GCC; see the file COPYING3.  If not see
 /* Define this to be nonzero if static stack checking is supported. */
 #define STACK_CHECK_STATIC_BUILTIN 1
 
+#define MD_UNWIND_SUPPORT "config/i386/netbsd-unwind.h"

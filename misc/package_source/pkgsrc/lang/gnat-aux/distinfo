@@ -1,14 +1,14 @@
 $NetBSD$
 
-SHA1 (gnat-aux-20101218.tar.bz2) = 43ca04d624fa2184040663a16c8f4a630fd5534f
-RMD160 (gnat-aux-20101218.tar.bz2) = 73823f17859f370d13e8fdcd10cbff8ba5a75668
-Size (gnat-aux-20101218.tar.bz2) = 23210492 bytes
+SHA1 (gnat-aux-20101221.tar.bz2) = 3ce50b3c9e0cb6892125a907e71af0385b34c2da
+RMD160 (gnat-aux-20101221.tar.bz2) = 2da36255076d842c281597376a4f4a76c90c5cd4
+Size (gnat-aux-20101221.tar.bz2) = 23194941 bytes
 SHA1 (gnat-aux-460.i386.dragonfly.tar.bz2) = 887c323de71e4bbc98e0864785b51548f60b63e9
 RMD160 (gnat-aux-460.i386.dragonfly.tar.bz2) = 7f1d7ba4ca87dcf0ffa877230bac72f55376a103
 Size (gnat-aux-460.i386.dragonfly.tar.bz2) = 28549010 bytes
-SHA1 (gnat-aux-460.i386.netbsd.tar.bz2) = 932249852e4cc60322b4c36a9d32707caa3b8263
-RMD160 (gnat-aux-460.i386.netbsd.tar.bz2) = d59eb7399d94fe3199b7925e29a3e71e9533e32a
-Size (gnat-aux-460.i386.netbsd.tar.bz2) = 28075691 bytes
+SHA1 (gnat-aux-460.i386.netbsd.tar.bz2) = cb5e27d0c7a467993eed2356f12c347fc794104a
+RMD160 (gnat-aux-460.i386.netbsd.tar.bz2) = dcddc89fb334560c9cee4389e949cf5d4157dfba
+Size (gnat-aux-460.i386.netbsd.tar.bz2) = 28077913 bytes
 SHA1 (gnat-aux-460.x86_64.dragonfly.tar.bz2) = aedaabe942c272fc6092d1ccaeb2272339561904
 RMD160 (gnat-aux-460.x86_64.dragonfly.tar.bz2) = e9a23a676bf8b137392d56c9bec666c3f637ed03
 Size (gnat-aux-460.x86_64.dragonfly.tar.bz2) = 31496009 bytes

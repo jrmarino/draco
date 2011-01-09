@@ -2,7 +2,7 @@
 #
 
 DISTNAME=	aws-${AWS_VERSION}
-PKGREVISION=	2
+PKGREVISION=	4
 CATEGORIES=	www
 MASTER_SITES=	http://downloads.dragonlace.net/src/
 EXTRACT_SUFX=	.tar.bz2
@@ -59,7 +59,7 @@ do-build:
 	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${GMAKE} build build_doc
 
 
-do-test:
+do-test: install
 	cd ${WRKSRC}/regtests && python2.6 testsuite.py
 
 

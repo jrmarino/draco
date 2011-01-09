@@ -83,11 +83,9 @@ along with GCC; see the file COPYING3.  If not see
 
 /* The following macros were originally stolen from i386v4.h.
    These have to be defined to get PIC code correct.  */
-
+   
 /* Assembler format: dispatch tables.  */
-
 /* Assembler format: sections.  */
-
 /* Stack & calling: aggregate returns.  */
 
 /* Don't default to pcc-struct-return, because gcc is the only compiler, and
@@ -113,14 +111,8 @@ along with GCC; see the file COPYING3.  If not see
   fputs (flag_pic ? "\tcall __mcount@PLT\n": "\tcall __mcount\n", FILE);
 
 /* Assembler format: exception region output.  */
-
-/* our configuration still doesn't handle dwarf2 correctly */
-#define DWARF2_UNWIND_INFO 0
-
 /* Assembler format: alignment output.  */
-
 /* Note that we pick up ASM_OUTPUT_MAX_SKIP_ALIGN from i386/gas.h */
-
 /* Note that we pick up ASM_OUTPUT_MI_THUNK from unix.h.  */
 
 #undef LINK_SPEC
@@ -138,9 +130,14 @@ along with GCC; see the file COPYING3.  If not see
 /* ADDED FOR GNAT AUX SUPPORT */
 /* Define this to be nonzero if static stack checking is supported */
 #undef  STACK_CHECK_STATIC_BUILTIN
-#define STACK_CHECK_STATIC_BUILTIN 0
+#define STACK_CHECK_STATIC_BUILTIN 1
 
 /* Ensure rounding is left to GNAT (i386 only) */
 #undef  TARGET_96_ROUND_53_LONG_DOUBLE
 #define TARGET_96_ROUND_53_LONG_DOUBLE 0
 
+/* Define location of OS-specific unwind support configuration. 
+   Not required until OpenBSD changes from SJLJ to ZCX exceptions 
+   When that happens, remove comments from first line and delete second line. */
+/*#define MD_UNWIND_SUPPORT "config/i386/openbsd-unwind32.h" */
+#define DWARF2_UNWIND_INFO 0

@@ -32,17 +32,6 @@ CONFIGURE_ARGS+=	--with-python=no
 CONFIGURE_ARGS+=	--enable-shared-python=yes
 
 
-# We've got a big problem here.  The make file wipes out share/gps/plugs-ins
-# but packages like xmlada, gtkada, and aws may (and have) already put files
-# that make the delete pattern there (*.xml, *.py).  There's really no
-# obvious way to prevent this, and it may cause uninstall problems for those
-# packages later.
-GENERATE_PLIST=  cd ${PREFIX};
-GENERATE_PLIST+= ${FIND} bin/gps;
-GENERATE_PLIST+= ${FIND} share/doc/gps/      -name \* -type f | ${SORT} -dr;
-GENERATE_PLIST+= ${FIND} share/gps/          -name \* -type f | ${SORT} -dr;
-GENERATE_PLIST+= ${FIND} share/examples/gps/ -name \* -type f | ${SORT} -dr;
-
 
 do-wrapper:
 	# Disable problematic wrappers
@@ -77,6 +66,7 @@ post-install:
 	${TOUCH} ${TPLS}/ajis_hello/binding/IGNORE.ME
 	${TOUCH} ${TPLS}/gtkada_minimal/obj/IGNORE.ME
 	${TOUCH} ${TPLS}/simple_project/obj/IGNORE.ME
+	${STRIP} ${PREFIX}/bin/gps
 
 
 .include "../../x11/gtkada/buildlink3.mk"

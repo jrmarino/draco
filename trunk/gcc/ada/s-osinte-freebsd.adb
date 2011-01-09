@@ -103,7 +103,6 @@ package body System.OS_Interface is
       F := D - Duration (S);
 
       --  If F has negative value due to a round-up, adjust for positive F
-      --  value.
 
       if F < 0.0 then
          S := S - 1;
