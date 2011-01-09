@@ -131,7 +131,7 @@ post-extract:
 	${MV} ${BOOTSTRAP_PREFIX}/../libexec ${BOOTSTRAP_PREFIX}
 
 	# Bootstrap compiler has statically linked z, gmp, mpc, mpfr and iconv
-	# The only shared object is libc.so.7, so it should work for a long time.
+	# The only shared lib is libc.so.7, so it should work for a long time.
 	# if FBSD 9.0 upgrades libc, a compat8x requirement could be added
 	# for FreeBSD 7.x and 8.x
 .endif
