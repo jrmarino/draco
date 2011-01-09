@@ -2,7 +2,7 @@
 #
 
 DISTNAME=	aws-${AWS_VERSION}
-PKGREVISION=	3
+PKGREVISION=	4
 CATEGORIES=	www
 MASTER_SITES=	http://downloads.dragonlace.net/src/
 EXTRACT_SUFX=	.tar.bz2
