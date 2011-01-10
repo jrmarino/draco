@@ -2,7 +2,6 @@
 #
 
 DISTNAME=	gnat-aux-${SNAPSHOT}
-#PKGREVISION=
 CATEGORIES=	lang
 MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 		http://dragonlace.mirrors.ada.cx/src/
@@ -13,7 +12,7 @@ HOMEPAGE=	http://www.dragonlace.net/
 COMMENT=	GNAT Ada compiler based on GCC ${GCC_BRANCH}
 LICENSE=	gnu-gpl-v3 AND gnu-lgpl-v3
 
-SNAPSHOT=	20101221
+SNAPSHOT=	20110107
 GCC_BRANCH=     4.6
 GCC_POINT=      0
 
@@ -46,13 +45,13 @@ FULL_PATH=		/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:${PREFIX}/bin
 .if ${OPSYS} == "DragonFly"
 .if ${MACHINE_ARCH} == "i386"
    OS_LABEL4VERS=	[DragonFly]
-   BOOTSTRAP_TRIPLET=	i386-aux-dragonfly2.8/4.6.0
+   BOOTSTRAP_TRIPLET=	i386-bootstrap-dragonfly2.8/4.6.0
 .endif
 .if ${MACHINE_ARCH} == "x86_64"
    OS_LABEL4VERS=	[DragonFly64]
-   BOOTSTRAP_TRIPLET=	x86_64-aux-dragonfly2.8/4.6.0
+   BOOTSTRAP_TRIPLET=	x86_64-bootstrap-dragonfly2.8/4.6.0
 .endif
-BOOTSTRAP_COMPILER=	gnat-aux-460.${MACHINE_ARCH}.dragonfly.tar.bz2
+BOOTSTRAP_COMPILER=	gnat-bootstrap.${MACHINE_ARCH}.dragonfly.tar.bz2
 .endif
 
 
@@ -125,10 +124,10 @@ FULL_PATH=${BOOTSTRAP_PREFIX}/bin:/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:$
 
 # For pkg maintenance, uncomment to invoke "bmake mdi"
 #DISTFILES=${DISTNAME}${EXTRACT_SUFX} \
-#  gnat-aux-460.i386.dragonfly.tar.bz2 \
-#  gnat-aux-460.x86_64.dragonfly.tar.bz2 \
-#  gnat-aux-460.i386.netbsd.tar.bz2 \
-#  gnat-aux-460.x86_64.netbsd.tar.bz2
+#  gnat-bootstrap.i386.dragonfly.tar.bz2 \
+#  gnat-bootstrap.x86_64.dragonfly.tar.bz2 \
+#  gnat-bootstrap.i386.netbsd.tar.bz2 \
+#  gnat-bootstrap.x86_64.netbsd.tar.bz2
 
 
 # establish ada-aware compiler for use
@@ -149,6 +148,7 @@ CONFIGURE_ARGS+=	--with-libiconv-prefix=${PKG_PREFIX}
 CONFIGURE_ARGS+=	--enable-shared
 CONFIGURE_ARGS+=	--enable-threads=${THREAD_MODEL}
 CONFIGURE_ARGS+=	--disable-bootstrap
+CONFIGURE_ARGS+=	--disable-libmudflap
 CONFIGURE_ARGS+=	--disable-libgomp
 CONFIGURE_ARGS+=	--disable-libssp
 CONFIGURE_ARGS+=	--disable-nls
@@ -182,22 +182,8 @@ post-extract:
 	mv ${BOOTSTRAP_PREFIX}/../lib ${BOOTSTRAP_PREFIX}
 	mv ${BOOTSTRAP_PREFIX}/../libexec ${BOOTSTRAP_PREFIX}
 
-	# Protect bootstrap compiler from future breakage
-	# gmp, mpc, mpfr, and iconv should already be installed at this point
-	# Hardlinks are used to protect against dangling references
-	# which confuse makefiles
-.if exists(/usr/pkg/lib/libmpc.so) && !exists(/usr/pkg/lib/libmpc.so.2)
-	$(LN) /usr/pkg/lib/libmpc.so /usr/pkg/lib/libmpc.so.2
-.endif
-.if exists(/usr/pkg/lib/libgmp.so) && !exists(/usr/pkg/lib/libgmp.so.10)
-	$(LN) /usr/pkg/lib/libgmp.so /usr/pkg/lib/libgmp.so.10
-.endif
-.if exists(/usr/pkg/lib/libmpfr.so) && !exists(/usr/pkg/lib/libmpfr.so.4)
-	$(LN) /usr/pkg/lib/libmpfr.so /usr/pkg/lib/libmpfr.so.4
-.endif
-.if exists(/usr/pkg/lib/libiconv.so) && !exists(/usr/pkg/lib/libiconv.so.2)
-	$(LN) /usr/pkg/lib/libiconv.so /usr/pkg/lib/libiconv.so.2
-.endif
+	# Bootstrap compiler has statically linked z, gmp, mpc, mpfr and iconv
+	# The only shared lib is libc.so.7, so it should work for a long time.	
 .endif
 
 
@@ -226,6 +212,7 @@ do-test: build
 
 do-install:
 	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} install
+	${MAKE} strip-exec
 
 
 strip-exec:
