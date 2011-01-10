@@ -1,0 +1,42 @@
+Test Run By root on Mon Jan 10 02:41:12 CET 2011
+		=== acats configuration ===
+target gcc is /usr/pkgsrc/lang/gnat-bootstrap/work/build/gcc/xgcc -B/usr/pkgsrc/lang/gnat-bootstrap/work/build/gcc/
+Reading specs from /usr/pkgsrc/lang/gnat-bootstrap/work/build/gcc/specs
+  COLLECT_GCC=/usr/pkgsrc/lang/gnat-bootstrap/work/build/gcc/xgcc
+  COLLECT_LTO_WRAPPER=/usr/pkgsrc/lang/gnat-bootstrap/work/build/gcc/lto-wrapper Target: x86_64-bootstrap-dragonfly2.8
+   Configured with: /usr/pkgsrc/lang/gnat-bootstrap/work/gcc-4.6-20110107/configure --enable-languages=c,ada
+   --build=x86_64-bootstrap-dragonfly2.8 --program-prefix=gnat --prefix=/usr/pkg --with-system-zlib --with-gmp=/usr/pkg
+   --with-mpfr=/usr/pkg --with-mpc=/usr/pkg --with-libiconv-prefix=/usr/pkg --enable-shared --enable-threads=posix
+   --disable-bootstrap --disable-libmudflap --disable-libgomp --disable-libssp --disable-nls Thread model:
+   posix gcc version 4.6.0 20110107 (experimental) -=> GNAT AUX [DragonFly64] (GCC)
+host=x86_64-pc-dragonflybsd
+target=x86_64-bootstrap-dragonfly2.8
+gnatmake is /usr/pkgsrc/lang/gnat-bootstrap/work/build/gcc/gnatmake
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+		=== acats Summary ===
+# of expected passes		2321
+# of unexpected failures	0
+
+=== Completed: Mon Jan 10 04:39:52 CET 2011 ===
+
+
+Test Run By root on Mon Jan 10 04:39:54 2011
+Native configuration is x86_64-bootstrap-dragonfly2.8
+
+		=== gnat tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+
+		=== gnat Summary ===
+
+# of expected passes		866
+# of expected failures		10
+
