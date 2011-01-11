@@ -549,7 +549,7 @@ case ${target} in
   gas=yes
   gnu_ld=yes
   extra_parts="crtbegin.o crtend.o crtbeginS.o crtendS.o"
-  tmake_file="t-libc-ok t-libgcc-pic"
+  tmake_file="t-slibgcc-elf-ver t-libc-ok t-libgcc-pic"
   case ${enable_threads} in
     "" | yes | posix)
       thread_file='posix'

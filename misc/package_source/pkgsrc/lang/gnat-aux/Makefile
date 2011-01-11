@@ -12,7 +12,7 @@ HOMEPAGE=	http://www.dragonlace.net/
 COMMENT=	GNAT Ada compiler based on GCC ${GCC_BRANCH}
 LICENSE=	gnu-gpl-v3 AND gnu-lgpl-v3
 
-SNAPSHOT=	20110107
+SNAPSHOT=	20110109
 GCC_BRANCH=     4.6
 GCC_POINT=      0
 
@@ -58,12 +58,12 @@ BOOTSTRAP_COMPILER=	gnat-bootstrap.${MACHINE_ARCH}.dragonfly.tar.bz2
 .if ${OPSYS} == "NetBSD"
 .if ${MACHINE_ARCH} == "i386"
    OS_LABEL4VERS=	[NetBSD]
-   BOOTSTRAP_TRIPLET=	i386-aux-netbsd5.1/4.6.0
+   BOOTSTRAP_TRIPLET=	i386-aux-netbsdelf5.1/4.6.0
    BLD_TARGET=		${MACHINE_ARCH}-aux-netbsdelf${OS_VERSION}
 .endif
 .if ${MACHINE_ARCH} == "x86_64"
    OS_LABEL4VERS=	[NetBSD64]
-   BOOTSTRAP_TRIPLET=	x86_64-aux-netbsd5.1/4.6.0
+   BOOTSTRAP_TRIPLET=	x86_64-aux-netbsdelf5.1/4.6.0
 .endif
 BOOTSTRAP_COMPILER=	gnat-aux-460.${MACHINE_ARCH}.netbsd.tar.bz2
 .endif
@@ -133,6 +133,7 @@ FULL_PATH=${BOOTSTRAP_PREFIX}/bin:/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:$
 # establish ada-aware compiler for use
 MY_CONFIGURE_ENV=	CC=${FULL_GNATGCC} PATH=${FULL_PATH} CONFIG_SHELL=${CONFIG_SHELL}
 MY_MAKE_ENV=		PATH=${FULL_PATH}
+MY_MAKE_ENV+=		LD_LIBRARY_PATH=${WRKSRC}/gcc
 
 
 # The standard configuration options
@@ -162,6 +163,8 @@ MAKE_ARGS=		MAKEINFOFLAGS="--no-split"
 GENERATE_PLIST=  cd ${PREFIX};
 GENERATE_PLIST+= ${FIND} bin/gnat* | ${SORT};
 GENERATE_PLIST+= ${FIND} bin/${BLD_TARGET}* | ${SORT};
+GENERATE_PLIST+= ${FIND} lib/libgcc_s.so;
+GENERATE_PLIST+= ${FIND} lib/libgcc_s.so.1;
 GENERATE_PLIST+= ${FIND} ${LPATH}/*     -type f | ${SORT};
 GENERATE_PLIST+= ${FIND} ${LEPATH}/*    -type f | ${SORT};
 GENERATE_PLIST+= ${FIND} ${SINFO}/gnat* -type f | ${SORT};

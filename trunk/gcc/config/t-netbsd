@@ -1,5 +1,5 @@
 # Always build crtstuff with PIC.
-CRTSTUFF_T_CFLAGS_S += -fPIC
+CRTSTUFF_T_CFLAGS_S = $(CRTSTUFF_T_CFLAGS) -fPIC
 
 # Omit $(srcdir)/ginclude/stddef.h header file for NETBSD
 # Comes from gcc/Makefile.in
