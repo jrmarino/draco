@@ -620,7 +620,7 @@ case ${target} in
   esac
   ;;
 *-*-netbsd*)
-  tmake_file="t-slibgcc-elf-ver t-libc-ok t-netbsd t-libgcc-pic"
+  tmake_file="t-slibgcc-elf-ver t-netbsd t-libgcc-pic"
   gas=yes
   gnu_ld=yes
 
