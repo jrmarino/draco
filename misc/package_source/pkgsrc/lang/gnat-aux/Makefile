@@ -63,7 +63,7 @@ BOOTSTRAP_COMPILER=	gnat-bootstrap.${MACHINE_ARCH}.dragonfly.tar.bz2
 .endif
 .if ${MACHINE_ARCH} == "x86_64"
    OS_LABEL4VERS=	[NetBSD64]
-   BOOTSTRAP_TRIPLET=	x86_64-aux-netbsdelf5.1/4.6.0
+   BOOTSTRAP_TRIPLET=	x86_64-aux-netbsd5.1/4.6.0
 .endif
 BOOTSTRAP_COMPILER=	gnat-aux-460.${MACHINE_ARCH}.netbsd.tar.bz2
 .endif
