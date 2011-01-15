@@ -2,7 +2,7 @@
    for x86-64/ELF NetBSD systems.
    Copyright (C) 2002, 2004, 2007 Free Software Foundation, Inc.
    Contributed by Wasabi Systems, Inc.
-   Copyright (C) 2010 John Marino <draco@marino.st>
+   Copyright (C) 2010, 2011 John Marino <www.dragonlace.net>
 
 This file is part of GCC.
 
