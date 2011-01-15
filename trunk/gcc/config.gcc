@@ -562,6 +562,7 @@ case ${target} in
       exit 1
       ;;
   esac
+  extra_options="$extra_options rpath.opt dragonfly.opt"
   default_use_cxa_atexit=yes
   ;;
 *-*-linux* | frv-*-*linux* | *-*-kfreebsd*-gnu | *-*-knetbsd*-gnu | *-*-gnu* | *-*-kopensolaris*-gnu)

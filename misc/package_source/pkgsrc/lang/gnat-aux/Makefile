@@ -21,6 +21,7 @@ PKG_DESTDIR_SUPPORT=	user-destdir
 USE_TOOLS+=		gmake sed flex bison gm4 perl makeinfo bzip2
 USE_BUILTIN.iconv=	no
 BUILD_DEPENDS+=		dejagnu>=1.4:../../devel/dejagnu
+BUILD_DEPENDS+=		autoconf>=2.6:../../devel/autoconf
 
 .include "../../mk/bsd.prefs.mk"
 
