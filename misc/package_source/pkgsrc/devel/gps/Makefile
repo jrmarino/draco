@@ -19,6 +19,7 @@ USE_TOOLS+=		gmake sed perl awk
 GPS_VERSION=		5.0.0
 FULL_PATH=		/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:${PREFIX}/bin:${PREFIX}/lib/pkgconfig
 MY_CONFIGURE_ENV=	PATH=${FULL_PATH}
+MY_CONFIGURE_ENV+=	CC=gnatgcc
 APP=			${PREFIX}/lib/gnat
 TPLS=			${PREFIX}/share/gps/templates
 
@@ -36,12 +37,6 @@ CONFIGURE_ARGS+=	--enable-shared-python=yes
 do-wrapper:
 	# Disable problematic wrappers
 	@${ECHO} "###  Pkgsrc wrappers disabled  ###"
-
-
-pre-configure:
-	# Explicitly request GNAT-AUX compiler
-	# It is done to fool tough pkgsrc compiler checks
-	${SETENV} CC=gnatgcc
 
 
 do-configure:

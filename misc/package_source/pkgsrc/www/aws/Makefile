@@ -47,10 +47,7 @@ pre-configure:
 
 
 do-configure:
-	# explicitly request GNAT-AUX compiler
-	# It is done here to fool tough pkgsrc compiler checks
-	${SETENV} CC=gnatgcc
-	cd ${WRKSRC} && ${SETENV} ${CONFIGURE_ENV} \
+	cd ${WRKSRC} && ${SETENV} CC=gnatgcc \
 	${GMAKE} setup ${CONFIGURE_ARGS}
 
 
@@ -59,8 +56,10 @@ do-build:
 	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${GMAKE} build build_doc
 
 
+
 do-test: install
 	cd ${WRKSRC}/regtests && python2.6 testsuite.py
+
 
 
 do-install:
