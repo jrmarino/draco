@@ -18,7 +18,8 @@ GNU_CONFIGURE=		yes
 USE_TOOLS+=		gmake pkg-config
 
 FULL_PATH=		/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:${PREFIX}/bin:${PREFIX}/lib/pkgconfig
-MY_CONFIGURE_ENV+=	PATH=${FULL_PATH}
+MY_CONFIGURE_ENV=	PATH=${FULL_PATH}
+MY_CONFIGURE_ENV+=	CC=gnatgcc
 CONFIGURE_ARGS+=	--disable-nls
 PKGCONFIG_OVERRIDE+=	projects/gtkada.pc.in
 
@@ -43,13 +44,10 @@ post-wrapper:
 	${RM} ${WRKDIR}/.wrapper/bin/*
 
 
-pre-configure:
-	# explicitly request GNAT-AUX compiler
-	# It is done here to fool tough pkgsrc compiler checks
-	${SETENV} CC=gnatgcc
-
-
 do-configure:
+	# OpenGL, Gnome, and glade are normally detected automatically, but
+	# at least with OpenGL, there is an installation bug.  Rather than
+	# test everything, patch-ad just disables support for these features.
 	cd ${WRKSRC} && ${SETENV} ${MY_CONFIGURE_ENV} ./configure ${CONFIGURE_ARGS}
 
 
