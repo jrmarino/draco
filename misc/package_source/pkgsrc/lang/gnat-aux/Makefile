@@ -166,8 +166,8 @@ GENERATE_PLIST+= ${FIND} bin/gnat* | ${SORT};
 GENERATE_PLIST+= ${FIND} bin/${BLD_TARGET}* | ${SORT};
 GENERATE_PLIST+= ${FIND} lib/libgcc_s.so;
 GENERATE_PLIST+= ${FIND} lib/libgcc_s.so.1;
-GENERATE_PLIST+= ${FIND} ${LPATH}/*     -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} ${LEPATH}/*    -type f | ${SORT};
+GENERATE_PLIST+= ${FIND} ${LPATH}/*  \( -type f -or -type l \) | ${SORT} -dr;
+GENERATE_PLIST+= ${FIND} ${LEPATH}/*    -type f | ${SORT} -dr;
 GENERATE_PLIST+= ${FIND} ${SINFO}/gnat* -type f | ${SORT};
 GENERATE_PLIST+= ${FIND} ${SMAN1}/gnat* -type f | ${SORT};
 .for k in ${MAN7}
