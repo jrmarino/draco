@@ -4,7 +4,8 @@
 DISTNAME=	aws-${AWS_VERSION}
 PKGREVISION=	5
 CATEGORIES=	www
-MASTER_SITES=	http://downloads.dragonlace.net/src/
+MASTER_SITES=	http://downloads.dragonlace.net/src/ \
+		http://dragonlace.mirrors.ada.cx/src/
 EXTRACT_SUFX=	.tar.bz2
 
 MAINTAINER=	draco@marino.st
