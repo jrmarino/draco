@@ -12,7 +12,7 @@ HOMEPAGE=	http://www.dragonlace.net/
 COMMENT=	GNAT Ada compiler based on GCC ${GCC_BRANCH}
 LICENSE=	gnu-gpl-v3 AND gnu-lgpl-v3
 
-SNAPSHOT=	20110119
+SNAPSHOT=	20110120
 GCC_BRANCH=     4.6
 GCC_POINT=      0
 

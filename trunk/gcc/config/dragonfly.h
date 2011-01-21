@@ -48,10 +48,8 @@ along with GCC; see the file COPYING3.  If not see
   while (0)
 
 #undef  CPP_SPEC
-#define CPP_SPEC "           \
-  %(cpp_cpu)                 \
-  %(cpp_arch)	             \
-  %{posix:-D_POSIX_SOURCE}"
+#define CPP_SPEC \
+ "%(cpp_cpu) %(cpp_arch) %{posix:-D_POSIX_SOURCE}"
 
 #undef  STARTFILE_SPEC
 #define STARTFILE_SPEC	\
@@ -62,14 +60,12 @@ along with GCC; see the file COPYING3.  If not see
    crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
 
 #undef  ENDFILE_SPEC
-#define ENDFILE_SPEC	\
+#define ENDFILE_SPEC \
   "%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
 
 #undef  LIB_SPEC
-#define LIB_SPEC "        \
-  %{pthread:-lpthread}    \
-  -lc                     \
-  "
+#define LIB_SPEC \
+  "%{pthread:-lpthread} -lc"
 
 /* Provide a LINK_SPEC appropriate for DragonFly.  Here we provide support
    for the special GCC options -static and -shared, which allow us to
@@ -80,8 +76,8 @@ along with GCC; see the file COPYING3.  If not see
    done.  */
 
 #undef	LINK_SPEC
-#define	LINK_SPEC "\
-  %{p:%nconsider using '-pg' instead of '-p' with gprof(1)} \
+#define	LINK_SPEC \
+ "%{p:%nconsider using '-pg' instead of '-p' with gprof(1)} \
   %{v:-V} \
   %{assert*} %{R*} %{rpath*} %{defsym*} \
   %{shared:-Bshareable %{h*} %{soname*}} \
@@ -92,12 +88,12 @@ along with GCC; see the file COPYING3.  If not see
     %{static:-Bstatic}} \
   %{symbolic:-Bsymbolic}"
 
-#define LINK_LIBGCC_SPEC "%D"
-
-#define	DFBSD_DYNAMIC_LINKER		"/usr/libexec/ld-elf.so.2"
+#define	DFBSD_DYNAMIC_LINKER \
+  "/usr/libexec/ld-elf.so.2"
 
 #if defined(HAVE_LD_EH_FRAME_HDR)
-#define LINK_EH_SPEC "%{!static:--eh-frame-hdr} "
+#define LINK_EH_SPEC \
+  "%{!static:--eh-frame-hdr}"
 #endif
 
 /* Use --as-needed -lgcc_s for eh support.  */
