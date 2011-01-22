@@ -1,4 +1,4 @@
-@comment $FreeBSD
+@comment $FreeBSD$
 bin/gnat
 bin/gnatbind
 bin/gnatchop
@@ -16,6 +16,13 @@ bin/gnatprep
 bin/gnatxref
 bin/%%GNU_HOST%%-gcc-%%GCC_VER%%
 bin/%%GNU_HOST%%-gnatgcc
+lib/libgcc_s.so
+lib/libgcc_s.so.1
+lib/libiberty.a
+lib/libquadmath.a
+lib/libquadmath.la
+lib/libquadmath.so
+lib/libquadmath.so.0
 share/info/cpp.info
 share/info/cppinternals.info
 share/info/dir
@@ -26,4 +33,8 @@ share/info/gnat-style.info
 share/info/gnat_rm.info
 share/info/gnat_ugn.info
 share/info/libquadmath.info
+@dirrmtry share/info
+@dirrmtry share/man/man1
+@dirrmtry share/man/man7
+@dirrmtry share/man
 @comment PLIST.lib attached below
