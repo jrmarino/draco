@@ -161,13 +161,14 @@ MAKE_ARGS=		MAKEINFOFLAGS="--no-split"
 
 
 # Automatic package list generation
+# lib/libquadmath.* will have to be added if __float128 support is added
+# Alternatively, libquadmath support could be intentionally disabled.
 GENERATE_PLIST=  cd ${PREFIX};
 GENERATE_PLIST+= ${FIND} bin/gnat* | ${SORT};
 GENERATE_PLIST+= ${FIND} bin/${BLD_TARGET}* | ${SORT};
 GENERATE_PLIST+= ${FIND} lib/libiberty.a;
-GENERATE_PLIST+= ${FIND} lib/libgcc_s.*    \( -type f -or -type l \) | ${SORT};
-GENERATE_PLIST+= ${FIND} lib/libquadmath.* \( -type f -or -type l \) | ${SORT};
-GENERATE_PLIST+= ${FIND} ${LPATH}/*        \( -type f -or -type l \) | ${SORT} -dr;
+GENERATE_PLIST+= ${FIND} lib/libgcc_s.* \( -type f -or -type l \) | ${SORT};
+GENERATE_PLIST+= ${FIND} ${LPATH}/*     \( -type f -or -type l \) | ${SORT} -dr;
 GENERATE_PLIST+= ${FIND} ${LEPATH}/*    -type f | ${SORT} -dr;
 GENERATE_PLIST+= ${FIND} ${SINFO}/gnat* -type f | ${SORT};
 GENERATE_PLIST+= ${FIND} ${SMAN1}/gnat* -type f | ${SORT};
