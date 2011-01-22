@@ -189,7 +189,7 @@ post-extract:
 	mv ${BOOTSTRAP_PREFIX}/../libexec ${BOOTSTRAP_PREFIX}
 
 	# Bootstrap compiler has statically linked z, gmp, mpc, mpfr and iconv
-	# The only shared lib is libc.so.7, so it should work for a long time.	
+	# The only shared lib is libc.so.7, so it should work for a long time.
 .endif
 
 
