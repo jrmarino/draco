@@ -93,8 +93,8 @@ DISTFILES=${PORTNAME}-${SNAPSHOT}.tar.bz2 ${BOOTSTRAP_COMPILER}
 
 # for port maintenance, uncomment to invoke "make makesum"
 # DISTFILES=${PORTNAME}-${SNAPSHOT}.tar.bz2 \
-#   gnat-aux-460.i386.freebsd.tar.bz2 \
-#   gnat-aux-460.x86_64.freebsd.tar.bz2
+#   gnat-bootstrap.i386.freebsd.tar.bz2 \
+#   gnat-bootstrap.x86_64.freebsd.tar.bz2
 
 # Establish Ada-aware compiler for use
 ADA_CONFIGURE_ENV=	CC=${FULL_GNATGCC} PATH=${FULL_PATH} CONFIG_SHELL=${SH}
