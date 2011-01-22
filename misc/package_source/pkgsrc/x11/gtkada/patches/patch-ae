@@ -1,5 +1,7 @@
---- ./testgtk/Makefile.in.orig	2011-01-19 23:19:14.000000000 +0100
-+++ ./testgtk/Makefile.in	2011-01-19 23:21:48.000000000 +0100
+$NetBSD$
+
+--- testgtk/Makefile.in.orig	2011-01-19 23:19:14.000000000 +0100
++++ testgtk/Makefile.in
 @@ -29,7 +29,7 @@
  GTKADA_GL_LIBS=
  endif

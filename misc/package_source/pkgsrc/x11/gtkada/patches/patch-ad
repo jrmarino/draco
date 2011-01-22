@@ -1,5 +1,7 @@
---- ./src/Makefile.common.in.orig	2011-01-19 22:48:51.000000000 +0100
-+++ ./src/Makefile.common.in	2011-01-19 22:49:48.000000000 +0100
+$NetBSD$
+
+--- src/Makefile.common.in.orig	2011-01-19 22:48:51.000000000 +0100
++++ src/Makefile.common.in
 @@ -12,9 +12,9 @@
  MINOR    = @GTKADA_MINOR_VERSION@
  MICRO    = @GTKADA_MICRO_VERSION@

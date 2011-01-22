@@ -1,5 +1,7 @@
---- ./src/tools/Makefile.in.orig	2011-01-19 22:51:22.000000000 +0100
-+++ ./src/tools/Makefile.in	2011-01-19 22:51:34.000000000 +0100
+$NetBSD$
+
+--- src/tools/Makefile.in.orig	2011-01-19 22:51:22.000000000 +0100
++++ src/tools/Makefile.in
 @@ -10,7 +10,7 @@
  GDIALOG       = gtkada-dialog
  GTKADA_CONFIG = gtkada-config
