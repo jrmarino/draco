@@ -72,7 +72,7 @@ do-install:
 .endif
 
 
-	
+
 demos:
 .for dd in ${DEMO_DIRS}
 	cd ${WRKSRC}/demos/${dd} && ${GMAKE}
