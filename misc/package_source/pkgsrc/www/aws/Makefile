@@ -2,7 +2,6 @@
 #
 
 DISTNAME=	aws-${AWS_VERSION}
-PKGREVISION=	5
 CATEGORIES=	www
 MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 		http://dragonlace.mirrors.ada.cx/src/
@@ -14,7 +13,7 @@ COMMENT=	Adacore Ada Web Server and framework
 LICENSE=	gnu-gpl-v2
 
 PKG_DESTDIR_SUPPORT=	user-destdir
-AWS_VERSION=		2.10.0
+AWS_VERSION=		2.10.0.1
 USE_TOOLS+=		gmake makeinfo sed
 BUILD_DEPENDS+=		gawk:../../lang/gawk
 
