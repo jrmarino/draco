@@ -60,6 +60,14 @@ system-netbsd-x86.ads
 system-netbsd-x86_64.ads
 system-openbsd-x86.ads
 system-openbsd-x86_64.ads
+gcc/config/dragonfly.h
+gcc/config/dragonfly.opt
+gcc/config/i386/dragonfly-unwind.h
+gcc/config/i386/dragonfly.h
+gcc/config/i386/dragonfly64.h
+gcc/config/i386/freebsd-unwind.h
+gcc/config/i386/netbsd-unwind.h
+gcc/config/i386/openbsd-unwind.h
 
 
 
