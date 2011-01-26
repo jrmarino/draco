@@ -49,10 +49,12 @@ s-osinte-freebsd32.ads
 s-osinte-freebsd64.ads
 s-osinte-netbsd.adb
 s-osinte-netbsd.ads
+s-osinte-netbsd6.ads
 s-osinte-openbsd.adb
 s-osinte-openbsd.ads
 s-osprim-bsd32.adb
 s-osprim-bsd64.adb
+s-osprim-bsdn6.adb
 s-taprop-netbsd.adb
 system-dragonfly-x86.ads
 system-dragonfly-x86_64.ads
