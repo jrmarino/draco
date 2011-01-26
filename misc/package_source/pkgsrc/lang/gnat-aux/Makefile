@@ -223,10 +223,6 @@ do-test: build
 
 do-install:
 	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} install
-	${MAKE} strip-exec
-
-
-strip-exec:
 	${STRIP} ${PREFIX}/bin/gnat*
 .for k in ${LELIST}
 	${STRIP} ${PREFIX}/${LEPATH}/${k}
