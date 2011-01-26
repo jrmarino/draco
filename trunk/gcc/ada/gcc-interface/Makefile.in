@@ -1,6 +1,6 @@
 # Makefile for GNU Ada Compiler (GNAT).
 #   Copyright (C) 1994-2010 Free Software Foundation, Inc.
-#   Copyright (C) 2010 John Marino <draco@marino.st>
+#   Copyright (C) 2010, 2011 John Marino <www.dragonlace.net>
 
 #This file is part of GCC.
 
