@@ -29,9 +29,9 @@ BUILD_DEPENDS+=		autoconf>=2.6:../../devel/autoconf
 # and DragonFly i386/AMD64.  Actually bootstrap compilers for OpenBSD and
 # FreeBSD also exist, but native packages will be available for those ports.
 
-ONLY_FOR_PLATFORM=	DragonFly-*-*    \
-			NetBSD-5*-i386   \
-                        NetBSD-5*-x86_64
+ONLY_FOR_PLATFORM=	DragonFly-*-*        \
+                  	NetBSD-[5-9]*-i386   \
+                  	NetBSD-[5-9]*-x86_64
 
 BLD_TARGET=		${MACHINE_ARCH}-aux-${LOWER_OPSYS}${OS_VERSION}
 THREAD_MODEL=		posix
@@ -57,14 +57,20 @@ BOOTSTRAP_COMPILER=	gnat-bootstrap.${MACHINE_ARCH}.dragonfly.tar.bz2
 
 
 .if ${OPSYS} == "NetBSD"
+.if empty(OS_VERSION:M5.99.*)
+   NSUFF=	${OS_VERSION}
+.else
+   NSUFF=	6.0-PREVIEW
+.endif
 .if ${MACHINE_ARCH} == "i386"
    OS_LABEL4VERS=	[NetBSD]
    BOOTSTRAP_TRIPLET=	i386-bootstrap-netbsdelf5.1/4.6.0
-   BLD_TARGET=		${MACHINE_ARCH}-aux-netbsdelf${OS_VERSION}
+   BLD_TARGET=		${MACHINE_ARCH}-aux-netbsdelf${NSUFF}
 .endif
 .if ${MACHINE_ARCH} == "x86_64"
    OS_LABEL4VERS=	[NetBSD64]
    BOOTSTRAP_TRIPLET=	x86_64-bootstrap-netbsd5.1/4.6.0
+   BLD_TARGET=		${MACHINE_ARCH}-aux-netbsd${NSUFF}
 .endif
 BOOTSTRAP_COMPILER=	gnat-bootstrap.${MACHINE_ARCH}.netbsd.tar.bz2
 .endif
@@ -90,15 +96,6 @@ LEPATH=			libexec/gcc/${BLD_TARGET}/${GCC_BRANCH}.${GCC_POINT}
 REVFILE= 		${GCC_WRKSRC}/gcc/REVISION
 LELIST=			cc1 collect2 gnat1 lto1
 
-
-# The bootstrap compiler is at least 28M these days.  Additionally, we would
-# prefer to use a native Ada-capable compiler if it were available for two
-# reasons:
-#    1) It takes a long time to download a file this big and
-#    2) Over time, the libraries evolve, breaking the bootstrap
-# For the latter reason, a symbolic link may have to be established by this
-# script if a latter version of the library is available, but only if the
-# bootstrap is determined necessary.
 
 
 # testing if gnatgcc, gnatlink, gnatbind and gnatmake are in standard location
@@ -190,6 +187,14 @@ post-extract:
 
 	# Bootstrap compiler has statically linked z, gmp, mpc, mpfr and iconv
 	# The only shared lib is libc.so.7, so it should work for a long time.
+	# It is at least 28MB and doesn't come with shared libraries.
+
+.if (${OPSYS} == "NetBSD") && (empty(OS_VERSION:M[5].*)
+	# Bootstrap compiler malfunctions in NetBSD 6 unless include-fixed
+	# directory is removed first.
+
+	${RM} -rf ${BOOTSTRAP_PREFIX}/lib/gcc/${BOOTSTRAP_TRIPLET}/include-fixed
+.endif
 .endif
 
 
