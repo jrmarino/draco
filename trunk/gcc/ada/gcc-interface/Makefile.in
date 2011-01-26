@@ -1380,7 +1380,7 @@ ifeq ($(strip $(filter-out x86_64 openbsd%,$(arch) $(osys))),)
 endif
 
 
-# NETBSD i386
+# NETBSD i386 (5+ only)
 # TOOL_TARGET_PAIRS probably does nothing, moved to gnattools/configure.ac
 ifeq ($(strip $(filter-out %86 netbsd%,$(arch) $(osys))),)
   LIBGNAT_TARGET_PAIRS = \
@@ -1394,12 +1394,20 @@ ifeq ($(strip $(filter-out %86 netbsd%,$(arch) $(osys))),)
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-osinte.adb<s-osinte-netbsd.adb \
-  s-osinte.ads<s-osinte-netbsd.ads \
-  s-osprim.adb<s-osprim-bsd32.adb \
   s-taprop.adb<s-taprop-netbsd.adb \
   s-taspri.ads<s-taspri-posix.ads \
   s-tpopsp.adb<s-tpopsp-posix.adb \
   system.ads<system-netbsd-x86.ads
+
+  ifeq ($(strip $(filter-out %86 netbsdelf5%,$(arch) $(osys))),)
+    LIBGNAT_TARGET_PAIRS+= \
+    s-osinte.ads<s-osinte-netbsd.ads \
+    s-osprim.adb<s-osprim-bsd32.adb    
+  else
+    LIBGNAT_TARGET_PAIRS+= \
+    s-osinte.ads<s-osinte-netbsd6.ads \
+    s-osprim.adb<s-osprim-bsdn6.adb
+  endif
 
   TOOLS_TARGET_PAIRS = \
   mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
@@ -1415,7 +1423,7 @@ ifeq ($(strip $(filter-out %86 netbsd%,$(arch) $(osys))),)
 endif
 
 
-# NETBSD AMD64
+# NETBSD AMD64 (5+ only)
 # TOOL_TARGET_PAIRS probably does nothing, moved to gnattools/configure.ac
 ifeq ($(strip $(filter-out x86_64 netbsd%,$(arch) $(osys))),)
   LIBGNAT_TARGET_PAIRS = \
@@ -1429,12 +1437,20 @@ ifeq ($(strip $(filter-out x86_64 netbsd%,$(arch) $(osys))),)
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-osinte.adb<s-osinte-netbsd.adb \
-  s-osinte.ads<s-osinte-netbsd.ads \
-  s-osprim.adb<s-osprim-bsd32.adb \
   s-taprop.adb<s-taprop-netbsd.adb \
   s-taspri.ads<s-taspri-posix.ads \
   s-tpopsp.adb<s-tpopsp-posix.adb \
   system.ads<system-netbsd-x86_64.ads
+
+  ifeq ($(strip $(filter-out x86_64 netbsd5%,$(arch) $(osys))),)
+    LIBGNAT_TARGET_PAIRS+= \
+    s-osinte.ads<s-osinte-netbsd.ads \
+    s-osprim.adb<s-osprim-bsd32.adb    
+  else
+    LIBGNAT_TARGET_PAIRS+= \
+    s-osinte.ads<s-osinte-netbsd6.ads \
+    s-osprim.adb<s-osprim-bsdn6.adb
+  endif
 
   TOOLS_TARGET_PAIRS=mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
   GNATLIB_SHARED = gnatlib-shared-dual
