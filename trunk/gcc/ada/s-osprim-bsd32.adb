@@ -27,7 +27,7 @@
 -- GNARL was developed by the GNARL team at Florida State University.       --
 -- Extensive contributions were provided by Ada Core Technologies, Inc.     --
 --                                                                          --
--- Copyright (C) 2010 John Marino <draco@marino.st>                         --
+-- Copyright (C) 2010, 2011 John Marino <www.dragonlace.net>                --
 ------------------------------------------------------------------------------
 
 --  This version is for BSD operating systems using 32-bit time types.
@@ -54,7 +54,7 @@ package body System.OS_Primitives is
 
    type timezone is record
       tz_minuteswest : int;
-      tz_distime     : int;
+      tz_dsttime     : int;
    end record;
    pragma Convention (C, timezone);
 

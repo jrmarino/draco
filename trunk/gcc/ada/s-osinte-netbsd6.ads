@@ -31,10 +31,10 @@
 -- now maintained by Ada Core Technologies Inc. in cooperation with Florida --
 -- State University (http://www.gnat.com).                                  --
 --                                                                          --
--- Copyright (C) 2010 John Marino <draco@marino.st>                         --
+-- Copyright (C) 2010, 2011 John Marino <www.dragonlace.net>                --
 ------------------------------------------------------------------------------
 
---  This is the NetBSD PTHREADS version of this package.
+--  This is the NetBSD 6+ PTHREADS version of this package.
 --  It is based off of the FreeBSD PTHREADS as of 4.2.3.
 
 --  This package encapsulates all direct interfaces to OS services
@@ -61,6 +61,7 @@ package System.OS_Interface is
    subtype unsigned_char  is Interfaces.C.unsigned_char;
    subtype plain_char     is Interfaces.C.plain_char;
    subtype size_t         is Interfaces.C.size_t;
+   subtype int64_t        is Interfaces.C.Integer_64;
 
    -----------
    -- Errno --
@@ -205,7 +206,7 @@ package System.OS_Interface is
    type timespec is private;
 
    function nanosleep (rqtp, rmtp : access timespec)  return int;
-   pragma Import (C, nanosleep, "nanosleep");
+   pragma Import (C, nanosleep, "__nanosleep50");
 
    type clockid_t is private;
 
@@ -215,7 +216,7 @@ package System.OS_Interface is
      (clock_id : clockid_t;
       tp       : access timespec)
       return int;
-   pragma Import (C, clock_gettime, "clock_gettime");
+   pragma Import (C, clock_gettime, "__clock_gettime50");
 
    function To_Duration (TS : timespec) return Duration;
    pragma Inline (To_Duration);
@@ -627,7 +628,7 @@ private
 
    type pid_t is new int;
 
-   type time_t is new int;
+   type time_t is new int64_t;
 
    type timespec is record
       tv_sec  : time_t;

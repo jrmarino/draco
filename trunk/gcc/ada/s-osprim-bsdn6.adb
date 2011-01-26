@@ -30,7 +30,8 @@
 -- Copyright (C) 2010, 2011 John Marino <www.dragonlace.net>                --
 ------------------------------------------------------------------------------
 
---  This version is for BSD operating systems using 64-bit time types.
+--  This version is for NetBSD 6.0+  
+--  It switches time type to 64 bits and uses compatibility functions
 
 with Interfaces.C;
 
@@ -61,12 +62,12 @@ package body System.OS_Primitives is
 
    type timeval is record
       tv_sec  : time_t;
-      tv_usec : long;   --  Not for NetBSD! FreeBSD/DragonFly
+      tv_usec : int;
    end record;
    pragma Convention (C, timeval);
 
    function nanosleep (rqtp, rmtp : access timespec)  return int;
-   pragma Import (C, nanosleep, "nanosleep");
+   pragma Import (C, nanosleep, "__nanosleep50");
 
    -----------
    -- Clock --
@@ -90,7 +91,7 @@ package body System.OS_Primitives is
       function gettimeofday
         (Tv : access timeval;
          Tz : access timezone) return int;
-      pragma Import (C, gettimeofday, "gettimeofday");
+      pragma Import (C, gettimeofday, "__gettimeofday50");
 
       pragma Unreferenced (Result);
    begin
