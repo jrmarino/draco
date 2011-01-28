@@ -30,7 +30,7 @@
 -- Copyright (C) 2010, 2011 John Marino <www.dragonlace.net>                --
 ------------------------------------------------------------------------------
 
---  This version is for NetBSD 6.0+  
+--  This version is for NetBSD 6.0+
 --  It switches time type to 64 bits and uses compatibility functions
 
 with Interfaces.C;
