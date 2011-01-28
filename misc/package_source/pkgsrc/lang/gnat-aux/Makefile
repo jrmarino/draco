@@ -189,7 +189,7 @@ post-extract:
 	# The only shared lib is libc.so.7, so it should work for a long time.
 	# It is at least 28MB and doesn't come with shared libraries.
 
-.if (${OPSYS} == "NetBSD") && (empty(OS_VERSION:M[5].[0-8].*))
+.if (${OPSYS} == "NetBSD") && (empty(OS_VERSION:M[5].[0-8]*))
 	# Bootstrap compiler malfunctions in NetBSD 6 unless include-fixed
 	# directory is removed first.
 
