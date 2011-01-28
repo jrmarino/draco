@@ -60,7 +60,7 @@ BOOTSTRAP_COMPILER=	gnat-bootstrap.${MACHINE_ARCH}.dragonfly.tar.bz2
 .if empty(OS_VERSION:M5.99.*)
    NSUFF=	${OS_VERSION}
 .else
-   NSUFF=	6_PREVIEW
+   NSUFF=	6.0_DEV
 .endif
 .if ${MACHINE_ARCH} == "i386"
    OS_LABEL4VERS=	[NetBSD]
