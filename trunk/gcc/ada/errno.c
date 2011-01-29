@@ -27,6 +27,7 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
+ * Copyright (C) 2011 John Marino <www.dragonlace.net>                      *
  ****************************************************************************/
 
 /* This file provides access to the C-language errno to the Ada interface
@@ -39,6 +40,7 @@
 #define _REENTRANT
 #define _THREAD_SAFE
 #define _SGI_MP_SOURCE
+#define GNAT_SET_ERRNO
 
 #ifdef MaRTE
 
@@ -52,6 +54,17 @@
 
 #endif
 
+#ifdef __ANDROID__
+
+/* The ANDROID errno.h file also defines __set_errno as an external variable
+   for use with syscalls.  It should not be referenced directly, but we are
+   going to do it anyway because the alternative solution is too rename all 
+   uses of __set_errno in GNAT. */
+
+#undef GNAT_SET_ERRNO   
+#endif
+
+
 #include <errno.h>
 int
 __get_errno(void)
@@ -59,8 +72,10 @@ __get_errno(void)
   return errno;
 }
 
+#ifdef GNAT_SET_ERRNO
 void
 __set_errno(int err)
 {
   errno = err;
 }
+#endif

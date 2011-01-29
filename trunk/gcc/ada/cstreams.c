@@ -51,9 +51,10 @@
 #include <unixlib.h>
 #endif
 
-#ifdef linux
+#if defined(linux) && !defined(__ANDROID__)
 /* Don't use macros on GNU/Linux since they cause incompatible changes between
    glibc 2.0 and 2.1 */
+/* Android is The exception because it uses the BIONIC library */
 
 #ifdef stderr
 #  undef stderr

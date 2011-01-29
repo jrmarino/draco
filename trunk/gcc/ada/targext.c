@@ -27,11 +27,16 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
+ * Copyright (C) 2011 John Marino <www.dragonlace.net>                      *
  ****************************************************************************/
 
 /*  This file contains target-specific parameters describing the file       */
 /*  extension for object and executable files. It is used by the compiler,  */
 /*  binder and tools.                                                       */
+
+#ifdef __ANDROID__
+#define HAVE_STRSIGNAL
+#endif
 
 #include "system.h"
 #include "coretypes.h"
