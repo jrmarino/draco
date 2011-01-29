@@ -6,7 +6,7 @@
  *                                                                          *
  *                          C Implementation File                           *
  *                                                                          *
- *        Copyright (C) 2005-2009  Free Software Foundation, Inc.           *
+ *        Copyright (C) 2005-2011, Free Software Foundation, Inc.           *
  *                                                                          *
  * GNAT is free software;  you can  redistribute it  and/or modify it under *
  * terms of the  GNU General Public License as published  by the Free Soft- *
@@ -27,18 +27,19 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
- * Copyright (C) 2011 John Marino <www.dragonlace.net>                      *
  ****************************************************************************/
 
 /*  This file contains target-specific parameters describing the file       */
 /*  extension for object and executable files. It is used by the compiler,  */
 /*  binder and tools.                                                       */
 
-#ifdef __ANDROID__
-#define HAVE_STRSIGNAL
-#endif
-
+#ifdef IN_RTS
+#include "tconfig.h"
+#include "tsystem.h"
+#else
+#include "config.h"
 #include "system.h"
+#endif
 #include "coretypes.h"
 #include "tm.h"
 

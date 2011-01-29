@@ -7753,7 +7753,7 @@ set_gnu_expr_location_from_node (tree node, Node_Id gnat_node)
     default:
       if (!REFERENCE_CLASS_P (node) && !EXPR_HAS_LOCATION (node))
 	{
-	set_expr_location_from_node (node, gnat_node);
+	  set_expr_location_from_node (node, gnat_node);
 	  set_end_locus_from_node (node, gnat_node);
 	}
       break;
