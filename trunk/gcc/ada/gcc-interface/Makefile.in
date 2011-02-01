@@ -1390,7 +1390,7 @@ ifeq ($(strip $(filter-out %86 netbsd%,$(arch) $(osys))),)
   a-numaux.adb<a-numaux-x86.adb \
   a-numaux.ads<a-numaux-x86.ads \
   g-bytswa.adb<g-bytswa-x86.adb \
-  g-socthi.adb<g-socthi-bsd.adb \
+  g-socthi.adb<g-socthi-netbsd.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-osinte.adb<s-osinte-netbsd.adb \
@@ -1405,6 +1405,7 @@ ifeq ($(strip $(filter-out %86 netbsd%,$(arch) $(osys))),)
     s-osprim.adb<s-osprim-bsd32.adb    
   else
     LIBGNAT_TARGET_PAIRS+= \
+    s-socthi.ads<s-socthi-netbsd6.ads \
     s-osinte.ads<s-osinte-netbsd6.ads \
     s-osprim.adb<s-osprim-bsdn6.adb
   endif
@@ -1433,7 +1434,7 @@ ifeq ($(strip $(filter-out x86_64 netbsd%,$(arch) $(osys))),)
   a-numaux.adb<a-numaux-x86.adb \
   a-numaux.ads<a-numaux-x86.ads \
   g-bytswa.adb<g-bytswa-x86.adb \
-  g-socthi.adb<g-socthi-bsd.adb \
+  g-socthi.adb<g-socthi-netbsd.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-osinte.adb<s-osinte-netbsd.adb \
@@ -1448,6 +1449,7 @@ ifeq ($(strip $(filter-out x86_64 netbsd%,$(arch) $(osys))),)
     s-osprim.adb<s-osprim-bsd32.adb    
   else
     LIBGNAT_TARGET_PAIRS+= \
+    s-socthi.ads<s-socthi-netbsd6.ads \
     s-osinte.ads<s-osinte-netbsd6.ads \
     s-osprim.adb<s-osprim-bsdn6.adb
   endif
