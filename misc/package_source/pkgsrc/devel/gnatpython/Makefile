@@ -14,14 +14,9 @@ LICENSE= 	gnu-gpl-v3
 SNAPSHOT=	20101207
 
 PKG_DESTDIR_SUPPORT=	user-destdir
+PYDISTUTILSPKG=		yes
+PYTHON_VERSIONS_ACCEPTED= 26 # uses "with ... as"
 
-do-build:
-	cd ${WRKSRC} && python2.6 ./setup.py build
-
-
-do-install:
-	cd ${WRKSRC} && python2.6 ./setup.py install
-
-
-.include "../../lang/python26/buildlink3.mk"
+.include "../../lang/python/application.mk"
+.include "../../lang/python/extension.mk"
 .include "../../mk/bsd.pkg.mk"
