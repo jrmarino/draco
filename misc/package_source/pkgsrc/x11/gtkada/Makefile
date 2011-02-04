@@ -23,26 +23,11 @@ MY_CONFIGURE_ENV+=	CC=gnatgcc
 CONFIGURE_ARGS+=	--disable-nls
 PKGCONFIG_OVERRIDE+=	projects/gtkada.pc.in
 
-
-GENERATE_PLIST=  cd ${PREFIX};
-GENERATE_PLIST+= ${FIND} bin/gtkada-config;
-GENERATE_PLIST+= ${FIND} bin/gtkada-dialog;
-GENERATE_PLIST+= ${FIND} lib/gnat/gtkada.gpr;
-GENERATE_PLIST+= ${FIND} lib/pkgconfig/gtkada.pc;
-GENERATE_PLIST+= ${FIND} share/gps/plug-ins/gtkada.xml;
-GENERATE_PLIST+= ${FIND} share/examples/gtkada/ -name \*    -type f | ${SORT} -dr;
-GENERATE_PLIST+= ${FIND} share/doc/gtkada/      -name \*    -type f | ${SORT} -dr;
-GENERATE_PLIST+= ${FIND} include/gtkada/        -name \*    -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} lib/gnat/gtkada/       -name \*    -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} lib/gtkada/            -name \* \( -type f -or -type l \) | ${SORT} -dr;
-
-
 post-wrapper:
 	# We disable at least the wrapper binaries on all GNAT AUX ports to
 	# avoid linkage and build problems.  In this case we need the wrappers
 	# for the sed transformation script.
 	${RM} ${WRKDIR}/.wrapper/bin/*
-
 
 do-configure:
 	# OpenGL, Gnome, and glade are normally detected automatically, but
@@ -50,11 +35,9 @@ do-configure:
 	# test everything, patch-ad just disables support for these features.
 	cd ${WRKSRC} && ${SETENV} ${MY_CONFIGURE_ENV} ./configure ${CONFIGURE_ARGS}
 
-
 post-install:
-	${TOUCH} ${PREFIX}/lib/gnat/gtkada/IGNORE.ME
-	${TOUCH} ${PREFIX}/share/doc/gtkada/gtkada_rm/IGNORE.ME
-
+	${TOUCH} ${DESTDIR}${PREFIX}/lib/gnat/gtkada/IGNORE.ME
+	${TOUCH} ${DESTDIR}${PREFIX}/share/doc/gtkada/gtkada_rm/IGNORE.ME
 
 # gtk2 includes atk, glib and pango among others
 .include "../../x11/gtk2/buildlink3.mk"
