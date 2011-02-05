@@ -1402,10 +1402,10 @@ ifeq ($(strip $(filter-out %86 netbsd%,$(arch) $(osys))),)
   ifeq ($(strip $(filter-out %86 netbsdelf5%,$(arch) $(osys))),)
     LIBGNAT_TARGET_PAIRS+= \
     s-osinte.ads<s-osinte-netbsd.ads \
-    s-osprim.adb<s-osprim-bsd32.adb    
+    s-osprim.adb<s-osprim-bsd32.adb
   else
     LIBGNAT_TARGET_PAIRS+= \
-    s-socthi.ads<s-socthi-netbsd6.ads \
+    g-socthi.ads<g-socthi-netbsd6.ads \
     s-osinte.ads<s-osinte-netbsd6.ads \
     s-osprim.adb<s-osprim-bsdn6.adb
   endif
@@ -1446,10 +1446,10 @@ ifeq ($(strip $(filter-out x86_64 netbsd%,$(arch) $(osys))),)
   ifeq ($(strip $(filter-out x86_64 netbsd5%,$(arch) $(osys))),)
     LIBGNAT_TARGET_PAIRS+= \
     s-osinte.ads<s-osinte-netbsd.ads \
-    s-osprim.adb<s-osprim-bsd32.adb    
+    s-osprim.adb<s-osprim-bsd32.adb
   else
     LIBGNAT_TARGET_PAIRS+= \
-    s-socthi.ads<s-socthi-netbsd6.ads \
+    g-socthi.ads<g-socthi-netbsd6.ads \
     s-osinte.ads<s-osinte-netbsd6.ads \
     s-osprim.adb<s-osprim-bsdn6.adb
   endif
@@ -2276,7 +2276,7 @@ ifeq ($(strip $(filter-out sh4% linux%,$(arch) $(osys))),)
   TOOLS_TARGET_PAIRS =  \
     mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
     indepsw.adb<indepsw-linux.adb
- 
+
   EXTRA_GNATRTL_TASKING_OBJS=s-linux.o
   EH_MECHANISM=-gcc
   MISCLIB=
@@ -2599,12 +2599,12 @@ common-tools:
 	$(GNATLINK) -v gnatclean -o ../../gnatclean$(exeext) \
 		--GCC="$(GCC_LINK)" $(TOOLS_LIBS)
 
-../../gnatsym$(exeext): 
+../../gnatsym$(exeext):
 	$(GNATMAKE) -c $(ADA_INCLUDES) gnatsym --GCC="$(CC) $(ALL_ADAFLAGS)"
 	$(GNATBIND) $(ADA_INCLUDES) $(GNATBIND_FLAGS) gnatsym
 	$(GNATLINK) -v gnatsym -o $@ --GCC="$(GCC_LINK)" $(TOOLS_LIBS)
 
-../../gnatdll$(exeext): 
+../../gnatdll$(exeext):
 	$(GNATMAKE) -c $(ADA_INCLUDES) gnatdll --GCC="$(CC) $(ALL_ADAFLAGS)"
 	$(GNATBIND) $(ADA_INCLUDES) $(GNATBIND_FLAGS) gnatdll
 	$(GNATLINK) -v gnatdll -o $@ --GCC="$(GCC_LINK)" $(TOOLS_LIBS)
