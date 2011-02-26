@@ -24,26 +24,19 @@ MY_CONFIGURE_ENV+=	CC=gnatgcc
 APP=			${PREFIX}/lib/gnat
 TPLS=			${PREFIX}/share/gps/templates
 
-
 .include "options.mk"
-
 
 # Do to hardcoding on GPS' part, can't get python to work yet
 CONFIGURE_ARGS+=	--with-gmp=${PREFIX}
 CONFIGURE_ARGS+=	--with-python=no
 CONFIGURE_ARGS+=	--enable-shared-python=yes
 
-
-
 do-wrapper:
 	# Disable problematic wrappers
 	@${ECHO} "###  Pkgsrc wrappers disabled  ###"
 
-
 do-configure:
 	cd ${WRKSRC} && ${SETENV} ${MY_CONFIGURE_ENV} ./configure ${CONFIGURE_ARGS}
-
-
 do-build:
 	cd ${WRKSRC} && ${SETENV} ADA_PROJECT_PATH=${APP} gmake default
 
@@ -54,16 +47,15 @@ do-build:
 #	cd ${WRKSRC}/scripts && ./testsuites clean
 
 post-install:
-	${TOUCH} ${PREFIX}/share/doc/gps/pdf/IGNORE.ME
-	${TOUCH} ${PREFIX}/share/doc/gps/txt/IGNORE.ME
-	${TOUCH} ${PREFIX}/share/examples/gps/tutorial/matrix_handling/IGNORE.ME
-	${TOUCH} ${TPLS}/ajis_hello/obj/IGNORE.ME
-	${TOUCH} ${TPLS}/ajis_hello/bin/IGNORE.ME
-	${TOUCH} ${TPLS}/ajis_hello/binding/IGNORE.ME
-	${TOUCH} ${TPLS}/gtkada_minimal/obj/IGNORE.ME
-	${TOUCH} ${TPLS}/simple_project/obj/IGNORE.ME
-	${STRIP} ${PREFIX}/bin/gps
-
+	${TOUCH} ${DESTDIR}${PREFIX}/share/doc/gps/pdf/IGNORE.ME
+	${TOUCH} ${DESTDIR}${PREFIX}/share/doc/gps/txt/IGNORE.ME
+	${TOUCH} ${DESTDIR}${PREFIX}/share/examples/gps/tutorial/matrix_handling/IGNORE.ME
+	${TOUCH} ${DESTDIR}${TPLS}/ajis_hello/obj/IGNORE.ME
+	${TOUCH} ${DESTDIR}${TPLS}/ajis_hello/bin/IGNORE.ME
+	${TOUCH} ${DESTDIR}${TPLS}/ajis_hello/binding/IGNORE.ME
+	${TOUCH} ${DESTDIR}${TPLS}/gtkada_minimal/obj/IGNORE.ME
+	${TOUCH} ${DESTDIR}${TPLS}/simple_project/obj/IGNORE.ME
+	${STRIP} ${DESTDIR}${PREFIX}/bin/gps
 
 .include "../../x11/gtkada/buildlink3.mk"
 .include "../../textproc/xmlada/buildlink3.mk"

@@ -1,4 +1,4 @@
-$NetBSD$
+$NetBSD: distinfo,v 1.1.1.1 2011/02/01 20:32:56 drochner Exp $
 
 SHA1 (gnat-aux-20110203.tar.bz2) = 2ddf38e21181649d68ca06deef5c1802828a80b0
 RMD160 (gnat-aux-20110203.tar.bz2) = 81e8c810278ac2c7d900fde28c70a5659f2dcfd0
