@@ -7,7 +7,7 @@
 
 PORTNAME=	aws
 PORTVERSION=	2.10.0
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	www
 MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 		http://dragonlace.mirrors.ada.cx/src/
@@ -141,9 +141,6 @@ PLIST_SUB+=	DEMO=""
 PLIST_SUB+=	DEMO="@comment "
 PLIST_SUB+=	LDAP="@comment "
 .endif
-
-pre-configure:
-	gprconfig --batch --config=Ada --config=C --config="Project File"
 
 do-configure:
 	cd ${WRKSRC} && ${SETENV} ${CONFIGURE_ENV} \
