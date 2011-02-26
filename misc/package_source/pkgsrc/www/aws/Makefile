@@ -2,6 +2,7 @@
 #
 
 DISTNAME=	aws-${AWS_VERSION}
+PKG_REVISION=	1
 CATEGORIES=	www
 MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 		http://dragonlace.mirrors.ada.cx/src/
@@ -25,9 +26,6 @@ post-wrapper:
 	# We disable at least the wrapper binaries on all GNAT AUX to
 	# avoid potential linkage problems
 	${RM} ${WRKDIR}/.wrapper/bin/*
-
-pre-configure:
-	gprconfig --batch --config=Ada --config=C --config="Project File"
 
 do-configure:
 	cd ${WRKSRC} && ${SETENV} CC=gnatgcc \
