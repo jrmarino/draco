@@ -2,12 +2,11 @@
 # Date created:                       12 December 2010
 # Whom:                               John Marino <draco@marino.st>
 #
-# $FreeBSD$
+# $FreeBSD: ports/www/aws/Makefile,v 1.1 2011/03/03 00:45:54 wen Exp $
 #
 
 PORTNAME=	aws
 PORTVERSION=	2.10.0
-PORTREVISION=	4
 CATEGORIES=	www
 MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 		http://dragonlace.mirrors.ada.cx/src/
@@ -15,14 +14,16 @@ MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 MAINTAINER=	draco@marino.st
 COMMENT=	Adacore Ada Web Server and framework
 
-BUILD_DEPENDS=  gnat-aux>=20101204:${PORTSDIR}/lang/gnat-aux
-BUILD_DEPENDS+= gprbuild-aux>=20101120:${PORTSDIR}/devel/gprbuild-aux
-BUILD_DEPENDS+= python26>=2.6:${PORTSDIR}/lang/python26
-BUILD_DEPENDS+= gnatpython>=20101207:${PORTSDIR}/devel/gnatpython
+BUILD_DEPENDS=	gnat-aux>=20101204:${PORTSDIR}/lang/gnat-aux \
+		gprbuild-aux>=20101120:${PORTSDIR}/devel/gprbuild-aux \
+		xmlada>=3.2:${PORTSDIR}/textproc/xmlada \
+		gnatpython>=20101207:${PORTSDIR}/devel/gnatpython
 
+USE_PYTHON=	yes
 USE_BZIP2=	yes
 GNU_CONFIGURE=	yes
 USE_GMAKE=	yes
+USE_LDCONFIG=	yes
 CC=		gnatgcc
 DOTBUILD=	release
 MAKE_ENV+=	ADA_PROJECT_PATH=${PREFIX}/lib/gnat
@@ -35,9 +36,9 @@ OPTIONS+=	LDAP  "Enable LDAP support" off
 OPTIONS+=	DSRT  "Disable shared runtime" off
 OPTIONS+=	RELOC "Build shared libraries (default is static)" off
 
-CONF_ARGS= 	PROCESSORS=1
+CONF_ARGS=	PROCESSORS=1
 CONF_ARGS+=	GCC=gnatgcc
-CONF_ARGS+=	PYTHON=python2.6
+CONF_ARGS+=	PYTHON=python${PYTHON_VER}
 
 .include <bsd.port.options.mk>
 
@@ -47,7 +48,7 @@ CONF_ARGS+=	PYTHON=python2.6
 
 .if defined(WITH_SSL)
 CONF_ARGS+=	SOCKET=openssl
-BUILD_DEPENDS+= openssl>=1:${PORTSDIR}/security/openssl
+BUILD_DEPENDS+=	openssl>=1:${PORTSDIR}/security/openssl
 RUN_DEPENDS+=	openssl>=1:${PORTSDIR}/security/openssl
 PLIST_SUB+=	YSSL=""
 PLIST_SUB+=	NSSL="@comment "
