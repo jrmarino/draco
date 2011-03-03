@@ -2,7 +2,7 @@
 # Date created:                       12 December 2010
 # Whom:                               John Marino <draco@marino.st>
 #
-# $FreeBSD$
+# $FreeBSD: ports/devel/gnatpython/Makefile,v 1.1 2011/02/17 09:25:51 wen Exp $
 #
 
 PORTNAME=	gnatpython
@@ -15,14 +15,10 @@ MAINTAINER=	draco@marino.st
 COMMENT=	Python package used in Ada testsuites
 
 SNAPSHOT=	20101207
-BUILD_DEPENDS=	python26>=2.6:${PORTSDIR}/lang/python26
-RUN_DEPENDS=	python26>=2.6:${PORTSDIR}/lang/python26
 USE_BZIP2=	yes
 
-do-build:
-	cd ${WRKSRC} && python2.6 ./setup.py build
-
-do-install:
-	cd ${WRKSRC} && python2.6 ./setup.py install
+USE_PYTHON=		2.6+
+USE_PYDISTUTILS=	yes
+PYDISTUTILS_PKGVERSION=	1.1
 
 .include <bsd.port.mk>
