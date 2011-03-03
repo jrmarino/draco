@@ -2,7 +2,7 @@
 # Date created:                       12 December 2010
 # Whom:                               John Marino <draco@marino.st>
 #
-# $FreeBSD$
+# $FreeBSD: ports/x11-toolkits/gtkada/Makefile,v 1.27 2011/03/02 00:29:44 wen Exp $
 #
 
 PORTNAME=	gtkada
@@ -21,6 +21,7 @@ RUN_DEPENDS+=	gtk>=2.22:${PORTSDIR}/x11-toolkits/gtk20
 GNU_CONFIGURE=	yes
 USE_GMAKE=	yes
 USE_BZIP2=	yes
+USE_LDCONFIG=	yes
 CC=		gnatgcc
 
 CONFIGURE_ARGS+=	--disable-nls
