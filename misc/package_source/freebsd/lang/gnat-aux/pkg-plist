@@ -1,4 +1,4 @@
-@comment $FreeBSD$
+@comment $FreeBSD
 bin/gnat
 bin/gnatbind
 bin/gnatchop
@@ -29,8 +29,8 @@ share/info/libquadmath.info
 lib/libgcc_s.so
 lib/libgcc_s.so.1
 lib/libiberty.a
-lib/libquadmath.a
 lib/libquadmath.la
+lib/libquadmath.a
 lib/libquadmath.so
 lib/libquadmath.so.0
 @dirrmtry share/info

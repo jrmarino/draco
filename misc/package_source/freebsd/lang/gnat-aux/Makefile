@@ -2,7 +2,7 @@
 # Date created:                       16 December 2010
 # Whom:                               John Marino <draco@marino.st>
 #
-# $FreeBSD$
+# $FreeBSD: ports/lang/gnat-aux/Makefile,v 1.1 2011/02/15 07:32:50 wen Exp $
 #
 
 PORTNAME=	gnat-aux
@@ -27,6 +27,7 @@ USE_BZIP2=		yes
 USE_ICONV=		yes
 USE_BISON=		build
 USE_PERL5_BUILD=	yes
+USE_LDCONFIG=		yes
 ALL_TARGET=		default
 
 SNAPSHOT=		20110107
@@ -93,8 +94,8 @@ DISTFILES=${PORTNAME}-${SNAPSHOT}.tar.bz2 ${BOOTSTRAP_COMPILER}
 
 # for port maintenance, uncomment to invoke "make makesum"
 # DISTFILES=${PORTNAME}-${SNAPSHOT}.tar.bz2 \
-#   gnat-bootstrap.i386.freebsd.tar.bz2 \
-#   gnat-bootstrap.x86_64.freebsd.tar.bz2
+#   gnat-aux-460.i386.freebsd.tar.bz2 \
+#   gnat-aux-460.x86_64.freebsd.tar.bz2
 
 # Establish Ada-aware compiler for use
 ADA_CONFIGURE_ENV=	CC=${FULL_GNATGCC} PATH=${FULL_PATH} CONFIG_SHELL=${SH}
@@ -141,7 +142,7 @@ do-configure:
 	cd ${GCC_WRKSRC}; contrib/gcc_update --touch
 	${RM} -f ${GCC_WRKSRC}/gcc/*/*.info*
 	${TOUCH} ${GCC_WRKSRC}/gcc/cstamp-h.in
-	
+
 	${MKDIR} ${WRKSRC}
 	cd ${WRKSRC} && ${SETENV} ${ADA_CONFIGURE_ENV} \
 	${SH} ${CONFIGURE_SCRIPT} ${CONFIGURE_ARGS}
