@@ -2,7 +2,7 @@
 # Date created:                       12 December 2010
 # Whom:                               John Marino <draco@marino.st>
 #
-# $FreeBSD$
+# $FreeBSD: ports/devel/gps/Makefile,v 1.1 2011/03/02 00:53:01 wen Exp $
 #
 
 PORTNAME=	gps
@@ -14,12 +14,12 @@ MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 MAINTAINER=	draco@marino.st
 COMMENT=	GNAT Programming Studio - IDE for Ada and many other languages
 
-BUILD_DEPENDS=	gnat-aux>20101204:${PORTSDIR}/lang/gnat-aux
-BUILD_DEPENDS+=	gtkada>=2.22:${PORTSDIR}/x11-toolkits/gtkada
-BUILD_DEPENDS+= gprbuild-aux>=20101120:${PORTSDIR}/devel/gprbuild-aux
-BUILD_DEPENDS+= xmlada>=3.2:${PORTSDIR}/textproc/xmlada
-LIB_DEPENDS+=	gmp.10:${PORTSDIR}/math/gmp
-RUN_DEPENDS+=	gtkada>=2.22:${PORTSDIR}/x11-toolkits/gtkada
+BUILD_DEPENDS=	gnat-aux>20101204:${PORTSDIR}/lang/gnat-aux \
+		gtkada>=2.22:${PORTSDIR}/x11-toolkits/gtkada \
+		xmlada>=3.2:${PORTSDIR}/textproc/xmlada \
+		gprbuild-aux>=20101120:${PORTSDIR}/devel/gprbuild-aux
+RUN_DEPENDS=	gtkada>=2.22:${PORTSDIR}/x11-toolkits/gtkada
+LIB_DEPENDS=	gmp.10:${PORTSDIR}/math/gmp
 
 GNU_CONFIGURE=		yes
 USE_GMAKE=		yes
