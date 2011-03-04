@@ -1,17 +1,17 @@
-$NetBSD$
+$NetBSD: distinfo,v 1.1.1.1 2011/02/01 20:32:56 drochner Exp $
 
-SHA1 (gnat-aux-20101221.tar.bz2) = 3ce50b3c9e0cb6892125a907e71af0385b34c2da
-RMD160 (gnat-aux-20101221.tar.bz2) = 2da36255076d842c281597376a4f4a76c90c5cd4
-Size (gnat-aux-20101221.tar.bz2) = 23194941 bytes
-SHA1 (gnat-aux-460.i386.dragonfly.tar.bz2) = 887c323de71e4bbc98e0864785b51548f60b63e9
-RMD160 (gnat-aux-460.i386.dragonfly.tar.bz2) = 7f1d7ba4ca87dcf0ffa877230bac72f55376a103
-Size (gnat-aux-460.i386.dragonfly.tar.bz2) = 28549010 bytes
-SHA1 (gnat-aux-460.i386.netbsd.tar.bz2) = cb5e27d0c7a467993eed2356f12c347fc794104a
-RMD160 (gnat-aux-460.i386.netbsd.tar.bz2) = dcddc89fb334560c9cee4389e949cf5d4157dfba
-Size (gnat-aux-460.i386.netbsd.tar.bz2) = 28077913 bytes
-SHA1 (gnat-aux-460.x86_64.dragonfly.tar.bz2) = aedaabe942c272fc6092d1ccaeb2272339561904
-RMD160 (gnat-aux-460.x86_64.dragonfly.tar.bz2) = e9a23a676bf8b137392d56c9bec666c3f637ed03
-Size (gnat-aux-460.x86_64.dragonfly.tar.bz2) = 31496009 bytes
-SHA1 (gnat-aux-460.x86_64.netbsd.tar.bz2) = 810bac1597afeeeb0cf74861fd1dd83f736dde67
-RMD160 (gnat-aux-460.x86_64.netbsd.tar.bz2) = f9b15f33e8f4a1acf14ed6aac65b6c6943e5c91f
-Size (gnat-aux-460.x86_64.netbsd.tar.bz2) = 30732429 bytes
+SHA1 (gnat-aux-20110203.tar.bz2) = 2ddf38e21181649d68ca06deef5c1802828a80b0
+RMD160 (gnat-aux-20110203.tar.bz2) = 81e8c810278ac2c7d900fde28c70a5659f2dcfd0
+Size (gnat-aux-20110203.tar.bz2) = 23282877 bytes
+SHA1 (gnat-bootstrap.i386.dragonfly.tar.bz2) = d7a8103243a2df3723d9d3c3ec0da9c3bb725214
+RMD160 (gnat-bootstrap.i386.dragonfly.tar.bz2) = 9e6fde444e0ed76ee404810af6d6b7eb48659c09
+Size (gnat-bootstrap.i386.dragonfly.tar.bz2) = 28205489 bytes
+SHA1 (gnat-bootstrap.i386.netbsd.tar.bz2) = 19b61f54fae8e237a4e678ff03f20f50b47db1df
+RMD160 (gnat-bootstrap.i386.netbsd.tar.bz2) = ade03f223b2af229daece20a749915f7da0eb0a6
+Size (gnat-bootstrap.i386.netbsd.tar.bz2) = 27654956 bytes
+SHA1 (gnat-bootstrap.x86_64.dragonfly.tar.bz2) = 77a637a497c61e4085de31b24a205f24b1776a15
+RMD160 (gnat-bootstrap.x86_64.dragonfly.tar.bz2) = 4d0eb7b8a5f901333f1ffd190a5bf72072b2b52e
+Size (gnat-bootstrap.x86_64.dragonfly.tar.bz2) = 31380342 bytes
+SHA1 (gnat-bootstrap.x86_64.netbsd.tar.bz2) = 84f0e9179998daa643046a5d139321c4130ea84d
+RMD160 (gnat-bootstrap.x86_64.netbsd.tar.bz2) = 0b2943349536c323a62b56dc05ff1fedd6d7e17a
+Size (gnat-bootstrap.x86_64.netbsd.tar.bz2) = 30572187 bytes

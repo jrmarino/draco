@@ -36,7 +36,7 @@ log () {
 }
 
 inform () {
-  printf "Exec    %7s" $@
+  printf "%04d    %7s" $1 $2
 }
 
 disinform () {
@@ -205,6 +205,18 @@ fi
 glob_countn=0
 glob_countok=0
 glob_countu=0
+countdown=0
+
+for chapter in $chapters; do
+   if [ -d $dir/tests/$chapter ]; then
+      cd $dir/tests/$chapter
+      ls *.a *.ada *.adt *.am *.dep 2> /dev/null | sed -e 's/\(.*\)\..*/\1/g' | \
+      cut -c1-7 | sort | uniq | comm -23 - $dir/support/norun.lst \
+        > $dir/tests/$chapter/${chapter}.lst
+      countn=`wc -l < $dir/tests/$chapter/${chapter}.lst`
+      countdown=`expr $countdown + $countn`
+   fi
+done
 
 for chapter in $chapters; do
    display Running chapter $chapter ...
@@ -215,10 +227,6 @@ for chapter in $chapters; do
       continue
    fi
 
-   cd $dir/tests/$chapter
-   ls *.a *.ada *.adt *.am *.dep 2> /dev/null | sed -e 's/\(.*\)\..*/\1/g' | \
-   cut -c1-7 | sort | uniq | comm -23 - $dir/support/norun.lst \
-     > $dir/tests/$chapter/${chapter}.lst 
    countn=`wc -l < $dir/tests/$chapter/${chapter}.lst`
    glob_countn=`expr $glob_countn + $countn`
    counti=0
@@ -241,7 +249,8 @@ for chapter in $chapters; do
       if [ $? -eq 0 ]; then
          extraflags="$extraflags -gnat95"
       fi
-      inform $i
+      inform $countdown $i
+      countdown=`expr $countdown - 1`
       test=$dir/tests/$chapter/$i
       mkdir $test && cd $test >> $dir/acats.log 2>&1
 

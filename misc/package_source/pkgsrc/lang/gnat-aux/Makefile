@@ -1,8 +1,7 @@
-# $NetBSD$
+# $NetBSD: Makefile,v 1.1.1.1 2011/02/01 20:32:56 drochner Exp $
 #
 
 DISTNAME=	gnat-aux-${SNAPSHOT}
-#PKGREVISION=
 CATEGORIES=	lang
 MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 		http://dragonlace.mirrors.ada.cx/src/
@@ -13,7 +12,7 @@ HOMEPAGE=	http://www.dragonlace.net/
 COMMENT=	GNAT Ada compiler based on GCC ${GCC_BRANCH}
 LICENSE=	gnu-gpl-v3 AND gnu-lgpl-v3
 
-SNAPSHOT=	20101221
+SNAPSHOT=	20110203
 GCC_BRANCH=     4.6
 GCC_POINT=      0
 
@@ -22,6 +21,7 @@ PKG_DESTDIR_SUPPORT=	user-destdir
 USE_TOOLS+=		gmake sed flex bison gm4 perl makeinfo bzip2
 USE_BUILTIN.iconv=	no
 BUILD_DEPENDS+=		dejagnu>=1.4:../../devel/dejagnu
+BUILD_DEPENDS+=		autoconf>=2.6:../../devel/autoconf
 
 .include "../../mk/bsd.prefs.mk"
 
@@ -29,9 +29,9 @@ BUILD_DEPENDS+=		dejagnu>=1.4:../../devel/dejagnu
 # and DragonFly i386/AMD64.  Actually bootstrap compilers for OpenBSD and
 # FreeBSD also exist, but native packages will be available for those ports.
 
-ONLY_FOR_PLATFORM=	DragonFly-*-*    \
-			NetBSD-5*-i386   \
-                        NetBSD-5*-x86_64
+ONLY_FOR_PLATFORM=	DragonFly-*-*        \
+                  	NetBSD-[5-9]*-i386   \
+                  	NetBSD-[5-9]*-x86_64
 
 BLD_TARGET=		${MACHINE_ARCH}-aux-${LOWER_OPSYS}${OS_VERSION}
 THREAD_MODEL=		posix
@@ -46,27 +46,33 @@ FULL_PATH=		/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:${PREFIX}/bin
 .if ${OPSYS} == "DragonFly"
 .if ${MACHINE_ARCH} == "i386"
    OS_LABEL4VERS=	[DragonFly]
-   BOOTSTRAP_TRIPLET=	i386-aux-dragonfly2.8/4.6.0
+   BOOTSTRAP_TRIPLET=	i386-bootstrap-dragonfly2.8/4.6.0
 .endif
 .if ${MACHINE_ARCH} == "x86_64"
    OS_LABEL4VERS=	[DragonFly64]
-   BOOTSTRAP_TRIPLET=	x86_64-aux-dragonfly2.8/4.6.0
+   BOOTSTRAP_TRIPLET=	x86_64-bootstrap-dragonfly2.8/4.6.0
 .endif
-BOOTSTRAP_COMPILER=	gnat-aux-460.${MACHINE_ARCH}.dragonfly.tar.bz2
+BOOTSTRAP_COMPILER=	gnat-bootstrap.${MACHINE_ARCH}.dragonfly.tar.bz2
 .endif
 
 
 .if ${OPSYS} == "NetBSD"
+.if empty(OS_VERSION:M5.99.*)
+   NSUFF=	${OS_VERSION}
+.else
+   NSUFF=	6.0_DEV
+.endif
 .if ${MACHINE_ARCH} == "i386"
    OS_LABEL4VERS=	[NetBSD]
-   BOOTSTRAP_TRIPLET=	i386-aux-netbsd5.1/4.6.0
-   BLD_TARGET=		${MACHINE_ARCH}-aux-netbsdelf${OS_VERSION}
+   BOOTSTRAP_TRIPLET=	i386-bootstrap-netbsdelf5.1/4.6.0
+   BLD_TARGET=		${MACHINE_ARCH}-aux-netbsdelf${NSUFF}
 .endif
 .if ${MACHINE_ARCH} == "x86_64"
    OS_LABEL4VERS=	[NetBSD64]
-   BOOTSTRAP_TRIPLET=	x86_64-aux-netbsd5.1/4.6.0
+   BOOTSTRAP_TRIPLET=	x86_64-bootstrap-netbsd5.1/4.6.0
+   BLD_TARGET=		${MACHINE_ARCH}-aux-netbsd${NSUFF}
 .endif
-BOOTSTRAP_COMPILER=	gnat-aux-460.${MACHINE_ARCH}.netbsd.tar.bz2
+BOOTSTRAP_COMPILER=	gnat-bootstrap.${MACHINE_ARCH}.netbsd.tar.bz2
 .endif
 
 
@@ -90,15 +96,6 @@ LEPATH=			libexec/gcc/${BLD_TARGET}/${GCC_BRANCH}.${GCC_POINT}
 REVFILE= 		${GCC_WRKSRC}/gcc/REVISION
 LELIST=			cc1 collect2 gnat1 lto1
 
-
-# The bootstrap compiler is at least 28M these days.  Additionally, we would
-# prefer to use a native Ada-capable compiler if it were available for two
-# reasons:
-#    1) It takes a long time to download a file this big and
-#    2) Over time, the libraries evolve, breaking the bootstrap
-# For the latter reason, a symbolic link may have to be established by this
-# script if a latter version of the library is available, but only if the
-# bootstrap is determined necessary.
 
 
 # testing if gnatgcc, gnatlink, gnatbind and gnatmake are in standard location
@@ -125,15 +122,16 @@ FULL_PATH=${BOOTSTRAP_PREFIX}/bin:/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:$
 
 # For pkg maintenance, uncomment to invoke "bmake mdi"
 #DISTFILES=${DISTNAME}${EXTRACT_SUFX} \
-#  gnat-aux-460.i386.dragonfly.tar.bz2 \
-#  gnat-aux-460.x86_64.dragonfly.tar.bz2 \
-#  gnat-aux-460.i386.netbsd.tar.bz2 \
-#  gnat-aux-460.x86_64.netbsd.tar.bz2
+#  gnat-bootstrap.i386.dragonfly.tar.bz2 \
+#  gnat-bootstrap.x86_64.dragonfly.tar.bz2 \
+#  gnat-bootstrap.i386.netbsd.tar.bz2 \
+#  gnat-bootstrap.x86_64.netbsd.tar.bz2
 
 
 # establish ada-aware compiler for use
 MY_CONFIGURE_ENV=	CC=${FULL_GNATGCC} PATH=${FULL_PATH} CONFIG_SHELL=${CONFIG_SHELL}
 MY_MAKE_ENV=		PATH=${FULL_PATH}
+MY_MAKE_ENV+=		LD_LIBRARY_PATH=${WRKSRC}/gcc
 
 
 # The standard configuration options
@@ -149,6 +147,7 @@ CONFIGURE_ARGS+=	--with-libiconv-prefix=${PKG_PREFIX}
 CONFIGURE_ARGS+=	--enable-shared
 CONFIGURE_ARGS+=	--enable-threads=${THREAD_MODEL}
 CONFIGURE_ARGS+=	--disable-bootstrap
+CONFIGURE_ARGS+=	--disable-libmudflap
 CONFIGURE_ARGS+=	--disable-libgomp
 CONFIGURE_ARGS+=	--disable-libssp
 CONFIGURE_ARGS+=	--disable-nls
@@ -159,11 +158,15 @@ MAKE_ARGS=		MAKEINFOFLAGS="--no-split"
 
 
 # Automatic package list generation
+# lib/libquadmath.* will have to be added if __float128 support is added
+# Alternatively, libquadmath support could be intentionally disabled.
 GENERATE_PLIST=  cd ${PREFIX};
 GENERATE_PLIST+= ${FIND} bin/gnat* | ${SORT};
 GENERATE_PLIST+= ${FIND} bin/${BLD_TARGET}* | ${SORT};
-GENERATE_PLIST+= ${FIND} ${LPATH}/*     -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} ${LEPATH}/*    -type f | ${SORT};
+GENERATE_PLIST+= ${FIND} lib/libiberty.a;
+GENERATE_PLIST+= ${FIND} lib/libgcc_s.* \( -type f -or -type l \) | ${SORT};
+GENERATE_PLIST+= ${FIND} ${LPATH}/*     \( -type f -or -type l \) | ${SORT} -dr;
+GENERATE_PLIST+= ${FIND} ${LEPATH}/*    -type f | ${SORT} -dr;
 GENERATE_PLIST+= ${FIND} ${SINFO}/gnat* -type f | ${SORT};
 GENERATE_PLIST+= ${FIND} ${SMAN1}/gnat* -type f | ${SORT};
 .for k in ${MAN7}
@@ -182,21 +185,15 @@ post-extract:
 	mv ${BOOTSTRAP_PREFIX}/../lib ${BOOTSTRAP_PREFIX}
 	mv ${BOOTSTRAP_PREFIX}/../libexec ${BOOTSTRAP_PREFIX}
 
-	# Protect bootstrap compiler from future breakage
-	# gmp, mpc, mpfr, and iconv should already be installed at this point
-	# Hardlinks are used to protect against dangling references
-	# which confuse makefiles
-.if exists(/usr/pkg/lib/libmpc.so) && !exists(/usr/pkg/lib/libmpc.so.2)
-	$(LN) /usr/pkg/lib/libmpc.so /usr/pkg/lib/libmpc.so.2
-.endif
-.if exists(/usr/pkg/lib/libgmp.so) && !exists(/usr/pkg/lib/libgmp.so.10)
-	$(LN) /usr/pkg/lib/libgmp.so /usr/pkg/lib/libgmp.so.10
-.endif
-.if exists(/usr/pkg/lib/libmpfr.so) && !exists(/usr/pkg/lib/libmpfr.so.4)
-	$(LN) /usr/pkg/lib/libmpfr.so /usr/pkg/lib/libmpfr.so.4
-.endif
-.if exists(/usr/pkg/lib/libiconv.so) && !exists(/usr/pkg/lib/libiconv.so.2)
-	$(LN) /usr/pkg/lib/libiconv.so /usr/pkg/lib/libiconv.so.2
+	# Bootstrap compiler has statically linked z, gmp, mpc, mpfr and iconv
+	# The only shared lib is libc.so.7, so it should work for a long time.
+	# It is at least 28MB and doesn't come with shared libraries.
+
+.if (${OPSYS} == "NetBSD") && (empty(OS_VERSION:M[5].[0-8]*))
+	# Bootstrap compiler malfunctions in NetBSD 6 unless include-fixed
+	# directory is removed first.
+
+	${RM} -rf ${BOOTSTRAP_PREFIX}/lib/gcc/${BOOTSTRAP_TRIPLET}/include-fixed
 .endif
 .endif
 
@@ -226,9 +223,6 @@ do-test: build
 
 do-install:
 	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} install
-
-
-strip-exec:
 	${STRIP} ${PREFIX}/bin/gnat*
 .for k in ${LELIST}
 	${STRIP} ${PREFIX}/${LEPATH}/${k}

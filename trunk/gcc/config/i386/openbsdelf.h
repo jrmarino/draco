@@ -1,7 +1,7 @@
 /* Configuration for an OpenBSD i386 target.
 
-   Copyright (C) 2005, 2007 Free Software Foundation, Inc.
-   Copyright (C) 2010 John Marino <draco@marino.st>
+   Copyright (C) 2005, 2007, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011 John Marino <www.dragonlace.net>
 
 This file is part of GCC.
 
@@ -19,8 +19,8 @@ You should have received a copy of the GNU General Public License
 along with GCC; see the file COPYING3.  If not see
 <http://www.gnu.org/licenses/>.  */
 
-/* This gets defined in tm.h->linux.h->svr4.h, and keeps us from using
-   libraries compiled with the native cc, so undef it. */
+/* This keeps us from using libraries compiled with the native cc, so
+   undef it. */
 #undef NO_DOLLAR_IN_LABEL
 
 /* Override the default comment-starter of "/".  */
@@ -85,7 +85,9 @@ along with GCC; see the file COPYING3.  If not see
    These have to be defined to get PIC code correct.  */
    
 /* Assembler format: dispatch tables.  */
+
 /* Assembler format: sections.  */
+
 /* Stack & calling: aggregate returns.  */
 
 /* Don't default to pcc-struct-return, because gcc is the only compiler, and
@@ -111,18 +113,24 @@ along with GCC; see the file COPYING3.  If not see
   fputs (flag_pic ? "\tcall __mcount@PLT\n": "\tcall __mcount\n", FILE);
 
 /* Assembler format: exception region output.  */
+
+/* our configuration still doesn't handle dwarf2 correctly */
+#define DWARF2_UNWIND_INFO 0
+
 /* Assembler format: alignment output.  */
+
 /* Note that we pick up ASM_OUTPUT_MAX_SKIP_ALIGN from i386/gas.h */
+
 /* Note that we pick up ASM_OUTPUT_MI_THUNK from unix.h.  */
 
 #undef LINK_SPEC
 #define LINK_SPEC \
-  "%{!shared:%{!nostdlib:%{!r*:%{!e*:-e __start}}}} \
+  "%{!shared:%{!nostdlib:%{!r:%{!e*:-e __start}}}} \
    %{shared:-shared} %{R*} \
    %{static:-Bstatic} \
    %{!static:-Bdynamic} \
    %{assert*} \
-   %{!dynamic-linker:-dynamic-linker /usr/libexec/ld.so}"
+   -dynamic-linker /usr/libexec/ld.so"
 
 #define OBSD_HAS_CORRECT_SPECS
 
@@ -140,4 +148,3 @@ along with GCC; see the file COPYING3.  If not see
    Not required until OpenBSD changes from SJLJ to ZCX exceptions 
    When that happens, remove comments from first line and delete second line. */
 /*#define MD_UNWIND_SUPPORT "config/i386/openbsd-unwind32.h" */
-#define DWARF2_UNWIND_INFO 0

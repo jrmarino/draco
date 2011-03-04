@@ -20,13 +20,33 @@ CONFIGURE_ARGS+=	PYTHON=python2.6
 DOTBUILD=		release
 DEMO_DIRS=
 
+
+# The system libgcc is from version 4.1 which doesn't include the symbol
+# _Unwind_GetIPInfo.  If AWS uses the system zlib or if it's configured to use
+# SSL the search path /usr/lib is inserted in the gnatmake/gprbuild
+# instructions and the system libgcc.a is picked up instead of
+# /usr/pkg/lib/libgcc.a.  This is a bug confirmed by Adacore and an internal
+# bug report has been generated.  In the meantime, this means AWS can't be
+# configured for HTTPS on NetBSD, and that zlib must be built from scratch on
+# NetBSD until NetBSD upgrades it's libgcc or until a new GNAT and GPRBuild
+# are delivered that don't have this bug.
+
+.if $(OPSYS) == "NetBSD"
+CONFIGURE_ARGS+=	ZLIB=false
+.endif
+
+
 ###################
 ##  SSL Support  ##
 ###################
 
 .if !empty(PKG_OPTIONS:Mssl)
+.if $(OPSYS) == "NetBSD"
+MESSAGE_SRC=	MESSAGE_NETBSD_SSL
+.else
 .include "../../security/openssl/buildlink3.mk"
 CONFIGURE_ARGS+= SOCKET=openssl
+.endif
 .endif
 
 

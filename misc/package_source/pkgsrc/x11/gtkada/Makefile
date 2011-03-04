@@ -18,23 +18,10 @@ GNU_CONFIGURE=		yes
 USE_TOOLS+=		gmake pkg-config
 
 FULL_PATH=		/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:${PREFIX}/bin:${PREFIX}/lib/pkgconfig
-MY_CONFIGURE_ENV+=	PATH=${FULL_PATH}
+MY_CONFIGURE_ENV=	PATH=${FULL_PATH}
+MY_CONFIGURE_ENV+=	CC=gnatgcc
 CONFIGURE_ARGS+=	--disable-nls
 PKGCONFIG_OVERRIDE+=	projects/gtkada.pc.in
-
-
-GENERATE_PLIST=  cd ${PREFIX};
-GENERATE_PLIST+= ${FIND} bin/gtkada-config;
-GENERATE_PLIST+= ${FIND} bin/gtkada-dialog;
-GENERATE_PLIST+= ${FIND} lib/gnat/gtkada.gpr;
-GENERATE_PLIST+= ${FIND} lib/pkgconfig/gtkada.pc;
-GENERATE_PLIST+= ${FIND} share/gps/plug-ins/gtkada.xml;
-GENERATE_PLIST+= ${FIND} share/examples/gtkada/ -name \*    -type f | ${SORT} -dr;
-GENERATE_PLIST+= ${FIND} share/doc/gtkada/      -name \*    -type f | ${SORT} -dr;
-GENERATE_PLIST+= ${FIND} include/gtkada/        -name \*    -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} lib/gnat/gtkada/       -name \*    -type f | ${SORT};
-GENERATE_PLIST+= ${FIND} lib/gtkada/            -name \* \( -type f -or -type l \) | ${SORT} -dr;
-
 
 post-wrapper:
 	# We disable at least the wrapper binaries on all GNAT AUX ports to
@@ -42,21 +29,15 @@ post-wrapper:
 	# for the sed transformation script.
 	${RM} ${WRKDIR}/.wrapper/bin/*
 
-
-pre-configure:
-	# explicitly request GNAT-AUX compiler
-	# It is done here to fool tough pkgsrc compiler checks
-	${SETENV} CC=gnatgcc
-
-
 do-configure:
+	# OpenGL, Gnome, and glade are normally detected automatically, but
+	# at least with OpenGL, there is an installation bug.  Rather than
+	# test everything, patch-ad just disables support for these features.
 	cd ${WRKSRC} && ${SETENV} ${MY_CONFIGURE_ENV} ./configure ${CONFIGURE_ARGS}
 
-
 post-install:
-	${TOUCH} ${PREFIX}/lib/gnat/gtkada/IGNORE.ME
-	${TOUCH} ${PREFIX}/share/doc/gtkada/gtkada_rm/IGNORE.ME
-
+	${TOUCH} ${DESTDIR}${PREFIX}/lib/gnat/gtkada/IGNORE.ME
+	${TOUCH} ${DESTDIR}${PREFIX}/share/doc/gtkada/gtkada_rm/IGNORE.ME
 
 # gtk2 includes atk, glib and pango among others
 .include "../../x11/gtk2/buildlink3.mk"

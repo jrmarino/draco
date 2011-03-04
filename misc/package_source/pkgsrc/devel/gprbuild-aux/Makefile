@@ -18,13 +18,7 @@ GNU_CONFIGURE=		yes
 USE_LANGUAGES=		c # Ada is not option.
 USE_TOOLS=		gmake
 MAKE_ENV+=		ADA_PROJECT_PATH=${PREFIX}/lib/gnat
-
-
-# Note: share/examples/gprbuild has several empty directories and due to this
-# the automatic pruning doesn't work during the deinstall phase.  There is no
-# post-deinstall target either so it can't be cleaned up via brute force.
-# Looks like a weakness of pkgsrc to not recognize this likely common case.
-
+#CONFIGURE_ENV+=		CC=gnatgcc
 
 # no special configuration options necessary
 pre-configure:
@@ -32,12 +26,9 @@ pre-configure:
 	# It is done here to fool tough pkgsrc compiler checks
 	${SETENV} CC=gnatgcc
 
-
 do-wrapper:
 	# GPRbuild has a linkage problem while using standard wrappers
 	${ECHO} "##  Wrappers are intentionally disabled  ##"
-
-
 
 .include "../../textproc/xmlada/buildlink3.mk"
 .include "../../mk/bsd.pkg.mk"

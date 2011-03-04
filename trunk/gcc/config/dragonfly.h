@@ -1,6 +1,6 @@
 /* Base configuration file for all DragonFly targets.
    Copyright (C) 1999, 2000, 2001, 2007, 2008 Free Software Foundation, Inc.
-   Copyright (C) 2010 John R. Marino <draco@marino.st>
+   Copyright (C) 2010, 2011 John R. Marino <www.dragonlace.net>
 
 This file is part of GCC.
 
@@ -48,10 +48,8 @@ along with GCC; see the file COPYING3.  If not see
   while (0)
 
 #undef  CPP_SPEC
-#define CPP_SPEC "           \
-  %(cpp_cpu)                 \
-  %(cpp_arch)	             \
-  %{posix:-D_POSIX_SOURCE}"
+#define CPP_SPEC \
+ "%(cpp_cpu) %(cpp_arch) %{posix:-D_POSIX_SOURCE}"
 
 #undef  STARTFILE_SPEC
 #define STARTFILE_SPEC	\
@@ -62,48 +60,40 @@ along with GCC; see the file COPYING3.  If not see
    crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
 
 #undef  ENDFILE_SPEC
-#define ENDFILE_SPEC	\
+#define ENDFILE_SPEC \
   "%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
 
 #undef  LIB_SPEC
-#define LIB_SPEC "        \
-  %{pthread:-lpthread}    \
-  -lc                     \
-  "
+#define LIB_SPEC \
+  "%{pthread:-lpthread} -lc"
 
 /* Provide a LINK_SPEC appropriate for DragonFly.  Here we provide support
    for the special GCC options -static and -shared, which allow us to
    link things in one of these three modes by applying the appropriate
-   combinations of options at link-time. We like to support here for
-   as many of the other GNU linker options as possible. But I don't
-   have the time to search for those flags. I am sure how to add
-   support for -soname shared_object_name. H.J.
-
-   I took out %{v:%{!V:-V}}. It is too much :-(. They can use
-   -Wl,-V.
+   combinations of options at link-time.
 
    When the -shared link option is used a final link is not being
    done.  */
 
 #undef	LINK_SPEC
-#define	LINK_SPEC "\
-  %{p:%nconsider using `-pg' instead of `-p' with gprof(1)} \
+#define	LINK_SPEC \
+ "%{p:%nconsider using '-pg' instead of '-p' with gprof(1)} \
   %{v:-V} \
   %{assert*} %{R*} %{rpath*} %{defsym*} \
   %{shared:-Bshareable %{h*} %{soname*}} \
     %{!shared: \
       %{!static: \
         %{rdynamic:-export-dynamic} \
-        %{!dynamic-linker:-dynamic-linker %(dfbsd_dynamic_linker) }} \
+        -dynamic-linker %(dfbsd_dynamic_linker) } \
     %{static:-Bstatic}} \
   %{symbolic:-Bsymbolic}"
 
-#define LINK_LIBGCC_SPEC "%D"
-
-#define	DFBSD_DYNAMIC_LINKER		"/usr/libexec/ld-elf.so.2"
+#define	DFBSD_DYNAMIC_LINKER \
+  "/usr/libexec/ld-elf.so.2"
 
 #if defined(HAVE_LD_EH_FRAME_HDR)
-#define LINK_EH_SPEC "%{!static:--eh-frame-hdr} "
+#define LINK_EH_SPEC \
+  "%{!static:--eh-frame-hdr}"
 #endif
 
 /* Use --as-needed -lgcc_s for eh support.  */

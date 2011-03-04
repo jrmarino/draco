@@ -2,7 +2,7 @@
 # Date created:                       12 December 2010
 # Whom:                               John Marino <draco@marino.st>
 #
-# $FreeBSD$
+# $FreeBSD: ports/devel/gprbuild-aux/Makefile,v 1.1 2011/03/01 09:44:47 wen Exp $
 #
 
 PORTNAME=	gprbuild-aux
@@ -17,6 +17,8 @@ COMMENT=	Adacore multi-language software build tool
 BUILD_DEPENDS=	gnat-aux>=20101204:${PORTSDIR}/lang/gnat-aux
 BUILD_DEPENDS+=	xmlada>=3.2:${PORTSDIR}/textproc/xmlada
 
+EXAMPLESDIR=	share/examples/gprbuild
+DOCSDIR=	share/doc/gprbuild
 SNAPSHOT=	20101120
 GNU_CONFIGURE=	yes
 USE_GMAKE=	yes

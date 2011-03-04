@@ -27,6 +27,7 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
+ * Copyright (C) 2011 John Marino <www.dragonlace.net>                      *
  ****************************************************************************/
 
 #ifdef IN_RTS
@@ -42,7 +43,8 @@
 
 /* Don't use macros on GNU/Linux since they cause incompatible changes between
    glibc 2.0 and 2.1 */
-#ifdef linux
+/* Android is The exception because it uses the BIONIC library */
+#if defined(linux) && !defined(__ANDROID__)
 #undef putchar
 #undef getchar
 #undef fputc

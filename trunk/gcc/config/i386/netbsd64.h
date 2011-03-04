@@ -2,7 +2,7 @@
    for x86-64/ELF NetBSD systems.
    Copyright (C) 2002, 2004, 2007 Free Software Foundation, Inc.
    Contributed by Wasabi Systems, Inc.
-   Copyright (C) 2010 John Marino <draco@marino.st>
+   Copyright (C) 2010, 2011 John Marino <www.dragonlace.net>
 
 This file is part of GCC.
 
@@ -77,3 +77,7 @@ along with GCC; see the file COPYING3.  If not see
 #define STACK_CHECK_STATIC_BUILTIN 1
 
 #define MD_UNWIND_SUPPORT "config/i386/netbsd-unwind.h"
+
+#if defined(HAVE_LD_EH_FRAME_HDR)
+#define LINK_EH_SPEC "%{!static:--eh-frame-hdr} "
+#endif

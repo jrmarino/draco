@@ -27,7 +27,7 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
- * Copyright (C) 2010 John Marino <draco@marino.st>                         *
+ * Copyright (C) 2010, 2011 John Marino <www.dragonlace.net>                *
  ****************************************************************************/
 
 /*  This unit contains initialization circuits that are system dependent.
@@ -520,7 +520,7 @@ __gnat_install_handler (void)
 /* GNU/Linux Section */
 /*********************/
 
-#elif defined (linux)
+#elif defined (linux) && !defined(__ANDROID__)
 
 #include <signal.h>
 
@@ -1790,6 +1790,77 @@ __gnat_install_handler (void)
 
   __gnat_handler_installed = 1;
 }
+
+/*******************/
+/* Android Section */
+/*******************/
+
+#elif defined(__ANDROID__)
+
+#include <signal.h>
+
+static void
+__gnat_error_handler (int             sig,
+		      struct siginfo *si          ATTRIBUTE_UNUSED,
+		      void           *ucontext    ATTRIBUTE_UNUSED)
+{
+  struct Exception_Data *exception;
+  const char *msg;
+
+  switch (sig)
+    {
+    case SIGFPE:
+      exception = &constraint_error;
+      msg = "SIGFPE";
+      break;
+
+    case SIGILL:
+      exception = &constraint_error;
+      msg = "SIGILL";
+      break;
+      
+    case SIGSEGV:
+      exception = &storage_error;
+      msg = "stack overflow or erroneous memory access";
+      break;
+
+    case SIGBUS:
+      exception = &constraint_error;
+      msg = "SIGBUS";
+      break;
+
+    default:
+      exception = &program_error;
+      msg = "unhandled signal";
+    }
+
+  Raise_From_Signal_Handler (exception, msg);
+}
+
+void
+__gnat_install_handler (void)
+{
+  struct sigaction act;
+
+  act.sa_sigaction = __gnat_error_handler;
+  act.sa_flags = SA_NODEFER | SA_RESTART | SA_SIGINFO;
+  sigemptyset (&act.sa_mask);
+
+  /* Do not install handlers if interrupt state is "System".  */
+  if (__gnat_get_interrupt_state (SIGABRT) != 's') 
+    sigaction (SIGABRT, &act, NULL);
+  if (__gnat_get_interrupt_state (SIGFPE)  != 's')
+    sigaction (SIGFPE,  &act, NULL);
+  if (__gnat_get_interrupt_state (SIGILL)  != 's')
+    sigaction (SIGILL,  &act, NULL);
+  if (__gnat_get_interrupt_state (SIGBUS)  != 's')
+    sigaction (SIGBUS,  &act, NULL);
+  if (__gnat_get_interrupt_state (SIGSEGV) != 's')
+    sigaction (SIGSEGV, &act, NULL);
+
+  __gnat_handler_installed = 1;
+}
+
 
 /*******************/
 /* VxWorks Section */

@@ -3071,9 +3071,9 @@ call_to_gnu (Node_Id gnat_node, tree *gnu_result_type_p, tree gnu_target)
 	      = convert (DECL_ARG_TYPE (gnu_formal), integer_zero_node);
 	  else
 	    gnu_actual = build_unary_op (ADDR_EXPR, NULL_TREE,
-					 fill_vms_descriptor (gnu_actual,
-							      gnat_formal,
-							      gnat_actual));
+					 fill_vms_descriptor
+					 (TREE_TYPE (TREE_TYPE (gnu_formal)),
+					  gnu_actual, gnat_actual));
 	}
       else
 	{
@@ -7753,7 +7753,7 @@ set_gnu_expr_location_from_node (tree node, Node_Id gnat_node)
     default:
       if (!REFERENCE_CLASS_P (node) && !EXPR_HAS_LOCATION (node))
 	{
-	set_expr_location_from_node (node, gnat_node);
+	  set_expr_location_from_node (node, gnat_node);
 	  set_end_locus_from_node (node, gnat_node);
 	}
       break;

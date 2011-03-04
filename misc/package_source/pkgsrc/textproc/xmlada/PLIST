@@ -12,6 +12,16 @@ lib/gnat/xmlada/xmlada_input_sources.lgpr
 lib/gnat/xmlada/xmlada_sax.lgpr
 lib/gnat/xmlada/xmlada_schema.lgpr
 lib/gnat/xmlada/xmlada_unicode.lgpr
+lib/libxmlada_dom.so.4
+lib/libxmlada_dom.so.4.1w
+lib/libxmlada_input_sources.so.4
+lib/libxmlada_input_sources.so.4.1w
+lib/libxmlada_sax.so.4
+lib/libxmlada_sax.so.4.1w
+lib/libxmlada_schema.so.4
+lib/libxmlada_schema.so.4.1w
+lib/libxmlada_unicode.so.4
+lib/libxmlada_unicode.so.4.1w
 lib/xmlada/static/dom-core-attrs.ali
 lib/xmlada/static/dom-core-cdata_sections.ali
 lib/xmlada/static/dom-core-character_datas.ali

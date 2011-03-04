@@ -1,6 +1,9 @@
-@comment $FreeBSD
 bin/awsres
 bin/aws_password
+bin/templates2ada
+bin/templatespp
+bin/webxref
+bin/wsdl2aws
 lib/aws/native/static/zlib-thin.ali
 lib/aws/native/static/zlib-streams.ali
 lib/aws/native/static/zlib.ali
@@ -653,133 +656,135 @@ include/aws/aws-client.adb
 include/aws/aws-attachments.ads
 include/aws/aws-attachments.adb
 include/aws/aws.ads
-share/doc/aws/aws.html
-share/doc/aws/aws.info
-share/doc/aws/aws.txt
-share/doc/aws/templates_parser.html
-share/doc/aws/templates_parser.info
-share/doc/aws/templates_parser.txt
-share/examples/aws/web_elements/rounded_boxes/rounded_boxes.tcss
-share/examples/aws/web_elements/rounded_boxes/rcorner.gif
-share/examples/aws/web_elements/readme.txt
-share/examples/aws/web_elements/notebook/notebook.thtml
-share/examples/aws/web_elements/notebook/cookies.js
-share/examples/aws/web_elements/mime.types
-share/examples/aws/web_elements/menu_css/menu.tcss
-share/examples/aws/web_elements/menu_css/arrow.png
-share/examples/aws/web_elements/javascripts/scriptaculous.js
-share/examples/aws/web_elements/javascripts/prototype.js
-share/examples/aws/web_elements/javascripts/effects.js
-share/examples/aws/web_elements/javascripts/dragdrop.js
-share/examples/aws/web_elements/javascripts/cookies.js
-share/examples/aws/web_elements/javascripts/behaviour.js
-share/examples/aws/web_elements/javascripts/aws.tjs
-share/examples/aws/web_elements/javascripts/aws_sortable.tjs
-share/examples/aws/web_elements/javascripts/aws_kernel.tjs
-share/examples/aws/web_elements/javascripts/aws_func_xml.tjs
-share/examples/aws/web_elements/javascripts/aws_func_replace.tjs
-share/examples/aws/web_elements/javascripts/aws_func_clear.tjs
-share/examples/aws/web_elements/javascripts/aws_action_xml.tjs
-share/examples/aws/web_elements/javascripts/aws_action_replace.tjs
-share/examples/aws/web_elements/javascripts/aws_action_js.tjs
-share/examples/aws/web_elements/javascripts/aws_action_clear.tjs
-share/examples/aws/web_elements/javascripts/ajax_api.tjs
-share/examples/aws/web_elements/icons/uu.gif
-share/examples/aws/web_elements/icons/unknown.gif
-share/examples/aws/web_elements/icons/text.gif
-share/examples/aws/web_elements/icons/tex.gif
-share/examples/aws/web_elements/icons/tar.gif
-share/examples/aws/web_elements/icons/sound2.gif
-share/examples/aws/web_elements/icons/sound1.gif
-share/examples/aws/web_elements/icons/script.gif
-share/examples/aws/web_elements/icons/rcorner.gif
-share/examples/aws/web_elements/icons/quill.gif
-share/examples/aws/web_elements/icons/ps.gif
-share/examples/aws/web_elements/icons/p.gif
-share/examples/aws/web_elements/icons/pdf.gif
-share/examples/aws/web_elements/icons/patch.gif
-share/examples/aws/web_elements/icons/movie.gif
-share/examples/aws/web_elements/icons/layout.gif
-share/examples/aws/web_elements/icons/image3.gif
-share/examples/aws/web_elements/icons/image2.gif
-share/examples/aws/web_elements/icons/image1.gif
-share/examples/aws/web_elements/icons/folder.open.gif
-share/examples/aws/web_elements/icons/folder.gif
-share/examples/aws/web_elements/icons/file_sec.gif
-share/examples/aws/web_elements/icons/file_red.gif
-share/examples/aws/web_elements/icons/file.gif
-share/examples/aws/web_elements/icons/f.gif
-share/examples/aws/web_elements/icons/dvi.gif
-share/examples/aws/web_elements/icons/dirup.gif
-share/examples/aws/web_elements/icons/compressed.gif
-share/examples/aws/web_elements/icons/c.gif
-share/examples/aws/web_elements/icons/break.gif
-share/examples/aws/web_elements/icons/bomb.gif
-share/examples/aws/web_elements/icons/binhex.gif
-share/examples/aws/web_elements/icons/binary.gif
-share/examples/aws/web_elements/icons/back.gif
-share/examples/aws/web_elements/icons/arrow.png
-share/examples/aws/web_elements/icons/alert.red.gif
-share/examples/aws/web_elements/icons/alert.black.gif
-share/examples/aws/web_elements/icons/ads.gif
-share/examples/aws/web_elements/icons/adb.gif
-share/examples/aws/web_elements/icons/ada.gif
-share/examples/aws/templates/wm_summary.thtml
-share/examples/aws/templates/wm_reply.thtml
-share/examples/aws/templates/wm_message.thtml
-share/examples/aws/templates/wm_login.html
-share/examples/aws/templates/wm_error.thtml
-share/examples/aws/templates/templates.tads
-share/examples/aws/images/aws_up.png
-share/examples/aws/images/aws_logo.png
-share/examples/aws/images/aws_down.png
-%%DEMO%%share/examples/aws/demos/agent
-%%DEMO%%share/examples/aws/demos/auth
-%%DEMO%%share/examples/aws/demos/com_1
-%%DEMO%%share/examples/aws/demos/com_2
-%%DEMO%%share/examples/aws/demos/dispatch
-%%DEMO%%share/examples/aws/demos/hello_world
-%%DEMO%%share/examples/aws/demos/hotplug
-%%DEMO%%share/examples/aws/demos/interoplab_main
-%%DEMO%%share/examples/aws/demos/jabber_demo
-%%DEMO%%share/examples/aws/demos/main
-%%DEMO%%share/examples/aws/demos/multiple_sessions
-%%DEMO%%share/examples/aws/demos/res_demo
-%%DEMO%%share/examples/aws/demos/runme
-%%DEMO%%share/examples/aws/demos/soap_client
-%%DEMO%%share/examples/aws/demos/soap_cvs
-%%DEMO%%share/examples/aws/demos/soap_server
-%%DEMO%%share/examples/aws/demos/soap_server_disp
-%%DEMO%%share/examples/aws/demos/soap_svs
-%%DEMO%%share/examples/aws/demos/split
-%%LDAP%%share/examples/aws/demos/test_ldap
-%%DEMO%%share/examples/aws/demos/test_mail
-%%DEMO%%share/examples/aws/demos/text_input
-%%DEMO%%share/examples/aws/demos/vh_demo
-%%DEMO%%share/examples/aws/demos/web_block
-%%DEMO%%share/examples/aws/demos/web_block_ajax
-%%DEMO%%share/examples/aws/demos/web_block_ajax_templates
-%%DEMO%%share/examples/aws/demos/web_elements
-%%DEMO%%share/examples/aws/demos/web_mail
-%%DEMO%%share/examples/aws/demos/wps
-%%DEMO%%share/examples/aws/demos/ws
-%%DEMO%%share/examples/aws/demos/wsdl_demo_client
-%%DEMO%%share/examples/aws/demos/wsdl_demo_server
-%%DEMO%%share/examples/aws/demos/zdemo
+%%DOCSDIR%%/aws.html
+%%DOCSDIR%%/aws.info
+%%DOCSDIR%%/aws.txt
+%%DOCSDIR%%/templates_parser.html
+%%DOCSDIR%%/templates_parser.info
+%%DOCSDIR%%/templates_parser.txt
+%%EXAMPLESDIR%%/web_elements/rounded_boxes/rounded_boxes.tcss
+%%EXAMPLESDIR%%/web_elements/rounded_boxes/rcorner.gif
+%%EXAMPLESDIR%%/web_elements/readme.txt
+%%EXAMPLESDIR%%/web_elements/notebook/notebook.thtml
+%%EXAMPLESDIR%%/web_elements/notebook/cookies.js
+%%EXAMPLESDIR%%/web_elements/mime.types
+%%EXAMPLESDIR%%/web_elements/menu_css/menu.tcss
+%%EXAMPLESDIR%%/web_elements/menu_css/arrow.png
+%%EXAMPLESDIR%%/web_elements/javascripts/scriptaculous.js
+%%EXAMPLESDIR%%/web_elements/javascripts/prototype.js
+%%EXAMPLESDIR%%/web_elements/javascripts/effects.js
+%%EXAMPLESDIR%%/web_elements/javascripts/dragdrop.js
+%%EXAMPLESDIR%%/web_elements/javascripts/cookies.js
+%%EXAMPLESDIR%%/web_elements/javascripts/behaviour.js
+%%EXAMPLESDIR%%/web_elements/javascripts/aws.tjs
+%%EXAMPLESDIR%%/web_elements/javascripts/aws_sortable.tjs
+%%EXAMPLESDIR%%/web_elements/javascripts/aws_kernel.tjs
+%%EXAMPLESDIR%%/web_elements/javascripts/aws_func_xml.tjs
+%%EXAMPLESDIR%%/web_elements/javascripts/aws_func_replace.tjs
+%%EXAMPLESDIR%%/web_elements/javascripts/aws_func_clear.tjs
+%%EXAMPLESDIR%%/web_elements/javascripts/aws_action_xml.tjs
+%%EXAMPLESDIR%%/web_elements/javascripts/aws_action_replace.tjs
+%%EXAMPLESDIR%%/web_elements/javascripts/aws_action_js.tjs
+%%EXAMPLESDIR%%/web_elements/javascripts/aws_action_clear.tjs
+%%EXAMPLESDIR%%/web_elements/javascripts/ajax_api.tjs
+%%EXAMPLESDIR%%/web_elements/icons/uu.gif
+%%EXAMPLESDIR%%/web_elements/icons/unknown.gif
+%%EXAMPLESDIR%%/web_elements/icons/text.gif
+%%EXAMPLESDIR%%/web_elements/icons/tex.gif
+%%EXAMPLESDIR%%/web_elements/icons/tar.gif
+%%EXAMPLESDIR%%/web_elements/icons/sound2.gif
+%%EXAMPLESDIR%%/web_elements/icons/sound1.gif
+%%EXAMPLESDIR%%/web_elements/icons/script.gif
+%%EXAMPLESDIR%%/web_elements/icons/rcorner.gif
+%%EXAMPLESDIR%%/web_elements/icons/quill.gif
+%%EXAMPLESDIR%%/web_elements/icons/ps.gif
+%%EXAMPLESDIR%%/web_elements/icons/p.gif
+%%EXAMPLESDIR%%/web_elements/icons/pdf.gif
+%%EXAMPLESDIR%%/web_elements/icons/patch.gif
+%%EXAMPLESDIR%%/web_elements/icons/movie.gif
+%%EXAMPLESDIR%%/web_elements/icons/layout.gif
+%%EXAMPLESDIR%%/web_elements/icons/image3.gif
+%%EXAMPLESDIR%%/web_elements/icons/image2.gif
+%%EXAMPLESDIR%%/web_elements/icons/image1.gif
+%%EXAMPLESDIR%%/web_elements/icons/folder.open.gif
+%%EXAMPLESDIR%%/web_elements/icons/folder.gif
+%%EXAMPLESDIR%%/web_elements/icons/file_sec.gif
+%%EXAMPLESDIR%%/web_elements/icons/file_red.gif
+%%EXAMPLESDIR%%/web_elements/icons/file.gif
+%%EXAMPLESDIR%%/web_elements/icons/f.gif
+%%EXAMPLESDIR%%/web_elements/icons/dvi.gif
+%%EXAMPLESDIR%%/web_elements/icons/dirup.gif
+%%EXAMPLESDIR%%/web_elements/icons/compressed.gif
+%%EXAMPLESDIR%%/web_elements/icons/c.gif
+%%EXAMPLESDIR%%/web_elements/icons/break.gif
+%%EXAMPLESDIR%%/web_elements/icons/bomb.gif
+%%EXAMPLESDIR%%/web_elements/icons/binhex.gif
+%%EXAMPLESDIR%%/web_elements/icons/binary.gif
+%%EXAMPLESDIR%%/web_elements/icons/back.gif
+%%EXAMPLESDIR%%/web_elements/icons/arrow.png
+%%EXAMPLESDIR%%/web_elements/icons/alert.red.gif
+%%EXAMPLESDIR%%/web_elements/icons/alert.black.gif
+%%EXAMPLESDIR%%/web_elements/icons/ads.gif
+%%EXAMPLESDIR%%/web_elements/icons/adb.gif
+%%EXAMPLESDIR%%/web_elements/icons/ada.gif
+%%EXAMPLESDIR%%/templates/wm_summary.thtml
+%%EXAMPLESDIR%%/templates/wm_reply.thtml
+%%EXAMPLESDIR%%/templates/wm_message.thtml
+%%EXAMPLESDIR%%/templates/wm_login.html
+%%EXAMPLESDIR%%/templates/wm_error.thtml
+%%EXAMPLESDIR%%/templates/templates.tads
+%%EXAMPLESDIR%%/images/aws_up.png
+%%EXAMPLESDIR%%/images/aws_logo.png
+%%EXAMPLESDIR%%/images/aws_down.png
+%%DEMO%%%%EXAMPLESDIR%%/demos/agent
+%%DEMO%%%%EXAMPLESDIR%%/demos/auth
+%%DEMO%%%%EXAMPLESDIR%%/demos/com_1
+%%DEMO%%%%EXAMPLESDIR%%/demos/com_2
+%%DEMO%%%%EXAMPLESDIR%%/demos/dispatch
+%%DEMO%%%%EXAMPLESDIR%%/demos/hello_world
+%%DEMO%%%%EXAMPLESDIR%%/demos/hotplug
+%%DEMO%%%%EXAMPLESDIR%%/demos/interoplab_main
+%%DEMO%%%%EXAMPLESDIR%%/demos/jabber_demo
+%%DEMO%%%%EXAMPLESDIR%%/demos/main
+%%DEMO%%%%EXAMPLESDIR%%/demos/multiple_sessions
+%%DEMO%%%%EXAMPLESDIR%%/demos/res_demo
+%%DEMO%%%%EXAMPLESDIR%%/demos/runme
+%%DEMO%%%%EXAMPLESDIR%%/demos/soap_client
+%%DEMO%%%%EXAMPLESDIR%%/demos/soap_cvs
+%%DEMO%%%%EXAMPLESDIR%%/demos/soap_server
+%%DEMO%%%%EXAMPLESDIR%%/demos/soap_server_disp
+%%DEMO%%%%EXAMPLESDIR%%/demos/soap_svs
+%%DEMO%%%%EXAMPLESDIR%%/demos/split
+%%LDAP%%%%EXAMPLESDIR%%/demos/test_ldap
+%%DEMO%%%%EXAMPLESDIR%%/demos/test_mail
+%%DEMO%%%%EXAMPLESDIR%%/demos/text_input
+%%DEMO%%%%EXAMPLESDIR%%/demos/vh_demo
+%%DEMO%%%%EXAMPLESDIR%%/demos/web_block
+%%DEMO%%%%EXAMPLESDIR%%/demos/web_block_ajax
+%%DEMO%%%%EXAMPLESDIR%%/demos/web_block_ajax_templates
+%%DEMO%%%%EXAMPLESDIR%%/demos/web_elements
+%%DEMO%%%%EXAMPLESDIR%%/demos/web_mail
+%%DEMO%%%%EXAMPLESDIR%%/demos/wps
+%%DEMO%%%%EXAMPLESDIR%%/demos/ws
+%%DEMO%%%%EXAMPLESDIR%%/demos/wsdl_demo_client
+%%DEMO%%%%EXAMPLESDIR%%/demos/wsdl_demo_server
+%%DEMO%%%%EXAMPLESDIR%%/demos/zdemo
 share/gps/plug-ins/ada2wsdl.xml
 share/gps/plug-ins/aws.py
 share/gps/plug-ins/aws.xml
 share/gps/plug-ins/aws_api.xml
 share/gps/plug-ins/wsdl2aws.xml
-@dirrm share/doc/aws
-@dirrm share/examples/aws/web_elements/icons
-@dirrm share/examples/aws/web_elements/javascripts
-@dirrm share/examples/aws/web_elements/menu_css
-@dirrm share/examples/aws/web_elements/notebook
-@dirrm share/examples/aws/web_elements/rounded_boxes
-@dirrm share/examples/aws/web_elements
-@dirrm share/examples/aws/templates
-@dirrm share/examples/aws/images
+@dirrm %%DOCSDIR%%
+@dirrm %%EXAMPLESDIR%%/web_elements/icons
+@dirrm %%EXAMPLESDIR%%/web_elements/javascripts
+@dirrm %%EXAMPLESDIR%%/web_elements/menu_css
+@dirrm %%EXAMPLESDIR%%/web_elements/notebook
+@dirrm %%EXAMPLESDIR%%/web_elements/rounded_boxes
+@dirrm %%EXAMPLESDIR%%/web_elements
+@dirrm %%EXAMPLESDIR%%/templates
+@dirrm %%EXAMPLESDIR%%/images
+@dirrm %%EXAMPLESDIR%%/bin
+@dirrm %%EXAMPLESDIR%%
 @dirrm lib/gnat/aws
 @dirrm lib/aws/native/static
 @dirrm lib/aws/native/relocatable
@@ -790,4 +795,4 @@ share/gps/plug-ins/wsdl2aws.xml
 @dirrm include/aws
 @dirrmtry lib/gnat
 @dirrmtry share/gps/plug-ins
-@dirrmtry share/examples/aws/demos
+@dirrmtry %%EXAMPLESDIR%%/demos

@@ -195,6 +195,10 @@
 #include <netdb.h>
 #endif
 
+#if defined(__ANDROID__)
+#include <sys/select.h>
+#endif
+
 #if defined (_AIX) || defined (__FreeBSD__) || defined (__hpux__) || \
     defined (__OpenBSD__) || \
     defined (__NetBSD__) || \
@@ -235,6 +239,7 @@
  || defined (__DragonFly__) \
  || defined (__OpenBSD__)   \
  || defined (__NetBSD__)    \
+ || defined (__ANDROID__)   \
  || defined (__vxworks)     \
  || defined(__rtems__)
 # define Has_Sockaddr_Len 1

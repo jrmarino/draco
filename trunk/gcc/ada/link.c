@@ -27,7 +27,7 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
- * Copyright (C) 2010 John Marino <draco@marino.st>                         *
+ * Copyright (C) 2010, 2011 John Marino <www.dragonlace.net>                *
  ****************************************************************************/
 
 /*  This file contains host-specific parameters describing the behavior     */
@@ -190,6 +190,7 @@ const char *__gnat_default_libgcc_subdir = "lib";
 
 #elif defined (__FreeBSD__) \
    || defined (__OpenBSD__) \
+   || defined (__NetBSD__)  \
    || defined (__DragonFly__)
 const char *__gnat_object_file_option = "";
 const char *__gnat_run_path_option = "-Wl,-rpath,";

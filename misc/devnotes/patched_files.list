@@ -49,10 +49,12 @@ s-osinte-freebsd32.ads
 s-osinte-freebsd64.ads
 s-osinte-netbsd.adb
 s-osinte-netbsd.ads
+s-osinte-netbsd6.ads
 s-osinte-openbsd.adb
 s-osinte-openbsd.ads
 s-osprim-bsd32.adb
 s-osprim-bsd64.adb
+s-osprim-bsdn6.adb
 s-taprop-netbsd.adb
 system-dragonfly-x86.ads
 system-dragonfly-x86_64.ads
@@ -60,6 +62,14 @@ system-netbsd-x86.ads
 system-netbsd-x86_64.ads
 system-openbsd-x86.ads
 system-openbsd-x86_64.ads
+gcc/config/dragonfly.h
+gcc/config/dragonfly.opt
+gcc/config/i386/dragonfly-unwind.h
+gcc/config/i386/dragonfly.h
+gcc/config/i386/dragonfly64.h
+gcc/config/i386/freebsd-unwind.h
+gcc/config/i386/netbsd-unwind.h
+gcc/config/i386/openbsd-unwind.h
 
 
 

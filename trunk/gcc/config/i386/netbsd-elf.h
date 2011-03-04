@@ -2,7 +2,7 @@
    for i386/ELF NetBSD systems.
    Copyright (C) 2001, 2002, 2004, 2007 Free Software Foundation, Inc.
    Contributed by matthew green <mrg@eterna.com.au>
-   Copyright (C) 2010 John Marino <draco@marino.st>
+   Copyright (C) 2010, 2011 John Marino <www.dragonlace.net>
 
 This file is part of GCC.
 
@@ -131,3 +131,6 @@ along with GCC; see the file COPYING3.  If not see
 /* Define location of OS-specific unwind support configuration. */
 #define MD_UNWIND_SUPPORT "config/i386/netbsd-unwind.h"
 
+#if defined(HAVE_LD_EH_FRAME_HDR)
+#define LINK_EH_SPEC "%{!static:--eh-frame-hdr} "
+#endif

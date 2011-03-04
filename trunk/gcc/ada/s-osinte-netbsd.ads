@@ -229,9 +229,6 @@ package System.OS_Interface is
    end record;
    pragma Convention (C, struct_timezone);
 
-   procedure usleep (useconds : unsigned_long);
-   pragma Import (C, usleep, "usleep");
-
    -------------------------
    -- Priority Scheduling --
    -------------------------

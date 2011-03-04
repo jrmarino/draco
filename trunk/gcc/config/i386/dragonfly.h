@@ -4,7 +4,7 @@
    Modified for stabs-in-ELF by H.J. Lu.
    Adapted from GNU/Linux version by John Polstra.
    Continued development by David O'Brien <obrien@freebsd.org>
-   Copyright (C) 2010 John Marino <draco@marino.st>
+   Copyright (C) 2010, 2011 John Marino <www.dragonlace.net>
 
 This file is part of GCC.
 
@@ -46,10 +46,6 @@ along with GCC; see the file COPYING3.  If not see
 
 #undef  MCOUNT_NAME
 #define MCOUNT_NAME ".mcount"
-
-/* mcount may clobber caller-saved registers, so ... */
-#undef  MCOUNT_PRESERVES_ALL_REGS
-#define MCOUNT_PRESERVES_ALL_REGS 0
 
 /* Make gcc agree with <machine/ansi.h>.  */
 
