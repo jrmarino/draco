@@ -656,6 +656,8 @@ case ${target} in
   tmake_file="t-slibgcc-elf-ver t-libc-ok t-libgcc-pic t-exceptions"
   gas=yes
   gnu_ld=yes
+  nbsd_major=`echo ${target} | sed -e 's/.*netbsd\(elf\)\{0,1\}//g' | sed -e 's/\..*//g'`
+  tm_defines="${tm_defines} NBSD_MAJOR=${nbsd_major}"
 
   # NetBSD 2.0 and later get POSIX threads enabled by default.
   # Allow them to be explicitly enabled on any other version.
