@@ -4,7 +4,7 @@
 # C languages.  The ability to build C++ will be maintained, but this will
 # have to be added externally.
 
-SNAPSHOT=20101221
+SNAPSHOT=20110304
 TRUNKVER=4.6
 GITREPOS=/export/home/marino/shallow_gcc
 DRACOREPOS=/export/home/marino/draco/trunk
@@ -109,6 +109,9 @@ done
 
 #overwrite everything with draco repository
 cp -r $DRACOREPOS/* $BASEDIR/
+
+#apply flux patches
+gpatch $BASEDIR/gcc/configure < $DRACOREPOS/../misc/gcc_flux_patches/patch_gcc_configure
 
 #now create a compressed tarball (tar.bz2)
 rm -f $TARBALL $TARBALL.bz2
