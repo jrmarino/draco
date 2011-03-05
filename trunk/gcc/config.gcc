@@ -271,6 +271,8 @@ case ${target} in
  | pdp11-*-bsd				\
  | sparc-hal-solaris2*			\
  | thumb-*-*				\
+ | *-*-freebsd[12] | *-*-freebsd[12].*	\
+ | *-*-freebsd*aout*			\
  | *-*-linux*aout*			\
  | *-*-linux*coff*			\
  | *-*-linux*libc1*			\
@@ -526,7 +528,7 @@ case ${target} in
   extra_parts="crtbegin.o crtend.o crtbeginS.o crtendS.o"
   fbsd_major=`echo ${target} | sed -e 's/.*freebsd//g' | sed -e 's/\..*//g'`
   tm_defines="${tm_defines} FBSD_MAJOR=${fbsd_major}"
-  tmake_file="t-slibgcc-elf-ver t-freebsd"
+  tmake_file="t-slibgcc-elf-ver t-libc-ok t-libgcc-pic t-exceptions"
   case ${enable_threads} in
     no)
       fbsd_tm_file="${fbsd_tm_file} freebsd-nthr.h"
@@ -565,7 +567,7 @@ case ${target} in
   gas=yes
   gnu_ld=yes
   extra_parts="crtbegin.o crtend.o crtbeginS.o crtendS.o"
-  tmake_file="t-slibgcc-elf-ver t-libc-ok t-libgcc-pic"
+  tmake_file="t-slibgcc-elf-ver t-libc-ok t-libgcc-pic t-exceptions"
   case ${enable_threads} in
     "" | yes | posix)
       thread_file='posix'
@@ -651,7 +653,7 @@ case ${target} in
   esac
   ;;
 *-*-netbsd*)
-  tmake_file="t-slibgcc-elf-ver t-netbsd t-libgcc-pic"
+  tmake_file="t-slibgcc-elf-ver t-libc-ok t-libgcc-pic t-exceptions"
   gas=yes
   gnu_ld=yes
 
@@ -693,7 +695,7 @@ case ${target} in
   gas=yes
   gnu_ld=yes
   # Do NOT add crt*.o extra parts!
-  tmake_file="t-libc-ok t-openbsd t-libgcc-pic"
+  tmake_file="t-libc-ok t-openbsd t-libgcc-pic t-exceptions"
   case ${enable_threads} in
     "" | yes | posix)
       thread_file='posix'
@@ -720,6 +722,7 @@ case ${target} in
   use_gcc_stdint=wrap
   ;;
 *-*-uclinux*)
+  extra_options="$extra_options gnu-user.opt"
   use_gcc_stdint=wrap
   tm_defines="$tm_defines DEFAULT_LIBC=LIBC_UCLIBC SINGLE_LIBC"
   ;;
@@ -1254,7 +1257,6 @@ hppa[12]*-*-hpux11*)
 i[34567]86-*-darwin*)
 	need_64bit_hwint=yes
 	need_64bit_isa=yes
-
 	# Baseline choice for a machine that allows m64 support.
 	with_cpu=${with_cpu:-core2}
 	tmake_file="${tmake_file} t-slibgcc-darwin i386/t-crtpc i386/t-crtfm"
@@ -1281,6 +1283,7 @@ x86_64-*-freebsd*)
 	;;
 i[34567]86-*-dragonfly*)
 	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h dragonfly.h i386/dragonfly.h"
+	tmake_file="${tmake_file} i386/t-crtstuff"
 	;;
 x86_64-*-dragonfly*)
 	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h dragonfly.h i386/x86-64.h i386/dragonfly.h i386/dragonfly64.h"
@@ -1289,6 +1292,7 @@ x86_64-*-dragonfly*)
 i[34567]86-*-netbsdelf*)
 	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h netbsd.h netbsd-elf.h i386/netbsd-elf.h"
 	extra_options="${extra_options} netbsd.opt netbsd-elf.opt"
+	tmake_file="${tmake_file} i386/t-crtstuff"
 	;;
 i[34567]86-*-netbsd*)
 	tm_file="${tm_file} i386/unix.h i386/bsd.h i386/gas.h i386/gstabs.h netbsd.h netbsd-aout.h i386/netbsd.h"
@@ -1412,6 +1416,7 @@ i[3456x]86-*-netware*)
 	;;
 i[34567]86-*-nto-qnx*)
 	tm_file="${tm_file} i386/att.h dbxelf.h tm-dwarf2.h elfos.h i386/unix.h i386/nto.h"
+	extra_options="${extra_options} i386/nto.opt"
 	tmake_file="${tmake_file} i386/t-nto"
 	gnu_ld=yes
 	gas=yes
@@ -1843,6 +1848,7 @@ m68k-*-uclinux*)		# Motorola m68k/ColdFire running uClinux
 	default_m68k_cpu=68020
 	default_cf_cpu=5206
 	tm_file="${tm_file} dbxelf.h elfos.h gnu-user.h linux.h glibc-stdint.h flat.h m68k/linux.h m68k/uclinux.h ./sysroot-suffix.h"
+	extra_options="${extra_options} m68k/uclinux.opt"
  	tm_defines="${tm_defines} MOTOROLA=1"
 	tmake_file="m68k/t-floatlib m68k/t-uclinux m68k/t-mlibs"
 	;;
@@ -2810,6 +2816,7 @@ xstormy16-*-elf)
 	;;
 xtensa*-*-elf*)
 	tm_file="${tm_file} dbxelf.h elfos.h newlib-stdint.h xtensa/elf.h"
+	extra_options="${extra_options} xtensa/elf.opt"
 	tmake_file="xtensa/t-xtensa xtensa/t-elf"
 	;;
 xtensa*-*-linux*)
@@ -2867,6 +2874,16 @@ cpu=
 arch_without_sse2=no
 arch_without_64bit=no
 case ${target} in
+  i386-*-freebsd*)
+    if test $fbsd_major -ge 6; then
+      arch=i486
+    else
+      arch=i386
+    fi
+    cpu=generic
+    arch_without_sse2=yes
+    arch_without_64bit=yes
+    ;;
   i386-*-*)
     arch=i386
     cpu=i386
