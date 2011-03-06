@@ -12,7 +12,7 @@ HOMEPAGE=	http://www.dragonlace.net/
 COMMENT=	GNAT Ada compiler based on GCC ${GCC_BRANCH}
 LICENSE=	gnu-gpl-v3 AND gnu-lgpl-v3
 
-SNAPSHOT=	20110203
+SNAPSHOT=	20110304
 GCC_BRANCH=     4.6
 GCC_POINT=      0
 
@@ -147,6 +147,7 @@ CONFIGURE_ARGS+=	--with-libiconv-prefix=${PKG_PREFIX}
 CONFIGURE_ARGS+=	--enable-shared
 CONFIGURE_ARGS+=	--enable-threads=${THREAD_MODEL}
 CONFIGURE_ARGS+=	--disable-bootstrap
+CONFIGURE_ARGS+=	--disable-libquadmath
 CONFIGURE_ARGS+=	--disable-libmudflap
 CONFIGURE_ARGS+=	--disable-libgomp
 CONFIGURE_ARGS+=	--disable-libssp
@@ -218,15 +219,19 @@ do-build:
 
 
 do-test: build
+.if (${OPSYS} == "NetBSD") && (${MACHINE_ARCH} == "x86_64")
+	#NetBSD has an exremely small default stacksize of 2MB, which is insufficient 
+	#for the gnat.dg testsuite (entry_queues test on AMD64 specifically)
+	cd ${WRKSRC} && \
+	${ULIMIT_CMD_stacksize} && \
+	${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-ada
+.else
 	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-ada
+.endif
 
 
 do-install:
-	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} install
-	${STRIP} ${PREFIX}/bin/gnat*
-.for k in ${LELIST}
-	${STRIP} ${PREFIX}/${LEPATH}/${k}
-.endfor
+	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} install-strip
 
 
 
