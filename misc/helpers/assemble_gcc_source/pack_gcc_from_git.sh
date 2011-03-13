@@ -35,15 +35,17 @@ ROOT_FILES="
    symlink-tree
    ylwrap"
 
+# del libquadmath
+# del libmudflap
+
 COMPLETE_DIRS="
    libiberty
    libdecnumber
-   libquadmath
+   libstdc++-v3
    zlib
    lto-plugin
    contrib
    fixincludes
-   libmudflap
    include
    intl
    config
@@ -54,8 +56,12 @@ COMPLETE_DIRS="
 GCC_DIRS="
    doc
    c-family
+   cp
    lto
    ginclude
+   testsuite/g++.dg
+   testsuite/gcc.dg
+   testsuite/c-c++-common
    config/i386
    config/soft-fp"
 
@@ -63,6 +69,10 @@ LIBGCC_DIRS="
    i386/32
    i386/64
    libbid"
+
+TESTTARGET_DIRS="
+   i386
+   x86_64"
 
 SPECIAL_DIRS="
    gcc
@@ -77,6 +87,8 @@ rm -rf $BASEDIR
 mkdir $BASEDIR
 mkdir $BASEDIR/gcc
 mkdir $BASEDIR/gcc/config
+mkdir $BASEDIR/gcc/testsuite
+mkdir $BASEDIR/gcc/testsuite/gcc.target
 mkdir $BASEDIR/libgcc
 mkdir $BASEDIR/libgcc/config
 mkdir $BASEDIR/libgcc/config/i386
@@ -101,6 +113,11 @@ do
    cp -r $GITREPOS/libgcc/config/$comdir $BASEDIR/libgcc/config/$comdir
 done
 
+for comdir in $TESTTARGET_DIRS
+do
+   cp -r $GITREPOS/gcc/testsuite/gcc.target/$comdir $BASEDIR/gcc/testsuite/gcc.target/$comdir
+done
+
 # populate base/* standard files
 for comdir in $SPECIAL_DIRS
 do
@@ -110,8 +127,15 @@ done
 #overwrite everything with draco repository
 cp -r $DRACOREPOS/* $BASEDIR/
 
+# Wipeout ChangeLogs
+gfind $BASEDIR/ -name ChangeLog\* -type f -exec rm {} \;
+
 #apply flux patches
+PATCHARGS="-d $BASEDIR --forward -E -p1"
 gpatch $BASEDIR/gcc/configure < $DRACOREPOS/../misc/gcc_flux_patches/patch_gcc_configure
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/libstdcxx-testsuite.patch
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/libstdc++.exp.patch
+gpatch $PATVHARGS < $DROCOREPOS/../misc/gcc_flux_patches/libstdxx_ts_missing_debug_checks.patch
 
 #now create a compressed tarball (tar.bz2)
 rm -f $TARBALL $TARBALL.bz2

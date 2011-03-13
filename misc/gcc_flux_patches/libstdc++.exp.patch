@@ -1,0 +1,26 @@
+diff --git a/libstdc++-v3/testsuite/lib/libstdc++.exp b/libstdc++-v3/testsuite/lib/libstdc++.exp
+index 2b96e29..4a4b2f6 100644
+--- a/libstdc++-v3/testsuite/lib/libstdc++.exp
++++ b/libstdc++-v3/testsuite/lib/libstdc++.exp
+@@ -865,17 +865,18 @@ proc check_v3_target_namedlocale { args } {
+       set f [open $src "w"]
+       puts $f "#include <locale>"
+       puts $f "#include <cstdio>"
+-      puts $f "using namespace std;"	
++      puts $f "using namespace std;"
+       puts $f "int main (int argc, char** argv)"
+       puts $f "{"
++      puts $f "  const char* mlx = *(argv + 1);"
+       puts $f "  try"	
+       puts $f "  {"
+-      puts $f "    locale(*(argv + 1));"
++      puts $f "    locale(mlx);"
+       puts $f "    return 0;"
+       puts $f "  }"
+       puts $f "  catch(...)"
+       puts $f "  {"
+-      puts $f "    printf(\"locale '%s' not supported\\n\", *(argv + 1));"
++      puts $f "    printf(\"locale '%s' not supported\\n\", mlx);"
+       puts $f "    return 1;"
+       puts $f "  }"	
+       puts $f "}"
