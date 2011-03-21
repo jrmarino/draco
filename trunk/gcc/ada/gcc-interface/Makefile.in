@@ -2438,8 +2438,7 @@ ifeq ($(strip $(filter-out darwin%,$(osys))),)
     endif
   endif
 
-  ifeq ($(strip $(filter-out %
-x86_64,$(arch))),)
+  ifeq ($(strip $(filter-out %x86_64,$(arch))),)
     LIBGNAT_TARGET_PAIRS = \
     a-intnam.ads<a-intnam-darwin.ads \
     i-forbla.adb<i-forbla-darwin.adb \

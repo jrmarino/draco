@@ -1,7 +1,7 @@
 # libgcc host-specific configuration file.
 # Copyright 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007,
 # 2008, 2009, 2010 Free Software Foundation, Inc.
-# Copyright 2010 John Marino <draco@marino.st>
+# Copyright 2010, 2011 John Marino <http://www.dragonlace.net>
 
 #This file is part of GCC.
 
@@ -476,7 +476,8 @@ powerpc-*-darwin*)
 	;;
 powerpc64-*-darwin*)
 	;;
-powerpc*-*-freebsd*)
+powerpc-*-freebsd*)
+	tmake_file="${tmake_file} rs6000/t-ppccomm rs6000/t-freebsd t-softfp"
 	;;
 powerpc-*-netbsd*)
 	;;
