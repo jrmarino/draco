@@ -4,7 +4,7 @@
 # C languages.  The ability to build C++ will be maintained, but this will
 # have to be added externally.
 
-SNAPSHOT=20110304
+SNAPSHOT=20110325
 TRUNKVER=4.6
 GITREPOS=/export/home/marino/shallow_gcc
 DRACOREPOS=/export/home/marino/draco/trunk
@@ -81,6 +81,34 @@ SPECIAL_DIRS="
    libgcc/config
    libgcc/config/i386"
 
+UNWANTED_LIBSTDCXX="
+   config/cpu/alpha
+   config/cpu/alpha
+   config/cpu/arm
+   config/cpu/cris
+   config/cpu/hppa
+   config/cpu/ia64
+   config/cpu/m68k
+   config/cpu/microblaze
+   config/cpu/powerpc
+   config/cpu/sh
+   config/cpu/sparc
+   config/locale/darwin
+   config/locale/gnu
+   config/locale/ieee_1003.1-2001
+   config/os/aix
+   config/os/bionic
+   config/os/djgpp
+   config/os/gnu-linux
+   config/os/hpux
+   config/os/irix
+   config/os/mingw32
+   config/os/newlib
+   config/os/qnx
+   config/os/tpf
+   config/os/uclibc
+   config/os/vxworks"
+
 BASEDIR=gcc-$TRUNKVER-$SNAPSHOT
 TARBALL=gnat-aux-$SNAPSHOT.tar
 rm -rf $BASEDIR
@@ -124,18 +152,25 @@ do
    gfind $GITREPOS/$comdir/ -maxdepth 1 -type f -exec cp {} $BASEDIR/$comdir/ \;
 done
 
-#overwrite everything with draco repository
-cp -r $DRACOREPOS/* $BASEDIR/
-
 # Wipeout ChangeLogs
 gfind $BASEDIR/ -name ChangeLog\* -type f -exec rm {} \;
+
+#prune libstdc++
+for comdir in $UNWANTED_LIBSTDCXX
+do
+   rm -rf $BASEDIR/libstdc++-v3/$comdir
+done
+
+#overwrite everything with draco repository
+cp -r $DRACOREPOS/* $BASEDIR/
 
 #apply flux patches
 PATCHARGS="-d $BASEDIR --forward -E -p1"
 gpatch $BASEDIR/gcc/configure < $DRACOREPOS/../misc/gcc_flux_patches/patch_gcc_configure
 gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/libstdcxx-testsuite.patch
 gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/libstdc++.exp.patch
-gpatch $PATVHARGS < $DROCOREPOS/../misc/gcc_flux_patches/libstdxx_ts_missing_debug_checks.patch
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/libstdxx_ts_missing_debug_checks.patch
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/fix_locales.patch
 
 #now create a compressed tarball (tar.bz2)
 rm -f $TARBALL $TARBALL.bz2
