@@ -213,25 +213,34 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       language[_territory][.codeset][@modifier], but it seems that both
       the _territory and .codeset components are required.
       
-      As an attempt to correct for this, we'll tack on ".ISO8859-1" if 
-      a period is not detected in the locale string.  */
+      As an attempt to correct for this, we'll tack on ".UTF-8" if 
+      a period is not detected in the locale string.  
+
+      There are no locales with modifiers on DragonFly so if found, they
+      will just be stripped off silently.  e.g "de_DE@euro" will be reduced
+      to "de_DE".  The UTF-8 default would be added after that.
+  */
 
   void
   locale::facet::_S_create_c_locale(__c_locale& __cloc, const char* __s,
 				    __c_locale)
   {
     const size_t size__s = (__s == NULL) ? 1 : strlen (__s);
-    const char ISO8859[] = ".ISO8859-1";
-    char localspec[size__s + 10 + 1];
+    const char UTF8[] = ".UTF-8";
+    char localspec[size__s + 6 + 1];
     
     if (__s == NULL) {
        localspec[0] = NULL;
     } else {
        strcpy (localspec, __s);
-       if (  (strchr (__s, '.') == 0)
+       char * pch = strchr (localspec, '@');
+       if (pch != NULL)
+          *pch = 0;
+
+       if (  (strchr (__s, '.') == NULL)
           && (strcmp (__s, "C") != 0)
           && (strcmp (__s, "POSIX") != 0))
-          strncat (localspec, ISO8859, 10);
+          strncat (localspec, UTF8, 6);
     }
 
     const char * result = std::setlocale(LC_ALL, localspec);

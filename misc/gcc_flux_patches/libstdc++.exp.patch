@@ -14,7 +14,7 @@ index 2b96e29..4a4b2f6 100644
        puts $f "  try"	
        puts $f "  {"
 -      puts $f "    locale(*(argv + 1));"
-+      puts $f "    locale(mlx);"
++      puts $f "    locale((char*)(mlx));"
        puts $f "    return 0;"
        puts $f "  }"
        puts $f "  catch(...)"
