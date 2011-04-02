@@ -1,7 +1,7 @@
 # $NetBSD$
 
 PKG_OPTIONS_VAR=	PKG_OPTIONS.gnat-aux
-PKG_SUPPORTED_OPTIONS=	ada cxx testc
+PKG_SUPPORTED_OPTIONS=	ada cxx testc testlto
 PKG_SUGGESTED_OPTIONS=	ada cxx
 
 .include "../../mk/bsd.options.mk"

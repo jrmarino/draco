@@ -12,9 +12,10 @@ HOMEPAGE=	http://www.dragonlace.net/
 COMMENT=	GNAT Ada compiler based on GCC ${GCC_BRANCH}
 LICENSE=	gnu-gpl-v3 AND gnu-lgpl-v3
 
-SNAPSHOT=	20110304
-GCC_BRANCH=     4.6
-GCC_POINT=      0
+SNAPSHOT=	20110325
+GCC_BRANCH=	4.6
+GCC_POINT=	0
+LANGS=		c
 
 PKG_DESTDIR_SUPPORT=	user-destdir
 
@@ -24,6 +25,7 @@ BUILD_DEPENDS+=		dejagnu>=1.4:../../devel/dejagnu
 BUILD_DEPENDS+=		autoconf>=2.6:../../devel/autoconf
 
 .include "../../mk/bsd.prefs.mk"
+.include "options.mk"
 
 # Requires bootstrap compiler, which is only available for NetBSD i386/AMD64
 # and DragonFly i386/AMD64.  Actually bootstrap compilers for OpenBSD and
@@ -88,13 +90,11 @@ PKG_PREFIX=		${PREFIX}
 CONFIGURE_SCRIPT=	${GCC_WRKSRC}/configure
 BOOTSTRAP_PREFIX=	${WRKDIR}/bootstrap
 MAN7=			fsf-funding.7 gfdl.7 gpl.7
-SINFO=			share/info
 SMAN1=			share/man/man1
 SMAN7=			share/man/man7
 LPATH=			lib/gcc/${BLD_TARGET}/${GCC_BRANCH}.${GCC_POINT}
 LEPATH=			libexec/gcc/${BLD_TARGET}/${GCC_BRANCH}.${GCC_POINT}
 REVFILE= 		${GCC_WRKSRC}/gcc/REVISION
-LELIST=			cc1 collect2 gnat1 lto1
 
 
 
@@ -131,11 +131,12 @@ FULL_PATH=${BOOTSTRAP_PREFIX}/bin:/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:$
 # establish ada-aware compiler for use
 MY_CONFIGURE_ENV=	CC=${FULL_GNATGCC} PATH=${FULL_PATH} CONFIG_SHELL=${CONFIG_SHELL}
 MY_MAKE_ENV=		PATH=${FULL_PATH}
+MY_MAKE_ENV+=		MAKEINFO=/usr/bin/false
 MY_MAKE_ENV+=		LD_LIBRARY_PATH=${WRKSRC}/gcc
 
 
 # The standard configuration options
-CONFIGURE_ARGS=		--enable-languages=c,ada
+CONFIGURE_ARGS= 	--enable-languages=${LANGS:Q}
 CONFIGURE_ARGS+=	--build=${BLD_TARGET}
 CONFIGURE_ARGS+=	--program-prefix=gnat
 CONFIGURE_ARGS+=	--prefix=${PREFIX}
@@ -166,9 +167,13 @@ GENERATE_PLIST+= ${FIND} bin/gnat* | ${SORT};
 GENERATE_PLIST+= ${FIND} bin/${BLD_TARGET}* | ${SORT};
 GENERATE_PLIST+= ${FIND} lib/libiberty.a;
 GENERATE_PLIST+= ${FIND} lib/libgcc_s.* \( -type f -or -type l \) | ${SORT};
+.if !empty(PKG_OPTIONS:Mcxx)
+GENERATE_PLIST+= ${FIND} lib/libsupc++.* \( -type f -or -type l \) | ${SORT};
+GENERATE_PLIST+= ${FIND} lib/libstdc++.* \( -type f -or -type l \) | ${SORT};
+GENERATE_PLIST+= ${FIND} include/c++/${GCC_BRANCH}.${GCC_POINT}/* -type f | ${SORT} -dr;
+.endif
 GENERATE_PLIST+= ${FIND} ${LPATH}/*     \( -type f -or -type l \) | ${SORT} -dr;
 GENERATE_PLIST+= ${FIND} ${LEPATH}/*    -type f | ${SORT} -dr;
-GENERATE_PLIST+= ${FIND} ${SINFO}/gnat* -type f | ${SORT};
 GENERATE_PLIST+= ${FIND} ${SMAN1}/gnat* -type f | ${SORT};
 .for k in ${MAN7}
 GENERATE_PLIST+= ${FIND} ${SMAN7}/${k};
@@ -219,14 +224,26 @@ do-build:
 
 
 do-test: build
+.if !empty(PKG_OPTIONS:Mada)
 .if (${OPSYS} == "NetBSD") && (${MACHINE_ARCH} == "x86_64")
-	#NetBSD has an exremely small default stacksize of 2MB, which is insufficient 
+	#NetBSD has an exremely small default stacksize of 2MB, which is insufficient
 	#for the gnat.dg testsuite (entry_queues test on AMD64 specifically)
 	cd ${WRKSRC} && \
 	${ULIMIT_CMD_stacksize} && \
 	${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-ada
 .else
 	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-ada
+.endif
+.endif
+.if !empty(PKG_OPTIONS:Mcxx)
+	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-c++
+	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-target-libstdc++-v3
+.endif
+.if !empty(PKG_OPTIONS:Mtestlto)
+	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-lto
+.endif
+.if !empty(PKG_OPTIONS:Mtestc)
+	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-gcc
 .endif
 
 
@@ -241,3 +258,4 @@ do-install:
 .include "../../math/mpcomplex/buildlink3.mk"
 .include "../../converters/libiconv/buildlink3.mk"
 .include "../../mk/bsd.pkg.mk"
+
