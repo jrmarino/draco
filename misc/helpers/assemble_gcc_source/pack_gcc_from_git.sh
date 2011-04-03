@@ -93,7 +93,6 @@ UNWANTED_LIBSTDCXX="
    config/cpu/powerpc
    config/cpu/sh
    config/cpu/sparc
-   config/locale/darwin
    config/locale/gnu
    config/locale/ieee_1003.1-2001
    config/os/aix
@@ -171,6 +170,11 @@ gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/libstdcxx-testsuite.pat
 gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/libstdc++.exp.patch
 gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/libstdxx_ts_missing_debug_checks.patch
 gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/fix_locales.patch
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/fix-ja_JP.eucJP.patch
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/fix-hong_kong.patch
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/fix-norway.patch
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/fix-random-locales.patch
+
 
 #now create a compressed tarball (tar.bz2)
 rm -f $TARBALL $TARBALL.bz2

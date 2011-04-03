@@ -697,7 +697,7 @@ case ${target} in
   gas=yes
   gnu_ld=yes
   # Do NOT add crt*.o extra parts!
-  tmake_file="t-libc-ok t-openbsd t-libgcc-pic t-exceptions"
+  tmake_file="t-libc-ok t-openbsd t-libgcc-pic"
   case ${enable_threads} in
     "" | yes | posix)
       thread_file='posix'
