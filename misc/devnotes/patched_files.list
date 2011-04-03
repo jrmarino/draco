@@ -83,3 +83,18 @@ gnat.dg/unchecked_convert6.ads (renamed to .txt)
 Testsuite Files
 ===============
 test_raise_from_pure.adb
+
+
+Non-Ada files
+=============
+include/libiberty.h
+libgcc/config.host
+gcc/config.gcc
+gcc/crtstuff.c
+gcc/unwind-dw2-fde-glibc.c
+
+
+Other Ada files
+===============
+gnattools/configure
+gnattools/configure.ac

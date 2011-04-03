@@ -4,7 +4,7 @@
 # C languages.  The ability to build C++ will be maintained, but this will
 # have to be added externally.
 
-SNAPSHOT=20101221
+SNAPSHOT=20110325
 TRUNKVER=4.6
 GITREPOS=/export/home/marino/shallow_gcc
 DRACOREPOS=/export/home/marino/draco/trunk
@@ -35,15 +35,17 @@ ROOT_FILES="
    symlink-tree
    ylwrap"
 
+# del libquadmath
+# del libmudflap
+
 COMPLETE_DIRS="
    libiberty
    libdecnumber
-   libquadmath
+   libstdc++-v3
    zlib
    lto-plugin
    contrib
    fixincludes
-   libmudflap
    include
    intl
    config
@@ -54,8 +56,12 @@ COMPLETE_DIRS="
 GCC_DIRS="
    doc
    c-family
+   cp
    lto
    ginclude
+   testsuite/g++.dg
+   testsuite/gcc.dg
+   testsuite/c-c++-common
    config/i386
    config/soft-fp"
 
@@ -64,6 +70,10 @@ LIBGCC_DIRS="
    i386/64
    libbid"
 
+TESTTARGET_DIRS="
+   i386
+   x86_64"
+
 SPECIAL_DIRS="
    gcc
    gcc/config
@@ -71,12 +81,41 @@ SPECIAL_DIRS="
    libgcc/config
    libgcc/config/i386"
 
+UNWANTED_LIBSTDCXX="
+   config/cpu/alpha
+   config/cpu/alpha
+   config/cpu/arm
+   config/cpu/cris
+   config/cpu/hppa
+   config/cpu/ia64
+   config/cpu/m68k
+   config/cpu/microblaze
+   config/cpu/powerpc
+   config/cpu/sh
+   config/cpu/sparc
+   config/locale/gnu
+   config/locale/ieee_1003.1-2001
+   config/os/aix
+   config/os/bionic
+   config/os/djgpp
+   config/os/gnu-linux
+   config/os/hpux
+   config/os/irix
+   config/os/mingw32
+   config/os/newlib
+   config/os/qnx
+   config/os/tpf
+   config/os/uclibc
+   config/os/vxworks"
+
 BASEDIR=gcc-$TRUNKVER-$SNAPSHOT
 TARBALL=gnat-aux-$SNAPSHOT.tar
 rm -rf $BASEDIR
 mkdir $BASEDIR
 mkdir $BASEDIR/gcc
 mkdir $BASEDIR/gcc/config
+mkdir $BASEDIR/gcc/testsuite
+mkdir $BASEDIR/gcc/testsuite/gcc.target
 mkdir $BASEDIR/libgcc
 mkdir $BASEDIR/libgcc/config
 mkdir $BASEDIR/libgcc/config/i386
@@ -101,14 +140,41 @@ do
    cp -r $GITREPOS/libgcc/config/$comdir $BASEDIR/libgcc/config/$comdir
 done
 
+for comdir in $TESTTARGET_DIRS
+do
+   cp -r $GITREPOS/gcc/testsuite/gcc.target/$comdir $BASEDIR/gcc/testsuite/gcc.target/$comdir
+done
+
 # populate base/* standard files
 for comdir in $SPECIAL_DIRS
 do
    gfind $GITREPOS/$comdir/ -maxdepth 1 -type f -exec cp {} $BASEDIR/$comdir/ \;
 done
 
+# Wipeout ChangeLogs
+gfind $BASEDIR/ -name ChangeLog\* -type f -exec rm {} \;
+
+#prune libstdc++
+for comdir in $UNWANTED_LIBSTDCXX
+do
+   rm -rf $BASEDIR/libstdc++-v3/$comdir
+done
+
 #overwrite everything with draco repository
 cp -r $DRACOREPOS/* $BASEDIR/
+
+#apply flux patches
+PATCHARGS="-d $BASEDIR --forward -E -p1"
+gpatch $BASEDIR/gcc/configure < $DRACOREPOS/../misc/gcc_flux_patches/patch_gcc_configure
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/libstdcxx-testsuite.patch
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/libstdc++.exp.patch
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/libstdxx_ts_missing_debug_checks.patch
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/fix_locales.patch
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/fix-ja_JP.eucJP.patch
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/fix-hong_kong.patch
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/fix-norway.patch
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/fix-random-locales.patch
+
 
 #now create a compressed tarball (tar.bz2)
 rm -f $TARBALL $TARBALL.bz2

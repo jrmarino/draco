@@ -67,8 +67,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 /* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
    defined if the corresponding type is *not* defined.
    FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_.
-   NetBSD uses _I386_ANSI_H_ and _X86_64_ANSI_H_ instead of _ANSI_H_ */
-#if defined(_ANSI_H_) || defined(_MACHINE_ANSI_H_) || defined(_X86_64_ANSI_H_) || defined(_I386_ANSI_H_)
+   NetBSD defines _I386_ANSI_H_ and _X86_64_ANSI_H_ instead of _ANSI_H_ */
+#if defined(_ANSI_H_) || defined(_MACHINE_ANSI_H_) || defined(_X86_64_ANSI_H_)  || defined(_I386_ANSI_H_)
 #if !defined(_SIZE_T_) && !defined(_BSD_SIZE_T_)
 #define _SIZE_T
 #endif
@@ -369,7 +369,7 @@ typedef __WINT_TYPE__ wint_t;
 /*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
     are already defined.  */
 /*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-/*  NetBSD 5 requires the I386_ANSI_H and X86_64_ANSI_H checks here. */
+/*  NetBSD 5 requires the I386_ANSI_H and X86_64_ANSI_H checks here.  */
 #if defined(_ANSI_H_) || defined(_MACHINE_ANSI_H_) || defined(_X86_64_ANSI_H_) || defined(_I386_ANSI_H_)
 /*  The references to _GCC_PTRDIFF_T_, _GCC_SIZE_T_, and _GCC_WCHAR_T_
     are probably typos and should be removed before 2.8 is released.  */

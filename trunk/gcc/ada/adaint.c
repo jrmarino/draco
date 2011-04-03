@@ -27,7 +27,7 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
- * Copyright (C) 2010 John Marino <draco@marino.st>                         *
+ * Copyright (C) 2010 John Marino <www.dragonlace.net>                      *
  ****************************************************************************/
 
 /* This file contains those routines named by Import pragmas in
@@ -401,7 +401,11 @@ OS_Time
 __gnat_current_time
   (void)
 {
+#if defined(__NetBSD__) && (__NetBSD > 5)
+  time_t res = __time50 (NULL);
+#else
   time_t res = time (NULL);
+#endif
   return (OS_Time) res;
 }
 
@@ -1620,8 +1624,11 @@ __gnat_set_file_time_name (char *name, time_t time_stamp)
   /* Set access time to now in local time.  */
   t = time ((time_t) 0);
   utimbuf.actime = mktime (localtime (&t));
-
+#if defined(__NetBSD__) && (__NetBSD__ > 5)
+  __utime50 (name, &utimbuf);
+#else
   utime (name, &utimbuf);
+#endif
 #endif
 }
 

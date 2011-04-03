@@ -1,0 +1,44 @@
+Test Run By root on Sun Mar  6 00:12:54 CET 2011
+		=== acats configuration ===
+target gcc is /usr/pkgsrc/lang/gnat-aux/work/build/gcc/xgcc -B/usr/pkgsrc/lang/gnat-aux/work/build/gcc/
+Reading specs from /usr/pkgsrc/lang/gnat-aux/work/build/gcc/specs
+  COLLECT_GCC=/usr/pkgsrc/lang/gnat-aux/work/build/gcc/xgcc
+  COLLECT_LTO_WRAPPER=/usr/pkgsrc/lang/gnat-aux/work/build/gcc/lto-wrapper Target: i386-aux-dragonfly2.9
+   Configured with: /usr/pkgsrc/lang/gnat-aux/work/gcc-4.6-20110304/configure --enable-languages=c,ada
+   --build=i386-aux-dragonfly2.9 --program-prefix=gnat --prefix=/usr/pkg --with-system-zlib --with-gmp=/usr/pkg
+   --with-mpfr=/usr/pkg --with-mpc=/usr/pkg --with-libiconv-prefix=/usr/pkg --enable-shared --enable-threads=posix
+   --disable-bootstrap --disable-libquadmath --disable-libmudflap --disable-libgomp --disable-libssp --disable-nls
+   Thread model: posix gcc version 4.6.0 20110304 (experimental) -=> GNAT AUX [DragonFly] (GCC)
+host=i386-pc-dragonflybsd
+target=i386-aux-dragonfly2.9
+gnatmake is /usr/pkgsrc/lang/gnat-aux/work/build/gcc/gnatmake
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+		=== acats Summary ===
+# of expected passes		2321
+# of unexpected failures	0
+
+=== Completed: Sun Mar  6 01:43:05 CET 2011 ===
+
+
+Test Run By root on Sun Mar  6 01:43:06 2011
+Native configuration is i386-aux-dragonfly2.9
+
+		=== gnat tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+
+		=== gnat Summary ===
+
+# of expected passes		868
+# of expected failures		10
+/usr/pkgsrc/lang/gnat-aux/work/build/gcc/gnatmake version 4.6.0 20110304 (experimental) -=> GNAT AUX [DragonFly]
+
+

@@ -1,0 +1,300 @@
+diff --git a/libstdc++-v3/testsuite/23_containers/deque/debug/assign4_neg.cc b/libstdc++-v3/testsuite/23_containers/deque/debug/assign4_neg.cc
+index 7b62041..29c6a8a 100644
+--- a/libstdc++-v3/testsuite/23_containers/deque/debug/assign4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/deque/debug/assign4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/deque>
+diff --git a/libstdc++-v3/testsuite/23_containers/deque/debug/construct4_neg.cc b/libstdc++-v3/testsuite/23_containers/deque/debug/construct4_neg.cc
+index 7d7906d..f3d3c82 100644
+--- a/libstdc++-v3/testsuite/23_containers/deque/debug/construct4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/deque/debug/construct4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/deque>
+diff --git a/libstdc++-v3/testsuite/23_containers/deque/debug/insert4_neg.cc b/libstdc++-v3/testsuite/23_containers/deque/debug/insert4_neg.cc
+index ff88760..7a3606e 100644
+--- a/libstdc++-v3/testsuite/23_containers/deque/debug/insert4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/deque/debug/insert4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/deque>
+diff --git a/libstdc++-v3/testsuite/23_containers/list/debug/assign4_neg.cc b/libstdc++-v3/testsuite/23_containers/list/debug/assign4_neg.cc
+index bde7b92..9216ba2 100644
+--- a/libstdc++-v3/testsuite/23_containers/list/debug/assign4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/list/debug/assign4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/list>
+diff --git a/libstdc++-v3/testsuite/23_containers/list/debug/construct4_neg.cc b/libstdc++-v3/testsuite/23_containers/list/debug/construct4_neg.cc
+index 29843ea..e79e4c4 100644
+--- a/libstdc++-v3/testsuite/23_containers/list/debug/construct4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/list/debug/construct4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/list>
+diff --git a/libstdc++-v3/testsuite/23_containers/list/debug/insert4_neg.cc b/libstdc++-v3/testsuite/23_containers/list/debug/insert4_neg.cc
+index ade2806..b125739 100644
+--- a/libstdc++-v3/testsuite/23_containers/list/debug/insert4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/list/debug/insert4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/list>
+diff --git a/libstdc++-v3/testsuite/23_containers/map/debug/construct4_neg.cc b/libstdc++-v3/testsuite/23_containers/map/debug/construct4_neg.cc
+index ce2eccc..6a26950 100644
+--- a/libstdc++-v3/testsuite/23_containers/map/debug/construct4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/map/debug/construct4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/map>
+diff --git a/libstdc++-v3/testsuite/23_containers/map/debug/insert4_neg.cc b/libstdc++-v3/testsuite/23_containers/map/debug/insert4_neg.cc
+index a68d601..0f22dd6 100644
+--- a/libstdc++-v3/testsuite/23_containers/map/debug/insert4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/map/debug/insert4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/map>
+diff --git a/libstdc++-v3/testsuite/23_containers/multimap/debug/construct4_neg.cc b/libstdc++-v3/testsuite/23_containers/multimap/debug/construct4_neg.cc
+index 7c267f4..be58eb4 100644
+--- a/libstdc++-v3/testsuite/23_containers/multimap/debug/construct4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/multimap/debug/construct4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/map>
+diff --git a/libstdc++-v3/testsuite/23_containers/multimap/debug/insert4_neg.cc b/libstdc++-v3/testsuite/23_containers/multimap/debug/insert4_neg.cc
+index 0e5102b..bf0b114 100644
+--- a/libstdc++-v3/testsuite/23_containers/multimap/debug/insert4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/multimap/debug/insert4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/map>
+diff --git a/libstdc++-v3/testsuite/23_containers/multiset/debug/construct4_neg.cc b/libstdc++-v3/testsuite/23_containers/multiset/debug/construct4_neg.cc
+index 181f4f9..c7e80f3 100644
+--- a/libstdc++-v3/testsuite/23_containers/multiset/debug/construct4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/multiset/debug/construct4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/set>
+diff --git a/libstdc++-v3/testsuite/23_containers/multiset/debug/insert4_neg.cc b/libstdc++-v3/testsuite/23_containers/multiset/debug/insert4_neg.cc
+index a088107..7f9ee74 100644
+--- a/libstdc++-v3/testsuite/23_containers/multiset/debug/insert4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/multiset/debug/insert4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/set>
+diff --git a/libstdc++-v3/testsuite/23_containers/set/debug/construct4_neg.cc b/libstdc++-v3/testsuite/23_containers/set/debug/construct4_neg.cc
+index d464aab..dbb2980 100644
+--- a/libstdc++-v3/testsuite/23_containers/set/debug/construct4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/set/debug/construct4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/set>
+diff --git a/libstdc++-v3/testsuite/23_containers/set/debug/insert4_neg.cc b/libstdc++-v3/testsuite/23_containers/set/debug/insert4_neg.cc
+index c2424d2..1b4c70e 100644
+--- a/libstdc++-v3/testsuite/23_containers/set/debug/insert4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/set/debug/insert4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/set>
+diff --git a/libstdc++-v3/testsuite/23_containers/unordered_map/debug/construct4_neg.cc b/libstdc++-v3/testsuite/23_containers/unordered_map/debug/construct4_neg.cc
+index e37cab2..320f3f0 100644
+--- a/libstdc++-v3/testsuite/23_containers/unordered_map/debug/construct4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/unordered_map/debug/construct4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-options "-std=gnu++0x" }
+ // { dg-do run { xfail *-*-* } }
+ 
+diff --git a/libstdc++-v3/testsuite/23_containers/unordered_map/debug/insert4_neg.cc b/libstdc++-v3/testsuite/23_containers/unordered_map/debug/insert4_neg.cc
+index 6239431..7f3a2c6 100644
+--- a/libstdc++-v3/testsuite/23_containers/unordered_map/debug/insert4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/unordered_map/debug/insert4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-options "-std=gnu++0x" }
+ // { dg-do run { xfail *-*-* } }
+ 
+diff --git a/libstdc++-v3/testsuite/23_containers/unordered_multimap/debug/construct4_neg.cc b/libstdc++-v3/testsuite/23_containers/unordered_multimap/debug/construct4_neg.cc
+index 000745e..bc82a3d 100644
+--- a/libstdc++-v3/testsuite/23_containers/unordered_multimap/debug/construct4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/unordered_multimap/debug/construct4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-options "-std=gnu++0x" }
+ // { dg-do run { xfail *-*-* } }
+ 
+diff --git a/libstdc++-v3/testsuite/23_containers/unordered_multimap/debug/insert4_neg.cc b/libstdc++-v3/testsuite/23_containers/unordered_multimap/debug/insert4_neg.cc
+index 988c312..7b5e6d7 100644
+--- a/libstdc++-v3/testsuite/23_containers/unordered_multimap/debug/insert4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/unordered_multimap/debug/insert4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-options "-std=gnu++0x" }
+ // { dg-do run { xfail *-*-* } }
+ 
+diff --git a/libstdc++-v3/testsuite/23_containers/unordered_multiset/debug/construct4_neg.cc b/libstdc++-v3/testsuite/23_containers/unordered_multiset/debug/construct4_neg.cc
+index 4fbb4fa..7d8d82a 100644
+--- a/libstdc++-v3/testsuite/23_containers/unordered_multiset/debug/construct4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/unordered_multiset/debug/construct4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-options "-std=gnu++0x" }
+ // { dg-do run { xfail *-*-* } }
+ 
+diff --git a/libstdc++-v3/testsuite/23_containers/unordered_multiset/debug/insert4_neg.cc b/libstdc++-v3/testsuite/23_containers/unordered_multiset/debug/insert4_neg.cc
+index 0f2acea..48b2542 100644
+--- a/libstdc++-v3/testsuite/23_containers/unordered_multiset/debug/insert4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/unordered_multiset/debug/insert4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-options "-std=gnu++0x" }
+ // { dg-do run { xfail *-*-* } }
+ 
+diff --git a/libstdc++-v3/testsuite/23_containers/unordered_set/debug/construct4_neg.cc b/libstdc++-v3/testsuite/23_containers/unordered_set/debug/construct4_neg.cc
+index 8eb0304..8b5a3e3 100644
+--- a/libstdc++-v3/testsuite/23_containers/unordered_set/debug/construct4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/unordered_set/debug/construct4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-options "-std=gnu++0x" }
+ // { dg-do run { xfail *-*-* } }
+ 
+diff --git a/libstdc++-v3/testsuite/23_containers/unordered_set/debug/insert4_neg.cc b/libstdc++-v3/testsuite/23_containers/unordered_set/debug/insert4_neg.cc
+index 96d6a2a..6051116 100644
+--- a/libstdc++-v3/testsuite/23_containers/unordered_set/debug/insert4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/unordered_set/debug/insert4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-options "-std=gnu++0x" }
+ // { dg-do run { xfail *-*-* } }
+ 
+diff --git a/libstdc++-v3/testsuite/23_containers/vector/debug/assign4_neg.cc b/libstdc++-v3/testsuite/23_containers/vector/debug/assign4_neg.cc
+index 8e3d3be..3868c69 100644
+--- a/libstdc++-v3/testsuite/23_containers/vector/debug/assign4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/vector/debug/assign4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/vector>
+diff --git a/libstdc++-v3/testsuite/23_containers/vector/debug/construct4_neg.cc b/libstdc++-v3/testsuite/23_containers/vector/debug/construct4_neg.cc
+index ec33a58..31cc393 100644
+--- a/libstdc++-v3/testsuite/23_containers/vector/debug/construct4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/vector/debug/construct4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/vector>
+diff --git a/libstdc++-v3/testsuite/23_containers/vector/debug/insert4_neg.cc b/libstdc++-v3/testsuite/23_containers/vector/debug/insert4_neg.cc
+index 684ebb5..fda6306 100644
+--- a/libstdc++-v3/testsuite/23_containers/vector/debug/insert4_neg.cc
++++ b/libstdc++-v3/testsuite/23_containers/vector/debug/insert4_neg.cc
+@@ -15,6 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ //
++// { dg-require-debug-mode "" }
+ // { dg-do run { xfail *-*-* } }
+ 
+ #include <debug/vector>

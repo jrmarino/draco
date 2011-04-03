@@ -1,0 +1,44 @@
+Test Run By root on Sat Mar  5 18:41:28 CST 2011
+		=== acats configuration ===
+target gcc is /usr/pkgsrc/lang/gnat-aux/work/build/gcc/xgcc -B/usr/pkgsrc/lang/gnat-aux/work/build/gcc/
+Reading specs from /usr/pkgsrc/lang/gnat-aux/work/build/gcc/specs
+  COLLECT_GCC=/usr/pkgsrc/lang/gnat-aux/work/build/gcc/xgcc
+  COLLECT_LTO_WRAPPER=/usr/pkgsrc/lang/gnat-aux/work/build/gcc/lto-wrapper Target: i386-aux-netbsdelf5.1
+   Configured with: /usr/pkgsrc/lang/gnat-aux/work/gcc-4.6-20110304/configure --enable-languages=c,ada
+   --build=i386-aux-netbsdelf5.1 --program-prefix=gnat --prefix=/usr/pkg --with-system-zlib --with-gmp=/usr/pkg
+   --with-mpfr=/usr/pkg --with-mpc=/usr/pkg --with-libiconv-prefix=/usr/pkg --enable-shared --enable-threads=posix
+   --disable-bootstrap --disable-libquadmath --disable-libmudflap --disable-libgomp --disable-libssp --disable-nls
+   Thread model: posix gcc version 4.6.0 20110304 (experimental) -=> GNAT AUX [NetBSD] (GCC)
+host=i386--netbsdelf
+target=i386-aux-netbsdelf5.1
+gnatmake is /usr/pkgsrc/lang/gnat-aux/work/build/gcc/gnatmake
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+		=== acats Summary ===
+# of expected passes		2321
+# of unexpected failures	0
+
+=== Completed: Sat Mar  5 19:22:51 CST 2011 ===
+
+
+Test Run By root on Sat Mar  5 19:22:52 2011
+Native configuration is i386-aux-netbsdelf5.1
+
+		=== gnat tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+
+		=== gnat Summary ===
+
+# of expected passes		868
+# of expected failures		10
+/usr/pkgsrc/lang/gnat-aux/work/build/gcc/gnatmake version 4.6.0 20110304 (experimental) -=> GNAT AUX [NetBSD]
+
+

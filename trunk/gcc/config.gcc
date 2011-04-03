@@ -225,16 +225,41 @@ xm_file=
 md_file=
 
 # Obsolete configurations.
-#case ${target} in
-# )
-#    if test "x$enable_obsolete" != xyes; then
-#      echo "*** Configuration ${target} is obsolete." >&2
-#      echo "*** Specify --enable-obsolete to build it anyway." >&2
-#      echo "*** Support will be REMOVED in the next major release of GCC," >&2
-#      echo "*** unless a maintainer comes forward." >&2
-#      exit 1
-#    fi;;
-#esac
+case ${target} in
+# Avoid cases below matching.
+   alpha*-*-linux*			\
+ | arm*-wince-pe*			\
+ | arm*-*-netbsdelf*			\
+ | i[34567]86-*-netbsdelf*		\
+ | powerpc*-*-linux*			\
+ | vax-*-netbsdelf*) ;;
+   arc-*				\
+ | alpha*-*-gnu*			\
+ | arm*-*-netbsd*			\
+ | arm-*-pe*				\
+ | crx-*				\
+ | i[34567]86-*-interix3*		\
+ | i[34567]86-*-netbsd*			\
+ | i[34567]86-*-pe			\
+ | m68hc11-*-*				\
+ | m6811-*-*				\
+ | m68hc12-*-*				\
+ | m6812-*-*				\
+ | m68k-*-uclinuxoldabi*		\
+ | mcore-*-pe*				\
+ | powerpc*-*-gnu*			\
+ | score-*				\
+ | sh*-*-symbianelf*			\
+ | vax-*-netbsd*			\
+ )
+    if test "x$enable_obsolete" != xyes; then
+      echo "*** Configuration ${target} is obsolete." >&2
+      echo "*** Specify --enable-obsolete to build it anyway." >&2
+      echo "*** Support will be REMOVED in the next major release of GCC," >&2
+      echo "*** unless a maintainer comes forward." >&2
+      exit 1
+    fi;;
+esac
 
 # Unsupported targets list.  Do not put an entry in this list unless
 # it would otherwise be caught by a more permissive pattern.  The list
@@ -246,6 +271,8 @@ case ${target} in
  | pdp11-*-bsd				\
  | sparc-hal-solaris2*			\
  | thumb-*-*				\
+ | *-*-freebsd[12] | *-*-freebsd[12].*	\
+ | *-*-freebsd*aout*			\
  | *-*-linux*aout*			\
  | *-*-linux*coff*			\
  | *-*-linux*libc1*			\
@@ -501,7 +528,7 @@ case ${target} in
   extra_parts="crtbegin.o crtend.o crtbeginS.o crtendS.o"
   fbsd_major=`echo ${target} | sed -e 's/.*freebsd//g' | sed -e 's/\..*//g'`
   tm_defines="${tm_defines} FBSD_MAJOR=${fbsd_major}"
-  tmake_file="t-slibgcc-elf-ver t-freebsd"
+  tmake_file="t-slibgcc-elf-ver t-libc-ok t-libgcc-pic t-exceptions"
   case ${enable_threads} in
     no)
       fbsd_tm_file="${fbsd_tm_file} freebsd-nthr.h"
@@ -540,7 +567,7 @@ case ${target} in
   gas=yes
   gnu_ld=yes
   extra_parts="crtbegin.o crtend.o crtbeginS.o crtendS.o"
-  tmake_file="t-slibgcc-elf-ver t-libc-ok t-libgcc-pic"
+  tmake_file="t-slibgcc-elf-ver t-libc-ok t-libgcc-pic t-exceptions"
   case ${enable_threads} in
     "" | yes | posix)
       thread_file='posix'
@@ -570,6 +597,7 @@ case ${target} in
   use_gcc_stdint=wrap
   ;;
 *-*-linux* | frv-*-*linux* | *-*-kfreebsd*-gnu | *-*-knetbsd*-gnu | *-*-gnu* | *-*-kopensolaris*-gnu)
+  extra_options="$extra_options gnu-user.opt"
   extra_parts="crtbegin.o crtbeginS.o crtbeginT.o crtend.o crtendS.o"
   gas=yes
   gnu_ld=yes
@@ -625,9 +653,11 @@ case ${target} in
   esac
   ;;
 *-*-netbsd*)
-  tmake_file="t-slibgcc-elf-ver t-netbsd t-libgcc-pic"
+  tmake_file="t-slibgcc-elf-ver t-libc-ok t-libgcc-pic t-exceptions"
   gas=yes
   gnu_ld=yes
+  nbsd_major=`echo ${target} | sed -e 's/.*netbsd\(elf\)\{0,1\}//g' | sed -e 's/\..*//g'`
+  tm_defines="${tm_defines} NBSD_MAJOR=${nbsd_major}"
 
   # NetBSD 2.0 and later get POSIX threads enabled by default.
   # Allow them to be explicitly enabled on any other version.
@@ -694,6 +724,7 @@ case ${target} in
   use_gcc_stdint=wrap
   ;;
 *-*-uclinux*)
+  extra_options="$extra_options gnu-user.opt"
   use_gcc_stdint=wrap
   tm_defines="$tm_defines DEFAULT_LIBC=LIBC_UCLIBC SINGLE_LIBC"
   ;;
@@ -1043,7 +1074,7 @@ frv-*-*linux*)
 moxie-*-elf)
 	gas=yes
 	gnu_ld=yes
-	tm_file="dbxelf.h elfos.h ${tm_file}"
+	tm_file="dbxelf.h elfos.h newlib-stdint.h ${tm_file}"
 	extra_parts="crti.o crtn.o crtbegin.o crtend.o"
 	tmake_file="${tmake_file} moxie/t-moxie moxie/t-moxie-softfp soft-fp/t-softfp"
 	;;
@@ -1228,7 +1259,6 @@ hppa[12]*-*-hpux11*)
 i[34567]86-*-darwin*)
 	need_64bit_hwint=yes
 	need_64bit_isa=yes
-
 	# Baseline choice for a machine that allows m64 support.
 	with_cpu=${with_cpu:-core2}
 	tmake_file="${tmake_file} t-slibgcc-darwin i386/t-crtpc i386/t-crtfm"
@@ -1255,6 +1285,7 @@ x86_64-*-freebsd*)
 	;;
 i[34567]86-*-dragonfly*)
 	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h dragonfly.h i386/dragonfly.h"
+	tmake_file="${tmake_file} i386/t-crtstuff"
 	;;
 x86_64-*-dragonfly*)
 	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h dragonfly.h i386/x86-64.h i386/dragonfly.h i386/dragonfly64.h"
@@ -1263,6 +1294,7 @@ x86_64-*-dragonfly*)
 i[34567]86-*-netbsdelf*)
 	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h netbsd.h netbsd-elf.h i386/netbsd-elf.h"
 	extra_options="${extra_options} netbsd.opt netbsd-elf.opt"
+	tmake_file="${tmake_file} i386/t-crtstuff"
 	;;
 i[34567]86-*-netbsd*)
 	tm_file="${tm_file} i386/unix.h i386/bsd.h i386/gas.h i386/gstabs.h netbsd.h netbsd-aout.h i386/netbsd.h"
@@ -1347,7 +1379,7 @@ x86_64-*-linux* | x86_64-*-kfreebsd*-gnu | x86_64-*-knetbsd*-gnu)
 	;;
 i[34567]86-pc-msdosdjgpp*)
 	xm_file=i386/xm-djgpp.h
-	tm_file="dbxcoff.h ${tm_file} i386/unix.h i386/bsd.h i386/gas.h i386/djgpp.h"
+	tm_file="dbxcoff.h ${tm_file} i386/unix.h i386/bsd.h i386/gas.h i386/djgpp.h i386/djgpp-stdint.h"
 	tmake_file="${tmake_file} i386/t-djgpp"
 	extra_options="${extra_options} i386/djgpp.opt"
 	gnu_ld=yes
@@ -1386,6 +1418,7 @@ i[3456x]86-*-netware*)
 	;;
 i[34567]86-*-nto-qnx*)
 	tm_file="${tm_file} i386/att.h dbxelf.h tm-dwarf2.h elfos.h i386/unix.h i386/nto.h"
+	extra_options="${extra_options} i386/nto.opt"
 	tmake_file="${tmake_file} i386/t-nto"
 	gnu_ld=yes
 	gas=yes
@@ -1817,6 +1850,7 @@ m68k-*-uclinux*)		# Motorola m68k/ColdFire running uClinux
 	default_m68k_cpu=68020
 	default_cf_cpu=5206
 	tm_file="${tm_file} dbxelf.h elfos.h gnu-user.h linux.h glibc-stdint.h flat.h m68k/linux.h m68k/uclinux.h ./sysroot-suffix.h"
+	extra_options="${extra_options} m68k/uclinux.opt"
  	tm_defines="${tm_defines} MOTOROLA=1"
 	tmake_file="m68k/t-floatlib m68k/t-uclinux m68k/t-mlibs"
 	;;
@@ -1883,7 +1917,7 @@ microblaze*-*-*)
 mips-sgi-irix6.5*)
 	tm_file="elfos.h ${tm_file} mips/iris6.h"
 	tmake_file="mips/t-iris mips/t-iris6 mips/t-slibgcc-irix"
-	extra_options="${extra_options} rpath.opt"
+	extra_options="${extra_options} rpath.opt mips/iris6.opt"
 	target_cpu_default="MASK_ABICALLS"
 	tm_defines="${tm_defines} MIPS_ISA_DEFAULT=3 MIPS_ABI_DEFAULT=ABI_N32"
 	# Only IRIX Development Foundation 1.3 for IRIX 6.5 provides stdint.h.
@@ -2116,9 +2150,10 @@ powerpc64-*-darwin*)
 	tm_file="${tm_file} ${cpu_type}/darwin8.h ${cpu_type}/darwin64.h"
 	extra_headers=altivec.h
 	;;
-powerpc*-*-freebsd*)
+powerpc-*-freebsd*)
 	tm_file="${tm_file} dbxelf.h elfos.h ${fbsd_tm_file} rs6000/sysv4.h rs6000/freebsd.h"
-	tmake_file="rs6000/t-fprules rs6000/t-fprules-fpbit rs6000/t-ppcos ${tmake_file} rs6000/t-ppccomm"
+	tmake_file="rs6000/t-fprules rs6000/t-ppcos ${tmake_file} rs6000/t-ppccomm rs6000/t-freebsd"
+	tmake_file="${tmake_file} t-slibgcc-libgcc rs6000/t-fprules-softfp soft-fp/t-softfp"
 	extra_options="${extra_options} rs6000/sysv4.opt"
 	;;
 powerpc-*-netbsd*)
@@ -2158,7 +2193,7 @@ powerpc-*-eabialtivec*)
 	;;
 powerpc-xilinx-eabi*)
 	tm_file="${tm_file} dbxelf.h elfos.h usegas.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/eabi.h rs6000/singlefp.h rs6000/xfpu.h rs6000/xilinx.h"
-	extra_options="${extra_options} rs6000/sysv4.opt"
+	extra_options="${extra_options} rs6000/sysv4.opt rs6000/xilinx.opt"
 	tmake_file="rs6000/t-fprules rs6000/t-fprules-fpbit rs6000/t-ppcgas rs6000/t-ppccomm rs6000/t-xilinx"
 	use_gcc_stdint=wrap
 	;;
@@ -2351,9 +2386,12 @@ s390x-ibm-tpf*)
 	extra_options="${extra_options} s390/tpf.opt"
 	;;
 score-*-elf)
+	gas=yes
+	gnu_ld=yes
         tm_file="dbxelf.h elfos.h score/elf.h score/score.h newlib-stdint.h"
-        tmake_file=score/t-score-elf
-        extra_objs="score7.o score3.o"
+	extra_parts="crti.o crtn.o crtbegin.o crtend.o"
+        tmake_file="${tmake_file} score/t-score-elf score/t-score-softfp soft-fp/t-softfp"
+        extra_objs="score7.o"
         ;;
 sh-*-elf* | sh[12346l]*-*-elf* | \
 sh-*-symbianelf* | sh[12346l]*-*-symbianelf* | \
@@ -2753,11 +2791,12 @@ v850-*-*)
 	;;
 vax-*-linux*)
 	tm_file="${tm_file} dbxelf.h elfos.h gnu-user.h linux.h vax/elf.h vax/linux.h"
+	extra_options="${extra_options} vax/elf.opt"
 	tmake_file="${tmake_file} vax/t-linux"
 	;;
 vax-*-netbsdelf*)
 	tm_file="${tm_file} elfos.h netbsd.h netbsd-elf.h vax/elf.h vax/netbsd-elf.h"
-	extra_options="${extra_options} netbsd.opt netbsd-elf.opt"
+	extra_options="${extra_options} netbsd.opt netbsd-elf.opt vax/elf.opt"
 	;;
 vax-*-netbsd*)
 	tm_file="${tm_file} netbsd.h netbsd-aout.h vax/netbsd.h"
@@ -2783,6 +2822,7 @@ xstormy16-*-elf)
 	;;
 xtensa*-*-elf*)
 	tm_file="${tm_file} dbxelf.h elfos.h newlib-stdint.h xtensa/elf.h"
+	extra_options="${extra_options} xtensa/elf.opt"
 	tmake_file="xtensa/t-xtensa xtensa/t-elf"
 	;;
 xtensa*-*-linux*)
@@ -2840,6 +2880,16 @@ cpu=
 arch_without_sse2=no
 arch_without_64bit=no
 case ${target} in
+  i386-*-freebsd*)
+    if test $fbsd_major -ge 6; then
+      arch=i486
+    else
+      arch=i386
+    fi
+    cpu=generic
+    arch_without_sse2=yes
+    arch_without_64bit=yes
+    ;;
   i386-*-*)
     arch=i386
     cpu=i386
