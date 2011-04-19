@@ -56,11 +56,11 @@
 #define GNAT_STRUCT_STAT struct stat64
 #else
 #define GNAT_FOPEN fopen
-#if defined(__NetBSD__) && (__NetBSD > 5)
+#if defined(__NetBSD__) && (__NetBSD__ > 5)
 #define GNAT_STAT __stat50
 #define GNAT_FSTAT __fstat50
 #define GNAT_LSTAT __lstat50
-#elif defined(__NetBSD__) && (__NetBSD > 3)
+#elif defined(__NetBSD__) && (__NetBSD__ > 3)
 #define GNAT_STAT __stat30
 #define GNAT_FSTAT __fstat30
 #define GNAT_LSTAT __lstat30
