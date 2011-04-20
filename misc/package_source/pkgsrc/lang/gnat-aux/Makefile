@@ -21,7 +21,6 @@ PKG_DESTDIR_SUPPORT=	user-destdir
 
 USE_TOOLS+=		gmake sed flex bison gm4 perl makeinfo bzip2
 USE_BUILTIN.iconv=	no
-BUILD_DEPENDS+=		dejagnu>=1.4:../../devel/dejagnu
 BUILD_DEPENDS+=		autoconf>=2.6:../../devel/autoconf
 
 .include "../../mk/bsd.prefs.mk"
@@ -157,10 +156,6 @@ CONFIGURE_ARGS+=	--disable-libssp
 CONFIGURE_ARGS+=	--disable-nls
 
 
-# The standard make options
-MAKE_ARGS=		MAKEINFOFLAGS="--no-split"
-
-
 # Automatic package list generation
 # lib/libquadmath.* will have to be added if __float128 support is added
 # Alternatively, libquadmath support could be intentionally disabled.
@@ -227,7 +222,7 @@ do-build:
 
 
 do-test: build
-.if !empty(PKG_OPTIONS:Mada)
+.if !empty(PKG_OPTIONS:Mtestada)
 .if (${OPSYS} == "NetBSD") && (${MACHINE_ARCH} == "x86_64")
 	#NetBSD has an exremely small default stacksize of 2MB, which is insufficient
 	#for the gnat.dg testsuite (entry_queues test on AMD64 specifically)
@@ -238,15 +233,12 @@ do-test: build
 	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-ada
 .endif
 .endif
-.if !empty(PKG_OPTIONS:Mcxx)
+.if !empty(PKG_OPTIONS:Mtestcxx)
 	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-c++
 	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-target-libstdc++-v3
 .endif
-.if !empty(PKG_OPTIONS:Mtestlto)
-	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-lto
-.endif
-.if !empty(PKG_OPTIONS:Mtestc)
-	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-gcc
+.if !empty(PKG_OPTIONS:Mtestgcc)
+	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-c
 .endif
 
 
@@ -261,4 +253,3 @@ do-install:
 .include "../../math/mpcomplex/buildlink3.mk"
 .include "../../converters/libiconv/buildlink3.mk"
 .include "../../mk/bsd.pkg.mk"
-
