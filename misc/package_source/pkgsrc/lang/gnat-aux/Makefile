@@ -129,9 +129,11 @@ FULL_PATH=${BOOTSTRAP_PREFIX}/bin:/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:$
 
 
 # establish ada-aware compiler for use
-MY_CONFIGURE_ENV=	CC=${FULL_GNATGCC} PATH=${FULL_PATH} CONFIG_SHELL=${CONFIG_SHELL}
+MY_CONFIGURE_ENV=	CC=${FULL_GNATGCC}
+MY_CONFIGURE_ENV+=	PATH=${FULL_PATH}
+MY_CONFIGURE_ENV+=	CONFIG_SHELL=${CONFIG_SHELL}
+MY_CONFIGURE_ENV+=	MAKEINFO=/usr/bin/false
 MY_MAKE_ENV=		PATH=${FULL_PATH}
-MY_MAKE_ENV+=		MAKEINFO=/usr/bin/false
 MY_MAKE_ENV+=		LD_LIBRARY_PATH=${WRKSRC}/gcc
 
 
@@ -171,6 +173,7 @@ GENERATE_PLIST+= ${FIND} lib/libgcc_s.* \( -type f -or -type l \) | ${SORT};
 GENERATE_PLIST+= ${FIND} lib/libsupc++.* \( -type f -or -type l \) | ${SORT};
 GENERATE_PLIST+= ${FIND} lib/libstdc++.* \( -type f -or -type l \) | ${SORT};
 GENERATE_PLIST+= ${FIND} include/c++/${GCC_BRANCH}.${GCC_POINT}/* -type f | ${SORT} -dr;
+GENERATE_PLIST+= ${FIND} share/gcc-${GCC_BRANCH}.${GCC_POINT}/*   -type f | ${SORT} -dr;
 .endif
 GENERATE_PLIST+= ${FIND} ${LPATH}/*     \( -type f -or -type l \) | ${SORT} -dr;
 GENERATE_PLIST+= ${FIND} ${LEPATH}/*    -type f | ${SORT} -dr;
