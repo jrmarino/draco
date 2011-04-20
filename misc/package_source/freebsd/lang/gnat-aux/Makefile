@@ -45,7 +45,6 @@ OPTIONS+=	CXX    "Build C++ language" on
 OPTIONS+=	TS_ADA "Enable Ada testsuite" off
 OPTIONS+=	TS_CXX "Enable C++ testsuite" off
 OPTIONS+=	TS_GCC "Enable GCC testsuite" off
-OPTIONS+=	TS_LTO "Enable link-time optimization testsuite" off
 
 .include <bsd.port.pre.mk>
 .include <bsd.port.options.mk>
@@ -125,13 +124,9 @@ PLIST_SUB+=	CXX="@comment "
 ##  Testsuites  ##
 ##################
 
-.if defined(WITH_TS_ADA)
-BUILD_DEPENDS=	dejagnu>=1.4:${PORTSDIR}/misc/dejagnu
-.elif defined(WITH_TS_CXX)
-BUILD_DEPENDS=	dejagnu>=1.4:${PORTSDIR}/misc/dejagnu
-.elif defined(WITH_TS_GCC)
-BUILD_DEPENDS=	dejagnu>=1.4:${PORTSDIR}/misc/dejagnu
-.elif defined(WITH_TS_LTO)
+.if defined(WITH_TS_ADA) \
+ || defined(WITH_TS_CXX) \
+ || defined(WITH_TS_GCC)
 BUILD_DEPENDS=	dejagnu>=1.4:${PORTSDIR}/misc/dejagnu
 .endif
 
@@ -205,11 +200,8 @@ test: build
 	cd ${WRKSRC} && ${SETENV} ${ADA_MAKE_ENV} \
 	   ${GMAKE} -sk check-target-libstdc++-v3
 .endif
-.if defined(WITH_TS_LTO)
-	cd ${WRKSRC} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} -sk check-lto
-.endif
 .if defined(WITH_TS_GCC)
-	cd ${WRKSRC} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} -sk check-gcc
+	cd ${WRKSRC} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} -sk check-c
 .endif
 
 do-install:
