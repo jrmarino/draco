@@ -1,0 +1,11 @@
+--- a/gcc/Makefile.in.orig	Fri Jul 15 00:06:02 2011
++++ b/gcc/Makefile.in	Fri Jul 15 00:06:22 2011
+@@ -4474,7 +4474,7 @@
+ # Install the driver last so that the window when things are
+ # broken is small.
+ install: install-common $(INSTALL_HEADERS) \
+-    install-cpp install-man install-info install-@POSUB@ \
++    install-cpp install-man install-@POSUB@ \
+     install-driver install-lto-wrapper
+ 
+ ifeq ($(enable_plugin),yes)

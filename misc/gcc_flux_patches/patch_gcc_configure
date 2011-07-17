@@ -2,12 +2,11 @@ diff --git a/gcc/configure b/gcc/configure
 index a454946..d562969 100755
 --- a/gcc/configure
 +++ b/gcc/configure
-@@ -25835,6 +25835,21 @@ case "$target" in
+@@ -25835,6 +25835,20 @@ case "$target" in
        gcc_cv_target_dl_iterate_phdr=no
      fi
      ;;
-+  *-*-freebsd*)
-+# *-*-dragonfly* | *-*-freebsd*)
++  *-*-dragonfly* | *-*-freebsd*)
 +  if grep dl_iterate_phdr $target_header_dir/sys/link_elf.h > /dev/null 2>&1; then
 +      gcc_cv_target_dl_iterate_phdr=yes
 +    else

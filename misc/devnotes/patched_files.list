@@ -2,8 +2,11 @@
 
 gcc-interface/Makefile.in
 adaint.c
+adaint.h			[*]
+cio.c				[*]
 cstreams.c
 env.c
+errno.c				[*]
 g-comlin.adb
 g-expect.adb
 gnatchop.adb
@@ -16,12 +19,19 @@ link.c
 make.adb
 mlib-utl.adb
 prj-makr.adb
+s-osinte-freebsd.adb		[*]
 s-rannum.adb
 s-stusta.adb
 sysdep.c
 system-freebsd-x86.ads
 system-freebsd-x86_64.ads
 tracebak.c
+gcc/config/netbsd.h
+gcc/config/t-openbsd-thread
+gcc/config/i386/freebsd.h	[*]
+gcc/config/i386/netbsd-elf.h	[*]
+gcc/config/i386/netbsd64.h	[*]
+gcc/config/i386/openbsdelf.h	[*]
 
 
 
@@ -43,6 +53,8 @@ a-intnam-dragonfly.ads
 a-intnam-netbsd.ads
 a-intnam-openbsd.ads
 g-socthi-bsd.adb
+g-socthi-netbsd.adb		[*]
+g-socthi-netbsd6.ads		[*]
 s-osinte-dragonfly.adb
 s-osinte-dragonfly.ads
 s-osinte-freebsd32.ads
@@ -64,35 +76,51 @@ system-openbsd-x86.ads
 system-openbsd-x86_64.ads
 gcc/config/dragonfly.h
 gcc/config/dragonfly.opt
+gcc/config/exec-stack.h			[*]
+gcc/config/t-exceptions			[*]
 gcc/config/i386/dragonfly-unwind.h
 gcc/config/i386/dragonfly.h
 gcc/config/i386/dragonfly64.h
 gcc/config/i386/freebsd-unwind.h
 gcc/config/i386/netbsd-unwind.h
-gcc/config/i386/openbsd-unwind.h
+gcc/config/i386/openbsd-unwind32.h
+gcc/config/i386/openbsd64.h
 
 
 
 Files I deleted
 ==================
-s-osinte-freebsd
-gnat.dg/unchecked_convert5.ads (renamed to .txt)
-gnat.dg/unchecked_convert6.ads (renamed to .txt)
+s-osinte-freebsd.ads
+gnat.dg/unchecked_convert5.adb (renamed to .txt)
+gnat.dg/unchecked_convert6.adb (renamed to .txt)
 
-
+diff
 Testsuite Files
 ===============
-test_raise_from_pure.adb
+gcc/testsuite/ada/acats/run_acats
+gcc/testsuite/ada/acats/run_all.sh
+gcc/testsuite/gnat.dg/test_raise_from_pure.adb
 
 
 Non-Ada files
 =============
 include/libiberty.h
 libgcc/config.host
+libgcc/config/i386/t-dragonfly				[*]
 gcc/config.gcc
 gcc/crtstuff.c
 gcc/unwind-dw2-fde-glibc.c
-
+gcc/ginclude/stddef.h
+gcc/DEV-PHASE
+libstdc++-v3/acinclude.m4				[*]
+libstdc++-v3/configure					[*]
+libstdc++-v3/configure.host				[*]
+libstdc++-v3/config/locale/dragonfly/c_locale.cc	[*]
+libstdc++-v3/config/locale/dragonfly/ctype_members.cc	[*]
+libstdc++-v3/config/os/bsd/dragonfly/ctype_base.h	[*]
+libstdc++-v3/config/os/bsd/dragonfly/ctype_inline.h	[*]
+libstdc++-v3/config/os/bsd/dragonfly/ctype_noninline.h	[*]
+libstdc++-v3/config/os/bsd/dragonfly/os_defines.h	[*]
 
 Other Ada files
 ===============
