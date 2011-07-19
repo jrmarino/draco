@@ -2,7 +2,7 @@
 # Date created:                       16 December 2010
 # Whom:                               John Marino <draco@marino.st>
 #
-# $FreeBSD: ports/lang/gnat-aux/Makefile,v 1.1 2011/02/15 07:32:50 wen Exp $
+# $FreeBSD: ports/lang/gnat-aux/Makefile,v 1.4 2011/07/16 05:29:51 linimon Exp $
 #
 
 PORTNAME=	gnat-aux
@@ -18,7 +18,7 @@ LIB_DEPENDS=	gmp.10:${PORTSDIR}/math/gmp
 LIB_DEPENDS+=	mpfr.4:${PORTSDIR}/math/mpfr
 LIB_DEPENDS+=	mpc.2:${PORTSDIR}/math/mpc
 
-ONLY_FOR_ARCHES=	i386 amd64
+ONLY_FOR_ARCHS=	i386 amd64
 
 GNU_CONFIGURE=		yes
 USE_GMAKE=		yes
@@ -29,9 +29,9 @@ USE_PERL5_BUILD=	yes
 USE_LDCONFIG=		yes
 ALL_TARGET=		default
 
-SNAPSHOT=		20110325
+SNAPSHOT=		20110627
 GCC_BRANCH=		4.6
-GCC_POINT=		0
+GCC_POINT=		1
 LANGS=			c
 
 THREAD_MODEL=		posix
@@ -70,7 +70,7 @@ PKG_PREFIX=		${PREFIX}
 CONFIGURE_SCRIPT=	${GCC_WRKSRC}/configure
 REVFILE=		${GCC_WRKSRC}/gcc/REVISION
 LPATH=			lib/gcc/${BLD_TARGET}/${GCC_BRANCH}.${GCC_POINT}
-LEPATH=			libexec/gcc/${BLD_TARGET}/${GCC_BRANCH}.${GCC_POINT}		
+LEPATH=			libexec/gcc/${BLD_TARGET}/${GCC_BRANCH}.${GCC_POINT}
 MAN1=			gnatcpp.1 gnatgcc.1 gnatgcov.1
 MAN7=			fsf-funding.7 gfdl.7 gpl.7
 MAN1PREFIX=		${PREFIX}/share
@@ -139,7 +139,6 @@ BUILD_DEPENDS=	dejagnu>=1.4:${PORTSDIR}/misc/dejagnu
 ADA_CONFIGURE_ENV=	CC=${FULL_GNATGCC}
 ADA_CONFIGURE_ENV+=	PATH=${FULL_PATH}
 ADA_CONFIGURE_ENV+=	CONFIG_SHELL=${SH}
-ADA_CONFIGURE_ENV+=	MAKEINFO=/usr/bin/false
 ADA_MAKE_ENV=		PATH=${FULL_PATH}
 ADA_MAKE_ENV+=		LD_LIBRARY_PATH=${WRKSRC}/gcc
 
@@ -205,7 +204,7 @@ test: build
 .endif
 
 do-install:
-	cd ${WRKSRC} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} install-strip
+	cd ${WRKSRC} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} install-strip DESTDIR=${DESTDIR}
 
 post-install:
 	${RM} -f ${WRKDIR}/PLIST.lib

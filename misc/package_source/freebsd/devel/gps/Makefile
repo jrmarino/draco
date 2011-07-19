@@ -2,11 +2,12 @@
 # Date created:                       12 December 2010
 # Whom:                               John Marino <draco@marino.st>
 #
-# $FreeBSD: ports/devel/gps/Makefile,v 1.1 2011/03/02 00:53:01 wen Exp $
+# $FreeBSD: ports/devel/gps/Makefile,v 1.4 2011/07/17 16:35:54 culot Exp $
 #
 
 PORTNAME=	gps
 PORTVERSION=	5.0.0
+PORTREVISION=	1
 CATEGORIES=	devel
 MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 		http://dragonlace.mirrors.ada.cx/src/
@@ -21,6 +22,8 @@ BUILD_DEPENDS=	gnat-aux>20101204:${PORTSDIR}/lang/gnat-aux \
 RUN_DEPENDS=	gtkada>=2.22:${PORTSDIR}/x11-toolkits/gtkada
 LIB_DEPENDS=	gmp.10:${PORTSDIR}/math/gmp
 
+LATEST_LINK=	gps-ide
+
 GNU_CONFIGURE=		yes
 USE_GMAKE=		yes
 USE_BZIP2=		yes
@@ -28,6 +31,7 @@ USE_PERL5_BUILD=	yes
 ALL_TARGET=		default
 CC=			gnatgcc
 
+CONFIGURE_ENV+=		AWK=/usr/bin/awk
 MAKE_ENV+=		ADA_PROJECT_PATH=${PREFIX}/lib/gnat
 
 OPTIONS=		SYSLOG "Enable system logging" on

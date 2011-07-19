@@ -2,7 +2,7 @@
 # Date created:                       12 December 2010
 # Whom:                               John Marino <draco@marino.st>
 #
-# $FreeBSD: ports/www/aws/Makefile,v 1.1 2011/03/03 00:45:54 wen Exp $
+# $FreeBSD: ports/www/aws/Makefile,v 1.2 2011/07/19 10:58:23 culot Exp $
 #
 
 PORTNAME=	aws
@@ -153,7 +153,7 @@ do-build:
 	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${GMAKE} build build_doc
 
 test: install
-	cd ${WRKSRC}/regtests && python2.6 testsuite.py
+	cd ${WRKSRC}/regtests && python${PYTHON_VER} testsuite.py
 
 do-install:
 	cd ${WRKSRC} && ${GMAKE} install
