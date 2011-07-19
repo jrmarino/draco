@@ -1476,7 +1476,7 @@ ifeq ($(strip $(filter-out arm% android eabi,$(targ))),)
   s-intman.adb<s-intman-posix.adb \
   s-linux.ads<s-linux.ads \
   s-osinte.adb<s-osinte-posix.adb \
-  s-osinte.ads<s-osinte-linux.ads \
+  s-osinte.ads<s-osinte-android.ads \
   s-osprim.adb<s-osprim-posix.adb \
   s-taprop.adb<s-taprop-linux.adb \
   s-tasinf.ads<s-tasinf-linux.ads \
@@ -1496,12 +1496,14 @@ ifeq ($(strip $(filter-out arm% android eabi,$(targ))),)
     mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
     indepsw.adb<indepsw-gnu.adb
 
-  EXTRA_GNATRTL_TASKING_OBJS=s-linux.o
+  EXTRA_LIBGNAT_SRCS+=		signal_android.c
+  EXTRA_LIBGNAT_OBJS+=		signal_android.o
+  EXTRA_GNATRTL_TASKING_OBJS=	s-linux.o
   EH_MECHANISM=
-  THREADSLIB = -lpthread
-  GNATLIB_SHARED = gnatlib-shared-dual
-  GMEM_LIB = gmemlib
-  LIBRARY_VERSION := $(LIB_VERSION)
+  THREADSLIB=
+  GNATLIB_SHARED=		gnatlib-shared-dual
+  GMEM_LIB=			gmemlib
+  LIBRARY_VERSION:=		$(LIB_VERSION)
 endif
 
 

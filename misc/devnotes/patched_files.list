@@ -55,6 +55,7 @@ a-intnam-openbsd.ads
 g-socthi-bsd.adb
 g-socthi-netbsd.adb		[*]
 g-socthi-netbsd6.ads		[*]
+s-osinte-android.ads
 s-osinte-dragonfly.adb
 s-osinte-dragonfly.ads
 s-osinte-freebsd32.ads
@@ -68,6 +69,7 @@ s-osprim-bsd32.adb
 s-osprim-bsd64.adb
 s-osprim-bsdn6.adb
 s-taprop-netbsd.adb
+signal_android.c
 system-dragonfly-x86.ads
 system-dragonfly-x86_64.ads
 system-netbsd-x86.ads
