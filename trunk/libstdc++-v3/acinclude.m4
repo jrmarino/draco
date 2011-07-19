@@ -1668,7 +1668,7 @@ AC_DEFUN([GLIBCXX_COMPUTE_STDIO_INTEGER_CONSTANTS], [
   AC_COMPUTE_INT([glibcxx_cv_stdio_eof], [[EOF]],
 		 [#include <stdio.h>],
 		 [AC_MSG_ERROR([computing EOF failed])])
-  ])   
+  ])
   AC_DEFINE_UNQUOTED(_GLIBCXX_STDIO_EOF, $glibcxx_cv_stdio_eof,
 		     [Define to the value of the EOF integer constant.])
 

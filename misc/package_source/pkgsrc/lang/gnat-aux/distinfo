@@ -1,8 +1,8 @@
 $NetBSD: distinfo,v 1.1.1.1 2011/02/01 20:32:56 drochner Exp $
 
-SHA1 (gnat-aux-20110325.tar.bz2) = 984f65366ec34326cf16dd95a454cb01f96f984a
-RMD160 (gnat-aux-20110325.tar.bz2) = 040fe85d8c57793c7c34ad459c15fc9d738b1361
-Size (gnat-aux-20110325.tar.bz2) = 26702525 bytes
+SHA1 (gnat-aux-20110325.tar.bz2) = 1a5889f74dedd56a721cb5b6f3372e9c28e9e7c1
+RMD160 (gnat-aux-20110325.tar.bz2) = 8440ae75906ecd97621872a7cbde02c6490118e0
+Size (gnat-aux-20110325.tar.bz2) = 26700051 bytes
 SHA1 (gnat-bootstrap.i386.dragonfly.tar.bz2) = d7a8103243a2df3723d9d3c3ec0da9c3bb725214
 RMD160 (gnat-bootstrap.i386.dragonfly.tar.bz2) = 9e6fde444e0ed76ee404810af6d6b7eb48659c09
 Size (gnat-bootstrap.i386.dragonfly.tar.bz2) = 28205489 bytes

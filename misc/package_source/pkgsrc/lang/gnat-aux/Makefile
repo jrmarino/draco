@@ -21,7 +21,6 @@ PKG_DESTDIR_SUPPORT=	user-destdir
 
 USE_TOOLS+=		gmake sed flex bison gm4 perl makeinfo bzip2
 USE_BUILTIN.iconv=	no
-BUILD_DEPENDS+=		dejagnu>=1.4:../../devel/dejagnu
 BUILD_DEPENDS+=		autoconf>=2.6:../../devel/autoconf
 
 .include "../../mk/bsd.prefs.mk"
@@ -129,9 +128,11 @@ FULL_PATH=${BOOTSTRAP_PREFIX}/bin:/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:$
 
 
 # establish ada-aware compiler for use
-MY_CONFIGURE_ENV=	CC=${FULL_GNATGCC} PATH=${FULL_PATH} CONFIG_SHELL=${CONFIG_SHELL}
+MY_CONFIGURE_ENV=	CC=${FULL_GNATGCC}
+MY_CONFIGURE_ENV+=	PATH=${FULL_PATH}
+MY_CONFIGURE_ENV+=	CONFIG_SHELL=${CONFIG_SHELL}
+MY_CONFIGURE_ENV+=	MAKEINFO=/usr/bin/false
 MY_MAKE_ENV=		PATH=${FULL_PATH}
-MY_MAKE_ENV+=		MAKEINFO=/usr/bin/false
 MY_MAKE_ENV+=		LD_LIBRARY_PATH=${WRKSRC}/gcc
 
 
@@ -155,10 +156,6 @@ CONFIGURE_ARGS+=	--disable-libssp
 CONFIGURE_ARGS+=	--disable-nls
 
 
-# The standard make options
-MAKE_ARGS=		MAKEINFOFLAGS="--no-split"
-
-
 # Automatic package list generation
 # lib/libquadmath.* will have to be added if __float128 support is added
 # Alternatively, libquadmath support could be intentionally disabled.
@@ -171,6 +168,7 @@ GENERATE_PLIST+= ${FIND} lib/libgcc_s.* \( -type f -or -type l \) | ${SORT};
 GENERATE_PLIST+= ${FIND} lib/libsupc++.* \( -type f -or -type l \) | ${SORT};
 GENERATE_PLIST+= ${FIND} lib/libstdc++.* \( -type f -or -type l \) | ${SORT};
 GENERATE_PLIST+= ${FIND} include/c++/${GCC_BRANCH}.${GCC_POINT}/* -type f | ${SORT} -dr;
+GENERATE_PLIST+= ${FIND} share/gcc-${GCC_BRANCH}.${GCC_POINT}/*   -type f | ${SORT} -dr;
 .endif
 GENERATE_PLIST+= ${FIND} ${LPATH}/*     \( -type f -or -type l \) | ${SORT} -dr;
 GENERATE_PLIST+= ${FIND} ${LEPATH}/*    -type f | ${SORT} -dr;
@@ -224,7 +222,7 @@ do-build:
 
 
 do-test: build
-.if !empty(PKG_OPTIONS:Mada)
+.if !empty(PKG_OPTIONS:Mtestada)
 .if (${OPSYS} == "NetBSD") && (${MACHINE_ARCH} == "x86_64")
 	#NetBSD has an exremely small default stacksize of 2MB, which is insufficient
 	#for the gnat.dg testsuite (entry_queues test on AMD64 specifically)
@@ -235,15 +233,12 @@ do-test: build
 	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-ada
 .endif
 .endif
-.if !empty(PKG_OPTIONS:Mcxx)
+.if !empty(PKG_OPTIONS:Mtestcxx)
 	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-c++
 	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-target-libstdc++-v3
 .endif
-.if !empty(PKG_OPTIONS:Mtestlto)
-	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-lto
-.endif
-.if !empty(PKG_OPTIONS:Mtestc)
-	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-gcc
+.if !empty(PKG_OPTIONS:Mtestgcc)
+	cd ${WRKSRC} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-c
 .endif
 
 
@@ -258,4 +253,3 @@ do-install:
 .include "../../math/mpcomplex/buildlink3.mk"
 .include "../../converters/libiconv/buildlink3.mk"
 .include "../../mk/bsd.pkg.mk"
-

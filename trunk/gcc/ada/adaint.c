@@ -401,7 +401,7 @@ OS_Time
 __gnat_current_time
   (void)
 {
-#if defined(__NetBSD__) && (__NetBSD > 5)
+#if defined(__NetBSD__) && (__NetBSD__ > 5)
   time_t res = __time50 (NULL);
 #else
   time_t res = time (NULL);

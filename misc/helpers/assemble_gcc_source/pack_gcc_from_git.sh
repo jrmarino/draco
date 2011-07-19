@@ -4,10 +4,13 @@
 # C languages.  The ability to build C++ will be maintained, but this will
 # have to be added externally.
 
-SNAPSHOT=20110325
+SNAPSHOT=20110627
 TRUNKVER=4.6
 GITREPOS=/export/home/marino/shallow_gcc
 DRACOREPOS=/export/home/marino/draco/trunk
+BASEDIR=gcc-$TRUNKVER-$SNAPSHOT
+PATCHARGS="-d $BASEDIR --forward -E -p1 --no-backup-if-mismatch"
+
 
 ROOT_FILES="
    config-ml.in
@@ -35,9 +38,6 @@ ROOT_FILES="
    symlink-tree
    ylwrap"
 
-# del libquadmath
-# del libmudflap
-
 COMPLETE_DIRS="
    libiberty
    libdecnumber
@@ -59,9 +59,9 @@ GCC_DIRS="
    cp
    lto
    ginclude
+   testsuite/c-c++-common
    testsuite/g++.dg
    testsuite/gcc.dg
-   testsuite/c-c++-common
    config/i386
    config/soft-fp"
 
@@ -108,7 +108,7 @@ UNWANTED_LIBSTDCXX="
    config/os/uclibc
    config/os/vxworks"
 
-BASEDIR=gcc-$TRUNKVER-$SNAPSHOT
+
 TARBALL=gnat-aux-$SNAPSHOT.tar
 rm -rf $BASEDIR
 mkdir $BASEDIR
@@ -164,8 +164,9 @@ done
 cp -r $DRACOREPOS/* $BASEDIR/
 
 #apply flux patches
-PATCHARGS="-d $BASEDIR --forward -E -p1"
-gpatch $BASEDIR/gcc/configure < $DRACOREPOS/../misc/gcc_flux_patches/patch_gcc_configure
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/patch_gcc_configure
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/patch_gcc_Makefile.in
+gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/patch_configure
 gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/libstdcxx-testsuite.patch
 gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/libstdc++.exp.patch
 gpatch $PATCHARGS < $DRACOREPOS/../misc/gcc_flux_patches/libstdxx_ts_missing_debug_checks.patch

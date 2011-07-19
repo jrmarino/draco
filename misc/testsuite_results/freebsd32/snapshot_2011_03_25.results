@@ -1,0 +1,44 @@
+Test Run By root on Wed Apr 20 22:11:18 CEST 2011
+		=== acats configuration ===
+target gcc is /usr/ports/lang/gnat-aux/work/build/gcc/xgcc -B/usr/ports/lang/gnat-aux/work/build/gcc/
+Reading specs from /usr/ports/lang/gnat-aux/work/build/gcc/specs COLLECT_GCC=/usr/ports/lang/gnat-aux/work/build/gcc/xgcc
+   COLLECT_LTO_WRAPPER=/usr/ports/lang/gnat-aux/work/build/gcc/lto-wrapper Target: i386-aux-freebsd8.0
+   Configured with: /usr/ports/lang/gnat-aux/work/gcc-4.6-20110325/configure --enable-languages='c ada
+   c++' --build=i386-aux-freebsd8.0 --program-prefix=gnat --prefix=/usr/local --with-system-zlib --with-gmp=/usr/local
+   --with-mpfr=/usr/local --with-mpc=/usr/local --with-libiconv-prefix=/usr/local --enable-shared --enable-threads=posix
+   --disable-bootstrap --disable-libquadmath --disable-libmudflap --disable-libgomp --disable-libssp --disable-nls
+   --prefix=/usr/local Thread model: posix gcc version 4.6.0 20110325 (release) -=> GNAT AUX [FreeBSD]
+   (GCC)
+host=i386-undermydesk-freebsd
+target=i386-aux-freebsd8.0
+gnatmake is /usr/ports/lang/gnat-aux/work/build/gcc/gnatmake
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+		=== acats Summary ===
+# of expected passes		2321
+# of unexpected failures	0
+
+=== Completed: Wed Apr 20 23:34:56 CEST 2011 ===
+
+
+Test Run By root on Wed Apr 20 23:34:57 2011
+Native configuration is i386-aux-freebsd8.0
+
+		=== gnat tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+
+		=== gnat Summary ===
+
+# of expected passes		868
+# of expected failures		10
+/usr/ports/lang/gnat-aux/work/build/gcc/gnatmake version 4.6.0 20110325 (release) -=> GNAT AUX [FreeBSD]
+
+
