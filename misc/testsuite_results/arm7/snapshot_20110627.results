@@ -1,0 +1,31 @@
+Test Run By root on Thu Aug 18 14:46:50 CDT 2011
+		=== acats configuration ===
+target gcc is /usr/ports/lang/gnatdroid-armv7/work/build/gcc/xgcc -B/usr/ports/lang/gnatdroid-armv7/work/build/gcc/
+Reading specs from /usr/ports/lang/gnatdroid-armv7/work/build/gcc/specs
+  COLLECT_GCC=/usr/ports/lang/gnatdroid-armv7/work/build/gcc/xgcc
+  COLLECT_LTO_WRAPPER=/usr/ports/lang/gnatdroid-armv7/work/build/gcc/lto-wrapper Target: arm-android-eabi
+   Configured with: /usr/ports/lang/gnatdroid-armv7/work/gcc-4.6-20110627/configure --enable-languages=c,ada
+   --target=arm-android-eabi --program-prefix=arm-android-eabi- --prefix=/usr/local/android9/ARMv7 --with-arch=armv7-a
+   --with-system-zlib --with-gmp=/usr/local --with-mpfr=/usr/local --with-mpc=/usr/local
+  --with-libiconv-prefix=/usr/local --with-sysroot=/usr/local/android9 --with-float=soft --with-fpu=neon
+   --enable-target-optspace --enable-threads=posix --disable-bootstrap --disable-shared --disable-libssp
+   --disable-libgomp --disable-libmudflap --disable-libquadmath --disable-libstdcxx-pch --disable-tls
+   --disable-nls Thread model: posix gcc version 4.6.1 20110627 (release) -=> GNAT AUX [FreeBSD32 x Android
+   ARMv7] (GCC)
+host=i386-undermydesk-freebsd
+target=arm-android-eabi
+gnatmake-cross is /usr/ports/lang/gnatdroid-armv7/work/build/gcc/gnatmake-cross
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+		=== acats Summary ===
+# of expected passes		2321
+# of unexpected failures	0
+
+=== Completed: Thu Aug 18 16:29:48 CDT 2011 ===
+
+
+
