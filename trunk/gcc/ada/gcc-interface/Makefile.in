@@ -1184,6 +1184,8 @@ ifeq ($(strip $(filter-out %86 freebsd%,$(arch) $(osys))),)
   a-numaux.ads<a-numaux-x86.ads \
   g-bytswa.adb<g-bytswa-x86.adb \
   g-socthi.adb<g-socthi-bsd.adb \
+  g-trasym.ads<g-trasym-unimplemented.ads \
+  g-trasym.adb<g-trasym-unimplemented.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-osinte.adb<s-osinte-freebsd.adb \
@@ -1219,6 +1221,8 @@ ifeq ($(strip $(filter-out x86_64 freebsd%,$(arch) $(osys))),)
   a-numaux.ads<a-numaux-x86.ads \
   g-bytswa.adb<g-bytswa-x86.adb \
   g-socthi.adb<g-socthi-bsd.adb \
+  g-trasym.ads<g-trasym-unimplemented.ads \
+  g-trasym.adb<g-trasym-unimplemented.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-osinte.adb<s-osinte-freebsd.adb \
@@ -1253,6 +1257,8 @@ ifeq ($(strip $(filter-out %86 dragonfly%,$(arch) $(osys))),)
   a-numaux.ads<a-numaux-x86.ads \
   g-bytswa.adb<g-bytswa-x86.adb \
   g-socthi.adb<g-socthi-bsd.adb \
+  g-trasym.ads<g-trasym-unimplemented.ads \
+  g-trasym.adb<g-trasym-unimplemented.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-osinte.adb<s-osinte-dragonfly.adb \
@@ -1288,6 +1294,8 @@ ifeq ($(strip $(filter-out x86_64 dragonfly%,$(arch) $(osys))),)
   a-numaux.ads<a-numaux-x86.ads \
   g-bytswa.adb<g-bytswa-x86.adb \
   g-socthi.adb<g-socthi-bsd.adb \
+  g-trasym.ads<g-trasym-unimplemented.ads \
+  g-trasym.adb<g-trasym-unimplemented.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-osinte.adb<s-osinte-dragonfly.adb \
@@ -1322,6 +1330,8 @@ ifeq ($(strip $(filter-out %86 openbsd%,$(arch) $(osys))),)
   a-numaux.ads<a-numaux-x86.ads \
   g-bytswa.adb<g-bytswa-x86.adb \
   g-socthi.adb<g-socthi-bsd.adb \
+  g-trasym.ads<g-trasym-unimplemented.ads \
+  g-trasym.adb<g-trasym-unimplemented.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-osinte.adb<s-osinte-openbsd.adb \
@@ -1357,6 +1367,8 @@ ifeq ($(strip $(filter-out x86_64 openbsd%,$(arch) $(osys))),)
   a-numaux.ads<a-numaux-x86.ads \
   g-bytswa.adb<g-bytswa-x86.adb \
   g-socthi.adb<g-socthi-bsd.adb \
+  g-trasym.ads<g-trasym-unimplemented.ads \
+  g-trasym.adb<g-trasym-unimplemented.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-osinte.adb<s-osinte-openbsd.adb \
@@ -1391,6 +1403,8 @@ ifeq ($(strip $(filter-out %86 netbsd%,$(arch) $(osys))),)
   a-numaux.ads<a-numaux-x86.ads \
   g-bytswa.adb<g-bytswa-x86.adb \
   g-socthi.adb<g-socthi-netbsd.adb \
+  g-trasym.ads<g-trasym-unimplemented.ads \
+  g-trasym.adb<g-trasym-unimplemented.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-osinte.adb<s-osinte-netbsd.adb \
@@ -1435,6 +1449,8 @@ ifeq ($(strip $(filter-out x86_64 netbsd%,$(arch) $(osys))),)
   a-numaux.ads<a-numaux-x86.ads \
   g-bytswa.adb<g-bytswa-x86.adb \
   g-socthi.adb<g-socthi-netbsd.adb \
+  g-trasym.ads<g-trasym-unimplemented.ads \
+  g-trasym.adb<g-trasym-unimplemented.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-osinte.adb<s-osinte-netbsd.adb \
@@ -1472,6 +1488,8 @@ endif
 ifeq ($(strip $(filter-out arm% android eabi,$(targ))),)
   LIBGNAT_TARGET_PAIRS = \
   a-intnam.ads<a-intnam-linux.ads \
+  g-trasym.ads<g-trasym-unimplemented.ads \
+  g-trasym.adb<g-trasym-unimplemented.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-linux.ads<s-linux.ads \
