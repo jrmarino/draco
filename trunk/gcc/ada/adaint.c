@@ -3480,8 +3480,6 @@ _flush_cache()
       && ! (defined (linux) && (defined (i386) || defined (__x86_64__))) \
       && ! (defined (linux) && defined (__ia64__)) \
       && ! (defined (linux) && defined (powerpc)) \
-      && ! defined (__FreeBSD__) \
-      && ! defined (__DragonFly__) \
       && ! defined (__Lynx__) \
       && ! defined (__hpux__) \
       && ! defined (__APPLE__) \
@@ -3503,6 +3501,160 @@ convert_addresses (const char *file_name ATTRIBUTE_UNUSED,
 		   int *len ATTRIBUTE_UNUSED)
 {
   *len = 0;
+}
+#elif defined(__DragonFly__) \
+   || defined(__FreeBSD__) \
+   || defined(__OpenBSD__) \
+   || defined(__NetBSD__)
+   
+/*
+  Copyright (C) 1999 by Juergen Pfeifer <juergen.pfeifer@gmx.net>
+  Ada for Linux Team (ALT)
+
+  Permission is hereby granted, free of charge, to any person obtaining a
+  copy of this software and associated documentation files (the
+  "Software"), to deal in the Software without restriction, including
+  without limitation the rights to use, copy, modify, merge, publish,
+  distribute, distribute with modifications, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included
+  in all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+  Except as contained in this notice, the name(s) of the above copyright
+  holders shall not be used in advertising or otherwise to promote the
+  sale, use or other dealings in this Software without prior written
+  authorization.
+*/
+
+#include <sys/types.h>
+#include <unistd.h>
+#include <string.h>
+#include <signal.h>
+
+#define MAX_LINE 1024
+
+#define CLOSE1  close(fd1[0]); close(fd1[1])
+#define CLOSE2  close(fd2[0]); close(fd2[1])
+#define RESTSIG sigaction(SIGPIPE,&oact,NULL)
+
+void convert_addresses (const char *file_name,
+                void* addrs[],
+                int   n_addr,
+                char* buf,
+                int*  len)
+{
+  int max_len = *len;
+  pid_t pid = getpid();
+  pid_t child;
+
+  struct sigaction act, oact;
+
+  int fd1[2], fd2[2];
+
+  *buf = 0; *len = 0;
+  act.sa_handler = SIG_IGN;
+  sigemptyset(&act.sa_mask);
+  act.sa_flags = 0;
+  if (sigaction(SIGPIPE,&act,&oact) < 0)
+    return;
+
+  if (pipe(fd1) >= 0) {                                   /* cond ALPHA */
+    if (pipe(fd2)>=0) {                                   /* cond BRAVO */
+      if ((child = fork()) < 0) {                         /* cond CHARLIE */
+        CLOSE1; CLOSE2; RESTSIG;
+        return;
+      }
+      else {                                              /* else CHARLIE */
+        if (0==child) {                                   /* cond DELTA */
+          close(fd1[1]);
+          close(fd2[0]);
+          if (fd1[0] != STDIN_FILENO) {
+            if (dup2(fd1[0],STDIN_FILENO) != STDIN_FILENO) {
+              CLOSE1; CLOSE2;
+            }
+            close(fd1[0]);
+          }
+          if (fd2[1] != STDOUT_FILENO) {
+            if (dup2(fd2[1],STDOUT_FILENO) != STDOUT_FILENO) {
+              CLOSE1; CLOSE2;
+            }
+            close(fd2[1]);
+          }
+
+          /* As pointed out by Florian Weimer to JP, it is a
+             security threat to call the script with a user defined
+             environment and using the path. That would be Trojans
+             pleasure.  Therefore the absolute path to addr2line and
+             an empty environment is used. That should be safe.
+          */
+          char *const argv[] = { "addr2line",
+                                 "-e", file_name,
+                                 "--demangle=gnat",
+                                 "--functions",
+                                 "--basenames",
+                                 NULL };
+          char *const envp[] = { NULL };
+          if (execve("/usr/bin/addr2line", argv, envp) < 0) {
+            CLOSE1; CLOSE2;
+          }
+        }
+        else {                                            /* else DELTA */
+          int i, n;
+          char hex[16];
+          char line[MAX_LINE + 1];
+          char *p;
+          char *s = buf;
+
+          /* Parent context */
+          close(fd1[0]);
+          close(fd2[1]);
+
+          for(i=0; i < n_addr; i++) {
+            snprintf(hex,sizeof(hex),"%p\n",addrs[i]);
+            write(fd1[1],hex,strlen(hex));
+            n = read(fd2[0],line,MAX_LINE);
+            if (n<=0)
+              break;
+            line[n]=0;
+            /* We have approx. 16 additional chars for "%p in " clause.
+               We use this info to prevent a buffer overrun.
+            */
+            if (n + 16 + (*len) > max_len)
+              break;
+            p = strchr(line,'\n');
+            if (p) {
+              if (*(p+1)) {
+                *p = 0;
+                *len += snprintf(s, (max_len - (*len)), "%p in %s at %s",
+                                 addrs[i], line, p+1);
+              }
+              else {
+                *len += snprintf(s, (max_len - (*len)), "%p at %s",
+                                 addrs[i], line);
+              }
+              s = buf + (*len);
+            }
+          }
+          close(fd1[1]);
+          close(fd2[0]);
+        }                                                 /* ends DELTA */
+      }                                                   /* ends CHARLIE */
+    }
+    else {                                                /* else BRAVO */
+      CLOSE1;
+    }                                                     /* ends BRAVO */
+  }                                                       /* ends ALPHA */
+  RESTSIG;
 }
 #endif
 
