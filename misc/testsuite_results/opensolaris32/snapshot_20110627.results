@@ -1,0 +1,47 @@
+Test Run By marino on October  2, 2011 10:34:20 AM CEST
+		=== acats configuration ===
+target gcc is /opt/ipp/pkgsrc/lang/gnat-aux/work/build/gcc/xgcc -B/opt/ipp/pkgsrc/lang/gnat-aux/work/build/gcc/
+Reading specs from /opt/ipp/pkgsrc/lang/gnat-aux/work/build/gcc/specs
+  COLLECT_GCC=/opt/ipp/pkgsrc/lang/gnat-aux/work/build/gcc/xgcc
+  COLLECT_LTO_WRAPPER=/opt/ipp/pkgsrc/lang/gnat-aux/work/build/gcc/lto-wrapper Target: i386-aux-solaris2.11
+   Configured with: /opt/ipp/pkgsrc/lang/gnat-aux/work/gcc-4.6-20110627/configure --enable-languages='c
+   ada c++' --build=i386-aux-solaris2.11 --program-prefix=gnat --prefix=/opt/ipp/pkg --with-system-zlib
+   --with-gmp=/opt/ipp/pkg --with-mpfr=/opt/ipp/pkg --with-mpc=/opt/ipp/pkg --with-libiconv-prefix=/opt/ipp/pkg
+   --enable-shared --enable-threads=posix --disable-bootstrap --disable-libquadmath --disable-libmudflap
+   --disable-libgomp --disable-libssp --disable-nls Thread model: posix gcc version 4.6.1 20110627 (release)
+   -=> GNAT AUX [Solaris] (GCC)
+host=i386-pc-solaris2.11
+target=i386-aux-solaris2.11
+gnatmake is a tracked alias for /opt/ipp/pkgsrc/lang/gnat-aux/work/build/gcc/gnatmake
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+		=== acats Summary ===
+# of expected passes		2321
+# of unexpected failures	0
+
+=== Completed: October  2, 2011 10:53:34 AM CEST ===
+
+
+Test Run By marino on Sun Oct  2 10:53:35 2011
+Native configuration is i386-aux-solaris2.11
+
+		=== gnat tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+UNSUPPORTED: gnat.dg/socket1.adb
+
+		=== gnat Summary ===
+
+# of expected passes		869
+# of expected failures		10
+# of unsupported tests		1
+/opt/ipp/pkgsrc/lang/gnat-aux/work/build/gcc/gnatmake version 4.6.1 20110627 (release) -=> GNAT AUX [Solaris]
+
+
