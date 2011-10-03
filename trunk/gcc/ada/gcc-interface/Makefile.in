@@ -1011,6 +1011,7 @@ ifeq ($(strip $(filter-out %86 solaris2%,$(arch) $(osys))),)
   a-numaux.adb<a-numaux-x86.adb \
   a-numaux.ads<a-numaux-x86.ads \
   a-intnam.ads<a-intnam-solaris.ads \
+  g-trasym.adb<g-trasym-bsd.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-solaris.adb \
   s-osinte.adb<s-osinte-solaris.adb \

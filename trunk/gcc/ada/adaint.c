@@ -3478,7 +3478,8 @@ _flush_cache()
 #if defined (__DragonFly__) \
  || defined (__FreeBSD__) \
  || defined (__OpenBSD__) \
- || defined (__NetBSD__)
+ || defined (__NetBSD__) \
+ || (defined (__sun__) && defined (__i386__) && defined (__SVR4))
 
 /* The above platforms use the external program /usr/bin/addr2line */
 #define EXTERNAL_SYMTRACE
@@ -3495,8 +3496,7 @@ _flush_cache()
    || (defined (linux)     && defined (powerpc)) \
    || (defined (linux)     && defined (__ia64__)) \
    || (defined (linux)     && defined (__x86_64__)) \
-   || (defined (__SVR4)    && defined (sun) && defined (i386)) \
-   || (defined (__SVR4)    && defined (sun) && defined (sparc))
+   || (defined (__SVR4)    && defined (__sun__) && defined (sparc))
 
 /* The above platforms use the system library libaddr2line.a */
 #define NATIVE_SYMTRACE
@@ -3550,6 +3550,12 @@ _flush_cache()
 #define CHILD_WRITE  readpipe[1]
 #define CHILD_READ   sendpipe[0]
 #define PARENT_WRITE sendpipe[1]
+
+#if defined (__sun__)
+#define ADDR2LINE_PROG	"/usr/gnu/bin/addr2line"
+#else
+#define ADDR2LINE_PROG	"/usr/bin/addr2line"
+#endif
 
 void
 convert_addresses (const char *file_name,
@@ -3620,7 +3626,7 @@ convert_addresses (const char *file_name,
                            "--basenames",
                            NULL };
     char *const envp[] = { NULL };
-    if (execve("/usr/bin/addr2line", argv, envp) < 0) {
+    if (execve(ADDR2LINE_PROG, argv, envp) < 0) {
       close (CHILD_WRITE);
       close (CHILD_READ);
       RESTSIG;
