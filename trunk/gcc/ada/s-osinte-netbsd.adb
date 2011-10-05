@@ -70,6 +70,30 @@ package body System.OS_Interface is
       null;
    end pthread_init;
 
+   -----------------------------------
+   -- pthread_mutexattr_setprotocol --
+   -----------------------------------
+
+   function pthread_mutexattr_setprotocol
+     (attr     : access pthread_mutexattr_t;
+      protocol : int) return int is
+      pragma Unreferenced (attr, protocol);
+   begin
+      return 0;
+   end pthread_mutexattr_setprotocol;
+
+   --------------------------------------
+   -- pthread_mutexattr_setprioceiling --
+   --------------------------------------
+
+   function pthread_mutexattr_setprioceiling
+     (attr     : access pthread_mutexattr_t;
+      prioceiling : int) return int is
+      pragma Unreferenced (attr, prioceiling);
+   begin
+      return 0;
+   end pthread_mutexattr_setprioceiling;
+
    -----------------
    -- To_Duration --
    -----------------
