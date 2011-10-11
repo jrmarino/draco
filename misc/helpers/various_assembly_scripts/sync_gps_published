@@ -11,14 +11,32 @@ rm -rf ${ORIG_DIR}
 rm -rf ${TARG_DIR}
 rm -rf ${NEW_BZ2}
 
+FILELIST=" \
+  gps-welcome.html \
+  gps-tutorial.html \
+  gps.css \
+  gps.html \
+  gps_index.xml \
+  gps_title.gif \
+  help_index.html" 
+  	
+
 /usr/bin/tar -xf ${TAR_FILE}
 mv ${ORIG_DIR} ${TARG_DIR}
 
 rm ${TARG_DIR}/templates_parser/tp_shared.gpr.orig
 rm ${TARG_DIR}/shared.gpr.orig
 
-mkdir ${TARG_DIR}/docx
-mv ${TARG_DIR}/docs/gps.pdf ${TARG_DIR}/docx
+mkdir -p ${TARG_DIR}/docx/html
+mv ${TARG_DIR}/docs/docs.gpr ${TARG_DIR}/docx
+cp -p ${TARG_DIR}/docs/gps-splash.png ${TARG_DIR}/docx
+for TEXAS in $FILELIST; do \
+   mv ${TARG_DIR}/docs/${TEXAS} ${TARG_DIR}/docx/html/; \
+done
+mv ${TARG_DIR}/docs/gps/* ${TARG_DIR}/docx/html/
+mv ${TARG_DIR}/docs/*.jpg ${TARG_DIR}/docx/html/
+mv ${TARG_DIR}/docs/*.png ${TARG_DIR}/docx/html/
+cp -p ${TARG_DIR}/share/icons/16px/entities/*_x.png ${TARG_DIR}/docx/html/
 rm -rf ${TARG_DIR}/docs
 mv ${TARG_DIR}/docx ${TARG_DIR}/docs
 echo "all:" > ${TARG_DIR}/docs/Makefile.in
