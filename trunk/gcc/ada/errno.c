@@ -58,7 +58,7 @@
 
 /* The ANDROID errno.h file also defines __set_errno as an external variable
    for use with syscalls.  It should not be referenced directly, but we are
-   going to do it anyway because the alternative solution is too rename all 
+   going to do it anyway because the alternative solution is to rename all 
    uses of __set_errno in GNAT. */
 
 #undef GNAT_SET_ERRNO   
