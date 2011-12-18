@@ -27,11 +27,14 @@ function produce_patch () {
       for F in ${FILES}; do
          if [ -f ${F} ]; then
             if [ -f ${RELEASE_DIR}/${F} ]; then
-               ORIG=${RELEASE_DIR}/${F}
+               DFMSG=`${DIFFPROG} -q ${RELEASE_DIR}/${F} ${F}`
+               if [ -n "${DFMSG}" ] ; then
+                  echo "diff ${F}"
+                  ${DIFFPROG} -u ${RELEASE_DIR}/${F} ${F} --label=original --label=${F} >> ${PATCH_FILE}
+               fi  
             else
-               ORIG=/dev/null
+               ${DIFFPROG} -u /dev/null ${F} --label=/dev/null --label=${F} >> ${PATCH_FILE}	
             fi
-            ${DIFFPROG} -u ${ORIG} ${F} >> ${PATCH_FILE}
          fi
       done
    done
@@ -57,8 +60,8 @@ function regenerate_patch () {
    for FILE in ${FILE_LIST[@]}; do
       FULL_PATH=`echo ${FILE:6} | awk '{print $1}'`
       FILE_PATH=`dirname ${FULL_PATH}`
-      FILE_NAME=`basename ${FULL_PATH}`   
-      ${DIFFPROG} -u ${FILE_PATH}/${FILE_NAME}.orig ${FILE_PATH}/${FILE_NAME} >> ${PATCH_FILE}
+      FILE_NAME=`basename ${FULL_PATH}`
+      ${DIFFPROG} -u ${FULL_PATH}.orig ${FULL_PATH} --label=original --label=${FULL_PATH} >> ${PATCH_FILE}
    done   
 }
 
@@ -67,7 +70,7 @@ function remove_file () {
    HALF_PATH=${2}
    PATCH_FILE=${OUTPUT_DIR}/diff-${PATCH_SUFFIX}
    FULL_PATH=${RELEASE_DIR}/${HALF_PATH}
-   ${DIFFPROG} -u ${FULL_PATH} /dev/null >> ${PATCH_FILE}
+   ${DIFFPROG} -u ${FULL_PATH} /dev/null --label=${HALF_PATH} --label=/dev/null >> ${PATCH_FILE}
 }
 
 mkdir -p ${OUTPUT_DIR}
