@@ -30,7 +30,7 @@ function produce_patch () {
                DFMSG=`${DIFFPROG} -q ${RELEASE_DIR}/${F} ${F}`
                if [ -n "${DFMSG}" ] ; then
                   echo "diff ${F}"
-                  ${DIFFPROG} -u ${RELEASE_DIR}/${F} ${F} --label=original --label=${F} >> ${PATCH_FILE}
+                  ${DIFFPROG} -u ${RELEASE_DIR}/${F} ${F} --label=${F}.orig --label=${F} >> ${PATCH_FILE}
                fi  
             else
                ${DIFFPROG} -u /dev/null ${F} --label=/dev/null --label=${F} >> ${PATCH_FILE}	
@@ -61,7 +61,7 @@ function regenerate_patch () {
       FULL_PATH=`echo ${FILE:6} | awk '{print $1}'`
       FILE_PATH=`dirname ${FULL_PATH}`
       FILE_NAME=`basename ${FULL_PATH}`
-      ${DIFFPROG} -u ${FULL_PATH}.orig ${FULL_PATH} --label=original --label=${FULL_PATH} >> ${PATCH_FILE}
+      ${DIFFPROG} -u ${FULL_PATH}.orig ${FULL_PATH} --label=${FULL_PATH}.orig --label=${FULL_PATH} >> ${PATCH_FILE}
    done   
 }
 
