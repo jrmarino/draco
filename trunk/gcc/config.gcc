@@ -1285,11 +1285,11 @@ x86_64-*-freebsd*)
 	tmake_file="${tmake_file} i386/t-crtstuff"
 	;;
 i[34567]86-*-dragonfly*)
-	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h dragonfly.h i386/dragonfly.h"
+	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h dragonfly.h dragonfly-stdint.h i386/dragonfly.h"
 	tmake_file="${tmake_file} i386/t-crtstuff"
 	;;
 x86_64-*-dragonfly*)
-	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h dragonfly.h i386/x86-64.h i386/dragonfly.h i386/dragonfly64.h"
+	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h dragonfly.h dragonfly-stdint.h i386/x86-64.h i386/dragonfly.h i386/dragonfly64.h"
 	tmake_file="${tmake_file} i386/t-crtstuff"
 	;;
 i[34567]86-*-netbsdelf*)
