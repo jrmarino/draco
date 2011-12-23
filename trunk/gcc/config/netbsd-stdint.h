@@ -23,7 +23,6 @@ a copy of the GCC Runtime Library Exception along with this program;
 see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
-/* Disabled due to segfault in libgcc
 #define SIG_ATOMIC_TYPE   "int"
 
 #define INT8_TYPE         "signed char"
@@ -52,7 +51,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #define UINT_FAST16_TYPE  UINT32_TYPE
 #define UINT_FAST32_TYPE  UINT32_TYPE
 #define UINT_FAST64_TYPE  UINT64_TYPE
-*/
 
-#define INTPTR_TYPE       (LONG_TYPE_SIZE == 64 ? "long int" : "int")
-#define UINTPTR_TYPE      (LONG_TYPE_SIZE == 64 ? "unsigned long int" : "unsigned int")
+/* Disabled due to segfault in libgcc
+#define INTPTR_TYPE       (LONG_TYPE_SIZE == 64 ?  INT64_TYPE :  INT32_TYPE)
+#define UINTPTR_TYPE      (LONG_TYPE_SIZE == 64 ? UINT64_TYPE : UINT32_TYPE)
+*/
