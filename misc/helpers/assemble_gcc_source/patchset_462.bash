@@ -9,6 +9,7 @@ PACHPROG=/usr/bin/gpatch
 ADA_SUFFIX=ada
 CORE_SUFFIX=core
 CXX_SUFFIX=cxx
+F95_SUFFIX=fortran
 ADA_SUITE_SUFFIX=ada-testsuite
 CXX_SUITE_SUFFIX=cxx-testsuite
 OUTPUT_DIR=${EXPANSE}/patches-${GCCVERSION}
@@ -78,7 +79,12 @@ pattern="^gcc/ada|^gnattools|^libada"
 ada=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
 produce_patch ${ADA_SUFFIX} ada[@]
 
-pattern="^gcc/testsuite|^gcc/ada|^gnattools|^libada|^libstdc..-v3"
+pattern="^gcc/fortran|^libgfortran"
+fortran=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
+produce_patch ${F95_SUFFIX} fortran[@]
+
+
+pattern="^gcc/testsuite|^gcc/ada|^gcc/fortran|^gnattools|^libada|^libgfortran|^libstdc..-v3"
 core=`cd ${DRACO} && find * -type d | ${GREPPROG} -vE $pattern`
 produce_patch ${CORE_SUFFIX} core[@]
 regenerate_patch ${CORE_SUFFIX} patch_gcc_configure
