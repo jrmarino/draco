@@ -821,7 +821,7 @@ gfc_init_builtin_functions (void)
   gfc_define_builtin ("__builtin_truncf", mfunc_float[0],
 		      BUILT_IN_TRUNCF, "truncf", ATTR_CONST_NOTHROW_LEAF_LIST);
 
-if defined(__NetBSD__) && (__NetBSD__ > 4)
+#if defined(__NetBSD__) && (__NetBSD__ > 4)
   gfc_define_builtin ("__builtin_cabsl", func_clongdouble_longdouble, 
 		      BUILT_IN_CABSL, "__c99_cabs", ATTR_CONST_NOTHROW_LEAF_LIST);
   gfc_define_builtin ("__builtin_cabs", func_cdouble_double, 
