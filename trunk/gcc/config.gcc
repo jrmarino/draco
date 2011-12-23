@@ -240,6 +240,7 @@ case ${target} in
  | crx-*				\
  | i[34567]86-*-interix3*		\
  | i[34567]86-*-netbsd*			\
+ | i[3456x]86-*-netware*		\
  | i[34567]86-*-pe			\
  | m68hc11-*-*				\
  | m6811-*-*				\
@@ -1293,7 +1294,8 @@ x86_64-*-dragonfly*)
 	tmake_file="${tmake_file} i386/t-crtstuff"
 	;;
 i[34567]86-*-netbsdelf*)
-	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h netbsd.h netbsd-elf.h i386/netbsd-elf.h netbsd-stdint.h"
+	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h netbsd.h netbsd-elf.h i386/netbsd-elf.h"
+	# crashes with this!   tm_file="${tm_file} netbsd-stdint.h"
 	extra_options="${extra_options} netbsd.opt netbsd-elf.opt"
 	tmake_file="${tmake_file} i386/t-crtstuff"
 	;;
@@ -1305,7 +1307,8 @@ i[34567]86-*-netbsd*)
 	use_collect2=yes
 	;;
 x86_64-*-netbsd*)
-	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h netbsd.h netbsd-elf.h i386/x86-64.h i386/netbsd64.h netbsd-stdint.h"
+	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h netbsd.h netbsd-elf.h i386/x86-64.h i386/netbsd64.h"
+	# crashes with this!   tm_file="${tm_file} netbsd-stdint.h"
 	extra_options="${extra_options} netbsd.opt netbsd-elf.opt"
 	tmake_file="${tmake_file} i386/t-crtstuff"
 	;;
