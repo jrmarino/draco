@@ -1,8 +1,15 @@
-diff --git a/configure b/configure
-index 32f239e..cdf8847 100755
 --- a/configure
 +++ b/configure
-@@ -14227,7 +14227,7 @@ main ()
+@@ -5269,7 +5269,7 @@
+ 
+ 
+ if test "x$with_mpfr" != x; then
+-  gmplibs="-L$with_mpfr/lib $gmplibs"
++  gmplibs="-L$with_mpfr/lib -Wl-R$with_mpfr/lib $gmplibs"
+   gmpinc="-I$with_mpfr/include $gmpinc"
+ fi
+ if test "x$with_mpfr_include" != x; then
+@@ -14200,7 +14200,7 @@
  _ACEOF
  if ac_fn_c_try_compile "$LINENO"; then :
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5

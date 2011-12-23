@@ -82,7 +82,7 @@ produce_patch ${ADA_SUFFIX} ada[@]
 pattern="^gcc/fortran|^libgfortran"
 fortran=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
 produce_patch ${F95_SUFFIX} fortran[@]
-
+regenerate_patch ${F95_SUFFIX} patch_libgfortran_configure
 
 pattern="^gcc/testsuite|^gcc/ada|^gcc/fortran|^gnattools|^libada|^libgfortran|^libstdc..-v3"
 core=`cd ${DRACO} && find * -type d | ${GREPPROG} -vE $pattern`

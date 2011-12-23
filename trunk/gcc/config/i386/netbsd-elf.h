@@ -40,6 +40,7 @@ along with GCC; see the file COPYING3.  If not see
 
 #undef LINK_SPEC
 #define LINK_SPEC NETBSD_LINK_SPEC_ELF
+#define LINK_LIBGCC_SPEC "%D -R @EXEC_PREFIX@/lib"
 
 #define NETBSD_ENTRY_POINT "__start"
 
