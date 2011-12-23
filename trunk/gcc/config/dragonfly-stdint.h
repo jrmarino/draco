@@ -1,4 +1,4 @@
-/* Definitions for <stdint.h> types for FreeBSD systems.
+/* Definitions for <stdint.h> types for DragonFly systems.
    Copyright (C) 2009 Free Software Foundation, Inc.
    Contributed by Gerald Pfeifer <gerald@pfeifer.com>.
 
