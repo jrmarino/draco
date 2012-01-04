@@ -1,0 +1,11 @@
+--- a/libquadmath/Makefile.in
++++ b/libquadmath/Makefile.in
+@@ -1247,7 +1247,7 @@
+ 
+ info-am: $(INFO_DEPS)
+ 
+-install-data-am: install-info-am install-nodist_libsubincludeHEADERS
++install-data-am: install-nodist_libsubincludeHEADERS
+ 
+ install-dvi: install-dvi-am
+ 
