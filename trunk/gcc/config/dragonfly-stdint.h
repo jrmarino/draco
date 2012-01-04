@@ -30,9 +30,9 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #define INT32_TYPE        "int"
 #define INT64_TYPE        (LONG_TYPE_SIZE == 64 ? "long int" : "long long int")
 #define UINT8_TYPE        "unsigned char"
-#define UINT16_TYPE       "unsigned short int"
+#define UINT16_TYPE       "short unsigned int"
 #define UINT32_TYPE       "unsigned int"
-#define UINT64_TYPE       (LONG_TYPE_SIZE == 64 ? "unsigned long int" : "unsigned long long int")
+#define UINT64_TYPE       (LONG_TYPE_SIZE == 64 ? "long unsigned int" : "long long unsigned int")
 
 #define INT_LEAST8_TYPE   INT8_TYPE
 #define INT_LEAST16_TYPE  INT16_TYPE
