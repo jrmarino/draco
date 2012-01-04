@@ -118,12 +118,15 @@ along with GCC; see the file COPYING3.  If not see
 #undef  NO_IMPLICIT_EXTERN_C
 #define NO_IMPLICIT_EXTERN_C	1
 
-/* Make gcc agree with DragonFly's standard headers (<machine/stdint.h>, etc...)  */
+/* Follow DragonFly's standard headers (<machine/stdint.h>, etc...).  */
 
 #undef  WCHAR_TYPE
 #define WCHAR_TYPE "int"
 
-#define MATH_LIBRARY_PROFILE    "-lm_p"
+#undef  WINT_TYPE
+#define WINT_TYPE "int"
+
+#define MATH_LIBRARY_PROFILE    "m_p"
 
 /* Code generation parameters.  */
 
