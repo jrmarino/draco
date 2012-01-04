@@ -12,6 +12,7 @@ CXX_SUFFIX=cxx
 F95_SUFFIX=fortran
 ADA_SUITE_SUFFIX=ada-testsuite
 CXX_SUITE_SUFFIX=cxx-testsuite
+GCC_SUITE_SUFFIX=gcc-testsuite
 OUTPUT_DIR=${EXPANSE}/patches-${GCCVERSION}
 RELEASE_DIR=${EXPANSE}/gcc-${GCCVERSION}
 SCRATCH_DIR=${EXPANSE}/scratch
@@ -32,9 +33,9 @@ function produce_patch () {
                if [ -n "${DFMSG}" ] ; then
                   echo "diff ${F}"
                   ${DIFFPROG} -u ${RELEASE_DIR}/${F} ${F} --label=${F}.orig --label=${F} >> ${PATCH_FILE}
-               fi  
+               fi
             else
-               ${DIFFPROG} -u /dev/null ${F} --label=/dev/null --label=${F} >> ${PATCH_FILE}	
+               ${DIFFPROG} -u /dev/null ${F} --label=/dev/null --label=${F} >> ${PATCH_FILE}
             fi
          fi
       done
@@ -63,7 +64,7 @@ function regenerate_patch () {
       FILE_PATH=`dirname ${FULL_PATH}`
       FILE_NAME=`basename ${FULL_PATH}`
       ${DIFFPROG} -u ${FULL_PATH}.orig ${FULL_PATH} --label=${FULL_PATH}.orig --label=${FULL_PATH} >> ${PATCH_FILE}
-   done   
+   done
 }
 
 function remove_file () {
@@ -110,3 +111,7 @@ regenerate_patch ${CXX_SUITE_SUFFIX} fix-ja_JP.eucJP.patch
 regenerate_patch ${CXX_SUITE_SUFFIX} fix-hong_kong.patch
 regenerate_patch ${CXX_SUITE_SUFFIX} fix-norway.patch
 regenerate_patch ${CXX_SUITE_SUFFIX} fix-random-locales.patch
+
+rm -f ${OUTPUT_DIR}/diff-${GCC_SUITE_SUFFIX}
+regenerate_patch ${GCC_SUITE_SUFFIX} gcc.pch.exp.patch
+
