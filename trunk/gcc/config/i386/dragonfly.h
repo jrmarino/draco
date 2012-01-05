@@ -91,8 +91,17 @@ along with GCC; see the file COPYING3.  If not see
 #undef TARGET_96_ROUND_53_LONG_DOUBLE
 #define TARGET_96_ROUND_53_LONG_DOUBLE 0
 
+/* Put all *tf routines in libgcc.  */
+#undef LIBGCC2_HAS_TF_MODE
+#define LIBGCC2_HAS_TF_MODE 1
+#define LIBGCC2_TF_CEXT q
+#define TF_SIZE 113
+
 /* Define this to be nonzero if static stack checking is supported. */
 #define STACK_CHECK_STATIC_BUILTIN 1
+
+/* Support for i386 has been removed from DragonFly for several releases  */
+#define SUBTARGET32_DEFAULT_CPU "i486"
 
 /* Define location of OS-specific unwind support configuration. */
 #define MD_UNWIND_SUPPORT "config/i386/dragonfly-unwind.h"
