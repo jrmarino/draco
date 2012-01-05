@@ -50,25 +50,27 @@
 
 #if defined (__GLIBC__) || defined (sun)  || (defined (__sgi) && defined(_LFAPI))
 #define GNAT_FOPEN fopen64
-#define GNAT_STAT stat64
+#define GNAT_STAT  stat64
 #define GNAT_FSTAT fstat64
 #define GNAT_LSTAT lstat64
 #define GNAT_STRUCT_STAT struct stat64
-#else
+#elif defined(__NetBSD__) && (__NetBSD__ >= 6)
 #define GNAT_FOPEN fopen
-#if defined(__NetBSD__) && (__NetBSD__ > 5)
-#define GNAT_STAT __stat50
+#define GNAT_STAT  __stat50
 #define GNAT_FSTAT __fstat50
 #define GNAT_LSTAT __lstat50
-#elif defined(__NetBSD__) && (__NetBSD__ > 3)
-#define GNAT_STAT __stat30
+#define GNAT_STRUCT_STAT struct stat
+#elif defined(__NetBSD__) && (__NetBSD__ >= 4)
+#define GNAT_FOPEN fopen
+#define GNAT_STAT  __stat30
 #define GNAT_FSTAT __fstat30
 #define GNAT_LSTAT __lstat30
+#define GNAT_STRUCT_STAT struct stat30
 #else
-#define GNAT_STAT stat
+#define GNAT_FOPEN fopen
+#define GNAT_STAT  stat
 #define GNAT_FSTAT fstat
 #define GNAT_LSTAT lstat
-#endif
 #define GNAT_STRUCT_STAT struct stat
 #endif
 
