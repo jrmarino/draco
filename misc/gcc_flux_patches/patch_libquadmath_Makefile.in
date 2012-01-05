@@ -1,5 +1,5 @@
 diff --git a/libquadmath/Makefile.in b/libquadmath/Makefile.in
-index 6e389cf..e19e067 100644
+index 6e389cf..08c6e0b 100644
 --- a/libquadmath/Makefile.in
 +++ b/libquadmath/Makefile.in
 @@ -393,10 +393,9 @@ AUTOMAKE_OPTIONS = 1.8 foreign
@@ -13,4 +13,13 @@ index 6e389cf..e19e067 100644
 -@BUILD_INFO_TRUE@@BUILD_LIBQUADMATH_TRUE@STAMP_BUILD_INFO = stamp-build-info
  @BUILD_LIBQUADMATH_TRUE@CLEANFILES = $(STAMP_GENINSRC) $(STAMP_BUILD_INFO) libquadmath.info
  @BUILD_LIBQUADMATH_TRUE@MAINTAINERCLEANFILES = $(srcdir)/libquadmath.info
+ 
+@@ -1247,7 +1246,7 @@ info: info-am
+ 
+ info-am: $(INFO_DEPS)
+ 
+-install-data-am: install-info-am install-nodist_libsubincludeHEADERS
++install-data-am: install-nodist_libsubincludeHEADERS
+ 
+ install-dvi: install-dvi-am
  

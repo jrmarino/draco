@@ -1,5 +1,5 @@
 diff --git a/gcc/Makefile.in b/gcc/Makefile.in
-index 872956d..8a46992 100644
+index 872956d..d668779 100644
 --- a/gcc/Makefile.in
 +++ b/gcc/Makefile.in
 @@ -4322,7 +4322,7 @@ $(build_htmldir)/gccinstall/index.html: $(TEXI_GCCINSTALL_FILES)
@@ -20,3 +20,15 @@ index 872956d..8a46992 100644
      install-driver install-lto-wrapper
  
  ifeq ($(enable_plugin),yes)
+@@ -4665,10 +4665,7 @@ install-html: $(HTMLS_BUILD) lang.install-html
+ install-man: lang.install-man \
+ 	$(DESTDIR)$(man1dir)/$(GCC_INSTALL_NAME)$(man1ext) \
+ 	$(DESTDIR)$(man1dir)/$(CPP_INSTALL_NAME)$(man1ext) \
+-	$(DESTDIR)$(man1dir)/$(GCOV_INSTALL_NAME)$(man1ext) \
+-	$(DESTDIR)$(man7dir)/fsf-funding$(man7ext) \
+-	$(DESTDIR)$(man7dir)/gfdl$(man7ext) \
+-	$(DESTDIR)$(man7dir)/gpl$(man7ext)
++	$(DESTDIR)$(man1dir)/$(GCOV_INSTALL_NAME)$(man1ext)
+ 
+ $(DESTDIR)$(man7dir)/%$(man7ext): doc/%.7 installdirs
+ 	-rm -f $@
