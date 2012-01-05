@@ -1,6 +1,6 @@
 /* Base configuration file for all DragonFly targets.
    Copyright (C) 1999, 2000, 2001, 2007, 2008 Free Software Foundation, Inc.
-   Copyright (C) 2010, 2011 John R. Marino <www.dragonlace.net>
+   Copyright (C) 2010-2012 John R. Marino <www.dragonlace.net>
 
 This file is part of GCC.
 
