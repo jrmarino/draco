@@ -13,6 +13,7 @@ F95_SUFFIX=fortran
 ADA_SUITE_SUFFIX=ada-testsuite
 CXX_SUITE_SUFFIX=cxx-testsuite
 GCC_SUITE_SUFFIX=gcc-testsuite
+FRT_SUITE_SUFFIX=fortran-testsuite
 OUTPUT_DIR=${EXPANSE}/patches-${GCCVERSION}
 RELEASE_DIR=${EXPANSE}/gcc-${GCCVERSION}
 SCRATCH_DIR=${EXPANSE}/scratch
@@ -115,4 +116,7 @@ regenerate_patch ${CXX_SUITE_SUFFIX} fix-random-locales.patch
 
 rm -f ${OUTPUT_DIR}/diff-${GCC_SUITE_SUFFIX}
 regenerate_patch ${GCC_SUITE_SUFFIX} gcc.pch.exp.patch
+
+rm -f ${OUTPUT_DIR}/diff-${FRT_SUITE_SUFFIX}
+regenerate_patch ${FRT_SUITE_SUFFIX} fortran_testsuite.patch
 
