@@ -105,6 +105,7 @@ cplusplus=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
 produce_patch ${CXX_SUFFIX} cplusplus[@]
 
 rm -f ${OUTPUT_DIR}/diff-${CXX_SUITE_SUFFIX}
+regenerate_patch ${CXX_SUITE_SUFFIX} gxx_ts1.patch
 regenerate_patch ${CXX_SUITE_SUFFIX} libstdcxx-testsuite.patch
 regenerate_patch ${CXX_SUITE_SUFFIX} libstdc++.exp.patch
 regenerate_patch ${CXX_SUITE_SUFFIX} libstdxx_ts_missing_debug_checks.patch
