@@ -19,6 +19,7 @@ link.c
 make.adb
 mlib-utl.adb
 prj-makr.adb
+s-fileio.adb
 s-osinte-freebsd.adb		[*]
 s-rannum.adb
 s-stusta.adb

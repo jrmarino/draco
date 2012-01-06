@@ -231,7 +231,7 @@ package body System.File_IO is
       Close_Status : int := 0;
       Dup_Strm     : Boolean := False;
       File         : AFCB_Ptr renames File_Ptr.all;
-      Errno        : Integer;
+      Errno        : Integer := 0;
 
    begin
       --  Take a task lock, to protect the global data value Open_Files
