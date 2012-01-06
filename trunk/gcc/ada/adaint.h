@@ -54,18 +54,6 @@
 #define GNAT_FSTAT fstat64
 #define GNAT_LSTAT lstat64
 #define GNAT_STRUCT_STAT struct stat64
-#elif defined(__NetBSD__) && (__NetBSD__ >= 6)
-#define GNAT_FOPEN fopen
-#define GNAT_STAT  __stat50
-#define GNAT_FSTAT __fstat50
-#define GNAT_LSTAT __lstat50
-#define GNAT_STRUCT_STAT struct stat
-#elif defined(__NetBSD__) && (__NetBSD__ >= 4)
-#define GNAT_FOPEN fopen
-#define GNAT_STAT  __stat30
-#define GNAT_FSTAT __fstat30
-#define GNAT_LSTAT __lstat30
-#define GNAT_STRUCT_STAT struct stat30
 #else
 #define GNAT_FOPEN fopen
 #define GNAT_STAT  stat
