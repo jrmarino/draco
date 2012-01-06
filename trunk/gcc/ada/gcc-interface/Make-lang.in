@@ -1093,11 +1093,11 @@ gnatstage2: force
 # Ada language specific files.
 
 ada/b_gnat1.c : $(GNAT1_ADA_OBJS)
-	$(GNATBIND) -C $(ADA_INCLUDES) -o ada/b_gnat1.c -n ada/gnat1drv.ali
+	$(GNATBIND) $(ADA_INCLUDES) -o ada/b_gnat1.c -n ada/gnat1drv.ali
 ada/b_gnat1.o : ada/b_gnat1.c
 
 ada/b_gnatb.c : $(GNATBIND_OBJS) ada/gnatbind.o ada/interfac.o
-	$(GNATBIND) -C $(ADA_INCLUDES) -o ada/b_gnatb.c ada/gnatbind.ali
+	$(GNATBIND) $(ADA_INCLUDES) -o ada/b_gnatb.c ada/gnatbind.ali
 ada/b_gnatb.o : ada/b_gnatb.c
 
 include $(srcdir)/ada/Make-generated.in

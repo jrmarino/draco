@@ -3017,11 +3017,11 @@ gnat-cross: force
 # is include the system varargs.h.
 
 b_gnatl.c : $(GNATLINK_OBJS)
-	$(GNATBIND) -C $(ADA_INCLUDES) -o b_gnatl.c gnatlink.ali
+	$(GNATBIND) $(ADA_INCLUDES) -o b_gnatl.c gnatlink.ali
 b_gnatl.o : b_gnatl.c
 
 b_gnatm.c : $(GNATMAKE_OBJS)
-	$(GNATBIND) -C $(ADA_INCLUDES) -o b_gnatm.c gnatmake.ali
+	$(GNATBIND) $(ADA_INCLUDES) -o b_gnatm.c gnatmake.ali
 b_gnatm.o : b_gnatm.c
 
 ADA_INCLUDE_DIR = $(libsubdir)/adainclude
