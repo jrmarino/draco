@@ -2,7 +2,6 @@
 
 gcc-interface/Makefile.in
 adaint.c
-adaint.h			[*]
 cio.c				[*]
 cstreams.c
 env.c

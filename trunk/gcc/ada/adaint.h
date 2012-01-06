@@ -27,7 +27,6 @@
  * GNAT was originally developed  by the GNAT team at  New York University. *
  * Extensive contributions were provided by Ada Core Technologies Inc.      *
  *                                                                          *
- * Copyright (C) 2010 John Marino <www.dragonlace.net>                      *
  ****************************************************************************/
 
 #include <sys/stat.h>
@@ -50,13 +49,13 @@
 
 #if defined (__GLIBC__) || defined (sun)  || (defined (__sgi) && defined(_LFAPI))
 #define GNAT_FOPEN fopen64
-#define GNAT_STAT  stat64
+#define GNAT_STAT stat64
 #define GNAT_FSTAT fstat64
 #define GNAT_LSTAT lstat64
 #define GNAT_STRUCT_STAT struct stat64
 #else
 #define GNAT_FOPEN fopen
-#define GNAT_STAT  stat
+#define GNAT_STAT stat
 #define GNAT_FSTAT fstat
 #define GNAT_LSTAT lstat
 #define GNAT_STRUCT_STAT struct stat
