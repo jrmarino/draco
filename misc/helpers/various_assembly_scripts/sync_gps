@@ -1,0 +1,28 @@
+#!/bin/sh
+
+GPS=/home/marino/sanitized/gps
+GNT=/home/marino/repos/draco_repo/trunk/gcc/ada
+#GNT=/home/marino/repos/gcc_repo/gcc/ada
+
+/usr/local/bin/rsync -av \
+  --exclude .svn \
+  --exclude .cvsignore \
+  --exclude .gitignore \
+  --exclude .svnignore \
+  --delete \
+  /home/marino/repos/gps_repo/* \
+  ${GPS}
+
+mkdir ${GPS}/gnatlib/gnat_src
+
+while read gnatfile
+do
+  cp -p ${GNT}/${gnatfile} \
+        ${GPS}/gnatlib/gnat_src
+done < gps_gnatsrc.list
+
+while read gnatfile
+do
+  cp -p ${GNT}/${gnatfile} \
+        ${GPS}/gnatlib/gnat_src
+done < gps_gnatsrc.list2

@@ -1,8 +1,6 @@
-diff --git a/configure b/configure
-index 32f239e..cdf8847 100755
 --- a/configure
 +++ b/configure
-@@ -14227,7 +14227,7 @@ main ()
+@@ -14200,7 +14200,7 @@
  _ACEOF
  if ac_fn_c_try_compile "$LINENO"; then :
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5

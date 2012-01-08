@@ -1,0 +1,44 @@
+#!/bin/sh
+
+HOME_DIR=/home/marino/sanitized
+ORIG_DIR=gps-5.0.1-src
+TARG_DIR=gps-5.0.1
+NEW_BZ2=${TARG_DIR}.tar.bz2
+TAR_FILE=gps-5.0.1-gpl-src.tar.gz
+
+cd ${HOME_DIR}
+rm -rf ${ORIG_DIR}
+rm -rf ${TARG_DIR}
+rm -rf ${NEW_BZ2}
+
+FILELIST=" \
+  gps-welcome.html \
+  gps-tutorial.html \
+  gps.css \
+  gps.html \
+  gps_index.xml \
+  gps_title.gif \
+  help_index.html" 
+  	
+
+/usr/bin/tar -xf ${TAR_FILE}
+mv ${ORIG_DIR} ${TARG_DIR}
+
+rm ${TARG_DIR}/templates_parser/tp_shared.gpr.orig
+rm ${TARG_DIR}/shared.gpr.orig
+
+mkdir -p ${TARG_DIR}/docx/html
+mv ${TARG_DIR}/docs/docs.gpr ${TARG_DIR}/docx
+cp -p ${TARG_DIR}/docs/gps-splash.png ${TARG_DIR}/docx
+for TEXAS in $FILELIST; do \
+   mv ${TARG_DIR}/docs/${TEXAS} ${TARG_DIR}/docx/html/; \
+done
+mv ${TARG_DIR}/docs/gps/* ${TARG_DIR}/docx/html/
+mv ${TARG_DIR}/docs/*.jpg ${TARG_DIR}/docx/html/
+mv ${TARG_DIR}/docs/*.png ${TARG_DIR}/docx/html/
+cp -p ${TARG_DIR}/share/icons/16px/entities/*_x.png ${TARG_DIR}/docx/html/
+rm -rf ${TARG_DIR}/docs
+mv ${TARG_DIR}/docx ${TARG_DIR}/docs
+echo "all:" > ${TARG_DIR}/docs/Makefile.in
+
+/usr/bin/tar -cyf ${NEW_BZ2} ${TARG_DIR}

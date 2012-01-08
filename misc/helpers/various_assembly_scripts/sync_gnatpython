@@ -1,0 +1,7 @@
+#!/bin/sh
+
+/usr/local/bin/rsync -av \
+  --exclude .svn \
+  --delete \
+  /home/marino/repos/gnatpython_repo/trunk/gnatpython \
+  /home/marino/sanitized

@@ -441,28 +441,10 @@ package System.OS_Interface is
    function pthread_mutexattr_setprotocol
      (attr     : access pthread_mutexattr_t;
       protocol : int) return int;
-   pragma Import
-      (C, pthread_mutexattr_setprotocol, "pthread_mutexattr_setprotocol");
-
-   function pthread_mutexattr_getprotocol
-     (attr     : access pthread_mutexattr_t;
-      protocol : access int) return int;
-   pragma Import
-     (C, pthread_mutexattr_getprotocol, "pthread_mutexattr_getprotocol");
 
    function pthread_mutexattr_setprioceiling
      (attr     : access pthread_mutexattr_t;
       prioceiling : int) return int;
-   pragma Import
-     (C, pthread_mutexattr_setprioceiling,
-      "pthread_mutexattr_setprioceiling");
-
-   function pthread_mutexattr_getprioceiling
-     (attr     : access pthread_mutexattr_t;
-      prioceiling : access int) return int;
-   pragma Import
-     (C, pthread_mutexattr_getprioceiling,
-      "pthread_mutexattr_getprioceiling");
 
    type struct_sched_param is record
       sched_priority : int;

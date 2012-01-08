@@ -1,0 +1,11 @@
+--- a/libgfortran/configure
++++ b/libgfortran/configure
+@@ -25699,7 +25699,7 @@ $as_echo "#define SUPPORTS_WEAK 1" >>confdefs.h
+ 
+   fi
+   case "$host" in
+-    *-*-darwin* | *-*-hpux* | *-*-cygwin* | *-*-mingw* | alpha*-dec-osf* )
++    *-*-darwin* | *-*-hpux* | *-*-cygwin* | *-*-mingw* | alpha*-dec-osf* | *-*-netbsd* )
+ 
+ $as_echo "#define GTHREAD_USE_WEAK 0" >>confdefs.h
+ 

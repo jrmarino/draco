@@ -240,6 +240,7 @@ case ${target} in
  | crx-*				\
  | i[34567]86-*-interix3*		\
  | i[34567]86-*-netbsd*			\
+ | i[3456x]86-*-netware*		\
  | i[34567]86-*-pe			\
  | m68hc11-*-*				\
  | m6811-*-*				\
@@ -1285,15 +1286,15 @@ x86_64-*-freebsd*)
 	tmake_file="${tmake_file} i386/t-crtstuff"
 	;;
 i[34567]86-*-dragonfly*)
-	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h dragonfly.h i386/dragonfly.h"
+	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h dragonfly.h dragonfly-stdint.h i386/dragonfly.h"
 	tmake_file="${tmake_file} i386/t-crtstuff"
 	;;
 x86_64-*-dragonfly*)
-	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h dragonfly.h i386/x86-64.h i386/dragonfly.h i386/dragonfly64.h"
+	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h dragonfly.h dragonfly-stdint.h i386/x86-64.h i386/dragonfly.h i386/dragonfly64.h"
 	tmake_file="${tmake_file} i386/t-crtstuff"
 	;;
 i[34567]86-*-netbsdelf*)
-	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h netbsd.h netbsd-elf.h i386/netbsd-elf.h"
+	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h netbsd.h netbsd-elf.h i386/netbsd-elf.h netbsd-stdint.h"
 	extra_options="${extra_options} netbsd.opt netbsd-elf.opt"
 	tmake_file="${tmake_file} i386/t-crtstuff"
 	;;
@@ -1305,7 +1306,7 @@ i[34567]86-*-netbsd*)
 	use_collect2=yes
 	;;
 x86_64-*-netbsd*)
-	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h netbsd.h netbsd-elf.h i386/x86-64.h i386/netbsd64.h"
+	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h netbsd.h netbsd-elf.h i386/x86-64.h i386/netbsd64.h netbsd-stdint.h"
 	extra_options="${extra_options} netbsd.opt netbsd-elf.opt"
 	tmake_file="${tmake_file} i386/t-crtstuff"
 	;;
@@ -1360,10 +1361,17 @@ i[34567]86-*-linux* | i[34567]86-*-kfreebsd*-gnu | i[34567]86-*-knetbsd*-gnu | i
 			tm_file="${tm_file} i386/linux.h"
 		fi
 		;;
-	i[34567]86-*-knetbsd*-gnu) tm_file="${tm_file} i386/linux.h knetbsd-gnu.h i386/knetbsd-gnu.h" ;;
-	i[34567]86-*-kfreebsd*-gnu) tm_file="${tm_file} i386/linux.h kfreebsd-gnu.h i386/kfreebsd-gnu.h" ;;
-	i[34567]86-*-kopensolaris*-gnu) tm_file="${tm_file} i386/linux.h kopensolaris-gnu.h i386/kopensolaris-gnu.h" ;;
-	i[34567]86-*-gnu*) tm_file="$tm_file i386/linux.h gnu.h i386/gnu.h";;
+	i[34567]86-*-knetbsd*-gnu)
+		tm_file="${tm_file} i386/linux.h knetbsd-gnu.h i386/knetbsd-gnu.h"
+		;;
+	i[34567]86-*-kfreebsd*-gnu)
+		tm_file="${tm_file} i386/linux.h kfreebsd-gnu.h i386/kfreebsd-gnu.h"
+		;;
+	i[34567]86-*-kopensolaris*-gnu)
+		tm_file="${tm_file} i386/linux.h kopensolaris-gnu.h i386/kopensolaris-gnu.h"
+		;;
+	i[34567]86-*-gnu*)
+		tm_file="$tm_file i386/linux.h gnu.h i386/gnu.h";;
 	esac
 	tmake_file="${tmake_file} i386/t-crtstuff i386/t-crtpc i386/t-crtfm t-dfprules"
 	;;
@@ -1372,9 +1380,14 @@ x86_64-*-linux* | x86_64-*-kfreebsd*-gnu | x86_64-*-knetbsd*-gnu)
 		 i386/x86-64.h i386/linux64.h"
 	case ${target} in
 	x86_64-*-linux*)
-	  default_gnu_indirect_function=glibc-2011 ;;
-	x86_64-*-kfreebsd*-gnu) tm_file="${tm_file} kfreebsd-gnu.h" ;;
-	x86_64-*-knetbsd*-gnu) tm_file="${tm_file} knetbsd-gnu.h" ;;
+		default_gnu_indirect_function=yes
+		;;
+	x86_64-*-kfreebsd*-gnu)
+		tm_file="${tm_file} kfreebsd-gnu.h"
+		;;
+	x86_64-*-knetbsd*-gnu)
+		tm_file="${tm_file} knetbsd-gnu.h"
+		;;
 	esac
 	tmake_file="${tmake_file} i386/t-linux64 i386/t-crtstuff i386/t-crtpc i386/t-crtfm t-dfprules"
 	;;
@@ -2650,7 +2663,7 @@ sparc*-*-solaris2*)
 	tm_file="${tm_file} sparc/sol2.h"
 	case ${target} in
 	    sparc64-*-* | sparcv9-*-*)
-		tm_file="${tm_file} sparc/sol2-64.h"
+		tm_file="sparc/sol2-64.h ${tm_file}"
 		;;
 	    *)
 		test x$with_cpu != x || with_cpu=v9

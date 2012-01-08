@@ -1,6 +1,17 @@
---- a/gcc/Makefile.in.orig	Fri Jul 15 00:06:02 2011
-+++ b/gcc/Makefile.in	Fri Jul 15 00:06:22 2011
-@@ -4474,7 +4474,7 @@
+diff --git a/gcc/Makefile.in b/gcc/Makefile.in
+index 872956d..d668779 100644
+--- a/gcc/Makefile.in
++++ b/gcc/Makefile.in
+@@ -4322,7 +4322,7 @@ $(build_htmldir)/gccinstall/index.html: $(TEXI_GCCINSTALL_FILES)
+ 	DESTDIR=$(@D) \
+ 	$(SHELL) $(srcdir)/doc/install.texi2html
+ 
+-MANFILES = doc/gcov.1 doc/cpp.1 doc/gcc.1 doc/gfdl.7 doc/gpl.7 doc/fsf-funding.7
++MANFILES = doc/gcov.1 doc/cpp.1 doc/gcc.1
+ 
+ generated-manpages: man
+ 
+@@ -4474,7 +4474,7 @@ maintainer-clean:
  # Install the driver last so that the window when things are
  # broken is small.
  install: install-common $(INSTALL_HEADERS) \
@@ -9,3 +20,15 @@
      install-driver install-lto-wrapper
  
  ifeq ($(enable_plugin),yes)
+@@ -4665,10 +4665,7 @@ install-html: $(HTMLS_BUILD) lang.install-html
+ install-man: lang.install-man \
+ 	$(DESTDIR)$(man1dir)/$(GCC_INSTALL_NAME)$(man1ext) \
+ 	$(DESTDIR)$(man1dir)/$(CPP_INSTALL_NAME)$(man1ext) \
+-	$(DESTDIR)$(man1dir)/$(GCOV_INSTALL_NAME)$(man1ext) \
+-	$(DESTDIR)$(man7dir)/fsf-funding$(man7ext) \
+-	$(DESTDIR)$(man7dir)/gfdl$(man7ext) \
+-	$(DESTDIR)$(man7dir)/gpl$(man7ext)
++	$(DESTDIR)$(man1dir)/$(GCOV_INSTALL_NAME)$(man1ext)
+ 
+ $(DESTDIR)$(man7dir)/%$(man7ext): doc/%.7 installdirs
+ 	-rm -f $@

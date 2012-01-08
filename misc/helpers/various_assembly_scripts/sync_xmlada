@@ -1,0 +1,9 @@
+#!/bin/sh
+
+/usr/local/bin/rsync -av \
+  --exclude .svn \
+  --exclude .cvsignore \
+  --exclude .gitignore \
+  --delete \
+  /home/marino/repos/xmlada_repo/* \
+  /home/marino/sanitized/xmlada

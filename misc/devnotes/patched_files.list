@@ -2,7 +2,6 @@
 
 gcc-interface/Makefile.in
 adaint.c
-adaint.h			[*]
 cio.c				[*]
 cstreams.c
 env.c
@@ -19,6 +18,7 @@ link.c
 make.adb
 mlib-utl.adb
 prj-makr.adb
+s-fileio.adb
 s-osinte-freebsd.adb		[*]
 s-rannum.adb
 s-stusta.adb
