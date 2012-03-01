@@ -4001,9 +4001,9 @@ bsd_strlcpy(char *dst, const char *src, size_t siz)
  * Returns strlen(src) + MIN(siz, strlen(initial dst)).
  * If retval >= siz, truncation occurred.
  *
- * $OpenBSD: strlcat.c,v 1.13 2005/08/08 08:05:37 espie Exp $
- * $FreeBSD: src/lib/libc/string/strlcat.c,v 1.11 2009/01/12 delphij Exp $
- * $DragonFly: src/lib/libc/string/strlcat.c,v 1.4 2004/12/18 asmodai Exp $
+ * OpenBSD: strlcat.c,v 1.13 2005/08/08 08:05:37 espie Exp
+ * FreeBSD: src/lib/libc/string/strlcat.c,v 1.11 2009/01/12 delphij Exp
+ * DragonFly: src/lib/libc/string/strlcat.c,v 1.4 2004/12/18 asmodai Exp
  */
 
 size_t
