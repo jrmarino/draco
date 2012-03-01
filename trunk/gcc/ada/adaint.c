@@ -3960,9 +3960,9 @@ void *__gnat_lwp_self (void)
  * will be copied.  Always NUL terminates (unless siz == 0).
  * Returns strlen(src); if retval >= siz, truncation occurred.
  *
- * $OpenBSD: strlcpy.c,v 1.11 2006/05/05 15:27:38 millert Exp $
- * $FreeBSD: src/lib/libc/string/strlcpy.c,v 1.10 2008/10/19 delphij Exp $
- * $DragonFly: src/lib/libc/string/strlcpy.c,v 1.4 2005/09/18 asmodai Exp $
+ * OpenBSD: strlcpy.c,v 1.11 2006/05/05 15:27:38 millert Exp
+ * FreeBSD: src/lib/libc/string/strlcpy.c,v 1.10 2008/10/19 delphij Exp
+ * DragonFly: src/lib/libc/string/strlcpy.c,v 1.4 2005/09/18 asmodai Exp
  */
 
 size_t
