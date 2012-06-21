@@ -15818,7 +15818,7 @@ $as_echo "darwin or freebsd" >&6; }
       ;;
     dragonfly)
       { $as_echo "$as_me:${as_lineno-$LINENO}: result: dragonfly" >&5
-$as_echo "darwin or freebsd" >&6; }
+$as_echo "dragonfly" >&6; }
 
       CLOCALE_H=config/locale/generic/c_locale.h
       CLOCALE_CC=config/locale/dragonfly/c_locale.cc
