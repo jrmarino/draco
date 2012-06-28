@@ -86,7 +86,7 @@ fortran=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
 produce_patch ${F95_SUFFIX} fortran[@]
 regenerate_patch ${F95_SUFFIX} patch_libgfortran_configure
 
-pattern="^gcc/testsuite|^gcc/ada|^gcc/fortran|^gnattools|^libada|^libgfortran|^libstdc..-v3"
+pattern="^gcc/testsuite|^gcc/ada|^gcc/fortran|^gnattools|^libada|^libgfortran|^libstdc..-v3|^libquadmath"
 core=`cd ${DRACO} && find * -type d | ${GREPPROG} -vE $pattern`
 produce_patch ${CORE_SUFFIX} core[@]
 regenerate_patch ${CORE_SUFFIX} patch_gcc_configure
