@@ -17,7 +17,7 @@ index 872956d..d668779 100644
  install: install-common $(INSTALL_HEADERS) \
 -    install-cpp install-man install-info install-@POSUB@ \
 +    install-cpp install-man install-@POSUB@ \
-     install-driver install-lto-wrapper
+     install-driver install-lto-wrapper install-gcc-ar
  
  ifeq ($(enable_plugin),yes)
 @@ -4728,10 +4728,7 @@ install-html: $(HTMLS_BUILD) lang.install-html
