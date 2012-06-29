@@ -6,7 +6,7 @@
 --                                                                          --
 --                                  S p e c                                 --
 --                                                                          --
---          Copyright (C) 1991-2009, Free Software Foundation, Inc.         --
+--          Copyright (C) 1991-2011, Free Software Foundation, Inc.         --
 --                                                                          --
 -- GNARL is free software; you can  redistribute it  and/or modify it under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -27,7 +27,6 @@
 -- GNARL was developed by the GNARL team at Florida State University.       --
 -- Extensive contributions were provided by Ada Core Technologies, Inc.     --
 --                                                                          --
--- Copyright (C) 2010 John Marino <draco@marino.st>                        --
 ------------------------------------------------------------------------------
 
 --  This is the NetBSD THREADS version of this package
@@ -35,6 +34,10 @@
 with System.OS_Interface;
 
 package Ada.Interrupts.Names is
+
+   --  All identifiers in this unit are implementation defined
+
+   pragma Implementation_Defined;
 
    --  Beware that the mapping of names to signals may be many-to-one. There
    --  may be aliases. Also, for all signal names that are not supported on
