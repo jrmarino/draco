@@ -1,8 +1,6 @@
-diff --git a/gcc/Makefile.in b/gcc/Makefile.in
-index 872956d..d668779 100644
---- a/gcc/Makefile.in
-+++ b/gcc/Makefile.in
-@@ -4378,7 +4378,7 @@ $(build_htmldir)/gccinstall/index.html: $(TEXI_GCCINSTALL_FILES)
+--- a/gcc/Makefile.in.orig	2012-05-18 18:32:05.000000000 +0200
++++ b/gcc/Makefile.in	2012-06-29 13:44:17.000000000 +0200
+@@ -4378,7 +4378,7 @@
  	DESTDIR=$(@D) \
  	$(SHELL) $(srcdir)/doc/install.texi2html
  
@@ -11,7 +9,7 @@ index 872956d..d668779 100644
  
  generated-manpages: man
  
-@@ -4530,7 +4530,7 @@ maintainer-clean:
+@@ -4530,7 +4530,7 @@
  # Install the driver last so that the window when things are
  # broken is small.
  install: install-common $(INSTALL_HEADERS) \
@@ -20,7 +18,17 @@ index 872956d..d668779 100644
      install-driver install-lto-wrapper install-gcc-ar
  
  ifeq ($(enable_plugin),yes)
-@@ -4728,10 +4728,7 @@ install-html: $(HTMLS_BUILD) lang.install-html
+@@ -4655,6 +4655,9 @@
+ 	-rm -f $(DESTDIR)$(bindir)/$(target_noncanonical)-gcc-$(version)$(exeext)
+ 	-( cd $(DESTDIR)$(bindir) && \
+ 	   $(LN) $(GCC_INSTALL_NAME)$(exeext) $(target_noncanonical)-gcc-$(version)$(exeext) )
++	-if [ -f gnat1$(exeext) ] ; then \
++	  ( cd $(DESTDIR)$(bindir) && $(LN) $(GCC_INSTALL_NAME)$(exeext) ada$(exeext) ) \
++	fi
+ 	-if [ -f gcc-cross$(exeext) ] ; then \
+ 	  if [ -d $(DESTDIR)$(gcc_tooldir)/bin/. ] ; then \
+ 	    rm -f $(DESTDIR)$(gcc_tooldir)/bin/gcc$(exeext); \
+@@ -4728,10 +4731,7 @@
  install-man: lang.install-man \
  	$(DESTDIR)$(man1dir)/$(GCC_INSTALL_NAME)$(man1ext) \
  	$(DESTDIR)$(man1dir)/$(CPP_INSTALL_NAME)$(man1ext) \
