@@ -1,4 +1,4 @@
-# $NetBSD$
+# $NetBSD: buildlink3.mk,v 1.1.1.1 2011/02/03 18:50:53 drochner Exp $
 
 BUILDLINK_TREE+=	xmlada
 
