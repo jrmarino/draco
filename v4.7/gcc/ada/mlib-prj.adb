@@ -1328,11 +1328,12 @@ package body MLib.Prj is
                   Get_Name_String (Element.Value);
 
                   if Name_Len /= 0 then
-                     Opts.Increment_Last;
-                     Opts.Table (Opts.Last) :=
-                       new String'(Name_Buffer (1 .. Name_Len));
-                     if Name_Len = 2 and then Name_Buffer (1 .. 2) = "-R" then
+                     if Name_Buffer (1 .. Name_Len) = "-R" then
                         Rpath_Disabled := True;
+                     else
+                        Opts.Increment_Last;
+                        Opts.Table (Opts.Last) :=
+                          new String'(Name_Buffer (1 .. Name_Len));
                      end if;
                   end if;
 

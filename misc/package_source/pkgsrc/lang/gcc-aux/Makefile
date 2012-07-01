@@ -164,7 +164,6 @@ MY_MAKE_ENV+=		lt_cv_path_SED=${TOOLS_SED}
 # The standard configuration options
 CONFIGURE_ARGS= 	--enable-languages=${LANGS:Q}
 CONFIGURE_ARGS+=	--build=${BLD_TARGET}
-#CONFIGURE_ARGS+=	--program-suffix=-aux
 CONFIGURE_ARGS+=	--prefix=${PKG_PREFIX:Q}
 CONFIGURE_ARGS+=	--with-system-zlib
 CONFIGURE_ARGS+=	--with-gmp=${BUILDLINK_PREFIX.gmp}
