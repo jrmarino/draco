@@ -1,4 +1,4 @@
-@comment $NetBSD$
+@comment $NetBSD: PLIST,v 1.1.1.1 2011/02/03 19:04:02 drochner Exp $
 bin/gprbuild
 bin/gprclean
 bin/gprconfig

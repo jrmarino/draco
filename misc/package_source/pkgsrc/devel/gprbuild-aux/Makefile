@@ -1,4 +1,4 @@
-# $NetBSD$
+# $NetBSD: Makefile,v 1.1.1.1 2011/02/03 19:04:02 drochner Exp $
 #
 
 DISTNAME=	gprbuild-aux-${SNAPSHOT}
