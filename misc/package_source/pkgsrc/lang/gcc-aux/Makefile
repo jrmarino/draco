@@ -95,11 +95,15 @@ SOL_OSV=		`expr substr ${OS_VERSION} 3 2`
 BLD_TARGET=		${MACHINE_ARCH}-aux-${LOWER_OPSYS}2.${SOL_OSV}
 BOOTSTRAP_COMPILER=	gnat-bootstrap.${MACHINE_ARCH}.solaris.tar.bz2
 MY_CONFIGURE_ENV+=	OBJDUMP=/usr/sfw/bin/gobjdump
-EXTRA_CONFARGS+=	--without-gnu-ld --with-ld=/usr/ccs/bin/ld
-. if !exists(/usr/sfw/bin/gas)
-EXTRA_CONFARGS+=	--without-gnu-as --with-as=/usr/ccs/bin/as
+. if exists(/usr/sfw/bin/gld)
+EXTRA_CONFARGS+=	--with-gnu-ld --with-ld=/usr/sfw/bin/gld
 . else
+EXTRA_CONFARGS+=	--without-gnu-ld --with-ld=/usr/ccs/bin/ld
+. endif
+. if exists(/usr/sfw/bin/gas)
 EXTRA_CONFARGS+=	--with-gnu-as --with-as=/usr/sfw/bin/gas
+. else
+EXTRA_CONFARGS+=	--without-gnu-as --with-as=/usr/ccs/bin/as
 . endif
 .endif
 

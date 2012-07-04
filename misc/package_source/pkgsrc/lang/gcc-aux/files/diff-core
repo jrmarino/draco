@@ -765,7 +765,7 @@
  	  tmake_file="${tmake_file} arm/t-bpabi"
  	  extra_parts="crtbegin.o crtend.o crti.o crtn.o"
  	  ;;
-@@ -523,16 +535,28 @@
+@@ -523,16 +535,29 @@
  x86_64-*-elf*)
  	tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
  	;;
@@ -786,6 +786,7 @@
 +	md_unwind_header=i386/freebsd-unwind.h
  	;;
  i[34567]86-*-netbsdelf*)
++	tmake_file="${tmake_file} i386/t-crtstuff"
 +	md_unwind_header=i386/netbsd-unwind.h
  	;;
  x86_64-*-netbsd*)
@@ -794,7 +795,7 @@
  	;;
  i[34567]86-*-openbsd2.*|i[34567]86-*openbsd3.[0123])
  	;;
-@@ -1160,6 +1184,7 @@
+@@ -1160,6 +1185,7 @@
    i[34567]86-*-gnu* | \
    i[34567]86-*-solaris2* | x86_64-*-solaris2.1[0-9]* | \
    i[34567]86-*-cygwin* | i[34567]86-*-mingw* | x86_64-*-mingw* | \
