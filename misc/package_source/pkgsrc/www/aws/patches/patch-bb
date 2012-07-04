@@ -1,4 +1,4 @@
-$NetBSD$
+$NetBSD: patch-bb,v 1.1.1.1 2011/02/11 16:48:53 drochner Exp $
 
 --- config/makefile.orig	2011-02-11 11:06:48.000000000 +0000
 +++ config/makefile
