@@ -1,4 +1,4 @@
-$NetBSD$
+$NetBSD: patch-bc,v 1.1.1.1 2011/02/03 18:57:15 drochner Exp $
 
 --- projects/Makefile.orig	2011-02-02 18:42:10.000000000 +0000
 +++ projects/Makefile
