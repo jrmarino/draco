@@ -22,5 +22,11 @@ MAKE_ENV+=		ADA_PROJECT_PATH=${PREFIX}/lib/gnat
 CONFIGURE_ENV+=		ADA_PROJECT_PATH=${PREFIX}/lib/gnat
 WRKSRC=			${WRKDIR}/gprbuild-2012-src
 
+SUBST_CLASSES+= 	xml
+SUBST_STAGE.xml=	pre-configure
+SUBST_MESSAGE.xml=	Edit compilers.xml to support lang/gcc-aux runtime
+SUBST_FILES.xml=	share/gprconfig/compilers.xml
+SUBST_SED.xml=		-e "s,@AUXPREFIX@,${PREFIX}/gcc-aux,"
+
 .include "../../textproc/xmlada/buildlink3.mk"
 .include "../../mk/bsd.pkg.mk"
