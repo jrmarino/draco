@@ -1,4 +1,4 @@
-$NetBSD$
+$NetBSD: patch-ab,v 1.1.1.1 2011/02/08 18:32:24 drochner Exp $
 
 --- gnatlib/gnatcoll_shared.gpr.in.orig	2010-12-04 00:20:09 +0000
 +++ gnatlib/gnatcoll_shared.gpr.in
