@@ -14,22 +14,21 @@ $NetBSD$
     Rpath : String_List_Access := null;
     --  Allocated only if Path Option is supported
  
-@@ -1001,8 +1006,12 @@ begin
+@@ -1009,7 +1014,12 @@ begin
                    Use_GNAT_Lib := False;
                 end if;
  
--               Leading_Library_Options_Table.Append
--                 (new String'(Line (1 .. Last)));
+-               Library_Options_Table.Append (new String'(Line (1 .. Last)));
 +               if Line (1 .. Last) = "-R" then
 +                  Rpath_Disabled := True;
 +               else
-+                  Leading_Library_Options_Table.Append
++                  Library_Options_Table.Append
 +                    (new String'(Line (1 .. Last)));
 +               end if;
  
-             when Gprexch.Library_Options =>
-                if Line (1 .. Last) = No_Std_Lib_String then
-@@ -2127,7 +2136,7 @@ begin
+             when Library_Path =>
+                Osint.Fail ("library path should not be specified");
+@@ -2127,7 +2137,7 @@ begin
           Library_Switches_Table.Append
             (new String'("-L" & Imported_Library_Directories.Table (J).all));
  

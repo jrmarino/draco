@@ -9,4 +9,4 @@ SHA1 (patch-share_gprconfig_compilers.xml) = d64a8e27372bbc1abbbf1b5d44a6b2bb467
 SHA1 (patch-share_gprconfig_gnat.xml) = 5e0ddcec2d46cbf0486556889845e10fab441ad8
 SHA1 (patch-share_gprconfig_linker.xml) = ad99b1d6f0d9199ca202f1dea2f7d0c8ffa5c3d3
 SHA1 (patch-share_gprconfig_targetset.xml) = 2bc382633eec715381fdfb5ac8e82edf026af5ad
-SHA1 (patch-src_gprlib.adb) = c9ddf8e03dc00c4fe3aecc87d3eee1005c86976f
+SHA1 (patch-src_gprlib.adb) = 9c3cf8116800ea6bd2741fa0da522e9886b7bcf1
