@@ -24,7 +24,7 @@ MAKE_JOBS_SAFE=		no
 # "-R" option disables all rpaths except adalib and compiler libs.  This is
 #      done because by default the rpaths will points at the WRKOBJDIR because
 #      it doesn't support the concept of DESTDIR.
-# "-Wl,R" adds a second rpath string.
+# "-Wl,-R" adds a second rpath string.
 # -Wl,-rpath is a better choice, but synonym -Wl,-R works on all BSD and SunOS
 SUBST_CLASSES+= 	rpath
 SUBST_STAGE.rpath=	pre-configure
