@@ -16,7 +16,7 @@ LICENSE=	gnu-gpl-v2
 PKG_DESTDIR_SUPPORT=	user-destdir
 AWS_VERSION=		2.10.0.1
 USE_TOOLS+=		gmake makeinfo sed gawk
-USE_LANGUAGES+= 	c ada c++ fortran
+USE_LANGUAGES=  	c ada c++ fortran
 
 # Note: c++ and fortran aren't used, but gprconfig probes for them.
 # When that happens, pkgsrc wrapper emits a warning message which causes
