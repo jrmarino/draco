@@ -283,9 +283,10 @@ do-build:
 	${SETENV} ${MY_MAKE_ENV} ${GMAKE} -j${MAKE_JOBS:U1:Q} all
 
 
-do-test: build
-.if !empty(PKG_OPTIONS:Mtestsuite)
-.if !empty(PKG_OPTIONS:Mada)
+do-test: build test-ada test-fortran test-objc test-cxx test-c
+
+test-ada:
+.if !empty(PKG_OPTIONS:Mtestsuite) && !empty(PKG_OPTIONS:Mada)
 .if (${OPSYS} == "NetBSD") && (${MACHINE_ARCH} == "x86_64")
 	# NetBSD has an extremely small default stacksize of 2MB, which is
 	# insufficient for the gnat.dg testsuite.
@@ -299,17 +300,26 @@ do-test: build
 	cd ${BUILDDIR} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-ada
 .endif
 .endif
-.if !empty(PKG_OPTIONS:Mfortran)
+
+test-fortran:
+.if !empty(PKG_OPTIONS:Mtestsuite) && !empty(PKG_OPTIONS:Mfortran)
 	cd ${BUILDDIR} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-fortran
 .endif
-.if !empty(PKG_OPTIONS:Mobjc)
+
+test-objc:
+.if !empty(PKG_OPTIONS:Mtestsuite) && !empty(PKG_OPTIONS:Mobjc)
 	cd ${BUILDDIR} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-objc
 .endif
-.if !empty(PKG_OPTIONS:Mcxx)
+
+test-cxx:
+.if !empty(PKG_OPTIONS:Mtestsuite) && !empty(PKG_OPTIONS:Mcxx)
 	# libstdc++ always ends with error status, so ignore it
 	cd ${BUILDDIR} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk \
 	check-c++ || ${TRUE}
 .endif
+
+test-c:
+.if !empty(PKG_OPTIONS:Mtestsuite)
 	cd ${BUILDDIR} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-c
 .endif
 

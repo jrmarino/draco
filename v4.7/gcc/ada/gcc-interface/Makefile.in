@@ -1371,7 +1371,7 @@ ifeq ($(strip $(filter-out %86 openbsd%,$(arch) $(osys))),)
 
   EH_MECHANISM=
   THREADSLIB= -lpthread
-  GMEM_LIB = 
+  GMEM_LIB =
   LIBRARY_VERSION := $(LIB_VERSION)
   MISCLIB = -lutil
 endif
@@ -1460,7 +1460,7 @@ ifeq ($(strip $(filter-out x86_64 netbsd%,$(arch) $(osys))),)
   a-exetim.adb<a-exetim-posix.adb \
   a-exetim.ads<a-exetim-default.ads \
   a-intnam.ads<a-intnam-netbsd.ads \
-  g-socthi.adb<g-socthi-bsd.adb \
+  g-socthi.adb<g-socthi-netbsd.adb \
   g-trasym.adb<g-trasym-bsd.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
