@@ -47,6 +47,8 @@ FULL_GNATGCC=		NOT SET
 FULL_PATH=		/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:${PREFIX}/bin:${PREFIX}/gcc-aux/bin
 OLD_EH=			register_frame
 REBUILD_LIB=		Rebuild the following library first:
+STICONV=		${PREFIX}/lib/libiconv.a
+STINTL= 		\$${top_builddir}/../intl/libintl.a
 
 
 .if ${OPSYS} == "DragonFly"
@@ -156,7 +158,7 @@ FULL_PATH=${BOOTSTRAP_PREFIX}/bin:/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:$
 MY_CONFIGURE_ENV+=	CC=${FULL_GNATGCC}
 MY_CONFIGURE_ENV+=	PATH=${FULL_PATH}
 MY_MAKE_ENV=		PATH=${FULL_PATH}
-MY_MAKE_ENV+=		ICONVPREFIX=${BUILDLINK_PREFIX.iconv}
+MY_MAKE_ENV+=		ICONVPREFIX=${PREFIX}
 MY_MAKE_ENV+=		LD_LIBRARY_PATH=${BUILDDIR}/gcc
 # ${WRKSRC}/fixincludes/ looks for sed and compiles the path to sed into
 # a binary so we need to make sure we give it the installed sed and not
@@ -173,7 +175,7 @@ CONFIGURE_ARGS+=	--with-system-zlib
 CONFIGURE_ARGS+=	--with-gmp=${BUILDLINK_PREFIX.gmp}
 CONFIGURE_ARGS+=	--with-mpfr=${BUILDLINK_PREFIX.mpfr}
 CONFIGURE_ARGS+=	--with-mpc=${BUILDLINK_PREFIX.mpcomplex}
-CONFIGURE_ARGS+=	--with-libiconv-prefix=${BUILDLINK_PREFIX.iconv}
+CONFIGURE_ARGS+=	--with-libiconv-prefix=${PREFIX}
 CONFIGURE_ARGS+=	--enable-shared
 CONFIGURE_ARGS+=	--enable-threads=${THREAD_MODEL}
 CONFIGURE_ARGS+=	--disable-bootstrap
@@ -203,6 +205,23 @@ post-extract:
 	@${PATCH} -d ${WRKSRC} -s -E < ${FILESDIR}/diff-${suffix}
 .endfor
 
+.if !empty(PKG_OPTIONS:Mstatic) || ${OPSYS} == "NetBSD"
+	@${ECHO} "Reconfiguring GCC Makefile to build compiler statically"
+	@${PATCH} -d ${WRKSRC} -s -E < ${FILESDIR}/diff-static-version
+.if empty(PKG_OPTIONS:Mnls)
+	@perl -pi -e 's;\@LIBICONV\@;${STICONV};' \
+	  ${WRKSRC}/gcc/Makefile.in \
+	  ${WRKSRC}/libcpp/Makefile.in \
+	  ${WRKSRC}/gcc/ada/gcc-interface/Makefile.in
+.else
+	@perl -pi -e 's;\@LIBINTL\@;${STINTL} ${STICONV};' ${WRKSRC}/intl/config.intl.in
+	@perl -pi -e 's;\@LIBICONV\@;;' \
+	  ${WRKSRC}/gcc/Makefile.in \
+	  ${WRKSRC}/libcpp/Makefile.in \
+	  ${WRKSRC}/gcc/ada/gcc-interface/Makefile.in
+.endif
+.endif
+
 .if ${INTENDED_COMPILER} == "BOOTSTRAP"
 	# Bootstrap compiler has statically linked z, gmp, mpc, mpfr and iconv
 	# The only shared lib is libc.so.7, so it should work for a long time.
@@ -223,12 +242,13 @@ post-extract:
 pre-configure:
 # NetBSD's system compiler is not configured to use dl_iterate_phdr which is
 # required to build shared libraries if gnat-aux handles exceptions via
-# dl_iterate_phdr.  Therefore this functionality is disabled for NetBSD until
-# further notice.  DragonFly introduced this functionality with 2.11, but it's
-# possible the shared libraries were built with an earlier compiler in the
-# case of an upgrade.  We need to detect this situation and stop the build
-# if the libraries need to be rebuilt.
-.if ${OPSYS} == "DragonFly"
+# dl_iterate_phdr.  Therefore the feature requires statically built
+# gmp, mpc, mpfr, and iconv libraries in order to build on NetBSD.
+# DragonFly introduced this functionality with 2.11, but it's possible the
+# shared libraries were built with an earlier compiler in the case of an
+# upgrade.  We need to detect this situation on shared library builds and
+# stop the build if the libraries need to be rebuilt.
+.if ${OPSYS} == "DragonFly" && empty(PKG_OPTIONS:Mstatic)
 	@if ${GREP} dl_iterate_phdr ${LINK_HEADER} > /dev/null; then \
 	  if ${GREP} ${OLD_EH} ${BASELIB}/libmpc.so > /dev/null; then \
 	    ${ERROR_MSG} "${REBUILD_LIB} math/mpcomplex"; \
@@ -300,9 +320,8 @@ do-install:
 
 
 
-.include "../../devel/zlib/buildlink3.mk"
+.include "../../converters/libiconv/buildlink3.mk"
 .include "../../devel/gmp/buildlink3.mk"
 .include "../../math/mpfr/buildlink3.mk"
 .include "../../math/mpcomplex/buildlink3.mk"
-.include "../../converters/libiconv/buildlink3.mk"
 .include "../../mk/bsd.pkg.mk"

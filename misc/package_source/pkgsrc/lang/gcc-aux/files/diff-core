@@ -743,7 +743,17 @@
  *-*-freebsd*)
    # This is the generic ELF configuration of FreeBSD.  Later
    # machine-specific sections may refine and add to this
-@@ -267,6 +278,7 @@
+@@ -202,7 +213,8 @@
+   extra_parts="crtbegin.o crtbeginS.o crtend.o crtendS.o"
+   ;;
+ *-*-netbsd*)
+-  tmake_file="$tmake_file t-crtstuff-pic t-libgcc-pic t-slibgcc t-slibgcc-gld t-slibgcc-elf-ver"
++  tmake_file="$tmake_file t-crtstuff-pic t-libgcc-pic t-eh-dw2-dip"
++  tmake_file="$tmake_file t-slibgcc t-slibgcc-gld t-slibgcc-elf-ver"
+   # NetBSD 1.7 and later are set up to use GCC's crtstuff for
+   # ELF configurations.  We will clear extra_parts in the
+   # a.out configurations.
+@@ -267,6 +279,7 @@
  
  case ${host} in
  *-*-darwin* | *-*-freebsd* | *-*-netbsd* | *-*-openbsd* | *-*-solaris2* | \
@@ -751,7 +761,7 @@
    alpha*-dec-osf5.1*)
    enable_execute_stack=enable-execute-stack-mprotect.c
    ;;
-@@ -354,11 +366,11 @@
+@@ -354,11 +367,11 @@
  	tmake_file="$tmake_file arm/t-arm arm/t-elf t-softfp-sfdf t-softfp-excl arm/t-softfp t-softfp"
  	extra_parts="$extra_parts crti.o crtn.o"
  	;;
@@ -765,7 +775,7 @@
  	  tmake_file="${tmake_file} arm/t-bpabi"
  	  extra_parts="crtbegin.o crtend.o crti.o crtn.o"
  	  ;;
-@@ -523,16 +535,29 @@
+@@ -523,16 +536,29 @@
  x86_64-*-elf*)
  	tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
  	;;
@@ -795,7 +805,7 @@
  	;;
  i[34567]86-*-openbsd2.*|i[34567]86-*openbsd3.[0123])
  	;;
-@@ -1160,6 +1185,7 @@
+@@ -1160,6 +1186,7 @@
    i[34567]86-*-gnu* | \
    i[34567]86-*-solaris2* | x86_64-*-solaris2.1[0-9]* | \
    i[34567]86-*-cygwin* | i[34567]86-*-mingw* | x86_64-*-mingw* | \
@@ -1411,13 +1421,13 @@
 +      gcc_cv_target_dl_iterate_phdr=no
 +    fi
 +  ;;
-+# *-*-netbsd* | *-*-openbsd*)
-+# if grep dl_iterate_phdr $target_header_dir/link_elf.h > /dev/null 2>&1; then
-+#     gcc_cv_target_dl_iterate_phdr=yes
-+#   else
-+#     gcc_cv_target_dl_iterate_phdr=no
-+#   fi
-+# ;;
++  *-*-netbsd*)
++  if grep dl_iterate_phdr $target_header_dir/link_elf.h > /dev/null 2>&1; then
++      gcc_cv_target_dl_iterate_phdr=yes
++    else
++      gcc_cv_target_dl_iterate_phdr=no
++    fi
++  ;;
  esac
  
  if test x$gcc_cv_target_dl_iterate_phdr = xyes; then

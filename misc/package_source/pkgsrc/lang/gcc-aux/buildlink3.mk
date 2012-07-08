@@ -8,11 +8,11 @@ GCC_AUX_BUILDLINK3_MK:=
 BUILDLINK_API_DEPENDS.gcc-aux+= gcc-aux>=20120614
 BUILDLINK_PKGSRCDIR.gcc-aux?= ../../lang/gcc-aux
 
-.include "../../devel/zlib/buildlink3.mk"
+.include "../../converters/libiconv/buildlink3.mk"
+.include "../../devel/gettext-lib/buildlink3.mk"
 .include "../../devel/gmp/buildlink3.mk"
 .include "../../math/mpfr/buildlink3.mk"
 .include "../../math/mpcomplex/buildlink3.mk"
-.include "../../converters/libiconv/buildlink3.mk"
 .endif
 
 BUILDLINK_TREE+= -gcc-aux

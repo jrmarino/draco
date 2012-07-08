@@ -1,8 +1,12 @@
 # $NetBSD: options.mk,v 1.2 2012/01/08 11:17:07 marino Exp $
 
 PKG_OPTIONS_VAR=	PKG_OPTIONS.gcc-aux
-PKG_SUPPORTED_OPTIONS=  ada cxx fortran objc testsuite nls
+PKG_SUPPORTED_OPTIONS=  ada cxx fortran objc testsuite nls static
 PKG_SUGGESTED_OPTIONS=  ada cxx fortran objc
+
+.if ${OPSYS} == "NetBSD"
+PKG_SUGGESTED_OPTIONS+= static
+.endif
 
 .include "../../mk/bsd.options.mk"
 
@@ -77,3 +81,16 @@ EXTRA_CONFARGS+= --enable-nls
 .else
 EXTRA_CONFARGS+= --disable-nls
 .endif
+
+
+###############################
+##  STATICALLY BUILT OPTION  ##
+###############################
+
+# NetBSD must be built statically to support dl_iterate_phdr
+# error handling.  The base compiler doesn't support despite it although
+# NetBSD's realtime linker supports dl_iterate_phdr
+# Setting the option by default on NetBSD is cosmetic; regardless of
+# setting, NetBSD will always be built statically.
+#
+# The "static" option is handled in the post-extract phase.
