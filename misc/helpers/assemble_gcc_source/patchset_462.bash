@@ -1,6 +1,6 @@
 #!/opt/csw/bin/bash
 
-GCCVERSION=4.6.2
+GCCVERSION=4.6.3
 DRACO=/export/home/marino/draco/trunk
 EXPANSE=/export/home/marino/GCC-TEST
 DIFFPROG=/usr/bin/gdiff
@@ -91,7 +91,9 @@ pattern="^gcc/testsuite|^gcc/ada|^gcc/fortran|^gnattools|^libada|^libgfortran|^l
 core=`cd ${DRACO} && find * -type d | ${GREPPROG} -vE $pattern`
 produce_patch ${CORE_SUFFIX} core[@]
 regenerate_patch ${CORE_SUFFIX} patch_gcc_configure
-regenerate_patch ${CORE_SUFFIX} patch_gcc_Makefile\.in
+regenerate_patch ${CORE_SUFFIX} patch_gcc_Makefile.in
+regenerate_patch ${CORE_SUFFIX} patch-libiberty__getpagesize.c
+regenerate_patch ${CORE_SUFFIX} patch-libiberty__setprotitle.c
 regenerate_patch ${CORE_SUFFIX} patch_configure
 
 pattern="^gcc/testsuite"

@@ -1,4 +1,4 @@
-$NetBSD$
+$NetBSD: patch-be,v 1.1.1.1 2011/02/11 16:48:53 drochner Exp $
 
 --- ssl/makefile.orig	2011-02-11 11:11:02.000000000 +0000
 +++ ssl/makefile

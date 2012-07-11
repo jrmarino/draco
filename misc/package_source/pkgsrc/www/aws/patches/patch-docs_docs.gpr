@@ -1,0 +1,13 @@
+$NetBSD$
+
+--- docs/docs.gpr.orig	2011-01-25 20:53:19.000000000 +0000
++++ docs/docs.gpr
+@@ -55,7 +55,7 @@ project Docs is
+ 
+    package Binder is
+       for Default_Switches ("Ada")
+-         use Shared.Builder'Default_Switches ("Ada") & ("-static");
++         use Shared.Builder'Default_Switches ("Ada");
+    end Binder;
+ 
+    -------------

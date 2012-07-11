@@ -1781,7 +1781,7 @@ AC_DEFUN([GLIBCXX_ENABLE_CLOCALE], [
 	enable_clocale_flag=darwin
 	;;
       dragonfly*)
-        enable_clocale_flag_dragonfly
+        enable_clocale_flag=dragonfly
         ;;
       *)
 	enable_clocale_flag=generic
@@ -1868,7 +1868,7 @@ AC_DEFUN([GLIBCXX_ENABLE_CLOCALE], [
       CLOCALE_INTERNAL_H=config/locale/generic/c++locale_internal.h
       ;;
     dragonfly)
-      AC_MSG_RESULT(darwin or freebsd)
+      AC_MSG_RESULT(dragonfly)
 
       CLOCALE_H=config/locale/generic/c_locale.h
       CLOCALE_CC=config/locale/dragonfly/c_locale.cc

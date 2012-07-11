@@ -1,11 +1,14 @@
-# $NetBSD$
+# $NetBSD: Makefile,v 1.7 2012/03/03 00:12:29 wiz Exp $
 #
 
-DISTNAME=	gtkada-2.22
+DISTNAME=	gtkada-${GTKADA_VERSION}
+PKGREVISION=	5
 CATEGORIES=	x11
 MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 		http://dragonlace.mirrors.ada.cx/src/
 EXTRACT_SUFX=	.tar.bz2
+DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
+DISTFILES+=	gtkada-rm-${GTKADA_VERSION}${EXTRACT_SUFX}
 
 MAINTAINER=	draco@marino.st
 HOMEPAGE=	http://libre.adacore.com/libre/tools/gtkada/
@@ -15,19 +18,20 @@ LICENSE=	gnu-gpl-v2
 PKG_DESTDIR_SUPPORT=	user-destdir
 
 GNU_CONFIGURE=		yes
-USE_TOOLS+=		gmake pkg-config
+USE_TOOLS+=		gmake pkg-config perl makeinfo pkg-config
+USE_LANGUAGES=		c ada c++ fortran
+MAKE_JOBS_SAFE=		no
 
-FULL_PATH=		/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:${PREFIX}/bin:${PREFIX}/lib/pkgconfig
-MY_CONFIGURE_ENV=	PATH=${FULL_PATH}
-MY_CONFIGURE_ENV+=	CC=gnatgcc
+GTKADA_VERSION=		2.22
 CONFIGURE_ARGS+=	--disable-nls
 PKGCONFIG_OVERRIDE+=	projects/gtkada.pc.in
 
-post-wrapper:
-	# We disable at least the wrapper binaries on all GNAT AUX ports to
-	# avoid linkage and build problems.  In this case we need the wrappers
-	# for the sed transformation script.
-	${RM} ${WRKDIR}/.wrapper/bin/*
+SUBST_CLASSES+= 	gate
+SUBST_STAGE.gate=	pre-configure
+SUBST_MESSAGE.gate=	Override tools for gate executable
+SUBST_FILES.gate=	src/tools/gate.in
+SUBST_SED.gate= 	-e "s,@DIFF@,${TOOLS_PLATFORM.diff},"
+SUBST_SED.gate+=	-e "s,@PATCH@,${TOOLS_PLATFORM.patch},"
 
 do-configure:
 	# OpenGL, Gnome, and glade are normally detected automatically, but
@@ -35,11 +39,6 @@ do-configure:
 	# test everything, patch-ad just disables support for these features.
 	cd ${WRKSRC} && ${SETENV} ${MY_CONFIGURE_ENV} ./configure ${CONFIGURE_ARGS}
 
-post-install:
-	${TOUCH} ${DESTDIR}${PREFIX}/lib/gnat/gtkada/IGNORE.ME
-	${TOUCH} ${DESTDIR}${PREFIX}/share/doc/gtkada/gtkada_rm/IGNORE.ME
-
 # gtk2 includes atk, glib and pango among others
 .include "../../x11/gtk2/buildlink3.mk"
-.include "../../lang/gnat-aux/buildlink3.mk"
 .include "../../mk/bsd.pkg.mk"

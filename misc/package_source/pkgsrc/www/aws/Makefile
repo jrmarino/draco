@@ -1,8 +1,8 @@
-# $NetBSD$
+# $NetBSD: Makefile,v 1.5 2012/03/16 04:31:15 obache Exp $
 #
 
 DISTNAME=	aws-${AWS_VERSION}
-PKG_REVISION=	1
+PKGREVISION=	3
 CATEGORIES=	www
 MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 		http://dragonlace.mirrors.ada.cx/src/
@@ -15,51 +15,68 @@ LICENSE=	gnu-gpl-v2
 
 PKG_DESTDIR_SUPPORT=	user-destdir
 AWS_VERSION=		2.10.0.1
-USE_TOOLS+=		gmake makeinfo sed
-BUILD_DEPENDS+=		gawk:../../lang/gawk
+USE_TOOLS+=		gmake makeinfo sed gawk
+USE_LANGUAGES=  	c ada c++ fortran
+
+# Note: c++ and fortran aren't used, but gprconfig probes for them.
+# When that happens, pkgsrc wrapper emits a warning message which causes
+# gprconfig to crash due to output text not matching expected regexp
+# Adding c++ and fortran to USE_LANGUAGES avoids this issue.
+
+PYTHON_VERSIONS_ACCEPTED=	26 27
 
 .include "options.mk"
 
 MAKE_ENV+=	ADA_PROJECT_PATH=${PREFIX}/lib/gnat
 
-post-wrapper:
-	# We disable at least the wrapper binaries on all GNAT AUX to
-	# avoid potential linkage problems
-	${RM} ${WRKDIR}/.wrapper/bin/*
+# Link options were added for the aws library
+# "-R" option disables all rpaths except adalib and compiler libs.  This is
+#      done because by default the rpaths will points at the WRKOBJDIR because
+#      it doesn't support the concept of DESTDIR.
+# "-Wl,-R" adds a second rpath string.
+# -Wl,-rpath is a better choice, but synonym -Wl,-R works on all BSD and SunOS
+SUBST_CLASSES+= 	rpath
+SUBST_STAGE.rpath=	pre-configure
+SUBST_MESSAGE.rpath=	Adjust rpaths of shared libraries
+SUBST_FILES.rpath=	src/src.gpr include/include.gpr
+SUBST_SED.rpath=	-e "s,@ADDITIONAL_RPATH@,${ADDITIONAL_RPATH},"
+ADDITIONAL_RPATH=	${PREFIX}/lib:${PREFIX}/lib/aws/native/relocatable
+
+GENERATE_PLIST=  cd ${DESTDIR}${PREFIX};
+GENERATE_PLIST+= ${FIND} bin/aws_password;
+GENERATE_PLIST+= ${FIND} bin/awsres;
+GENERATE_PLIST+= ${FIND} bin/templates2ada;
+GENERATE_PLIST+= ${FIND} bin/templatespp;
+GENERATE_PLIST+= ${FIND} bin/webxref;
+GENERATE_PLIST+= ${FIND} bin/wsdl2aws;
+GENERATE_PLIST+= ${FIND} include/aws/        -name \* -type f | ${SORT} -dr;
+GENERATE_PLIST+= ${FIND} lib/aws/            -name \* -type f | ${SORT} -dr;
+GENERATE_PLIST+= ${FIND} lib/gnat/aws/       -name \* -type f | ${SORT};
+GENERATE_PLIST+= ${FIND} lib/gnat/aws.gpr;
+GENERATE_PLIST+= ${FIND} share/doc/aws/      -name \* -type f | ${SORT};
+GENERATE_PLIST+= ${FIND} share/examples/aws/ -name \* -type f | ${SORT} -dr;
+GENERATE_PLIST+= ${FIND} share/gps/plug-ins/ada2wsdl.xml;
+GENERATE_PLIST+= ${FIND} share/gps/plug-ins/aws.py;
+GENERATE_PLIST+= ${FIND} share/gps/plug-ins/aws.xml;
+GENERATE_PLIST+= ${FIND} share/gps/plug-ins/aws_api.xml;
+GENERATE_PLIST+= ${FIND} share/gps/plug-ins/wsdl2aws.xml;
 
 do-configure:
-	cd ${WRKSRC} && ${SETENV} CC=gnatgcc \
-	${GMAKE} setup ${CONFIGURE_ARGS}
+	cd ${WRKSRC} && ${GMAKE} setup ${CONFIGURE_ARGS}
 
 do-build:
 	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${GMAKE} build build_doc
 
 do-test: install
-	cd ${WRKSRC}/regtests && python2.6 testsuite.py
+	cd ${WRKSRC}/regtests && python${PYVERSSUFFIX} testsuite.py
 
 do-install:
 	cd ${WRKSRC} && ${SETENV} ${INSTALL_ENV} ${GMAKE} install
 	${TOUCH} ${DESTDIR}${PREFIX}/share/examples/aws/bin/IGNORE.ME
-.if !empty (BUILD_DEMOS)
-	${MAKE} demos
-	${MAKE} demos-install
-.endif
-
-demos:
-.for dd in ${DEMO_DIRS}
-	cd ${WRKSRC}/demos/${dd} && ${GMAKE}
-.endfor
-
-demos-install:
-.if !empty (BUILD_DEMOS)
-	${MKDIR} ${DESTDIR}${PREFIX}/share/examples/aws/demos
-.for dd in ${DEMO_DIRS}
-	${FIND} ${WRKSRC}/demos/${dd} -type f -perm -0001 \
-	-exec ${INSTALL} {} ${DESTDIR}${PREFIX}/share/examples/aws/demos/ \;
-.endfor
-.endif
 
 .include "../../devel/zlib/buildlink3.mk"
+.include "../../lang/python/pyversion.mk"
 .include "../../devel/gnatpython/buildlink3.mk"
+.include "../../textproc/xmlada/buildlink3.mk"
 .include "../../devel/gprbuild-aux/buildlink3.mk"
 .include "../../mk/bsd.pkg.mk"

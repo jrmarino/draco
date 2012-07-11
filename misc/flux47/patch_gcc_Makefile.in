@@ -1,0 +1,42 @@
+--- a/gcc/Makefile.in.orig	2012-05-18 18:32:05.000000000 +0200
++++ b/gcc/Makefile.in	2012-06-29 13:44:17.000000000 +0200
+@@ -4378,7 +4378,7 @@
+ 	DESTDIR=$(@D) \
+ 	$(SHELL) $(srcdir)/doc/install.texi2html
+ 
+-MANFILES = doc/gcov.1 doc/cpp.1 doc/gcc.1 doc/gfdl.7 doc/gpl.7 doc/fsf-funding.7
++MANFILES = doc/gcov.1 doc/cpp.1 doc/gcc.1
+ 
+ generated-manpages: man
+ 
+@@ -4530,7 +4530,7 @@
+ # Install the driver last so that the window when things are
+ # broken is small.
+ install: install-common $(INSTALL_HEADERS) \
+-    install-cpp install-man install-info install-@POSUB@ \
++    install-cpp install-man install-@POSUB@ \
+     install-driver install-lto-wrapper install-gcc-ar
+ 
+ ifeq ($(enable_plugin),yes)
+@@ -4655,6 +4655,9 @@
+ 	-rm -f $(DESTDIR)$(bindir)/$(target_noncanonical)-gcc-$(version)$(exeext)
+ 	-( cd $(DESTDIR)$(bindir) && \
+ 	   $(LN) $(GCC_INSTALL_NAME)$(exeext) $(target_noncanonical)-gcc-$(version)$(exeext) )
++	-if [ -f gnat1$(exeext) ] ; then \
++	  ( cd $(DESTDIR)$(bindir) && $(LN) $(GCC_INSTALL_NAME)$(exeext) ada$(exeext) ) \
++	fi
+ 	-if [ -f gcc-cross$(exeext) ] ; then \
+ 	  if [ -d $(DESTDIR)$(gcc_tooldir)/bin/. ] ; then \
+ 	    rm -f $(DESTDIR)$(gcc_tooldir)/bin/gcc$(exeext); \
+@@ -4728,10 +4731,7 @@
+ install-man: lang.install-man \
+ 	$(DESTDIR)$(man1dir)/$(GCC_INSTALL_NAME)$(man1ext) \
+ 	$(DESTDIR)$(man1dir)/$(CPP_INSTALL_NAME)$(man1ext) \
+-	$(DESTDIR)$(man1dir)/$(GCOV_INSTALL_NAME)$(man1ext) \
+-	$(DESTDIR)$(man7dir)/fsf-funding$(man7ext) \
+-	$(DESTDIR)$(man7dir)/gfdl$(man7ext) \
+-	$(DESTDIR)$(man7dir)/gpl$(man7ext)
++	$(DESTDIR)$(man1dir)/$(GCOV_INSTALL_NAME)$(man1ext)
+ 
+ $(DESTDIR)$(man7dir)/%$(man7ext): doc/%.7 installdirs
+ 	-rm -f $@

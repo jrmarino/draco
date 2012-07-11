@@ -1,8 +1,8 @@
-# $NetBSD$
+# $NetBSD: Makefile,v 1.3 2011/12/03 07:30:48 marino Exp $
 #
 
-DISTNAME=	xmlada-${XMLADA_VERS}-${SNAPSHOT}
-PKGNAME=	xmlada-${XMLADA_VERS}
+DISTNAME=	xmlada-${XMLADA_VERS}
+PKGREVISION=	2
 CATEGORIES=	textproc
 MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 		http://dragonlace.mirrors.ada.cx/src/
@@ -14,24 +14,25 @@ COMMENT=	Adacore XML suite for the Ada language
 LICENSE=	gnu-gpl-v2
 
 PKG_DESTDIR_SUPPORT=	user-destdir
-XMLADA_VERS=		4.1w
-SNAPSHOT=		20101125
-WRKSRC=			${WRKDIR}/${PKGNAME_NOREV}
+XMLADA_VERS=		4.2.0.0
 GNU_CONFIGURE=		yes
-USE_LANGUAGES=		c # ada is not valid enumeration
-USE_TOOLS=		gmake
-#CONFIGURE_ENV+=		CC=gnatgcc
+USE_LANGUAGES=		c ada
+USE_TOOLS=		gmake makeinfo
+MAKE_JOBS_SAFE=		no
 
-# no special configuration options necessary
-pre-configure:
-	# explicitly request GNAT-AUX compiler
-	# It is done here to fool tough pkgscr compiler checks
-	${SETENV} CC=gnatgcc
+# Link options were added for the sax, dom, schema, and input_sources libraries
+# "-R" option disables all rpaths except adalib and compiler libs.  This is
+#      done because by default the rpaths will points at the WRKOBJDIR because
+#      it doesn't support the concept of DESTDIR.
+# "-Wl,-R" adds a second rpath string.
+# -Wl,-rpath is a better choice, but synonym -Wl,-R works on all BSD and SunOS
+SUBST_CLASSES+= 	rpath
+SUBST_STAGE.rpath=	pre-configure
+SUBST_MESSAGE.rpath=	Adjust rpaths of shared libraries
+SUBST_FILES.rpath=	sax/sax.gpr
+SUBST_FILES.rpath+=	dom/dom.gpr
+SUBST_FILES.rpath+=	input_sources/input_sources.gpr
+SUBST_FILES.rpath+=	schema/schema.gpr
+SUBST_SED.rpath=	-e "s,@ADDITIONAL_RPATH@,${PREFIX}/lib,"
 
-post-wrapper:
-	# We disable at least the wrapper binaries on all GNAT AUX ports to
-	# avoid potential linkage problems
-	${RM} ${WRKDIR}/.wrapper/bin/*
-
-.include "../../lang/gnat-aux/buildlink3.mk"
 .include "../../mk/bsd.pkg.mk"

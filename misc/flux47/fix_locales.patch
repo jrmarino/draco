@@ -1,0 +1,416 @@
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/always_noconv/wchar_t/2.cc b/libstdc++-v3/testsuite/22_locale/codecvt/always_noconv/wchar_t/2.cc
+index 2c8d77f..07ac099 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/always_noconv/wchar_t/2.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/always_noconv/wchar_t/2.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_US.ISO-8859-1" }
++// { dg-require-namedlocale "en_US.ISO8859-1" }
+ 
+ // 2003-02-06  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -27,14 +27,14 @@
+ // Required instantiation
+ // codecvt<wchar_t, char, mbstate_t>
+ //
+-// Baseline test in ISO-8859-1 locale
++// Baseline test in ISO8859-1 locale
+ void test02()
+ {
+   using namespace std;
+   bool test __attribute__((unused)) = true;
+   typedef codecvt<wchar_t, char, mbstate_t> 	w_codecvt;
+ 
+-  locale loc = locale("en_US.ISO-8859-1");
++  locale loc = locale("en_US.ISO8859-1");
+   locale::global(loc);
+   const w_codecvt* 	cvt = &use_facet<w_codecvt>(loc); 
+ 
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/always_noconv/wchar_t/3.cc b/libstdc++-v3/testsuite/22_locale/codecvt/always_noconv/wchar_t/3.cc
+index dcb961d..f10767c 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/always_noconv/wchar_t/3.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/always_noconv/wchar_t/3.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_US.ISO-8859-15" }
++// { dg-require-namedlocale "en_US.ISO8859-15" }
+ 
+ // 2003-02-06  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -27,14 +27,14 @@
+ // Required instantiation
+ // codecvt<wchar_t, char, mbstate_t>
+ //
+-// Baseline test in ISO-8859-15 locale
++// Baseline test in ISO8859-15 locale
+ void test03()
+ {
+   using namespace std;
+   bool test __attribute__((unused)) = true;
+   typedef codecvt<wchar_t, char, mbstate_t> 	w_codecvt;
+ 
+-  locale loc = locale("en_US.ISO-8859-15");
++  locale loc = locale("en_US.ISO8859-15");
+   locale::global(loc);
+   const w_codecvt* 	cvt = &use_facet<w_codecvt>(loc); 
+ 
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/encoding/wchar_t/2.cc b/libstdc++-v3/testsuite/22_locale/codecvt/encoding/wchar_t/2.cc
+index c5c0344..d7265a8 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/encoding/wchar_t/2.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/encoding/wchar_t/2.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_US.ISO-8859-1" }
++// { dg-require-namedlocale "en_US.ISO8859-1" }
+ 
+ // 2003-02-06  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -27,19 +27,19 @@
+ // Required instantiation
+ // codecvt<wchar_t, char, mbstate_t>
+ //
+-// Test do_encoding with ISO-8859-1 locale.
++// Test do_encoding with ISO8859-1 locale.
+ void test02()
+ {
+   using namespace std;
+   typedef codecvt<wchar_t, char, mbstate_t> 	w_codecvt;
+   bool test __attribute__((unused)) = true;
+ 
+-  locale loc = locale("en_US.ISO-8859-1");
++  locale loc = locale("en_US.ISO8859-1");
+   locale::global(loc);
+   const w_codecvt* 	cvt = &use_facet<w_codecvt>(loc); 
+ 
+   int i = cvt->encoding();
+-  VERIFY( i == 1 ); // ISO-8859-1 is a single-byte encoding
++  VERIFY( i == 1 ); // ISO8859-1 is a single-byte encoding
+ }
+ 
+ int main ()
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/encoding/wchar_t/3.cc b/libstdc++-v3/testsuite/22_locale/codecvt/encoding/wchar_t/3.cc
+index 6b003d0..ede3a51 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/encoding/wchar_t/3.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/encoding/wchar_t/3.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_US.ISO-8859-15" }
++// { dg-require-namedlocale "en_US.ISO8859-15" }
+ 
+ // 2003-02-06  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -27,19 +27,19 @@
+ // Required instantiation
+ // codecvt<wchar_t, char, mbstate_t>
+ //
+-// Test do_encoding with ISO-8859-15 locale.
++// Test do_encoding with ISO8859-15 locale.
+ void test03()
+ {
+   using namespace std;
+   typedef codecvt<wchar_t, char, mbstate_t> 	w_codecvt;
+   bool test __attribute__((unused)) = true;
+ 
+-  locale loc = locale("en_US.ISO-8859-15");
++  locale loc = locale("en_US.ISO8859-15");
+   locale::global(loc);
+   const w_codecvt* 	cvt = &use_facet<w_codecvt>(loc); 
+ 
+   int i = cvt->encoding();
+-  VERIFY( i == 1 ); // ISO-8859-15 is a single-byte encoding
++  VERIFY( i == 1 ); // ISO8859-15 is a single-byte encoding
+ }
+ 
+ int main ()
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/in/wchar_t/2.cc b/libstdc++-v3/testsuite/22_locale/codecvt/in/wchar_t/2.cc
+index 64a2c21..60a31b5 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/in/wchar_t/2.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/in/wchar_t/2.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_US.ISO-8859-1" }
++// { dg-require-namedlocale "en_US.ISO8859-1" }
+ 
+ // 2003-02-06  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -41,7 +41,7 @@ zero_state(std::mbstate_t& state)
+ // Required instantiation
+ // codecvt<wchar_t, char, mbstate_t>
+ //
+-// Baseline test for ISO-8859-1. Converts entire charset.
++// Baseline test for ISO8859-1. Converts entire charset.
+ void test02()
+ {
+   using namespace std;
+@@ -90,7 +90,7 @@ void test02()
+   wmemset(i_ref, 0xdeadbeef, size + 1);
+   int_type*		ito_next;
+ 
+-  locale loc = locale("en_US.ISO-8859-1");
++  locale loc = locale("en_US.ISO8859-1");
+   locale::global(loc);
+   const w_codecvt* 	cvt = &use_facet<w_codecvt>(loc); 
+ 
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/in/wchar_t/3.cc b/libstdc++-v3/testsuite/22_locale/codecvt/in/wchar_t/3.cc
+index ead5c4e..10c9297 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/in/wchar_t/3.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/in/wchar_t/3.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_US.ISO-8859-15" }
++// { dg-require-namedlocale "en_US.ISO8859-15" }
+ 
+ // 2003-02-06  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -41,7 +41,7 @@ zero_state(std::mbstate_t& state)
+ // Required instantiation
+ // codecvt<wchar_t, char, mbstate_t>
+ //
+-// Baseline test for ISO-8859-15. Converts entire charset.
++// Baseline test for ISO8859-15. Converts entire charset.
+ void test03()
+ {
+   using namespace std;
+@@ -104,7 +104,7 @@ void test03()
+   wmemset(i_ref, 0xdeadbeef, size + 1);
+   int_type*		ito_next;
+ 
+-  locale loc = locale("en_US.ISO-8859-15");
++  locale loc = locale("en_US.ISO8859-15");
+   locale::global(loc);
+   const w_codecvt* 	cvt = &use_facet<w_codecvt>(loc); 
+ 
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/length/wchar_t/2.cc b/libstdc++-v3/testsuite/22_locale/codecvt/length/wchar_t/2.cc
+index 3002a9e..66cbf5e 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/length/wchar_t/2.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/length/wchar_t/2.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_US.ISO-8859-1" }
++// { dg-require-namedlocale "en_US.ISO8859-1" }
+ 
+ // 2003-02-06  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -63,7 +63,7 @@ void test02()
+     "\xff";
+   int 			size = strlen(e_lit);
+ 
+-  locale  loc = locale("en_US.ISO-8859-1");
++  locale  loc = locale("en_US.ISO8859-1");
+   locale::global(loc);
+   const w_codecvt* 	cvt = &use_facet<w_codecvt>(loc); 
+ 
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/length/wchar_t/3.cc b/libstdc++-v3/testsuite/22_locale/codecvt/length/wchar_t/3.cc
+index 9f2b925..e1880bb 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/length/wchar_t/3.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/length/wchar_t/3.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_US.ISO-8859-15" }
++// { dg-require-namedlocale "en_US.ISO8859-15" }
+ 
+ // 2003-02-06  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -63,7 +63,7 @@ void test03()
+     "\xff";
+   int 			size = strlen(e_lit);
+ 
+-  locale loc = locale("en_US.ISO-8859-15");
++  locale loc = locale("en_US.ISO8859-15");
+   locale::global(loc);
+   const w_codecvt* 	cvt = &use_facet<w_codecvt>(loc); 
+ 
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/max_length/wchar_t/2.cc b/libstdc++-v3/testsuite/22_locale/codecvt/max_length/wchar_t/2.cc
+index 872a385..6e659c1 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/max_length/wchar_t/2.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/max_length/wchar_t/2.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_US.ISO-8859-1" }
++// { dg-require-namedlocale "en_US.ISO8859-1" }
+ 
+ // 2003-02-06  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -32,12 +32,12 @@ void test02()
+   bool test __attribute__((unused)) = true;
+   typedef codecvt<wchar_t, char, mbstate_t> 	w_codecvt;
+ 
+-  locale  loc = locale("en_US.ISO-8859-1");
++  locale  loc = locale("en_US.ISO8859-1");
+   locale::global(loc);
+   const w_codecvt* 	cvt = &use_facet<w_codecvt>(loc); 
+ 
+   int k = cvt->max_length();
+-  VERIFY( k == 1 ); // ISO-8859-1 is a single-byte encoding
++  VERIFY( k == 1 ); // ISO8859-1 is a single-byte encoding
+ }
+ 
+ int main ()
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/max_length/wchar_t/3.cc b/libstdc++-v3/testsuite/22_locale/codecvt/max_length/wchar_t/3.cc
+index 85514e7..7077c63 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/max_length/wchar_t/3.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/max_length/wchar_t/3.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_US.ISO-8859-15" }
++// { dg-require-namedlocale "en_US.ISO8859-15" }
+ 
+ // 2003-02-06  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -32,12 +32,12 @@ void test03()
+   bool test __attribute__((unused)) = true;
+   typedef codecvt<wchar_t, char, mbstate_t> 	w_codecvt;
+ 
+-  locale loc = locale("en_US.ISO-8859-15");
++  locale loc = locale("en_US.ISO8859-15");
+   locale::global(loc);
+   const w_codecvt* 	cvt = &use_facet<w_codecvt>(loc); 
+ 
+   int k = cvt->max_length();
+-  VERIFY( k == 1 ); // ISO-8859-15 is a single-byte encoding
++  VERIFY( k == 1 ); // ISO8859-15 is a single-byte encoding
+ }
+ 
+ int main ()
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/out/wchar_t/2.cc b/libstdc++-v3/testsuite/22_locale/codecvt/out/wchar_t/2.cc
+index 05aa145..b8e0980 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/out/wchar_t/2.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/out/wchar_t/2.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_US.ISO-8859-1" }
++// { dg-require-namedlocale "en_US.ISO8859-1" }
+ 
+ // 2003-02-06  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -88,7 +88,7 @@ void test02()
+   memset(e_ref, 0xf0, size + 1);
+   ext_type*		eto_next;
+ 
+-  locale  loc = locale("en_US.ISO-8859-1");
++  locale  loc = locale("en_US.ISO8859-1");
+   locale::global(loc);
+   const w_codecvt* 	cvt = &use_facet<w_codecvt>(loc); 
+ 
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/out/wchar_t/3.cc b/libstdc++-v3/testsuite/22_locale/codecvt/out/wchar_t/3.cc
+index e12e0f6..e7bdf16 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/out/wchar_t/3.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/out/wchar_t/3.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_US.ISO-8859-15" }
++// { dg-require-namedlocale "en_US.ISO8859-15" }
+ 
+ // 2003-02-06  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -102,7 +102,7 @@ void test03()
+   memset(e_ref, 0xf0, size + 1);
+   ext_type*		eto_next;
+ 
+-  locale loc = locale("en_US.ISO-8859-15");
++  locale loc = locale("en_US.ISO8859-15");
+   locale::global(loc);
+   const w_codecvt* 	cvt = &use_facet<w_codecvt>(loc); 
+ 
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/out/wchar_t/7.cc b/libstdc++-v3/testsuite/22_locale/codecvt/out/wchar_t/7.cc
+index 2c8a529..8f1da89 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/out/wchar_t/7.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/out/wchar_t/7.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_US.ISO-8859-1" }
++// { dg-require-namedlocale "en_US.ISO8859-1" }
+ 
+ // 2003-02-06  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -60,7 +60,7 @@ void test03()
+   memset(e_ref, 0xf0, size + 1);
+   ext_type*		eto_next;
+ 
+-  locale loc = locale("en_US.ISO-8859-1");
++  locale loc = locale("en_US.ISO8859-1");
+   locale::global(loc);
+   const w_codecvt* 	cvt = &use_facet<w_codecvt>(loc); 
+ 
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/unshift/wchar_t/2.cc b/libstdc++-v3/testsuite/22_locale/codecvt/unshift/wchar_t/2.cc
+index 15aaf1d..c2e28c8 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/unshift/wchar_t/2.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/unshift/wchar_t/2.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_US.ISO-8859-1" }
++// { dg-require-namedlocale "en_US.ISO8859-1" }
+ 
+ // 2003-02-06  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -73,7 +73,7 @@ void test02()
+   memset(e_ref, 0xf0, size + 1);
+   ext_type*		eto_next;
+ 
+-  locale loc = locale("en_US.ISO-8859-1");
++  locale loc = locale("en_US.ISO8859-1");
+   locale::global(loc);
+   const w_codecvt* 	cvt = &use_facet<w_codecvt>(loc); 
+ 
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/unshift/wchar_t/3.cc b/libstdc++-v3/testsuite/22_locale/codecvt/unshift/wchar_t/3.cc
+index 915b824..e4d3f67 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/unshift/wchar_t/3.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/unshift/wchar_t/3.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_US.ISO-8859-15" }
++// { dg-require-namedlocale "en_US.ISO8859-15" }
+ 
+ // 2003-02-06  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -87,7 +87,7 @@ void test03()
+   memset(e_ref, 0xf0, size + 1);
+   ext_type*		eto_next;
+ 
+-  locale loc = locale("en_US.ISO-8859-15");
++  locale loc = locale("en_US.ISO8859-15");
+   locale::global(loc);
+   const w_codecvt* 	cvt = &use_facet<w_codecvt>(loc); 
+ 
+diff --git a/libstdc++-v3/testsuite/22_locale/ctype/widen/wchar_t/2.cc b/libstdc++-v3/testsuite/22_locale/ctype/widen/wchar_t/2.cc
+index d6c5c6d..6763a34 100644
+--- a/libstdc++-v3/testsuite/22_locale/ctype/widen/wchar_t/2.cc
++++ b/libstdc++-v3/testsuite/22_locale/ctype/widen/wchar_t/2.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_US.ISO-8859-1" }
++// { dg-require-namedlocale "en_US.ISO8859-1" }
+ 
+ // 2003-03-12  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -31,7 +31,7 @@ void test02()
+   using namespace std;
+   bool test __attribute__((unused)) = true;
+ 
+-  locale loc = locale("en_US.ISO-8859-1");
++  locale loc = locale("en_US.ISO8859-1");
+   const ctype<wchar_t>& wct = use_facet<ctype<wchar_t> >(loc);
+ 
+   char c = 0xff;
+diff --git a/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/9520.cc b/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/9520.cc
+index f791b86..2528296 100644
+--- a/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/9520.cc
++++ b/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/9520.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "de_DE.ISO-8859-15@euro" }
++// { dg-require-namedlocale "de_DE.ISO8859-15@euro" }
+ 
+ // 2003-05-03  Petur Runolfsson <peturr02@ru.is>
+ 
+@@ -36,7 +36,7 @@ void test01()
+     putc(static_cast<unsigned char>(i), file);
+   fclose(file);
+ 
+-  locale loc (locale("de_DE.ISO-8859-15@euro"));
++  locale loc (locale("de_DE.ISO8859-15@euro"));
+   wchar_t buf[1];
+   wfilebuf fb;
+   fb.pubimbue(loc);
+diff --git a/libstdc++-v3/testsuite/27_io/objects/wchar_t/9520.cc b/libstdc++-v3/testsuite/27_io/objects/wchar_t/9520.cc
+index 717bbc1..51377b9 100644
+--- a/libstdc++-v3/testsuite/27_io/objects/wchar_t/9520.cc
++++ b/libstdc++-v3/testsuite/27_io/objects/wchar_t/9520.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "de_DE.ISO-8859-15@euro" }
++// { dg-require-namedlocale "de_DE.ISO8859-15@euro" }
+ 
+ // 2003-04-30  Petur Runolfsson <peturr02@ru.is>
+ 
+@@ -35,7 +35,7 @@ void test01()
+     putc(static_cast<unsigned char>(i), file);
+   fclose(file);
+ 
+-  locale loc (locale("de_DE.ISO-8859-15@euro"));
++  locale loc (locale("de_DE.ISO8859-15@euro"));
+   locale::global(loc); // Set locale for stdin
+ 
+   VERIFY( freopen(name, "r", stdin) );
