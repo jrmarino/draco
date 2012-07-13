@@ -127,10 +127,10 @@ along with GCC; see the file COPYING3.  If not see
 #undef  DEFAULT_PCC_STRUCT_RETURN
 #define DEFAULT_PCC_STRUCT_RETURN 0
 
-/* FreeBSD sets the rounding precision of the FPU to 53 bits, but GNAT
-   resets it to full precision.  */
+/* FreeBSD sets the rounding precision of the FPU to 53 bits.  Let the
+   compiler get the contents of <float.h> and std::numeric_limits correct.  */
 #undef TARGET_96_ROUND_53_LONG_DOUBLE
-#define TARGET_96_ROUND_53_LONG_DOUBLE 0
+#define TARGET_96_ROUND_53_LONG_DOUBLE (!TARGET_64BIT)
 
 /* Put all *tf routines in libgcc.  */
 #undef LIBGCC2_HAS_TF_MODE
@@ -178,5 +178,4 @@ __enable_execute_stack (void *addr)                      \
   ends = (char *) ((ends_addr & mask) + size);           \
   (void) mprotect (page, ends - page, perms);            \
 }
-
 

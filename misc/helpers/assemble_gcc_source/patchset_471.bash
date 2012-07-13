@@ -80,6 +80,7 @@ mkdir -p ${OUTPUT_DIR}
 pattern="^gcc/ada|^gnattools"
 ada=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
 produce_patch ${ADA_SUFFIX} ada[@]
+regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Make-lang.in
 
 pattern="^gcc/fortran|^libgfortran|^libquadmath"
 fortran=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
