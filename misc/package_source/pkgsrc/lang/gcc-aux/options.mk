@@ -1,4 +1,4 @@
-# $NetBSD: options.mk,v 1.2 2012/01/08 11:17:07 marino Exp $
+# $NetBSD: options.mk,v 1.1 2012/07/08 19:30:38 marino Exp $
 
 PKG_OPTIONS_VAR=	PKG_OPTIONS.gcc-aux
 PKG_SUPPORTED_OPTIONS=  ada cxx fortran objc testsuite nls static

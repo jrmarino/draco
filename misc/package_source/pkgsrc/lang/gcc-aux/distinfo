@@ -1,4 +1,4 @@
-$NetBSD: distinfo,v 1.9 2012/03/02 16:00:58 marino Exp $
+$NetBSD: distinfo,v 1.1 2012/07/08 19:30:38 marino Exp $
 
 SHA1 (gcc-4.7.1.tar.bz2) = 3ab74e63a8f2120b4f2c5557f5ffec6907337137
 RMD160 (gcc-4.7.1.tar.bz2) = 4b52d867d06288a0b3bb33c845cac0112c22b513

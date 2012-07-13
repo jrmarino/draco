@@ -1,4 +1,4 @@
-# $NetBSD: buildlink3.mk,v 1.2 2011/12/03 07:28:18 marino Exp $
+# $NetBSD: buildlink3.mk,v 1.1 2012/07/08 19:30:38 marino Exp $
 
 BUILDLINK_TREE+= gcc-aux
 
