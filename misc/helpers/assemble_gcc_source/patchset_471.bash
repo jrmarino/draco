@@ -26,6 +26,7 @@ function produce_patch () {
    cd ${DRACO}
    rm -f ${PATCH_FILE}
    for DIR in ${DIRECTORY_LIST[@]}; do
+      echo "     Searching ${DIR}"
       FILES=${DIR}/*
       for F in ${FILES}; do
          if [ -f ${F} ]; then
@@ -102,7 +103,9 @@ pattern="^libstdc..-v3"
 cplusplus=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
 produce_patch ${CXX_SUFFIX} cplusplus[@]
 
-rm -f ${OUTPUT_DIR}/diff-${CXX_SUITE_SUFFIX}
+pattern="^gcc/testsuite/c-c..-common"
+suite=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
+produce_patch ${CXX_SUITE_SUFFIX} suite[@]
 regenerate_patch ${CXX_SUITE_SUFFIX} gxx_ts1.patch
 regenerate_patch ${CXX_SUITE_SUFFIX} libstdcxx-testsuite.patch
 regenerate_patch ${CXX_SUITE_SUFFIX} libstdc++.exp.patch
