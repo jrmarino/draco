@@ -205,13 +205,13 @@ post-extract:
 	@${ECHO} "Reconfiguring GCC Makefile to build compiler statically"
 	@${PATCH} -d ${WRKSRC} -s -E < ${FILESDIR}/diff-static-version
 .if defined(WITH_NLS)
-	@${PERL} -pi -e 's;\@LIBICONV\@;${STICONV};' \
+	@${PERL} -pi -e 's;\@LIBINTL\@;${STINTL} ${STICONV};' ${WRKSRC}/intl/config.intl.in
+	@${PERL} -pi -e 's;\@LIBICONV\@;;' \
 	  ${WRKSRC}/gcc/Makefile.in \
 	  ${WRKSRC}/libcpp/Makefile.in \
 	  ${WRKSRC}/gcc/ada/gcc-interface/Makefile.in
 .else
-	@${PERL} -pi -e 's;\@LIBINTL\@;${STINTL} ${STICONV};' ${WRKSRC}/intl/config.intl.in
-	@${PERL} -pi -e 's;\@LIBICONV\@;;' \
+	@${PERL} -pi -e 's;\@LIBICONV\@;${STICONV};' \
 	  ${WRKSRC}/gcc/Makefile.in \
 	  ${WRKSRC}/libcpp/Makefile.in \
 	  ${WRKSRC}/gcc/ada/gcc-interface/Makefile.in
