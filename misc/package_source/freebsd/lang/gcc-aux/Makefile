@@ -48,33 +48,30 @@ OS_LABEL4VERS=		[FreeBSD]
 BOOTSTRAP_TRIPLET=	i386-bootstrap-freebsd8.0/4.6.0
 BOOTSTRAP_COMPILER=	gnat-bootstrap.i386.freebsd.tar.bz2
 .endif
-PLIST_SUB=		GNU_HOST=${BLD_TARGET}
-PLIST_SUB+=		GCC_VER=${GCC_VERSION}
 
 WRKSRC=			${WRKDIR}/gcc-${GCC_VERSION}
 BUILDDIR=		${WRKDIR}/build
 CFG_SCRIPT=		${WRKSRC}/configure
 REVFILE=		${WRKSRC}/gcc/REVISION
 BOOTSTRAP_PREFIX=	${WRKDIR}/bootstrap
-PKG_PREFIX=		${PREFIX}
-LPATH=			lib/gcc/${BLD_TARGET}/${GCC_VERSION}
-LEPATH=			libexec/gcc/${BLD_TARGET}/${GCC_VERSION}
+DESTINY=		${WRKDIR}/destdir
+PKG_PREFIX=		${PREFIX}/${PORTNAME}
 STICONV=		${PREFIX}/lib/libiconv.a
 STINTL= 		\$${top_builddir}/../intl/libintl.a
-USE_LDCONFIG=		${PREFIX}/lib/gcc
-MAN1=			gnatcpp.1 gnatgcc.1 gnatgcov.1
-MAN1PREFIX=		${PREFIX}/share
-MAN7PREFIX=		${PREFIX}/share
+USE_LDCONFIG=		${PREFIX}/${PORTNAME}/lib ${PREFIX}/${PORTNAME}/lib/gcc
+MAN1=			cpp.1 gcc.1 gcov.1
+MAN1PREFIX=		${PREFIX}/${PORTNAME}/share
+MAN7PREFIX=		${PREFIX}/${PORTNAME}/share
 NO_MANCOMPRESS=		yes
 
-# If we find gnatgcc and friends in standard location, then we'll use this
+# If we find gnatmake and friends in a standard location, then we'll use this
 # compiler instead of downloading the bootstrap.
-.if exists (${PREFIX}/gcc-aux/bin/ada)
-.if exists (${PREFIX}/gcc-aux/bin/gnatbind)
-.if exists (${PREFIX}/gcc-aux/bin/gnatlink)
-.if exists (${PREFIX}/gcc-aux/bin/gnatmake)
-FULL_GNATGCC=${PREFIX}/gcc-aux/bin/ada
-FULL_PATH=/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/gcc-aux/bin:${PREFIX}/bin
+.if exists (${PREFIX}/${PORTNAME}/bin/ada)
+.if exists (${PREFIX}/${PORTNAME}/bin/gnatbind)
+.if exists (${PREFIX}/${PORTNAME}/bin/gnatlink)
+.if exists (${PREFIX}/${PORTNAME}/bin/gnatmake)
+FULL_GNATGCC=${PREFIX}/${PORTNAME}/bin/ada
+FULL_PATH=/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/${PORTNAME}/bin:${PREFIX}/bin
 .endif
 .endif
 .endif
@@ -102,9 +99,6 @@ DISTFILES=gcc-${GCC_VERSION}.tar.bz2 \
 .if defined(WITH_ADA)
 LANGS+=		ada
 APPLY_DIFFS+=	ada
-PLIST_SUB+=	ADA=""
-.else
-PLIST_SUB+=	ADA="@comment "
 .endif
 
 ###########
@@ -114,12 +108,7 @@ PLIST_SUB+=	ADA="@comment "
 .if defined(WITH_CXX)
 LANGS+=		c++
 APPLY_DIFFS+=	cxx
-MAN1+=		gnatg++.1
-LCXXPATH=	include/c++/${GCC_VERSION}
-LSHRPATH=	share/gcc-${GCC_VERSION}
-PLIST_SUB+=	CXX=""
-.else
-PLIST_SUB+=	CXX="@comment "
+MAN1+=		g++.1
 .endif
 
 ###############
@@ -129,12 +118,10 @@ PLIST_SUB+=	CXX="@comment "
 .if defined(WITH_FORT)
 LANGS+=		fortran
 APPLY_DIFFS+=	fortran
-MAN1+=		gnatgfortran.1
+MAN1+=		gfortran.1
 EXTRA_CONFIG+=	--enable-libquadmath
-PLIST_SUB+= 	FRT=""
 .else
 EXTRA_CONFIG+=	--disable-libquadmath
-PLIST_SUB+= 	FRT="@comment "
 .endif
 
 ###################
@@ -164,10 +151,8 @@ APPLY_DIFFS+=	gcc-testsuite
 .if defined(WITH_NLS)
 BUILD_DEPENDS=	gettext>=0.18:${PORTSDIR}/devel/gettext
 EXTRA_CONFIG+= --enable-nls
-PLIST_SUB+= 	NLS=""
 .else
 EXTRA_CONFIG+= --disable-nls
-PLIST_SUB+= 	NLS="@comment "
 .endif
 
 ###############################
@@ -184,21 +169,21 @@ ADA_MAKE_ENV+=		ICONVPREFIX=${PREFIX}
 ADA_MAKE_ENV+=		LD_LIBRARY_PATH=${BUILDDIR}/gcc
 
 # The standard configuration options
-CONFIGURE_ARGS=		--enable-languages=${LANGS:Q}
-CONFIGURE_ARGS+=	--build=${BLD_TARGET}
-CONFIGURE_ARGS+=	--prefix=${PREFIX}
-CONFIGURE_ARGS+=	--with-system-zlib
-CONFIGURE_ARGS+=	--with-gmp=${PKG_PREFIX}
-CONFIGURE_ARGS+=	--with-mpfr=${PKG_PREFIX}
-CONFIGURE_ARGS+=	--with-mpc=${PKG_PREFIX}
-CONFIGURE_ARGS+=	--with-libiconv-prefix=${PKG_PREFIX}
-CONFIGURE_ARGS+=	--enable-shared
-CONFIGURE_ARGS+=	--enable-threads=posix
-CONFIGURE_ARGS+=	--disable-bootstrap
-CONFIGURE_ARGS+=	--disable-libmudflap
-CONFIGURE_ARGS+=	--disable-libgomp
-CONFIGURE_ARGS+=	--disable-libssp
-CONFIGURE_ARGS+=	${EXTRA_CONFIG}
+ADA_CONFIG_ARGS=	--enable-languages=${LANGS:Q}
+ADA_CONFIG_ARGS+=	--build=${BLD_TARGET}
+ADA_CONFIG_ARGS+=	--prefix=${PKG_PREFIX:Q}
+ADA_CONFIG_ARGS+=	--with-system-zlib
+ADA_CONFIG_ARGS+=	--with-gmp=${PREFIX}
+ADA_CONFIG_ARGS+=	--with-mpfr=${PREFIX}
+ADA_CONFIG_ARGS+=	--with-mpc=${PREFIX}
+ADA_CONFIG_ARGS+=	--with-libiconv-prefix=${PREFIX}
+ADA_CONFIG_ARGS+=	--enable-shared
+ADA_CONFIG_ARGS+=	--enable-threads=posix
+ADA_CONFIG_ARGS+=	--disable-bootstrap
+ADA_CONFIG_ARGS+=	--disable-libmudflap
+ADA_CONFIG_ARGS+=	--disable-libgomp
+ADA_CONFIG_ARGS+=	--disable-libssp
+ADA_CONFIG_ARGS+=	${EXTRA_CONFIG}
 
 post-extract:
 	# Personalize GNAT for each different machine
@@ -220,13 +205,13 @@ post-extract:
 	@${ECHO} "Reconfiguring GCC Makefile to build compiler statically"
 	@${PATCH} -d ${WRKSRC} -s -E < ${FILESDIR}/diff-static-version
 .if defined(WITH_NLS)
-	@perl -pi -e 's;\@LIBICONV\@;${STICONV};' \
+	@${PERL} -pi -e 's;\@LIBICONV\@;${STICONV};' \
 	  ${WRKSRC}/gcc/Makefile.in \
 	  ${WRKSRC}/libcpp/Makefile.in \
 	  ${WRKSRC}/gcc/ada/gcc-interface/Makefile.in
 .else
-	@perl -pi -e 's;\@LIBINTL\@;${STINTL} ${STICONV};' ${WRKSRC}/intl/config.intl.in
-	@perl -pi -e 's;\@LIBICONV\@;;' \
+	@${PERL} -pi -e 's;\@LIBINTL\@;${STINTL} ${STICONV};' ${WRKSRC}/intl/config.intl.in
+	@${PERL} -pi -e 's;\@LIBICONV\@;;' \
 	  ${WRKSRC}/gcc/Makefile.in \
 	  ${WRKSRC}/libcpp/Makefile.in \
 	  ${WRKSRC}/gcc/ada/gcc-interface/Makefile.in
@@ -252,7 +237,7 @@ post-extract:
 do-configure:
 	${MKDIR} ${BUILDDIR}
 	cd ${BUILDDIR} && ${SETENV} ${ADA_CONFIGURE_ENV} \
-	${CFG_SCRIPT} ${CONFIGURE_ARGS}
+	${CFG_SCRIPT} ${ADA_CONFIG_ARGS}
 
 do-build:
 	cd ${BUILDDIR} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} ${_MAKE_JOBS} all
@@ -286,22 +271,21 @@ test-c:
 .endif
 
 do-install:
-	cd ${BUILDDIR} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} install-strip DESTDIR=${DESTDIR}
+	cd ${BUILDDIR} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} install-strip DESTDIR=${DESTINY}
+	${CP} -pr ${DESTINY}${PREFIX}/ ${PREFIX}/
 
 post-install:
-	${RM} -f ${WRKDIR}/PLIST.lib
-.for d in ${LPATH} ${LEPATH} ${LCXXPATH} ${LSHRPATH}
-	cd ${PREFIX} ; ${FIND} $d \( -type f -or -type l \) | ${SORT} >> ${WRKDIR}/PLIST.lib
-	cd ${PREFIX} ; ${FIND} $d  -type d | ${SORT} -r | \
-	   ${SED} -e 's/^/@dirrm /g' >> ${WRKDIR}/PLIST.lib
-.endfor
-	${ECHO_CMD} "@unexec ${RMDIR} %D/lib/gcc/${BLD_TARGET}     2>/dev/null || true" >> ${WRKDIR}/PLIST.lib
-	${ECHO_CMD} "@unexec ${RMDIR} %D/lib/gcc                   2>/dev/null || true" >> ${WRKDIR}/PLIST.lib
-	${ECHO_CMD} "@unexec ${RMDIR} %D/libexec/gcc/${BLD_TARGET} 2>/dev/null || true" >> ${WRKDIR}/PLIST.lib
-	${ECHO_CMD} "@unexec ${RMDIR} %D/libexec/gcc               2>/dev/null || true" >> ${WRKDIR}/PLIST.lib
-	${ECHO_CMD} "@unexec ${RMDIR} %D/include/c++               2>/dev/null || true" >> ${WRKDIR}/PLIST.lib
+	${RM} -f ${WRKDIR}/PLIST.all
+	${RM} -rf ${DESTINY}/man
+	${MV} ${DESTINY}${PREFIX}/${PORTNAME}/share/man ${DESTINY}/
+	cd ${DESTINY}; ${FIND} man -type d \
+	   -exec ${MKDIR} ${DESTINY}${PREFIX}/${PORTNAME}/share/{} \;
+	cd ${DESTINY}${PREFIX}; ${FIND} ${PORTNAME} \( -type f -or -type l \) | \
+	   ${SORT} >> ${WRKDIR}/PLIST.all
+	cd ${DESTINY}${PREFIX}; ${FIND} ${PORTNAME}  -type d | ${SORT} -r | \
+	   ${SED} -e 's/^/@dirrm /g' >> ${WRKDIR}/PLIST.all
 
-	cd ${WRKDIR}; ${SED} -i -e "/PLIST.lib/ r PLIST.lib" ${TMPPLIST}
+	cd ${WRKDIR}; ${SED} -i -e "/PLIST.all/ r PLIST.all" ${TMPPLIST}
 .if ${OSVERSION} > 900000
 	@${ECHO_MSG} "========================================================"
 	@${ECHO_MSG} " NOTICE REGARDING ADA TASKING ON FREEBSD 9.x:"
