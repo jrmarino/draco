@@ -108,6 +108,7 @@ suite=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
 produce_patch ${CXX_SUITE_SUFFIX} suite[@]
 regenerate_patch ${CXX_SUITE_SUFFIX} gxx_ts1.patch
 regenerate_patch ${CXX_SUITE_SUFFIX} libstdcxx-testsuite.patch
+regenerate_patch ${CXX_SUITE_SUFFIX} libstdcxx_section30.patch
 regenerate_patch ${CXX_SUITE_SUFFIX} libstdc++.exp.patch
 regenerate_patch ${CXX_SUITE_SUFFIX} libstdxx_ts_missing_debug_checks.patch
 regenerate_patch ${CXX_SUITE_SUFFIX} fix_locales.patch

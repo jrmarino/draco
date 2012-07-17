@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.1 2012/07/08 19:30:38 marino Exp $
+# $NetBSD: Makefile,v 1.2 2012/07/14 21:53:05 marino Exp $
 #
 
 PKGNAME=	gcc-aux-${SNAPSHOT}
