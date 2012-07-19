@@ -278,9 +278,10 @@ arm*-android-eabi*)
 esac
 
 case ${host} in
-*-*-darwin* | *-*-freebsd* | *-*-netbsd* | *-*-openbsd* | *-*-solaris2* | \
-  *-*-dragonfly* | \
-  alpha*-dec-osf5.1*)
+*-*-freebsd* | *-*-dragonfly* | *-*-netbsd* | *-*-openbsd*)
+  enable_execute_stack=enable-execute-stack-freebsd.c
+  ;;
+*-*-darwin* | *-*-solaris2* | alpha*-dec-osf5.1*)
   enable_execute_stack=enable-execute-stack-mprotect.c
   ;;
 i[34567]86-*-mingw* | x86_64-*-mingw*)
