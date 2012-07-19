@@ -45,7 +45,7 @@ __enable_execute_stack (void *addr)
   }
   page_addr = (long) addr;
   ends_addr = (long) (addr + __LIBGCC_TRAMPOLINE_SIZE__);
-  
+
   page = (char *) (page_addr & mask);
   ends = (char *) ((ends_addr & mask) + size);
 

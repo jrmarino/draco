@@ -95,7 +95,7 @@
  	arm*-*-rtemseabi*)
  	  tm_file="${tm_file} rtems.h arm/rtems-eabi.h newlib-stdint.h"
  	  tmake_file="${tmake_file} arm/t-bpabi t-rtems arm/t-rtems-eabi"
-@@ -1196,6 +1240,14 @@
+@@ -1196,19 +1240,31 @@
  x86_64-*-elf*)
  	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h newlib-stdint.h i386/i386elf.h i386/x86-64.h"
  	;;
@@ -109,9 +109,11 @@
 +	;;
  i[34567]86-*-freebsd*)
  	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h ${fbsd_tm_file} i386/freebsd.h"
++	tmake_file="${tmake_file} i386/t-crtstuff"
  	;;
-@@ -1203,12 +1255,14 @@
+ x86_64-*-freebsd*)
  	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h ${fbsd_tm_file} i386/x86-64.h i386/freebsd.h i386/freebsd64.h"
++	tmake_file="${tmake_file} i386/t-crtstuff"
  	;;
  i[34567]86-*-netbsdelf*)
 -	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h netbsd.h netbsd-elf.h i386/netbsd-elf.h"
@@ -127,7 +129,7 @@
  	;;
  i[34567]86-*-openbsd2.*|i[34567]86-*openbsd3.[0123])
  	tm_file="i386/i386.h i386/unix.h i386/bsd.h i386/gas.h i386/gstabs.h openbsd-oldgas.h openbsd.h i386/openbsd.h"
-@@ -3530,6 +3584,8 @@
+@@ -3530,6 +3586,8 @@
  		;;
  	i[34567]86-*-cygwin* | i[34567]86-*-mingw* | x86_64-*-mingw*)
  		;;
@@ -568,6 +570,14 @@
 +
 +#define TARGET_ASM_FILE_END file_end_indicate_exec_stack
 +
+--- gcc/config/i386/freebsd.h.orig
++++ gcc/config/i386/freebsd.h
+@@ -148,3 +148,5 @@
+ 
+ #define TARGET_ASM_FILE_END file_end_indicate_exec_stack
+ 
++/* Compile in __enable_execute_stack (void *) (see config.host) */
++#define HAVE_ENABLE_EXECUTE_STACK
 --- gcc/config/i386/netbsd-elf.h.orig
 +++ gcc/config/i386/netbsd-elf.h
 @@ -119,3 +119,9 @@
@@ -705,15 +715,20 @@
    # NetBSD 1.7 and later are set up to use GCC's crtstuff for
    # ELF configurations.  We will clear extra_parts in the
    # a.out configurations.
-@@ -267,6 +279,7 @@
+@@ -266,8 +278,10 @@
+ esac
  
  case ${host} in
- *-*-darwin* | *-*-freebsd* | *-*-netbsd* | *-*-openbsd* | *-*-solaris2* | \
-+  *-*-dragonfly* | \
-   alpha*-dec-osf5.1*)
+-*-*-darwin* | *-*-freebsd* | *-*-netbsd* | *-*-openbsd* | *-*-solaris2* | \
+-  alpha*-dec-osf5.1*)
++*-*-freebsd* | *-*-dragonfly* | *-*-netbsd* | *-*-openbsd*)
++  enable_execute_stack=enable-execute-stack-freebsd.c
++  ;;
++*-*-darwin* | *-*-solaris2* | alpha*-dec-osf5.1*)
    enable_execute_stack=enable-execute-stack-mprotect.c
    ;;
-@@ -354,11 +367,11 @@
+ i[34567]86-*-mingw* | x86_64-*-mingw*)
+@@ -354,11 +368,11 @@
  	tmake_file="$tmake_file arm/t-arm arm/t-elf t-softfp-sfdf t-softfp-excl arm/t-softfp t-softfp"
  	extra_parts="$extra_parts crti.o crtn.o"
  	;;
@@ -727,7 +742,7 @@
  	  tmake_file="${tmake_file} arm/t-bpabi"
  	  extra_parts="crtbegin.o crtend.o crti.o crtn.o"
  	  ;;
-@@ -523,16 +536,29 @@
+@@ -523,16 +537,29 @@
  x86_64-*-elf*)
  	tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
  	;;
@@ -757,7 +772,7 @@
  	;;
  i[34567]86-*-openbsd2.*|i[34567]86-*openbsd3.[0123])
  	;;
-@@ -1160,6 +1186,7 @@
+@@ -1160,6 +1187,7 @@
    i[34567]86-*-gnu* | \
    i[34567]86-*-solaris2* | x86_64-*-solaris2.1[0-9]* | \
    i[34567]86-*-cygwin* | i[34567]86-*-mingw* | x86_64-*-mingw* | \
@@ -788,6 +803,67 @@
  #include <link.h>
  # define USE_PT_GNU_EH_FRAME
  #endif
+--- /dev/null
++++ libgcc/enable-execute-stack-freebsd.c
+@@ -0,0 +1,58 @@
++/* Implement __enable_execute_stack using mprotect(2).
++   Copyright (C) 2011, 2012 Free Software Foundation, Inc.
++
++   This file is part of GCC.
++
++   GCC is free software; you can redistribute it and/or modify it under
++   the terms of the GNU General Public License as published by the Free
++   Software Foundation; either version 3, or (at your option) any later
++   version.
++
++   GCC is distributed in the hope that it will be useful, but WITHOUT ANY
++   WARRANTY; without even the implied warranty of MERCHANTABILITY or
++   FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++   for more details.
++
++   Under Section 7 of GPL version 3, you are granted additional
++   permissions described in the GCC Runtime Library Exception, version
++   3.1, as published by the Free Software Foundation.
++
++   You should have received a copy of the GNU General Public License and
++   a copy of the GCC Runtime Library Exception along with this program;
++   see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
++   <http://www.gnu.org/licenses/>.  */
++
++#include <sys/mman.h>
++#include <unistd.h>
++#include <stdlib.h>
++
++#define STACK_PROT_RWX (PROT_READ | PROT_WRITE | PROT_EXEC)
++
++extern void __enable_execute_stack (void *);
++
++void
++__enable_execute_stack (void *addr)
++{
++  static int size;
++  static long mask;
++  char *page, *ends;
++  long page_addr, ends_addr;
++
++  if (size == 0)
++  {
++    size = getpagesize ();
++    mask = ~((long) size - 1);
++  }
++  page_addr = (long) addr;
++  ends_addr = (long) (addr + __LIBGCC_TRAMPOLINE_SIZE__);
++
++  page = (char *) (page_addr & mask);
++  ends = (char *) ((ends_addr & mask) + size);
++
++  /*
++   * Note that no errors should be emitted by mprotect; it is considered
++   * dangerous for library calls to send messages to stdout/stderr.
++   */
++  if (mprotect (page, ends - page, STACK_PROT_RWX) < 0)
++    abort ();
++}
 --- libgcc/unwind-dw2-fde-dip.c.orig
 +++ libgcc/unwind-dw2-fde-dip.c
 @@ -54,11 +54,19 @@
