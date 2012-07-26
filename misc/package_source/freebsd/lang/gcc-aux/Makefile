@@ -286,16 +286,16 @@ post-install:
 	   ${SED} -e 's/^/@dirrm /g' >> ${WRKDIR}/PLIST.all
 
 	cd ${WRKDIR}; ${SED} -i -e "/PLIST.all/ r PLIST.all" ${TMPPLIST}
-.if ${OSVERSION} > 900000
-	@${ECHO_MSG} "========================================================"
-	@${ECHO_MSG} " NOTICE REGARDING ADA TASKING ON FREEBSD 9.x:"
-	@${ECHO_MSG} " Due to a new resource check in the threading library"
-	@${ECHO_MSG} " starting with FreeBSD 9.0, an exiting task panics with"
-	@${ECHO_MSG} " the message 'thread exits with resources held!'."
-	@${ECHO_MSG} " Essentially this behavior breaks Ada tasking and 23"
-	@${ECHO_MSG} " ACATS tests fail on FreeBSD 9.x. A solution is being"
-	@${ECHO_MSG} " sought, but the necessary patches will not be trivial."
-	@${ECHO_MSG} "========================================================"
+.if ${OSVERSION} > 900000 && ${OSVERSION} < 900507
+	@${ECHO_MSG} "===================================================================="
+	@${ECHO_MSG} " NOTICE REGARDING ADA TASKING ON FREEBSD 9.0:"
+	@${ECHO_MSG} " Due to a bug in the FreeBSD 9.0 threading library, an exiting task"
+	@${ECHO_MSG} " panics with the message: 'thread exits with resources held!'."
+	@${ECHO_MSG} " This behavior breaks Ada tasking.  These are two solutions:"
+	@${ECHO_MSG} " 1) Upgrade to FreeBSD 9.1 or higher"
+	@${ECHO_MSG} " 2) Patch and rebuild thread library as described in"
+	@${ECHO_MSG} "    http://www.dragonlace.net/posts/F9_Fix/"
+	@${ECHO_MSG} "===================================================================="
 .endif
 
 .include <bsd.port.post.mk>
