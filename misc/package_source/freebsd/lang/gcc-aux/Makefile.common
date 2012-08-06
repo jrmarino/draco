@@ -1,4 +1,4 @@
-# $FreeBSD$
+# $FreeBSD: ports/lang/gcc-aux/Makefile.common,v 1.1 2012/07/31 17:35:29 culot Exp $
 
 LIB_DEPENDS=		gmp.10:${PORTSDIR}/math/gmp
 LIB_DEPENDS+=		mpfr.4:${PORTSDIR}/math/mpfr

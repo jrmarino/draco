@@ -1,8 +1,8 @@
 # New ports collection makefile for:  gcc-aux
-# Date created:                       15 July 2012
+# Date created:                       2012-07-15
 # Whom:                               John Marino <draco@marino.st>
 #
-# $FreeBSD$
+# $FreeBSD: ports/lang/gcc-aux/Makefile,v 1.1 2012/07/31 17:35:29 culot Exp $
 #
 
 PORTNAME=	gcc-aux
@@ -57,7 +57,7 @@ BOOTSTRAP_PREFIX=	${WRKDIR}/bootstrap
 DESTINY=		${WRKDIR}/destdir
 PKG_PREFIX=		${PREFIX}/${PORTNAME}
 STICONV=		${PREFIX}/lib/libiconv.a
-STINTL= 		\$${top_builddir}/../intl/libintl.a
+STINTL=			\$${top_builddir}/../intl/libintl.a
 USE_LDCONFIG=		${PREFIX}/${PORTNAME}/lib ${PREFIX}/${PORTNAME}/lib/gcc
 MAN1=			cpp.1 gcc.1 gcov.1
 MAN1PREFIX=		${PREFIX}/${PORTNAME}/share
@@ -150,9 +150,9 @@ APPLY_DIFFS+=	gcc-testsuite
 
 .if defined(WITH_NLS)
 BUILD_DEPENDS=	gettext>=0.18:${PORTSDIR}/devel/gettext
-EXTRA_CONFIG+= --enable-nls
+EXTRA_CONFIG+=	--enable-nls
 .else
-EXTRA_CONFIG+= --disable-nls
+EXTRA_CONFIG+=	--disable-nls
 .endif
 
 ###############################
