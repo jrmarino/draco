@@ -102,6 +102,7 @@ along with GCC; see the file COPYING3.  If not see
         %{rdynamic:-export-dynamic} \
         -dynamic-linker %(fbsd_dynamic_linker) } \
     %{static:-Bstatic}} \
+  %{!static:--hash-style=both -rpath @PREFIX@/gcc-aux/lib} \
   %{symbolic:-Bsymbolic}"
 
 /* A C statement to output to the stdio stream FILE an assembler

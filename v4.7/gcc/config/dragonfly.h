@@ -84,8 +84,9 @@ along with GCC; see the file COPYING3.  If not see
     %{rdynamic:-export-dynamic} \
     -dynamic-linker %(dfbsd_dynamic_linker) \
    } \
-  %{static:-Bstatic}} \
-  %{!static:--hash-style=both} \
+   %{static:-Bstatic} \
+  } \
+  %{!static:--hash-style=both -rpath @PREFIX@/gcc-aux/lib} \
   %{symbolic:-Bsymbolic}"
 
 #undef  LINK_SPEC
