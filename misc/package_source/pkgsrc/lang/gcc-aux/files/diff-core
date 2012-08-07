@@ -587,6 +587,14 @@
  
 +/* Compile in __enable_execute_stack (void *) (see config.host) */
 +#define HAVE_ENABLE_EXECUTE_STACK
+--- gcc/config/i386/freebsd64.h.orig
++++ gcc/config/i386/freebsd64.h
+@@ -41,4 +41,5 @@
+         %{rdynamic:-export-dynamic} \
+ 	-dynamic-linker %(fbsd_dynamic_linker) } \
+     %{static:-Bstatic}} \
++  %{!static:--hash-style=both -rpath @PREFIX@/gcc-aux/lib} \
+   %{symbolic:-Bsymbolic}"
 --- gcc/config/i386/netbsd-elf.h.orig
 +++ gcc/config/i386/netbsd-elf.h
 @@ -38,7 +38,8 @@
