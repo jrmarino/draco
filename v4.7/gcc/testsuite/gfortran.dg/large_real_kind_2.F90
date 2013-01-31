@@ -1,6 +1,6 @@
 ! { dg-do run }
 ! { dg-require-effective-target fortran_large_real }
-! { dg-xfail-if "" { "*-*-freebsd*" *-*-dragonfly* *-*-netbsd* } { "*" }  { "" } }
+! { dg-skip-if "Requires cpowl,coshl,sinhl,tanhl,acoshl,asinhl,atanhl,expl,logl,ccosl,csinl,cexpl,clogl" { "x86_64-*-freebsd* x86_64-*-dragonfly* x86_64-*-netbsd*" } { "*" }  { "" } }
 
 ! Testing library calls on large real kinds (larger than kind=8)
   implicit none

@@ -2,7 +2,7 @@
 # Date created:                       12 December 2010
 # Whom:                               John Marino <draco@marino.st>
 #
-# $FreeBSD: ports/devel/gnatpython/Makefile,v 1.1 2011/02/17 09:25:51 wen Exp $
+# $FreeBSD: ports/devel/gnatpython/Makefile,v 1.2 2011/10/07 12:25:28 culot Exp $
 #
 
 PORTNAME=	gnatpython
@@ -14,11 +14,11 @@ MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 MAINTAINER=	draco@marino.st
 COMMENT=	Python package used in Ada testsuites
 
-SNAPSHOT=	20101207
+SNAPSHOT=	20110912
 USE_BZIP2=	yes
 
 USE_PYTHON=		2.6+
 USE_PYDISTUTILS=	yes
-PYDISTUTILS_PKGVERSION=	1.1
+PYDISTUTILS_PKGVERSION=	1.2
 
 .include <bsd.port.mk>

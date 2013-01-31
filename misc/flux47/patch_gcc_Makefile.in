@@ -1,6 +1,65 @@
---- a/gcc/Makefile.in.orig	2012-05-18 18:32:05.000000000 +0200
-+++ b/gcc/Makefile.in	2012-06-29 13:44:17.000000000 +0200
-@@ -4378,7 +4378,7 @@
+--- a/gcc/Makefile.in
++++ b/gcc/Makefile.in
+@@ -1150,7 +1150,6 @@
+ 	insn-automata.o \
+ 	insn-emit.o \
+ 	insn-extract.o \
+-	insn-modes.o \
+ 	insn-opinit.o \
+ 	insn-output.o \
+ 	insn-peep.o \
+@@ -1469,13 +1468,18 @@
+ ALL_HOST_BACKEND_OBJS = $(GCC_OBJS) $(OBJS) $(OBJS-libcommon) \
+   $(OBJS-libcommon-target) @TREEBROWSER@ main.o gccspec.o cppspec.o \
+   $(COLLECT2_OBJS) $(EXTRA_GCC_OBJS) mips-tfile.o mips-tdump.o \
+-  $(GCOV_OBJS) $(GCOV_DUMP_OBJS)
++  $(GCOV_OBJS) $(GCOV_DUMP_OBJS) insn-modes.o insn-modes-ada.o
+ 
+ # This lists all host object files, whether they are included in this
+ # compilation or not.
+ ALL_HOST_OBJS = $(ALL_HOST_FRONTEND_OBJS) $(ALL_HOST_BACKEND_OBJS)
+ 
+-BACKEND = main.o @TREEBROWSER@ libbackend.a libcommon-target.a libcommon.a \
++BACKEND = main.o @TREEBROWSER@ insn-modes.o libbackend.a \
++	libcommon-target.a libcommon.a \
++	$(CPPLIB) $(LIBDECNUMBER)
++
++BACKEND2 = main.o @TREEBROWSER@ insn-modes-ada.o libbackend.a \
++	libcommon-target.a libcommon.a \
+ 	$(CPPLIB) $(LIBDECNUMBER)
+ 
+ MOSTLYCLEANFILES = insn-flags.h insn-config.h insn-codes.h \
+@@ -3506,6 +3510,8 @@
+   $(TM_H) $(RTL_H) $(DIAGNOSTIC_CORE_H) insn-config.h $(RECOG_H)
+ insn-modes.o : insn-modes.c $(CONFIG_H) $(SYSTEM_H) coretypes.h	$(TM_H) \
+   $(MACHMODE_H)
++insn-modes-ada.o : insn-modes-ada.c $(CONFIG_H) $(SYSTEM_H) coretypes.h \
++  $(TM_H) $(MACHMODE_H)
+ insn-opinit.o : insn-opinit.c $(CONFIG_H) $(SYSTEM_H) coretypes.h	\
+   $(TM_H) $(RTL_H) $(TM_P_H) insn-config.h $(FLAGS_H) $(RECOG_H)	\
+   $(EXPR_H) $(OPTABS_H) reload.h
+@@ -3599,6 +3605,7 @@
+ 
+ insn-modes.c: s-modes; @true
+ insn-modes.h: s-modes-h; @true
++insn-modes-ada.c: s-modes-ada; @true
+ min-insn-modes.c: s-modes-m; @true
+ 
+ s-modes: build/genmodes$(build_exeext)
+@@ -3616,6 +3623,12 @@
+ 	$(SHELL) $(srcdir)/../move-if-change tmp-min-modes.c min-insn-modes.c
+ 	$(STAMP) s-modes-m
+ 
++s-modes-ada: s-modes
++	$(shell sed -e 's/: TARGET_96_ROUND_53_LONG_DOUBLE \? &ieee_extended_intel_96_round_53_format //'  \
++		< insn-modes.c > tmp-modes-ada.c)
++	$(SHELL) $(srcdir)/../move-if-change tmp-modes-ada.c insn-modes-ada.c
++	$(STAMP) s-modes-ada
++
+ insn-preds.c: s-preds; @true
+ tm-preds.h: s-preds-h; @true
+ tm-constrs.h: s-constrs-h; @true
+@@ -4378,7 +4391,7 @@
  	DESTDIR=$(@D) \
  	$(SHELL) $(srcdir)/doc/install.texi2html
  
@@ -9,7 +68,7 @@
  
  generated-manpages: man
  
-@@ -4530,7 +4530,7 @@
+@@ -4530,7 +4543,7 @@
  # Install the driver last so that the window when things are
  # broken is small.
  install: install-common $(INSTALL_HEADERS) \
@@ -18,7 +77,7 @@
      install-driver install-lto-wrapper install-gcc-ar
  
  ifeq ($(enable_plugin),yes)
-@@ -4655,6 +4655,9 @@
+@@ -4655,6 +4668,9 @@
  	-rm -f $(DESTDIR)$(bindir)/$(target_noncanonical)-gcc-$(version)$(exeext)
  	-( cd $(DESTDIR)$(bindir) && \
  	   $(LN) $(GCC_INSTALL_NAME)$(exeext) $(target_noncanonical)-gcc-$(version)$(exeext) )
@@ -28,7 +87,7 @@
  	-if [ -f gcc-cross$(exeext) ] ; then \
  	  if [ -d $(DESTDIR)$(gcc_tooldir)/bin/. ] ; then \
  	    rm -f $(DESTDIR)$(gcc_tooldir)/bin/gcc$(exeext); \
-@@ -4728,10 +4731,7 @@
+@@ -4728,10 +4744,7 @@
  install-man: lang.install-man \
  	$(DESTDIR)$(man1dir)/$(GCC_INSTALL_NAME)$(man1ext) \
  	$(DESTDIR)$(man1dir)/$(CPP_INSTALL_NAME)$(man1ext) \

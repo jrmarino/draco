@@ -2,11 +2,12 @@
 # Date created:                       12 December 2010
 # Whom:                               John Marino <draco@marino.st>
 #
-# $FreeBSD: ports/x11-toolkits/gtkada/Makefile,v 1.27 2011/03/02 00:29:44 wen Exp $
+# $FreeBSD: ports/x11-toolkits/gtkada/Makefile,v 1.28 2012/06/01 05:25:48 dinoex Exp $
 #
 
 PORTNAME=	gtkada
 PORTVERSION=	2.22
+PORTREVISION=	1
 CATEGORIES=	x11-toolkits
 MASTER_SITES=	http://downloads.dragonlace.net/src/ \
 		http://dragonlace.mirrors.ada.cx/src/

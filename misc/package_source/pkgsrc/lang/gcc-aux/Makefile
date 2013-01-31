@@ -1,8 +1,9 @@
-# $NetBSD: Makefile,v 1.12 2012/03/02 16:00:58 marino Exp $
+# $NetBSD: Makefile,v 1.2 2012/07/14 21:53:05 marino Exp $
 #
 
 PKGNAME=	gcc-aux-${SNAPSHOT}
 DISTNAME=	gcc-${GCC_VERSION}
+PKGREVISION=	2
 CATEGORIES=	lang
 MASTER_SITES=	${MASTER_SITE_GNU:=gcc/gcc-${GCC_VERSION}/}
 DISTFILES=	${DISTNAME}.tar.bz2
@@ -44,7 +45,7 @@ BOOTSTRAP_COMPILER=	NOT_REQUIRED
 INTENDED_COMPILER=	NATIVE
 BOOTSTRAP_TRIPLET=	NOT SET
 FULL_GNATGCC=		NOT SET
-FULL_PATH=		/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/sbin:${PREFIX}/bin:${PREFIX}/gcc-aux/bin
+FULL_PATH=		/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/gcc-aux/bin:${PREFIX}/sbin:${PREFIX}/bin
 OLD_EH=			register_frame
 REBUILD_LIB=		Rebuild the following library first:
 STICONV=		${PREFIX}/lib/libiconv.a
@@ -121,17 +122,11 @@ BASELIB=		${PREFIX}/lib
 
 
 
-# testing if gcc-aux, gnatlink, gnatbind and gnatmake are in standard location
-# exists function will NOT expand any variable, so it has to be hard-coded
-.if exists(/usr/pkg/gcc-aux/bin/ada)      || exists(/opt/ipp/pkg/gcc-aux/bin/ada)
-.if exists(/usr/pkg/gcc-aux/bin/gnatbind) || exists(/opt/ipp/pkg/gcc-aux/bin/gnatbind)
-.if exists(/usr/pkg/gcc-aux/bin/gnatlink) || exists(/opt/ipp/pkg/gcc-aux/bin/gnatlink)
-.if exists(/usr/pkg/gcc-aux/bin/gnatmake) || exists(/opt/ipp/pkg/gcc-aux/bin/gnatmake)
-FULL_GNATGCC=${PREFIX}/gcc-aux/bin/ada
-.endif #gnatmake
-.endif #gnatlink
-.endif #gnatbind
-.endif #gnatgcc
+# testing if gcc-aux is already installed - if so, use this compiler along with
+# its gnatlink, gnatbind, and gnatmake rather than the older bootstrap versions
+.if exists(${LOCALBASE}/gcc-aux/bin/ada)
+FULL_GNATGCC=${LOCALBASE}/gcc-aux/bin/ada
+.endif
 
 
 .if ${FULL_GNATGCC} == "NOT SET"
@@ -205,6 +200,14 @@ post-extract:
 	@${PATCH} -d ${WRKSRC} -s -E < ${FILESDIR}/diff-${suffix}
 .endfor
 
+	# Update LINK_SPEC to add gcc-aux lib runpath in every binary
+	@${ECHO} "Configuring LINK_SPEC runpath"
+	@perl -pi -e 's;\@PREFIX\@;${PREFIX};' \
+	  ${WRKSRC}/gcc/config/dragonfly.h \
+	  ${WRKSRC}/gcc/config/i386/freebsd.h \
+	  ${WRKSRC}/gcc/config/i386/netbsd-elf.h
+
+	# Handle static option
 .if !empty(PKG_OPTIONS:Mstatic) || ${OPSYS} == "NetBSD"
 	@${ECHO} "Reconfiguring GCC Makefile to build compiler statically"
 	@${PATCH} -d ${WRKSRC} -s -E < ${FILESDIR}/diff-static-version
@@ -283,9 +286,10 @@ do-build:
 	${SETENV} ${MY_MAKE_ENV} ${GMAKE} -j${MAKE_JOBS:U1:Q} all
 
 
-do-test: build
-.if !empty(PKG_OPTIONS:Mtestsuite)
-.if !empty(PKG_OPTIONS:Mada)
+do-test: build test-ada test-fortran test-objc test-cxx test-c
+
+test-ada:
+.if !empty(PKG_OPTIONS:Mtestsuite) && !empty(PKG_OPTIONS:Mada)
 .if (${OPSYS} == "NetBSD") && (${MACHINE_ARCH} == "x86_64")
 	# NetBSD has an extremely small default stacksize of 2MB, which is
 	# insufficient for the gnat.dg testsuite.
@@ -299,17 +303,26 @@ do-test: build
 	cd ${BUILDDIR} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-ada
 .endif
 .endif
-.if !empty(PKG_OPTIONS:Mfortran)
+
+test-fortran:
+.if !empty(PKG_OPTIONS:Mtestsuite) && !empty(PKG_OPTIONS:Mfortran)
 	cd ${BUILDDIR} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-fortran
 .endif
-.if !empty(PKG_OPTIONS:Mobjc)
+
+test-objc:
+.if !empty(PKG_OPTIONS:Mtestsuite) && !empty(PKG_OPTIONS:Mobjc)
 	cd ${BUILDDIR} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-objc
 .endif
-.if !empty(PKG_OPTIONS:Mcxx)
+
+test-cxx:
+.if !empty(PKG_OPTIONS:Mtestsuite) && !empty(PKG_OPTIONS:Mcxx)
 	# libstdc++ always ends with error status, so ignore it
 	cd ${BUILDDIR} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk \
 	check-c++ || ${TRUE}
 .endif
+
+test-c:
+.if !empty(PKG_OPTIONS:Mtestsuite)
 	cd ${BUILDDIR} && ${SETENV} ${MY_MAKE_ENV} ${GMAKE} -sk check-c
 .endif
 

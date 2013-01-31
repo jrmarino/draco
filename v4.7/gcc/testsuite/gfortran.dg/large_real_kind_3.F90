@@ -1,6 +1,6 @@
 ! { dg-do run }
 ! { dg-require-effective-target fortran_large_real }
-! { dg-xfail-if "" { "*-*-freebsd*" *-*-dragonfly* *-*-netbsd* } { "*" }  { "" } }
+! { dg-skip-if "Requires erfl,erfcl with -O0" { "x86_64-*-freebsd* x86_64-*-dragonfly* x86_64-*-netbsd*" } { "-O0" }  { "" } }
 
 ! Testing erf and erfc library calls on large real kinds (larger than kind=8)
   implicit none

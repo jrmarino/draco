@@ -1,0 +1,11 @@
+--- a/gcc/ada/gcc-interface/Make-lang.in
++++ b/gcc/ada/gcc-interface/Make-lang.in
+@@ -541,7 +541,7 @@ GNATBIND_OBJS = \
+  ada/widechar.o
+ 
+ # Language-independent object files.
+-ADA_BACKEND = $(BACKEND) attribs.o
++ADA_BACKEND = $(BACKEND2) attribs.o
+ 
+ # List of target dependent sources, overridden below as necessary
+ TARGET_ADA_SRCS =

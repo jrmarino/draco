@@ -2,39 +2,26 @@
 # Date created:                       16 December 2010
 # Whom:                               John Marino <draco@marino.st>
 #
-# $FreeBSD: ports/lang/gnat-aux/Makefile,v 1.4 2011/07/16 05:29:51 linimon Exp $
+# $FreeBSD: ports/lang/gnat-aux/Makefile,v 1.8 2012/04/09 11:28:22 culot Exp $
 #
 
 PORTNAME=	gnat-aux
 PORTVERSION=	${SNAPSHOT}
+PORTREVISION=	1
 CATEGORIES=	lang
-MASTER_SITES=	http://downloads.dragonlace.net/src/ \
-		http://dragonlace.mirrors.ada.cx/src/
+MASTER_SITES=	http://downloads.dragonlace.net/src/:boot \
+		http://dragonlace.mirrors.ada.cx/src/:boot \
+		${MASTER_SITE_GCC}
+MASTER_SITE_SUBDIR=	releases/gcc-${GCC_VERSION}
+DISTFILES=	gcc-core-${GCC_VERSION}.tar.bz2
 
 MAINTAINER=	draco@marino.st
 COMMENT=	GNAT Ada compiler based on GCC ${GCC_BRANCH}
 
-LIB_DEPENDS=	gmp.10:${PORTSDIR}/math/gmp
-LIB_DEPENDS+=	mpfr.4:${PORTSDIR}/math/mpfr
-LIB_DEPENDS+=	mpc.2:${PORTSDIR}/math/mpc
+.include "${.CURDIR}/Makefile.common"
 
-ONLY_FOR_ARCHS=	i386 amd64
-
-GNU_CONFIGURE=		yes
-USE_GMAKE=		yes
-USE_BZIP2=		yes
-USE_ICONV=		yes
-USE_BISON=		build
-USE_PERL5_BUILD=	yes
-USE_LDCONFIG=		yes
-ALL_TARGET=		default
-
-SNAPSHOT=		20110627
-GCC_BRANCH=		4.6
-GCC_POINT=		1
 LANGS=			c
-
-THREAD_MODEL=		posix
+APPLY_DIFFS=		core
 INTENDED_COMPILER=	NATIVE
 BOOTSTRAP_COMPILER=	NOT_REQUIRED
 BOOTSTRAP_TRIPLET=	NOT_SET
@@ -42,8 +29,12 @@ FULL_GNATGCC=		NOT_SET
 
 OPTIONS=	ADA    "Build Ada language" on
 OPTIONS+=	CXX    "Build C++ language" on
+OPTIONS+=	FORT   "Build Fortran language" on
+OPTIONS+=	OBJC   "Build Objective-C language" on
 OPTIONS+=	TS_ADA "Enable Ada testsuite" off
 OPTIONS+=	TS_CXX "Enable C++ testsuite" off
+OPTIONS+=	TS_FOR "Enable Fortran testsuite" off
+OPTIONS+=	TS_OBC "Enable Objective-C testsuite" off
 OPTIONS+=	TS_GCC "Enable GCC testsuite" off
 
 .include <bsd.port.pre.mk>
@@ -61,18 +52,18 @@ BOOTSTRAP_TRIPLET=	i386-bootstrap-freebsd8.0/4.6.0
 BOOTSTRAP_COMPILER=	gnat-bootstrap.i386.freebsd.tar.bz2
 .endif
 PLIST_SUB=		GNU_HOST=${BLD_TARGET}
-PLIST_SUB+=		GCC_VER=${GCC_BRANCH}.${GCC_POINT}
+PLIST_SUB+=		GCC_VER=${GCC_VERSION}
 
-WRKSRC=			${WRKDIR}/build
-GCC_WRKSRC=		${WRKDIR}/gcc-${GCC_BRANCH}-${SNAPSHOT}
+WRKSRC=			${WRKDIR}/gcc-${GCC_VERSION}
+BUILDDIR=		${WRKDIR}/build
+CFG_SCRIPT=		${WRKSRC}/configure
+REVFILE=		${WRKSRC}/gcc/REVISION
 BOOTSTRAP_PREFIX=	${WRKDIR}/bootstrap
 PKG_PREFIX=		${PREFIX}
-CONFIGURE_SCRIPT=	${GCC_WRKSRC}/configure
-REVFILE=		${GCC_WRKSRC}/gcc/REVISION
-LPATH=			lib/gcc/${BLD_TARGET}/${GCC_BRANCH}.${GCC_POINT}
-LEPATH=			libexec/gcc/${BLD_TARGET}/${GCC_BRANCH}.${GCC_POINT}
+LPATH=			lib/gcc/${BLD_TARGET}/${GCC_VERSION}
+LEPATH=			libexec/gcc/${BLD_TARGET}/${GCC_VERSION}
+USE_LDCONFIG=		${PREFIX}/lib/gcc
 MAN1=			gnatcpp.1 gnatgcc.1 gnatgcov.1
-MAN7=			fsf-funding.7 gfdl.7 gpl.7
 MAN1PREFIX=		${PREFIX}/share
 MAN7PREFIX=		${PREFIX}/share
 NO_MANCOMPRESS=		yes
@@ -95,7 +86,7 @@ FULL_PATH=/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/bin
 INTENDED_COMPILER=BOOTSTRAP
 FULL_GNATGCC=${BOOTSTRAP_PREFIX}/bin/gnatgcc
 FULL_PATH=${BOOTSTRAP_PREFIX}/bin:/sbin:/bin:/usr/sbin:/usr/bin:${PREFIX}/bin
-DISTFILES=${PORTNAME}-${SNAPSHOT}.tar.bz2 ${BOOTSTRAP_COMPILER}
+DISTFILES+=	${BOOTSTRAP_COMPILER}:boot
 .endif
 
 ###########
@@ -104,6 +95,11 @@ DISTFILES=${PORTNAME}-${SNAPSHOT}.tar.bz2 ${BOOTSTRAP_COMPILER}
 
 .if defined(WITH_ADA)
 LANGS+=		ada
+APPLY_DIFFS+=	ada
+DISTFILES+=	gcc-ada-${GCC_VERSION}.tar.bz2
+PLIST_SUB+=	ADA=""
+.else
+PLIST_SUB+=	ADA="@comment "
 .endif
 
 ###########
@@ -112,12 +108,39 @@ LANGS+=		ada
 
 .if defined(WITH_CXX)
 LANGS+=		c++
+APPLY_DIFFS+=	cxx
+DISTFILES+=	gcc-g++-${GCC_VERSION}.tar.bz2
 MAN1+=		gnatg++.1
-LCXXPATH=	include/c++/${GCC_BRANCH}.${GCC_POINT}
-LSHRPATH=	share/gcc-${GCC_BRANCH}.${GCC_POINT}
+LCXXPATH=	include/c++/${GCC_VERSION}
+LSHRPATH=	share/gcc-${GCC_VERSION}
 PLIST_SUB+=	CXX=""
 .else
 PLIST_SUB+=	CXX="@comment "
+.endif
+
+###############
+##  Fortran  ##
+###############
+
+.if defined(WITH_FORT)
+LANGS+=		fortran
+APPLY_DIFFS+=	fortran
+DISTFILES+=	gcc-fortran-${GCC_VERSION}.tar.bz2
+MAN1+=		gnatgfortran.1
+QUADOPT=	--enable-libquadmath
+PLIST_SUB+=	FRT=""
+.else
+QUADOPT=	--disable-libquadmath
+PLIST_SUB+=	FRT="@comment "
+.endif
+
+###################
+##  Objective-C  ##
+###################
+
+.if defined(WITH_OBJC)
+LANGS+=		objc
+DISTFILES+=	gcc-objc-${GCC_VERSION}.tar.bz2
 .endif
 
 ##################
@@ -126,8 +149,20 @@ PLIST_SUB+=	CXX="@comment "
 
 .if defined(WITH_TS_ADA) \
  || defined(WITH_TS_CXX) \
+ || defined(WITH_TS_FOR) \
+ || defined(WITH_TS_OBC) \
  || defined(WITH_TS_GCC)
 BUILD_DEPENDS=	dejagnu>=1.4:${PORTSDIR}/misc/dejagnu
+DISTFILES+=	gcc-testsuite-${GCC_VERSION}.tar.bz2
+.if defined(WITH_TS_ADA)
+APPLY_DIFFS+=	ada-testsuite
+.endif
+.if defined(WITH_TS_CXX)
+APPLY_DIFFS+=	cxx-testsuite
+.endif
+.if defined(WITH_TS_GCC)
+APPLY_DIFFS+=	gcc-testsuite
+.endif
 .endif
 
 # for port maintenance, uncomment to invoke "make makesum"
@@ -140,7 +175,7 @@ ADA_CONFIGURE_ENV=	CC=${FULL_GNATGCC}
 ADA_CONFIGURE_ENV+=	PATH=${FULL_PATH}
 ADA_CONFIGURE_ENV+=	CONFIG_SHELL=${SH}
 ADA_MAKE_ENV=		PATH=${FULL_PATH}
-ADA_MAKE_ENV+=		LD_LIBRARY_PATH=${WRKSRC}/gcc
+ADA_MAKE_ENV+=		LD_LIBRARY_PATH=${BUILDDIR}/gcc
 
 # The standard configuration options
 CONFIGURE_ARGS=		--enable-languages=${LANGS:Q}
@@ -153,9 +188,9 @@ CONFIGURE_ARGS+=	--with-mpfr=${PKG_PREFIX}
 CONFIGURE_ARGS+=	--with-mpc=${PKG_PREFIX}
 CONFIGURE_ARGS+=	--with-libiconv-prefix=${PKG_PREFIX}
 CONFIGURE_ARGS+=	--enable-shared
-CONFIGURE_ARGS+=	--enable-threads=${THREAD_MODEL}
+CONFIGURE_ARGS+=	--enable-threads=posix
 CONFIGURE_ARGS+=	--disable-bootstrap
-CONFIGURE_ARGS+=	--disable-libquadmath
+CONFIGURE_ARGS+=	${QUADOPT}
 CONFIGURE_ARGS+=	--disable-libmudflap
 CONFIGURE_ARGS+=	--disable-libgomp
 CONFIGURE_ARGS+=	--disable-libssp
@@ -165,6 +200,18 @@ post-extract:
 	# Personalize GNAT for each different machine
 	@${ECHO} "-=> GNAT AUX ${OS_LABEL4VERS}" > ${REVFILE}
 
+	# Create new directories in preparation of applying diff files
+.if defined(WITH_CXX)
+	${MKDIR} ${WRKSRC}/libstdc++-v3/config/locale/dragonfly
+	${MKDIR} ${WRKSRC}/libstdc++-v3/config/os/bsd/dragonfly
+.endif
+
+	# Apply required composite diff files
+.for suffix in ${APPLY_DIFFS}
+	@${ECHO} "Applying composite patch diff-${suffix}"
+	@${PATCH} -d ${WRKSRC} -s -E < ${FILESDIR}/diff-${suffix}
+.endfor
+
 .if ${INTENDED_COMPILER} == "BOOTSTRAP"
 	${MKDIR} ${BOOTSTRAP_PREFIX}
 	${MV} ${BOOTSTRAP_PREFIX}/../bin ${BOOTSTRAP_PREFIX}
@@ -173,38 +220,42 @@ post-extract:
 
 	# Bootstrap compiler has statically linked z, gmp, mpc, mpfr and iconv
 	# The only shared lib is libc.so.7, so it should work for a long time.
-	# if FBSD 9.0 upgrades libc, a compat8x requirement could be added
-	# for FreeBSD 7.x and 8.x
+
+.if ${OSVERSION} > 900000
+	# Since June 7, bootstrap compiler's include-fixed headers have been
+	# incompatible with FreeBSD 9.0-CURRENT
+	${RM} -rf ${BOOTSTRAP_PREFIX}/lib/gcc/${BOOTSTRAP_TRIPLET}/include-fixed
+.endif
 .endif
 
 do-configure:
-	#reset timestamps
-	cd ${GCC_WRKSRC}; contrib/gcc_update --touch
-	${RM} -f ${GCC_WRKSRC}/gcc/*/*.info*
-	${TOUCH} ${GCC_WRKSRC}/gcc/cstamp-h.in
-
-	${MKDIR} ${WRKSRC}
-	cd ${WRKSRC} && ${SETENV} ${ADA_CONFIGURE_ENV} \
-	${SH} ${CONFIGURE_SCRIPT} ${CONFIGURE_ARGS}
+	${MKDIR} ${BUILDDIR}
+	cd ${BUILDDIR} && ${SETENV} ${ADA_CONFIGURE_ENV} \
+	${CFG_SCRIPT} ${CONFIGURE_ARGS}
 
 do-build:
-	cd ${WRKSRC} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} all
+	cd ${BUILDDIR} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} ${_MAKE_JOBS} all
 
 test: build
-.if defined(WITH_TS_ADA)
-	cd ${WRKSRC} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} -sk check-ada
+.if defined(WITH_ADA) && defined(WITH_TS_ADA)
+	cd ${BUILDDIR} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} -sk check-ada
 .endif
-.if defined(WITH_TS_CXX)
-	cd ${WRKSRC} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} -sk check-c++
-	cd ${WRKSRC} && ${SETENV} ${ADA_MAKE_ENV} \
-	   ${GMAKE} -sk check-target-libstdc++-v3
+.if defined(WITH_FORT) && defined(WITH_TS_FOR)
+	cd ${BUILDDIR} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} -sk check-fortran
+.endif
+.if defined(WITH_OBJC) && defined(WITH_TS_OBC)
+	cd ${BUILDDIR} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} -sk check-objc
+.endif
+.if defined(WITH_CXX) && defined(WITH_TS_CXX)
+	# libstdc++ testsuite will break every time, TRUE used to force continuation
+	cd ${BUILDDIR} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} -sk check-c++ || true
 .endif
 .if defined(WITH_TS_GCC)
-	cd ${WRKSRC} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} -sk check-c
+	cd ${BUILDDIR} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} -sk check-c
 .endif
 
 do-install:
-	cd ${WRKSRC} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} install-strip DESTDIR=${DESTDIR}
+	cd ${BUILDDIR} && ${SETENV} ${ADA_MAKE_ENV} ${GMAKE} install-strip DESTDIR=${DESTDIR}
 
 post-install:
 	${RM} -f ${WRKDIR}/PLIST.lib
@@ -220,5 +271,16 @@ post-install:
 	${ECHO_CMD} "@unexec ${RMDIR} %D/include/c++               2>/dev/null || true" >> ${WRKDIR}/PLIST.lib
 
 	cd ${WRKDIR}; ${SED} -i -e "/PLIST.lib/ r PLIST.lib" ${TMPPLIST}
+.if ${OSVERSION} > 900000 && ${OSVERSION} < 900507
+	@${ECHO_MSG} "===================================================================="
+	@${ECHO_MSG} " NOTICE REGARDING ADA TASKING ON FREEBSD 9.0:"
+	@${ECHO_MSG} " Due to a bug in the FreeBSD 9.0 threading library, an exiting task"
+	@${ECHO_MSG} " panics with the message: 'thread exits with resources held!'."
+	@${ECHO_MSG} " This behavior breaks Ada tasking.  These are two solutions:"
+	@${ECHO_MSG} " 1) Upgrade to FreeBSD 9.1 or higher"
+	@${ECHO_MSG} " 2) Patch and rebuild thread library as described in"
+	@${ECHO_MSG} "    http://www.dragonlace.net/posts/F9_Fix/"
+	@${ECHO_MSG} "===================================================================="
+.endif
 
 .include <bsd.port.post.mk>

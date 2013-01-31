@@ -38,7 +38,8 @@ along with GCC; see the file COPYING3.  If not see
 /* Provide a LINK_SPEC appropriate for a NetBSD/i386 ELF target.  */
 
 #undef LINK_SPEC
-#define LINK_SPEC NETBSD_LINK_SPEC_ELF
+#define LINK_SPEC NETBSD_LINK_SPEC_ELF \
+"%{!static:-rpath @PREFIX@/gcc-aux/lib}"
 
 #define NETBSD_ENTRY_POINT "__start"
 
