@@ -1242,7 +1242,7 @@ endif
 
 
 # FREEBSD AMD64
-ifeq ($(strip $(filter-out x86_64 freebsd%,$(arch) $(osys))),)
+ifeq ($(strip $(filter-out %86_64 freebsd%,$(arch) $(osys))),)
   LIBGNAT_TARGET_PAIRS = \
   a-exetim.adb<a-exetim-posix.adb \
   a-exetim.ads<a-exetim-default.ads \
@@ -2145,7 +2145,7 @@ ifeq ($(strip $(filter-out powerpc% linux%,$(arch) $(osys))),)
   LIBRARY_VERSION := $(LIB_VERSION)
 endif
 
-ifeq ($(strip $(filter-out arm% linux-gnueabi,$(arch) $(osys)-$(word 4,$(targ)))),)
+ifeq ($(strip $(filter-out arm%-linux,$(arch)-$(osys)) $(if $(findstring eabi,$(word 4,$(targ))),,$(word 4,$(targ)))),)
   LIBGNAT_TARGET_PAIRS = \
   a-intnam.ads<a-intnam-linux.ads \
   s-inmaop.adb<s-inmaop-posix.adb \
@@ -2795,8 +2795,6 @@ install-gnatlib: ../stamp-gnatlib-$(RTSDIR)
 	$(CP) $(srcdir)/tsystem.h $(RTSDIR)
 	$(RM) ../stamp-gnatlib-$(RTSDIR)
 	touch ../stamp-gnatlib1-$(RTSDIR)
-
-# GNULLI End #############################################################
 
 ifeq ($(strip $(filter-out alpha64 ia64 dec hp vms% openvms% alphavms%,$(subst -, ,$(host)))),)
 OSCONS_CPP=../../$(DECC) -E /comment=as_is -DNATIVE \
