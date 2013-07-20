@@ -1077,7 +1077,7 @@ __gnat_open_new_temp (char *path, int fmode)
   strcpy (path, "GNAT-XXXXXX");
 
 #if (defined (__FreeBSD__) || defined (__NetBSD__) || defined (__OpenBSD__) \
-  || defined (DragonFly) \
+  || defined (__DragonFly__) \
   || defined (linux) || defined(__GLIBC__)) && !defined (__vxworks)
   return mkstemp (path);
 #elif defined (__Lynx__)
