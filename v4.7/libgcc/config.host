@@ -329,9 +329,9 @@ arm-wrs-vxworks)
 arm*-android-eabi*)
 	extra_parts="crtbegin.o crtbeginS.o crtbeginT.o crtend.o crtendS.o"
 
-	tmake_file="$tmake_file t-crtstuff-pic t-libgcc-pic t-eh-dw2-dip t-slibgcc t-slibgcc-gld t-slibgcc-elf-ver t-linux"
-	tmake_file="${tmake_file} arm/t-arm t-fixedpoint-gnu-prefix"
-	tmake_file="${tmake_file} arm/t-elf arm/t-bpabi arm/t-linux-eabi t-slibgcc-libgcc"
+	tmake_file="$tmake_file t-crtstuff-pic t-libgcc-pic t-eh-dw2-dip t-slibgcc t-slibgcc-gld t-slibgcc-elf-ver"
+	tmake_file="$tmake_file arm/t-arm t-fixedpoint-gnu-prefix"
+	tmake_file="$tmake_file arm/t-elf arm/t-bpabi arm/t-linux-eabi t-slibgcc-libgcc"
 	tmake_file="$tmake_file t-softfp-sfdf t-softfp-excl arm/t-softfp t-softfp"
 
 	tm_file="$tm_file arm/bpabi-lib.h"
