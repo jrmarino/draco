@@ -620,19 +620,6 @@ case ${target} in
   default_use_cxa_atexit=yes
   use_gcc_stdint=wrap
   ;;
-*-android-eabi*)
-  extra_parts="crtbegin.o crtbeginS.o crtbeginT.o crtend.o crtendS.o"
-  gas=yes
-  gnu_ld=yes
-  case ${enable_threads} in
-    "" | yes | posix) thread_file='posix' ;;
-  esac
-  tm_defines="$tm_defines DEFAULT_LIBC=LIBC_BIONIC ANDROID_DEFAULT=1"
-  extra_options="$extra_options linux.opt linux-android.opt"
-  default_use_cxa_atexit=yes
-  use_gcc_tgmath=no
-  use_gcc_stdint=wrap
-  ;;
 *-*-linux* | frv-*-*linux* | *-*-kfreebsd*-gnu | *-*-knetbsd*-gnu | *-*-gnu* | *-*-kopensolaris*-gnu)
   extra_options="$extra_options gnu-user.opt"
   gas=yes
@@ -947,8 +934,11 @@ arm*-android-eabi*)
 	  "" | yes | posix) thread_file='posix' ;;
 	esac
 	tm_file="dbxelf.h elfos.h gnu-user.h linux.h linux-android.h glibc-stdint.h"
-	tm_file="$tm_file arm/elf.h arm/linux-gas.h arm/linux-elf.h arm/bpabi.h arm/linux-eabi.h"
-	tm_file="$tm_file ../../libgcc/config/arm/bpabi-lib.h arm/aout.h arm/arm.h"
+	tm_file="$tm_file arm/elf.h arm/linux-gas.h arm/linux-elf.h"
+	tm_file="$tm_file arm/bpabi.h arm/linux-eabi.h arm/aout.h arm/arm.h"
+
+	tmake_file="${tmake_file} arm/t-arm arm/t-arm-elf"
+	tmake_file="$tmake_file arm/t-bpabi arm/t-linux-eabi"
 
 	tm_defines="$tm_defines DEFAULT_LIBC=LIBC_BIONIC ANDROID_DEFAULT=1"
 	case $target in
