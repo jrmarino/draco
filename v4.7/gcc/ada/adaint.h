@@ -253,7 +253,6 @@ extern char * __gnat_locate_file_with_predicate    (char *, char *,
 #if defined (linux)
 extern void   *__gnat_lwp_self			   (void);
 
-#ifndef __ANDROID__
 /* Routines for interface to required CPU set primitives */
 
 #include <sched.h>
@@ -264,7 +263,6 @@ extern void   __gnat_cpu_free                  (cpu_set_t *);
 extern void   __gnat_cpu_zero                      (size_t, cpu_set_t *);
 extern void   __gnat_cpu_set                       (int, size_t, cpu_set_t *);
 #endif
-#endif  /* __ANDROID__ */
 
 #if defined (_WIN32)
 /* Interface to delete a handle from internally maintained list of child
