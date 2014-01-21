@@ -4029,6 +4029,7 @@ void *__gnat_lwp_self (void)
    return (void *) syscall (__NR_gettid);
 }
 
+#ifndef __ANDROID__
 #include <sched.h>
 
 /* glibc versions earlier than 2.7 do not define the routines to handle
@@ -4097,6 +4098,7 @@ void __gnat_cpu_set (int cpu, size_t count ATTRIBUTE_UNUSED, cpu_set_t *set)
   CPU_SET (cpu - 1, set);
 }
 #endif
+#endif /* __ANDROID__ */
 #endif
 
 #ifdef __cplusplus
