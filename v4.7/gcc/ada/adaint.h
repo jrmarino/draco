@@ -255,7 +255,13 @@ extern void   *__gnat_lwp_self			   (void);
 
 /* Routines for interface to required CPU set primitives */
 
+#ifdef __ANDROID__
+typedef struct {
+	unsigned long int  __bits[ 1 ];
+} cpu_set_t;
+#else
 #include <sched.h>
+#endif
 
 extern cpu_set_t *__gnat_cpu_alloc                 (size_t);
 extern size_t __gnat_cpu_alloc_size                (size_t);
