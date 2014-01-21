@@ -332,6 +332,10 @@ arm-wrs-vxworks)
 	tmake_file="$tmake_file arm/t-arm arm/t-vxworks t-fdpbit"
 	extra_parts="$extra_parts crti.o crtn.o"
 	;;
+arm*-android-eabi*)
+	tmake_file="$tmake_file t-softfp-sfdf t-softfp-excl arm/t-softfp t-softfp"
+	unwind_header=config/arm/unwind-arm.h
+	;;
 arm*-*-freebsd*)
 	tmake_file="$tmake_file arm/t-arm arm/t-strongarm-elf t-fdpbit"
 	;;
