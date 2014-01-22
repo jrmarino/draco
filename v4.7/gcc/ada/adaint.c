@@ -1227,6 +1227,47 @@ __gnat_tmp_name (char *tmp_filename)
     free (pname);
   }
 
+#elif defined (__ANDROID__)
+
+  /*
+   * ext2 /ext3/ext4/fat16/fat32 have no path limits
+   * /data/local/tmp normally requires rooted devices, if it even exists
+   * /sdcard is the standard location for external storage.  Nativeactivity
+   * manifest needs to authorize its use, otherwise it might not have the
+   * proper permissions.
+   */
+
+  int testfd;
+  char *datadir = getenv ("ANDROID_DATA");
+
+  if (datadir == NULL)
+    strcpy (tmp_filename, "/data/local/tmp/gnat-XXXXXX");
+  else
+    sprintf (tmp_filename, "%s/local/tmp/gnat-XXXXXX", datadir);
+
+  testfd = mkstemp (tmp_filename);
+  if (testfd != -1)
+    {
+      close (testfd);
+      return;
+    }
+
+  char *sdcard = getenv ("EXTERNAL_STORAGE");
+
+  if (sdcard == NULL)
+    strcpy (tmp_filename, "/sdcard/gnat-XXXXXX");
+  else
+    sprintf (tmp_filename, "%s/gnat-XXXXXX", sdcard);
+
+  testfd = mkstemp (tmp_filename);
+  if (testfd != -1)
+    {
+      close (testfd);
+      return;
+    }
+
+  tmpnam (tmp_filename);
+
 #elif defined (linux) || defined (__FreeBSD__) || defined (__NetBSD__) \
   || defined (__OpenBSD__) || defined(__GLIBC__)
 #define MAX_SAFE_PATH 1000
