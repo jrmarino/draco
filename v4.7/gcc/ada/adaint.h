@@ -258,14 +258,17 @@ extern void   *__gnat_lwp_self			   (void);
 #include <sched.h>
 
 #ifdef __ANDROID__
+struct pthread_rwlockattr;
+typedef struct	pthread_rwlockattr	*pthread_rwlockattr_t;
 typedef struct {
 	unsigned long int  __bits[ 1 ];
 } cpu_set_t;
 #  define __CPU_MASK(x)		((unsigned long int)1 << ((x) & 31))
-#  define CPU_ZERO(set_)	do{ (set_)->__bits[0] = 0; }while(0)
+#  define CPU_ZERO(set_)	do { (set_)->__bits[0] = 0; } while(0)
 #  define CPU_SET(cpu_,set_) \
 	do { size_t __cpu = (cpu_); \
-	if (__cpu < 32) (set_)->__bits[0] |= __CPU_MASK(__cpu); }while (0)
+	if (__cpu < 32) (set_)->__bits[0] |= __CPU_MASK(__cpu); } while (0)
+int __gnat_set_threadlock_kind (pthread_rwlockattr_t *, int);
 #endif
 
 extern cpu_set_t *__gnat_cpu_alloc                 (size_t);

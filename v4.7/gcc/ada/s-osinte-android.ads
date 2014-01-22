@@ -374,7 +374,7 @@ package System.OS_Interface is
      (attr : access pthread_rwlockattr_t;
       pref : int) return int;
    pragma Import
-     (C, pthread_rwlockattr_setkind_np, "pthread_rwlockattr_setkind_np");
+     (C, pthread_rwlockattr_setkind_np, "__gnat_set_threadlock_kind");
 
    function pthread_rwlock_init
      (mutex : access pthread_rwlock_t;
