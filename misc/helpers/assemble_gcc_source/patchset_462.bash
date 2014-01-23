@@ -1,7 +1,7 @@
 #!/usr/local/bin/bash
 
 GCCVERSION=4.6.4
-DRACO=/home/marino/draco/trunk
+DRACO=/home/gituser/draco/trunk
 EXPANSE=/home/marino/GCC-TEST
 DIFFPROG=/usr/bin/diff
 GREPPROG=/usr/bin/grep
