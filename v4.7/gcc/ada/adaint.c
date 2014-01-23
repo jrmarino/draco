@@ -3575,37 +3575,6 @@ _flush_cache()
 }
 #endif
 
-#if defined (IS_CROSS)  \
-  || (! ((defined (sparc) || defined (i386)) && defined (sun) \
-      && defined (__SVR4)) \
-      && ! (defined (linux) && (defined (i386) || defined (__x86_64__))) \
-      && ! (defined (linux) && defined (__ia64__)) \
-      && ! (defined (linux) && defined (powerpc)) \
-      && ! defined (__FreeBSD__) \
-      && ! defined (__Lynx__) \
-      && ! defined (__hpux__) \
-      && ! defined (__APPLE__) \
-      && ! defined (_AIX) \
-      && ! (defined (__alpha__)  && defined (__osf__)) \
-      && ! defined (VMS) \
-      && ! defined (__MINGW32__) \
-      && ! (defined (__mips) && defined (__sgi)))
-
-/* Dummy function to satisfy g-trasym.o. See the preprocessor conditional
-   just above for a list of native platforms that provide a non-dummy
-   version of this procedure in libaddr2line.a.  */
-
-void
-convert_addresses (const char *file_name ATTRIBUTE_UNUSED,
-		   void *addrs ATTRIBUTE_UNUSED,
-		   int n_addr ATTRIBUTE_UNUSED,
-		   void *buf ATTRIBUTE_UNUSED,
-		   int *len ATTRIBUTE_UNUSED)
-{
-  *len = 0;
-}
-#endif
-
 #if defined (_WIN32)
 int __gnat_argument_needs_quote = 1;
 #else
