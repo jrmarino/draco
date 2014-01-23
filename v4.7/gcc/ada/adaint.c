@@ -1077,6 +1077,7 @@ __gnat_open_new_temp (char *path, int fmode)
   strcpy (path, "GNAT-XXXXXX");
 
 #if (defined (__FreeBSD__) || defined (__NetBSD__) || defined (__OpenBSD__) \
+  || defined (__DragonFly__) \
   || defined (linux) || defined(__GLIBC__)) && !defined (__vxworks)
   return mkstemp (path);
 #elif defined (__Lynx__)
@@ -1269,6 +1270,7 @@ __gnat_tmp_name (char *tmp_filename)
   tmpnam (tmp_filename);
 
 #elif defined (linux) || defined (__FreeBSD__) || defined (__NetBSD__) \
+  || defined (__DragonFly__) \
   || defined (__OpenBSD__) || defined(__GLIBC__)
 #define MAX_SAFE_PATH 1000
   char *tmpdir = getenv ("TMPDIR");
