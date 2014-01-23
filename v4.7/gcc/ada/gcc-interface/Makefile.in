@@ -1081,6 +1081,8 @@ ifeq ($(strip $(filter-out %86 %x86_64 solaris2%,$(arch) $(osys))),)
   TOOLS_TARGET_PAIRS=mlib-tgt-specific.adb<mlib-tgt-specific-solaris.adb
 
   EH_MECHANISM=-gcc
+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
   THREADSLIB = -lposix4 -lthread
   MISCLIB = -lposix4 -lnsl -lsocket
   SO_OPTS = -Wl,-h,
@@ -1230,6 +1232,8 @@ ifeq ($(strip $(filter-out %86 freebsd%,$(arch) $(osys))),)
 
   GNATLIB_SHARED = gnatlib-shared-dual
 
+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
   EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
   EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
 
@@ -1264,6 +1268,8 @@ ifeq ($(strip $(filter-out %86_64 freebsd%,$(arch) $(osys))),)
 
   GNATLIB_SHARED = gnatlib-shared-dual
 
+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
   EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
   EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
 
@@ -1298,6 +1304,8 @@ ifeq ($(strip $(filter-out %86 dragonfly%,$(arch) $(osys))),)
 
   GNATLIB_SHARED = gnatlib-shared-dual
 
+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
   EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
   EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
 
@@ -1332,6 +1340,8 @@ ifeq ($(strip $(filter-out x86_64 dragonfly%,$(arch) $(osys))),)
 
   GNATLIB_SHARED = gnatlib-shared-dual
 
+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
   EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
   EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
 
@@ -1366,6 +1376,8 @@ ifeq ($(strip $(filter-out %86 openbsd%,$(arch) $(osys))),)
 
   GNATLIB_SHARED = gnatlib-shared-dual
 
+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
   EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
   EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
 
@@ -1400,6 +1412,8 @@ ifeq ($(strip $(filter-out x86_64 openbsd%,$(arch) $(osys))),)
 
   GNATLIB_SHARED = gnatlib-shared-dual
 
+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
   EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
   EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
 
@@ -1443,6 +1457,8 @@ ifeq ($(strip $(filter-out %86 netbsd%,$(arch) $(osys))),)
 
   GNATLIB_SHARED = gnatlib-shared-dual
 
+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
   EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
   EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
 
@@ -1486,6 +1502,8 @@ ifeq ($(strip $(filter-out x86_64 netbsd%,$(arch) $(osys))),)
 
   GNATLIB_SHARED = gnatlib-shared-dual
 
+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
   EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
   EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
 
@@ -1501,8 +1519,6 @@ endif
 ifeq ($(strip $(filter-out arm% android eabi,$(targ))),)
   LIBGNAT_TARGET_PAIRS = \
   a-intnam.ads<a-intnam-linux.ads \
-  g-trasym.ads<g-trasym-unimplemented.ads \
-  g-trasym.adb<g-trasym-unimplemented.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-linux.ads<s-linux.ads \

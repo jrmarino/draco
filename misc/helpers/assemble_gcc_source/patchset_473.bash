@@ -1,7 +1,7 @@
 #!/usr/local/bin/bash
 
 GCCVERSION=4.7.3
-DRACO=/home/marino/draco/v4.7
+DRACO=/home/gituser/draco/v4.7
 EXPANSE=/home/marino/GCC-TEST
 DIFFPROG=/usr/bin/diff
 GREPPROG=/usr/bin/grep
@@ -79,32 +79,32 @@ function remove_file () {
 
 mkdir -p ${OUTPUT_DIR}
 pattern="^gcc/ada|^gnattools"
-ada=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
+ada=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${ADA_SUFFIX} ada[@]
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Make-lang.in
 
 pattern="^gcc/fortran|^libgfortran|^libquadmath"
-fortran=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
+fortran=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${F95_SUFFIX} fortran[@]
 regenerate_patch ${F95_SUFFIX} patch_libgfortran_configure
 
 pattern="^gcc/testsuite|^gcc/ada|^gcc/fortran|^gnattools|^libada|^libgfortran|^libstdc..-v3|^libquadmath"
-core=`cd ${DRACO} && find * -type d | ${GREPPROG} -vE $pattern`
+core=`cd ${DRACO} && find * -type d | sort | ${GREPPROG} -vE $pattern`
 produce_patch ${CORE_SUFFIX} core[@]
 regenerate_patch ${CORE_SUFFIX} patch_gcc_configure
 regenerate_patch ${CORE_SUFFIX} patch_gcc_Makefile.in
 regenerate_patch ${CORE_SUFFIX} patch_configure
 
 pattern="^gcc/testsuite/ada|^gcc/testsuite/gnat.dg"
-suite=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
+suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${ADA_SUITE_SUFFIX} suite[@]
 
 pattern="^libstdc..-v3"
-cplusplus=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
+cplusplus=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${CXX_SUFFIX} cplusplus[@]
 
 pattern="^gcc/testsuite/c-c..-common"
-suite=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
+suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${CXX_SUITE_SUFFIX} suite[@]
 regenerate_patch ${CXX_SUITE_SUFFIX} gxx_ts1.patch
 regenerate_patch ${CXX_SUITE_SUFFIX} libstdcxx-testsuite.patch
@@ -118,9 +118,9 @@ regenerate_patch ${CXX_SUITE_SUFFIX} fix-norway.patch
 regenerate_patch ${CXX_SUITE_SUFFIX} fix-random-locales.patch
 
 pattern="^gcc/testsuite/gcc.dg"
-suite=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
+suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${GCC_SUITE_SUFFIX} suite[@]
 
 pattern="^gcc/testsuite/gfortran"
-suite=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
+suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${FRT_SUITE_SUFFIX} suite[@]

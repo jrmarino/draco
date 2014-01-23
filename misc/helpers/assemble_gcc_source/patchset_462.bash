@@ -1,11 +1,11 @@
-#!/opt/csw/bin/bash
+#!/usr/local/bin/bash
 
-GCCVERSION=4.6.3
-DRACO=/export/home/marino/draco/trunk
-EXPANSE=/export/home/marino/GCC-TEST
-DIFFPROG=/usr/bin/gdiff
-GREPPROG=/opt/csw/bin/ggrep
-PACHPROG=/usr/bin/gpatch
+GCCVERSION=4.6.4
+DRACO=/home/gituser/draco/trunk
+EXPANSE=/home/marino/GCC-TEST
+DIFFPROG=/usr/bin/diff
+GREPPROG=/usr/bin/grep
+PACHPROG=/usr/bin/patch
 ADA_SUFFIX=ada
 CORE_SUFFIX=core
 CXX_SUFFIX=cxx
@@ -78,17 +78,17 @@ function remove_file () {
 
 mkdir -p ${OUTPUT_DIR}
 pattern="^gcc/ada|^gnattools|^libada"
-ada=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
+ada=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${ADA_SUFFIX} ada[@]
 
 pattern="^gcc/fortran|^libgfortran"
-fortran=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
+fortran=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${F95_SUFFIX} fortran[@]
 regenerate_patch ${F95_SUFFIX} patch_libgfortran_configure
 regenerate_patch ${F95_SUFFIX} patch_libquadmath_Makefile.in
 
 pattern="^gcc/testsuite|^gcc/ada|^gcc/fortran|^gnattools|^libada|^libgfortran|^libstdc..-v3"
-core=`cd ${DRACO} && find * -type d | ${GREPPROG} -vE $pattern`
+core=`cd ${DRACO} && find * -type d | sort | ${GREPPROG} -vE $pattern`
 produce_patch ${CORE_SUFFIX} core[@]
 regenerate_patch ${CORE_SUFFIX} patch_gcc_configure
 regenerate_patch ${CORE_SUFFIX} patch_gcc_Makefile.in
@@ -97,13 +97,13 @@ regenerate_patch ${CORE_SUFFIX} patch-libiberty__setprotitle.c
 regenerate_patch ${CORE_SUFFIX} patch_configure
 
 pattern="^gcc/testsuite"
-suite=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
+suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${ADA_SUITE_SUFFIX} suite[@]
 remove_file ${ADA_SUITE_SUFFIX} gcc/testsuite/gnat.dg/unchecked_convert5.adb
 remove_file ${ADA_SUITE_SUFFIX} gcc/testsuite/gnat.dg/unchecked_convert6.adb
 
 pattern="^libstdc..-v3"
-cplusplus=`cd $DRACO && find * -type d | ${GREPPROG} -E $pattern`
+cplusplus=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${CXX_SUFFIX} cplusplus[@]
 
 rm -f ${OUTPUT_DIR}/diff-${CXX_SUITE_SUFFIX}

@@ -174,12 +174,6 @@ case ${host} in
   tmake_file="$tmake_file t-darwin ${cpu_type}/t-darwin t-libgcc-pic t-slibgcc-darwin"
   extra_parts="crt3.o crttms.o crttme.o"
   ;;
-arm*-android-eabi*)
-  tmake_file="t-slibgcc-elf-ver t-linux arm/t-arm"
-  tmake_file="$tmake_file arm/t-arm-elf arm/t-bpabi arm/t-linux-eabi t-slibgcc-libgcc"
-  tmake_file="$tmake_file arm/t-linux-androideabi arm/t-arm-softfp soft-fp/t-softfp"
-  extra_parts="crtbegin.o crtbeginS.o crtbeginT.o crtend.o crtendS.o"
-  ;;
 *-*-dragonfly*)
   tmake_file="$tmake_file t-crtstuff-pic t-libgcc-pic t-eh-dw2-dip"
   tmake_file="$tmake_file t-slibgcc t-slibgcc-gld t-slibgcc-elf-ver"
@@ -331,6 +325,17 @@ alpha*-dec-*vms*)
 arm-wrs-vxworks)
 	tmake_file="$tmake_file arm/t-arm arm/t-vxworks t-fdpbit"
 	extra_parts="$extra_parts crti.o crtn.o"
+	;;
+arm*-android-eabi*)
+	extra_parts="crtbegin.o crtbeginS.o crtbeginT.o crtend.o crtendS.o"
+
+	tmake_file="$tmake_file t-crtstuff-pic t-libgcc-pic t-eh-dw2-dip t-slibgcc t-slibgcc-gld t-slibgcc-elf-ver"
+	tmake_file="$tmake_file arm/t-arm t-fixedpoint-gnu-prefix"
+	tmake_file="$tmake_file arm/t-elf arm/t-bpabi arm/t-linux-eabi t-slibgcc-libgcc"
+	tmake_file="$tmake_file t-softfp-sfdf t-softfp-excl arm/t-softfp t-softfp"
+
+	tm_file="$tm_file arm/bpabi-lib.h"
+	unwind_header=config/arm/unwind-arm.h
 	;;
 arm*-*-freebsd*)
 	tmake_file="$tmake_file arm/t-arm arm/t-strongarm-elf t-fdpbit"
