@@ -1,5 +1,6 @@
 /* Definitions for Intel 386 running DragonFly with ELF format
-   Copyright (C) 1996, 2000, 2002, 2004, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1996, 2000, 2002, 2004, 2007, 2010, 2011
+   Free Software Foundation, Inc.
    Contributed by Eric Youngdale.
    Modified for stabs-in-ELF by H.J. Lu.
    Adapted from GNU/Linux version by John Polstra.
@@ -99,3 +100,6 @@ along with GCC; see the file COPYING3.  If not see
 
 /* Support for i386 has been removed from DragonFly for several releases  */
 #define SUBTARGET32_DEFAULT_CPU "i486"
+
+#define TARGET_ASM_FILE_END file_end_indicate_exec_stack
+

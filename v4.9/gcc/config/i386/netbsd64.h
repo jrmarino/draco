@@ -1,6 +1,6 @@
 /* Definitions of target machine for GCC,
    for x86-64/ELF NetBSD systems.
-   Copyright (C) 2002-2014 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004, 2007, 2011 Free Software Foundation, Inc.
    Contributed by Wasabi Systems, Inc.
 
 This file is part of GCC.
@@ -67,3 +67,10 @@ along with GCC; see the file COPYING3.  If not see
 }
 
 #define HAVE_ENABLE_EXECUTE_STACK
+
+/* Define this to be nonzero if static stack checking is supported. */
+#define STACK_CHECK_STATIC_BUILTIN 1
+
+#if defined(HAVE_LD_EH_FRAME_HDR)
+#define LINK_EH_SPEC "%{!static:--eh-frame-hdr} "
+#endif

@@ -1,5 +1,6 @@
 /* Definitions for Intel 386 running FreeBSD with ELF format
-   Copyright (C) 1996-2014 Free Software Foundation, Inc.
+   Copyright (C) 1996, 2000, 2002, 2004, 2007, 2010, 2011
+   Free Software Foundation, Inc.
    Contributed by Eric Youngdale.
    Modified for stabs-in-ELF by H.J. Lu.
    Adapted from GNU/Linux version by John Polstra.
@@ -90,6 +91,12 @@ along with GCC; see the file COPYING3.  If not see
    When the -shared link option is used a final link is not being
    done.  */
 
+#if FBSD_MAJOR < 9
+#define ELF_HASH_STYLE ""
+#else
+#define ELF_HASH_STYLE "--hash-style=both "
+#endif
+
 #undef	LINK_SPEC
 #define LINK_SPEC "\
   %{p:%nconsider using '-pg' instead of '-p' with gprof(1)} \
@@ -101,6 +108,7 @@ along with GCC; see the file COPYING3.  If not see
         %{rdynamic:-export-dynamic} \
         -dynamic-linker %(fbsd_dynamic_linker) } \
     %{static:-Bstatic}} \
+  %{!static:" ELF_HASH_STYLE "-rpath @PREFIX@/gcc-aux/lib} \
   %{symbolic:-Bsymbolic}"
 
 /* A C statement to output to the stdio stream FILE an assembler
@@ -147,3 +155,5 @@ along with GCC; see the file COPYING3.  If not see
 
 #define TARGET_ASM_FILE_END file_end_indicate_exec_stack
 
+/* Compile in __enable_execute_stack (void *) (see config.host) */
+#define HAVE_ENABLE_EXECUTE_STACK

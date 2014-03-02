@@ -1,6 +1,6 @@
 /* Definitions of target machine for GCC,
    for i386/ELF NetBSD systems.
-   Copyright (C) 2001-2014 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2004, 2007, 2011 Free Software Foundation, Inc.
    Contributed by matthew green <mrg@eterna.com.au>
 
 This file is part of GCC.
@@ -38,7 +38,8 @@ along with GCC; see the file COPYING3.  If not see
 /* Provide a LINK_SPEC appropriate for a NetBSD/i386 ELF target.  */
 
 #undef LINK_SPEC
-#define LINK_SPEC NETBSD_LINK_SPEC_ELF
+#define LINK_SPEC NETBSD_LINK_SPEC_ELF \
+"%{!static:-rpath @PREFIX@/gcc-aux/lib}"
 
 #define NETBSD_ENTRY_POINT "__start"
 
@@ -119,3 +120,9 @@ along with GCC; see the file COPYING3.  If not see
 #define DEFAULT_PCC_STRUCT_RETURN 1
 
 #define HAVE_ENABLE_EXECUTE_STACK
+/* Define this to be nonzero if static stack checking is supported. */
+#define STACK_CHECK_STATIC_BUILTIN 1
+
+#if defined(HAVE_LD_EH_FRAME_HDR)
+#define LINK_EH_SPEC "%{!static:--eh-frame-hdr} "
+#endif

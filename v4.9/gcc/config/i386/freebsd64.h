@@ -1,5 +1,5 @@
 /* Definitions for AMD x86-64 running FreeBSD with ELF format
-   Copyright (C) 2002-2014 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004, 2007, 2010, 2011 Free Software Foundation, Inc.
    Contributed by David O'Brien <obrien@FreeBSD.org>
 
 This file is part of GCC.
@@ -41,4 +41,5 @@ along with GCC; see the file COPYING3.  If not see
         %{rdynamic:-export-dynamic} \
 	-dynamic-linker %(fbsd_dynamic_linker) } \
     %{static:-Bstatic}} \
+  %{!static:" ELF_HASH_STYLE "-rpath @PREFIX@/gcc-aux/lib} \
   %{symbolic:-Bsymbolic}"
