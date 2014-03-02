@@ -1,0 +1,12 @@
+--- libstdc++-v3/configure.host.orig	2013-07-04 16:07:44.000000000 -0500
++++ libstdc++-v3/configure.host
+@@ -230,6 +230,9 @@ case "${host_os}" in
+     os_include_dir="os/generic"
+     atomicity_dir="cpu/generic"
+     ;;
++  dragonfly*)
++    os_include_dir="os/bsd/dragonfly"
++    ;;
+   bsd*)
+     # Plain BSD attempts to share FreeBSD files.
+     os_include_dir="os/bsd/freebsd"
