@@ -1,6 +1,6 @@
 #!/usr/local/bin/bash
 
-GCCVERSION=4.9.0
+GCCVERSION=4.9-20140223
 DRACO=/home/marino/github/draco/v4.9
 EXPANSE=/home/marino/GCC-TEST
 DIFFPROG=/usr/bin/diff
@@ -49,20 +49,23 @@ function regenerate_patch () {
    FLUX_NAME=${2}
    PATCH_FILE=${OUTPUT_DIR}/diff-${PATCH_SUFFIX}
    FLUX_PATCH=${DRACO}/../misc/flux49/${FLUX_NAME}
+   AWKCMD='{if (substr($2,0,2) == "b/") print substr($2,3); else print $2}'
+   AWKCM2='NR==1 {if (substr($2,0,2) == "b/") print "-p1"}'
 
    cd ${SCRATCH_DIR}
    IFS=$'\n'
    FILE_LIST=`${GREPPROG} '^+++ ' ${FLUX_PATCH}`
    for FILE in ${FILE_LIST[@]}; do
-      FULL_PATH=`echo ${FILE:6} | awk '{print $1}'`
+      FULL_PATH=`echo ${FILE} | awk "${AWKCMD}"`
       FILE_PATH=`dirname ${FULL_PATH}`
       FILE_NAME=`basename ${FULL_PATH}`
       mkdir -p ${SCRATCH_DIR}/${FILE_PATH}
       cp ${RELEASE_DIR}/${FILE_PATH}/${FILE_NAME} ${SCRATCH_DIR}/${FILE_PATH}
    done
-   ${PACHPROG} -d ${SCRATCH_DIR} -p1 --backup < ${FLUX_PATCH}
+   PATCHLEVEL=`echo ${FILE_LIST} | awk "${AWKCM2}"`
+   ${PACHPROG} -d ${SCRATCH_DIR} ${PATCHLEVEL} --backup < ${FLUX_PATCH}
    for FILE in ${FILE_LIST[@]}; do
-      FULL_PATH=`echo ${FILE:6} | awk '{print $1}'`
+      FULL_PATH=`echo ${FILE} | awk "${AWKCMD}"`
       FILE_PATH=`dirname ${FULL_PATH}`
       FILE_NAME=`basename ${FULL_PATH}`
       ${DIFFPROG} -u ${FULL_PATH}.orig ${FULL_PATH} --label=${FULL_PATH}.orig --label=${FULL_PATH} >> ${PATCH_FILE}
@@ -77,7 +80,8 @@ function remove_file () {
    ${DIFFPROG} -u ${FULL_PATH} /dev/null --label=${HALF_PATH} --label=/dev/null >> ${PATCH_FILE}
 }
 
-mkdir -p ${OUTPUT_DIR}
+rm -rf ${EXPANSE}/scratch
+mkdir -p ${OUTPUT_DIR} ${EXPANSE}/scratch
 pattern="^gcc/ada"
 ada=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${ADA_SUFFIX} ada[@]
@@ -89,16 +93,17 @@ regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure
 pattern="^gcc/fortran"
 fortran=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${F95_SUFFIX} fortran[@]
-regenerate_patch ${F95_SUFFIX} patch_libgfortran_acinclude.m4
-regenerate_patch ${F95_SUFFIX} patch_libgfortran_configure
-regenerate_patch ${F95_SUFFIX} patch_libquadmath_Makefile.in
+regenerate_patch ${F95_SUFFIX} patch-libgfortran_acinclude.m4
+regenerate_patch ${F95_SUFFIX} patch-libgfortran_configure
+regenerate_patch ${F95_SUFFIX} patch-libquadmath_Makefile.in
 
 pattern="^gcc/testsuite|^gcc/ada|^gcc/fortran|^libstdc..-v3"
 core=`cd ${DRACO} && find * -type d | sort | ${GREPPROG} -vE $pattern`
 produce_patch ${CORE_SUFFIX} core[@]
-regenerate_patch ${CORE_SUFFIX} patch_gcc_configure
-regenerate_patch ${CORE_SUFFIX} patch_gcc_Makefile.in
-regenerate_patch ${CORE_SUFFIX} patch_libgcc_config.host
+regenerate_patch ${CORE_SUFFIX} patch-gcc_config.gcc
+regenerate_patch ${CORE_SUFFIX} patch-gcc_configure
+regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
+regenerate_patch ${CORE_SUFFIX} patch-libgcc_config.host
 
 pattern="^gcc/testsuite/ada|^gcc/testsuite/gnat.dg"
 suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
@@ -107,9 +112,9 @@ produce_patch ${ADA_SUITE_SUFFIX} suite[@]
 pattern="^libstdc..-v3"
 cplusplus=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${CXX_SUFFIX} cplusplus[@]
-regenerate_patch ${CXX_SUFFIX} patch_libstdcpp3_acinclude.m4
-regenerate_patch ${CXX_SUFFIX} patch_libstdcpp3_configure
-regenerate_patch ${CXX_SUFFIX} patch_libstdcpp3_configure.host
+regenerate_patch ${CXX_SUFFIX} patch-libstdcpp3_acinclude.m4
+regenerate_patch ${CXX_SUFFIX} patch-libstdcpp3_configure
+regenerate_patch ${CXX_SUFFIX} patch-libstdcpp3_configure.host
 
 pattern="^gcc/testsuite/c-c..-common"
 suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
