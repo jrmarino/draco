@@ -104,6 +104,8 @@ regenerate_patch ${CORE_SUFFIX} patch-gcc_config.gcc
 regenerate_patch ${CORE_SUFFIX} patch-gcc_configure
 regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
 regenerate_patch ${CORE_SUFFIX} patch-libgcc_config.host
+regenerate_patch ${CORE_SUFFIX} patch-libcilkrts_runtime_os-unix.c
+regenerate_patch ${CORE_SUFFIX} patch-libitm_configure.tgt
 
 pattern="^gcc/testsuite/ada|^gcc/testsuite/gnat.dg"
 suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
