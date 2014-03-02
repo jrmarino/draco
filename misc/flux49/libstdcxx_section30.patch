@@ -1,0 +1,132 @@
+diff --git a/libstdc++-v3/testsuite/30_threads/async/49668.cc b/libstdc++-v3/testsuite/30_threads/async/49668.cc
+index a8bd399..64a07bb 100644
+--- a/libstdc++-v3/testsuite/30_threads/async/49668.cc
++++ b/libstdc++-v3/testsuite/30_threads/async/49668.cc
+@@ -1,5 +1,5 @@
+-// { dg-do run { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+-// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-do run { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-options " -std=gnu++0x -pthread" { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+ // { dg-options " -std=gnu++0x -pthreads" { target *-*-solaris* } }
+ // { dg-options " -std=gnu++0x " { target *-*-cygwin *-*-darwin* } }
+ // { dg-require-cstdint "" }
+diff --git a/libstdc++-v3/testsuite/30_threads/async/launch.cc b/libstdc++-v3/testsuite/30_threads/async/launch.cc
+index e17b4bc..b41ddfb 100644
+--- a/libstdc++-v3/testsuite/30_threads/async/launch.cc
++++ b/libstdc++-v3/testsuite/30_threads/async/launch.cc
+@@ -1,5 +1,5 @@
+-// { dg-do run { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+-// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-do run { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-options " -std=gnu++0x -pthread" { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+ // { dg-options " -std=gnu++0x -pthreads" { target *-*-solaris* } }
+ // { dg-options " -std=gnu++0x " { target *-*-cygwin *-*-darwin* } }
+ // { dg-require-cstdint "" }
+diff --git a/libstdc++-v3/testsuite/30_threads/call_once/49668.cc b/libstdc++-v3/testsuite/30_threads/call_once/49668.cc
+index 63b15c7..6eb63f9 100644
+--- a/libstdc++-v3/testsuite/30_threads/call_once/49668.cc
++++ b/libstdc++-v3/testsuite/30_threads/call_once/49668.cc
+@@ -1,5 +1,5 @@
+-// { dg-do run { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+-// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-do run { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-options " -std=gnu++0x -pthread" { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+ // { dg-options " -std=gnu++0x -pthreads" { target *-*-solaris* } }
+ // { dg-options " -std=gnu++0x " { target *-*-cygwin *-*-darwin* } }
+ // { dg-require-cstdint "" }
+diff --git a/libstdc++-v3/testsuite/30_threads/condition_variable_any/50862.cc b/libstdc++-v3/testsuite/30_threads/condition_variable_any/50862.cc
+index afc6bb7..b222d0e 100644
+--- a/libstdc++-v3/testsuite/30_threads/condition_variable_any/50862.cc
++++ b/libstdc++-v3/testsuite/30_threads/condition_variable_any/50862.cc
+@@ -1,5 +1,5 @@
+-// { dg-do run { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+-// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-do run { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-options " -std=gnu++0x -pthread" { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+ // { dg-options " -std=gnu++0x -pthreads" { target *-*-solaris* } }
+ // { dg-options " -std=gnu++0x " { target *-*-cygwin *-*-darwin* } }
+ // { dg-require-cstdint "" }
+diff --git a/libstdc++-v3/testsuite/30_threads/future/members/share.cc b/libstdc++-v3/testsuite/30_threads/future/members/share.cc
+index 9132597..1e6775b 100644
+--- a/libstdc++-v3/testsuite/30_threads/future/members/share.cc
++++ b/libstdc++-v3/testsuite/30_threads/future/members/share.cc
+@@ -1,5 +1,5 @@
+-// { dg-do run { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+-// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-do run { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-options " -std=gnu++0x -pthread" { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+ // { dg-options " -std=gnu++0x -pthreads" { target *-*-solaris* } }
+ // { dg-options " -std=gnu++0x " { target *-*-cygwin *-*-darwin* } }
+ // { dg-require-cstdint "" }
+diff --git a/libstdc++-v3/testsuite/30_threads/packaged_task/49668.cc b/libstdc++-v3/testsuite/30_threads/packaged_task/49668.cc
+index 5c217df..012083c 100644
+--- a/libstdc++-v3/testsuite/30_threads/packaged_task/49668.cc
++++ b/libstdc++-v3/testsuite/30_threads/packaged_task/49668.cc
+@@ -1,5 +1,5 @@
+-// { dg-do run { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+-// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-do run { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-options " -std=gnu++0x -pthread" { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+ // { dg-options " -std=gnu++0x -pthreads" { target *-*-solaris* } }
+ // { dg-options " -std=gnu++0x " { target *-*-cygwin *-*-darwin* } }
+ // { dg-require-cstdint "" }
+diff --git a/libstdc++-v3/testsuite/30_threads/packaged_task/cons/3.cc b/libstdc++-v3/testsuite/30_threads/packaged_task/cons/3.cc
+index 33cec40..edf0aee 100644
+--- a/libstdc++-v3/testsuite/30_threads/packaged_task/cons/3.cc
++++ b/libstdc++-v3/testsuite/30_threads/packaged_task/cons/3.cc
+@@ -1,5 +1,5 @@
+-// { dg-do run { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+-// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-do run { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-options " -std=gnu++0x -pthread" { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+ // { dg-options " -std=gnu++0x -pthreads" { target *-*-solaris* } }
+ // { dg-options " -std=gnu++0x " { target *-*-cygwin *-*-darwin* } }
+ // { dg-require-cstdint "" }
+diff --git a/libstdc++-v3/testsuite/30_threads/this_thread/2.cc b/libstdc++-v3/testsuite/30_threads/this_thread/2.cc
+index 49aa9c0..3d4f79e 100644
+--- a/libstdc++-v3/testsuite/30_threads/this_thread/2.cc
++++ b/libstdc++-v3/testsuite/30_threads/this_thread/2.cc
+@@ -1,5 +1,5 @@
+-// { dg-do run { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+-// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-do run { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-options " -std=gnu++0x -pthread" { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+ // { dg-options " -std=gnu++0x -pthreads" { target *-*-solaris* } }
+ // { dg-options " -std=gnu++0x " { target *-*-cygwin *-*-darwin* } }
+ // { dg-require-cstdint "" }
+diff --git a/libstdc++-v3/testsuite/30_threads/this_thread/3.cc b/libstdc++-v3/testsuite/30_threads/this_thread/3.cc
+index 3a3a025..bc6a244 100644
+--- a/libstdc++-v3/testsuite/30_threads/this_thread/3.cc
++++ b/libstdc++-v3/testsuite/30_threads/this_thread/3.cc
+@@ -1,5 +1,5 @@
+-// { dg-do run { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+-// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-do run { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-options " -std=gnu++0x -pthread" { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+ // { dg-options " -std=gnu++0x -pthreads" { target *-*-solaris* } }
+ // { dg-options " -std=gnu++0x " { target *-*-cygwin *-*-darwin* } }
+ // { dg-require-cstdint "" }
+diff --git a/libstdc++-v3/testsuite/30_threads/this_thread/4.cc b/libstdc++-v3/testsuite/30_threads/this_thread/4.cc
+index f015986..250847e 100644
+--- a/libstdc++-v3/testsuite/30_threads/this_thread/4.cc
++++ b/libstdc++-v3/testsuite/30_threads/this_thread/4.cc
+@@ -1,5 +1,5 @@
+-// { dg-do run { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+-// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-do run { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-options " -std=gnu++0x -pthread" { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+ // { dg-options " -std=gnu++0x -pthreads" { target *-*-solaris* } }
+ // { dg-options " -std=gnu++0x " { target *-*-cygwin *-*-darwin* } }
+ // { dg-require-cstdint "" }
+diff --git a/libstdc++-v3/testsuite/30_threads/thread/cons/49668.cc b/libstdc++-v3/testsuite/30_threads/thread/cons/49668.cc
+index 7f0fdf1..cea89e7 100644
+--- a/libstdc++-v3/testsuite/30_threads/thread/cons/49668.cc
++++ b/libstdc++-v3/testsuite/30_threads/thread/cons/49668.cc
+@@ -1,5 +1,5 @@
+-// { dg-do run { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+-// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-do run { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
++// { dg-options " -std=gnu++0x -pthread" { target *-*-dragonfly* *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* powerpc-ibm-aix* } }
+ // { dg-options " -std=gnu++0x -pthreads" { target *-*-solaris* } }
+ // { dg-options " -std=gnu++0x " { target *-*-cygwin *-*-darwin* } }
+ // { dg-require-cstdint "" }

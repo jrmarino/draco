@@ -1,0 +1,118 @@
+diff --git a/libstdc++-v3/testsuite/22_locale/facet/2.cc b/libstdc++-v3/testsuite/22_locale/facet/2.cc
+index b211f5a..4f1d036 100644
+--- a/libstdc++-v3/testsuite/22_locale/facet/2.cc
++++ b/libstdc++-v3/testsuite/22_locale/facet/2.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "es_MX" }
++// { dg-require-namedlocale "es_ES" }
+ 
+ // 2000-08-31 Benjamin Kosnik <bkoz@redhat.com>
+ 
+@@ -84,7 +84,7 @@ void test02()
+   // 4: Named locale should destroy facets when it goes out of scope.
+   // Not quite sure how to test for this w/o valgrind at the moment.
+   {
+-    locale loc03 = locale("es_MX");
++    locale loc03 = locale("es_ES");
+   }
+ }
+ 
+diff --git a/libstdc++-v3/testsuite/22_locale/locale/cons/5.cc b/libstdc++-v3/testsuite/22_locale/locale/cons/5.cc
+index 812f469..834fd0c 100644
+--- a/libstdc++-v3/testsuite/22_locale/locale/cons/5.cc
++++ b/libstdc++-v3/testsuite/22_locale/locale/cons/5.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "en_PH" }
++// { dg-require-namedlocale "en_NZ" }
+ // { dg-require-namedlocale "de_DE" }
+ // { dg-require-namedlocale "it_IT" }
+ 
+@@ -76,21 +76,21 @@ void test04()
+     }
+   setenv("LC_ALL", "", 1);
+ 
+-  // Check that a "en_PH" LC_ALL is equivalent to "en_PH".
+-  if (!setenv("LC_ALL", "en_PH", 1))
++  // Check that a "en_NZ" LC_ALL is equivalent to "en_PH".
++  if (!setenv("LC_ALL", "en_NZ", 1))
+     {
+       locale loc = locale("");
+-      VERIFY( loc.name() == "en_PH" );
++      VERIFY( loc.name() == "en_NZ" );
+     }
+   setenv("LC_ALL", "", 1);
+ 
+   // Explicit check that LC_ALL sets regardless of LC_* and LANG.
+-  if (!setenv("LANG", "es_MX", 1) && !setenv("LC_COLLATE", "de_DE", 1))
++  if (!setenv("LANG", "es_ES", 1) && !setenv("LC_COLLATE", "de_DE", 1))
+     {
+-      if (!setenv("LC_ALL", "en_PH", 1))
++      if (!setenv("LC_ALL", "en_NZ", 1))
+ 	{
+ 	  locale loc = locale("");
+-	  VERIFY( loc.name() == "en_PH" );
++	  VERIFY( loc.name() == "en_NZ" );
+ 	}
+       setenv("LC_ALL", "", 1);
+       setenv("LANG", LANG_orig ? LANG_orig : "", 1);
+diff --git a/libstdc++-v3/testsuite/22_locale/locale/global_locale_objects/2.cc b/libstdc++-v3/testsuite/22_locale/locale/global_locale_objects/2.cc
+index 98b7312..bc99c4a 100644
+--- a/libstdc++-v3/testsuite/22_locale/locale/global_locale_objects/2.cc
++++ b/libstdc++-v3/testsuite/22_locale/locale/global_locale_objects/2.cc
+@@ -1,5 +1,5 @@
+-// { dg-require-namedlocale "en_PH" }
+-// { dg-require-namedlocale "es_MX" }
++// { dg-require-namedlocale "en_NZ" }
++// { dg-require-namedlocale "es_ES" }
+ 
+ // 2000-09-13 Benjamin Kosnik <bkoz@redhat.com>
+ 
+@@ -32,8 +32,8 @@ void test02()
+   using namespace std;
+   bool test __attribute__((unused)) = true;
+   
+-  const string ph("en_PH");
+-  const string mx("es_MX");
++  const string ph("en_NZ");
++  const string mx("es_ES");
+   const char* orig = setlocale(LC_ALL, 0);
+   const char* testph = setlocale(LC_ALL, ph.c_str());
+   const char* testmx = setlocale(LC_ALL, mx.c_str());
+diff --git a/libstdc++-v3/testsuite/22_locale/time_get/get_weekday/char/38081-1.cc b/libstdc++-v3/testsuite/22_locale/time_get/get_weekday/char/38081-1.cc
+index 7316cc4..fc68e0e 100644
+--- a/libstdc++-v3/testsuite/22_locale/time_get/get_weekday/char/38081-1.cc
++++ b/libstdc++-v3/testsuite/22_locale/time_get/get_weekday/char/38081-1.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ru_RU.ISO-8859-5" }
++// { dg-require-namedlocale "ru_RU.ISO8859-5" }
+ 
+ // Copyright (C) 2010 Free Software Foundation
+ //
+@@ -33,7 +33,7 @@ void test01()
+   typedef istreambuf_iterator<char> iterator_type;
+ 
+   // basic construction
+-  locale loc("ru_RU.ISO-8859-5");
++  locale loc("ru_RU.ISO8859-5");
+ 
+   // create an ostream-derived object, cache the time_get facet
+   iterator_type end;
+diff --git a/libstdc++-v3/testsuite/22_locale/time_get/get_weekday/char/38081-2.cc b/libstdc++-v3/testsuite/22_locale/time_get/get_weekday/char/38081-2.cc
+index 1c079a4..b619b3a 100644
+--- a/libstdc++-v3/testsuite/22_locale/time_get/get_weekday/char/38081-2.cc
++++ b/libstdc++-v3/testsuite/22_locale/time_get/get_weekday/char/38081-2.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ru_RU.UTF8" }
++// { dg-require-namedlocale "ru_RU.UTF-8" }
+ 
+ // 2010-01-05  Paolo Carlini  <paolo.carlini@oracle.com>
+ 
+@@ -34,7 +34,7 @@ void test01()
+   typedef istreambuf_iterator<char> iterator_type;
+ 
+   // basic construction
+-  locale loc("ru_RU.UTF8");
++  locale loc("ru_RU.UTF-8");
+ 
+   // create an ostream-derived object, cache the time_get facet
+   iterator_type end;

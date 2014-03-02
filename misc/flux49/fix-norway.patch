@@ -1,0 +1,266 @@
+diff --git a/libstdc++-v3/testsuite/22_locale/ctype/narrow/wchar_t/3.cc b/libstdc++-v3/testsuite/22_locale/ctype/narrow/wchar_t/3.cc
+index 5bd6e07..696b36f 100644
+--- a/libstdc++-v3/testsuite/22_locale/ctype/narrow/wchar_t/3.cc
++++ b/libstdc++-v3/testsuite/22_locale/ctype/narrow/wchar_t/3.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "se_NO.UTF-8" }
++// { dg-require-namedlocale "no_NO.UTF-8" }
+ 
+ // 2003-03-12  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -31,7 +31,7 @@ void test03()
+   using namespace std;
+   bool test __attribute__((unused)) = true;
+ 
+-  locale loc = locale("se_NO.UTF-8");
++  locale loc = locale("no_NO.UTF-8");
+   const ctype<wchar_t>& wct = use_facet<ctype<wchar_t> >(loc);
+ 
+   const wchar_t* wstrlit = L"\x80";
+diff --git a/libstdc++-v3/testsuite/22_locale/ctype/widen/wchar_t/3.cc b/libstdc++-v3/testsuite/22_locale/ctype/widen/wchar_t/3.cc
+index 1d1fd69..d8b3564 100644
+--- a/libstdc++-v3/testsuite/22_locale/ctype/widen/wchar_t/3.cc
++++ b/libstdc++-v3/testsuite/22_locale/ctype/widen/wchar_t/3.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "se_NO.UTF-8" }
++// { dg-require-namedlocale "no_NO.UTF-8" }
+ 
+ // 2003-03-12  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -31,7 +31,7 @@ void test03()
+   using namespace std;
+   bool test __attribute__((unused)) = true;
+ 
+-  locale loc = locale("se_NO.UTF-8");
++  locale loc = locale("no_NO.UTF-8");
+   const ctype<wchar_t>& wct = use_facet<ctype<wchar_t> >(loc);
+ 
+   const char* strlit = "\xc2\x80";
+diff --git a/libstdc++-v3/testsuite/27_io/basic_filebuf/seekoff/wchar_t/1.cc b/libstdc++-v3/testsuite/27_io/basic_filebuf/seekoff/wchar_t/1.cc
+index c6f13dc..d3519f2 100644
+--- a/libstdc++-v3/testsuite/27_io/basic_filebuf/seekoff/wchar_t/1.cc
++++ b/libstdc++-v3/testsuite/27_io/basic_filebuf/seekoff/wchar_t/1.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "se_NO.UTF-8" }
++// { dg-require-namedlocale "no_NO.UTF-8" }
+ 
+ // 2003-09-08  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -91,7 +91,7 @@ void test01()
+   const size_t wlen = sizeof(wstr) / sizeof(wstr[0]);
+ 
+   const int loops = 2 * BUFSIZ / wlen;
+-  locale loc = locale("se_NO.UTF-8");
++  locale loc = locale("no_NO.UTF-8");
+ 
+   FILE* file = fopen(name, "w");
+   for (int i = 0; i < loops; ++i)
+diff --git a/libstdc++-v3/testsuite/27_io/basic_filebuf/seekoff/wchar_t/2.cc b/libstdc++-v3/testsuite/27_io/basic_filebuf/seekoff/wchar_t/2.cc
+index cc9c4e2..10b1e8c 100644
+--- a/libstdc++-v3/testsuite/27_io/basic_filebuf/seekoff/wchar_t/2.cc
++++ b/libstdc++-v3/testsuite/27_io/basic_filebuf/seekoff/wchar_t/2.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "se_NO.UTF-8" }
++// { dg-require-namedlocale "no_NO.UTF-8" }
+ 
+ // 2003-09-08  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -35,7 +35,7 @@ void test02()
+   bool test __attribute__((unused)) = true;
+   const char name[] = "tmp_seekoff-2.tst";
+ 
+-  locale loc = locale("se_NO.UTF-8");
++  locale loc = locale("no_NO.UTF-8");
+ 
+   const size_t size = 10;
+   wchar_t buf[size];
+diff --git a/libstdc++-v3/testsuite/27_io/basic_filebuf/seekpos/wchar_t/9874.cc b/libstdc++-v3/testsuite/27_io/basic_filebuf/seekpos/wchar_t/9874.cc
+index e011f87..a2fde11 100644
+--- a/libstdc++-v3/testsuite/27_io/basic_filebuf/seekpos/wchar_t/9874.cc
++++ b/libstdc++-v3/testsuite/27_io/basic_filebuf/seekpos/wchar_t/9874.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "se_NO.UTF-8" }
++// { dg-require-namedlocale "no_NO.UTF-8" }
+ 
+ // 2003-10-07  Petur Runolfsson  <peturr02@ru.is>
+ //
+@@ -93,7 +93,7 @@ void test01()
+   const size_t wlen = sizeof(wstr) / sizeof(wstr[0]);
+ 
+   const int loops = 2 * BUFSIZ / wlen;
+-  locale loc = locale("se_NO.UTF-8");
++  locale loc = locale("no_NO.UTF-8");
+ 
+   FILE* file = fopen(name, "w");
+   for (int i = 0; i < loops; ++i)
+diff --git a/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/1.cc b/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/1.cc
+index 72c3ecb..18ff39f 100644
+--- a/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/1.cc
++++ b/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/1.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "se_NO.UTF-8" }
++// { dg-require-namedlocale "no_NO.UTF-8" }
+ 
+ // 2003-09-04  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -86,7 +86,7 @@ void test01()
+   const size_t clen = sizeof(cstr) / sizeof(cstr[0]);
+   const size_t wlen = sizeof(wstr) / sizeof(wstr[0]);
+ 
+-  locale loc = locale("se_NO.UTF-8");
++  locale loc = locale("no_NO.UTF-8");
+ 
+   FILE* file = fopen(name, "w");
+   fwrite(cstr, 1, clen, file);
+diff --git a/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/2.cc b/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/2.cc
+index c6f3044..c55b157 100644
+--- a/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/2.cc
++++ b/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/2.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "se_NO.UTF-8" }
++// { dg-require-namedlocale "no_NO.UTF-8" }
+ 
+ // 2003-09-04  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -86,7 +86,7 @@ void test02()
+   const size_t clen = sizeof(cstr) / sizeof(cstr[0]);
+   const size_t wlen = sizeof(wstr) / sizeof(wstr[0]);
+ 
+-  locale loc = locale("se_NO.UTF-8");
++  locale loc = locale("no_NO.UTF-8");
+ 
+   FILE* file = fopen(name, "w");
+   fwrite(cstr, 1, clen, file);
+diff --git a/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/3.cc b/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/3.cc
+index 42892e4..b4010a6 100644
+--- a/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/3.cc
++++ b/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/3.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "se_NO.UTF-8" }
++// { dg-require-namedlocale "no_NO.UTF-8" }
+ 
+ // 2003-09-04  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -87,7 +87,7 @@ void test03()
+   const size_t wlen = sizeof(wstr) / sizeof(wstr[0]);
+ 
+   const int loops = 2 * BUFSIZ / wlen;
+-  locale loc = locale("se_NO.UTF-8");
++  locale loc = locale("no_NO.UTF-8");
+ 
+   FILE* file = fopen(name, "w");
+   for (int i = 0; i < loops; ++i)
+diff --git a/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/4.cc b/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/4.cc
+index 6e63db0..5805739 100644
+--- a/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/4.cc
++++ b/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/4.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "se_NO.UTF-8" }
++// { dg-require-namedlocale "no_NO.UTF-8" }
+ 
+ // 2003-09-04  Petur Runolfsson  <peturr02@ru.is>
+ // Adapted from 27_io/basic_filebuf/underflow/char/2.cc
+@@ -31,7 +31,7 @@ void test01()
+   bool test __attribute__((unused)) = true;
+   using namespace std;
+ 
+-  locale loc (locale("se_NO.UTF-8"));
++  locale loc (locale("no_NO.UTF-8"));
+   wfilebuf fb_out, fb_in_out;
+   fb_out.pubimbue(loc);
+   fb_in_out.pubimbue(loc);
+diff --git a/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/5.cc b/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/5.cc
+index 4c4b8d3..9ed1773 100644
+--- a/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/5.cc
++++ b/libstdc++-v3/testsuite/27_io/basic_filebuf/underflow/wchar_t/5.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "se_NO.UTF-8" }
++// { dg-require-namedlocale "no_NO.UTF-8" }
+ 
+ // 2003-09-04  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -35,7 +35,7 @@ void test05()
+ 
+   wfilebuf fb;
+   fb.pubsetbuf(0, 0);
+-  fb.pubimbue(locale("se_NO.UTF-8"));
++  fb.pubimbue(locale("no_NO.UTF-8"));
+ 
+   FILE* file = fopen(name, "w");
+   setvbuf(file, 0, _IONBF, 0);
+diff --git a/libstdc++-v3/testsuite/27_io/objects/wchar_t/10.cc b/libstdc++-v3/testsuite/27_io/objects/wchar_t/10.cc
+index 1030e75..a630c3a 100644
+--- a/libstdc++-v3/testsuite/27_io/objects/wchar_t/10.cc
++++ b/libstdc++-v3/testsuite/27_io/objects/wchar_t/10.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "se_NO.UTF-8" }
++// { dg-require-namedlocale "no_NO.UTF-8" }
+ 
+ // 2003-05-01  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -33,7 +33,7 @@ void test10()
+   bool test __attribute__((unused)) = true;
+   const char* name = "tmp_10";
+ 
+-  locale loc(locale("se_NO.UTF-8"));
++  locale loc(locale("no_NO.UTF-8"));
+   locale::global(loc);
+   wcin.imbue(loc);
+   wcout.imbue(loc);
+diff --git a/libstdc++-v3/testsuite/27_io/objects/wchar_t/11.cc b/libstdc++-v3/testsuite/27_io/objects/wchar_t/11.cc
+index 7799591..7596b70 100644
+--- a/libstdc++-v3/testsuite/27_io/objects/wchar_t/11.cc
++++ b/libstdc++-v3/testsuite/27_io/objects/wchar_t/11.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "se_NO.UTF-8" }
++// { dg-require-namedlocale "no_NO.UTF-8" }
+ 
+ // 2003-05-01  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -33,7 +33,7 @@ void test11()
+   bool test __attribute__((unused)) = true;
+   const char* name = "tmp_11";
+ 
+-  locale loc(locale("se_NO.UTF-8"));
++  locale loc(locale("no_NO.UTF-8"));
+   locale::global(loc);
+   wcin.imbue(loc);
+   wcout.imbue(loc);
+diff --git a/libstdc++-v3/testsuite/27_io/objects/wchar_t/12.cc b/libstdc++-v3/testsuite/27_io/objects/wchar_t/12.cc
+index e94abdd..501a622 100644
+--- a/libstdc++-v3/testsuite/27_io/objects/wchar_t/12.cc
++++ b/libstdc++-v3/testsuite/27_io/objects/wchar_t/12.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "se_NO.UTF-8" }
++// { dg-require-namedlocale "no_NO.UTF-8" }
+ 
+ // 2003-09-04  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -38,7 +38,7 @@ void test12()
+   bool test __attribute__((unused)) = true;
+   const char* name = "tmp_12";
+ 
+-  locale loc(locale("se_NO.UTF-8"));
++  locale loc(locale("no_NO.UTF-8"));
+   locale::global(loc);
+   std::ios_base::sync_with_stdio(false);
+   wcout.imbue(loc);
+diff --git a/libstdc++-v3/testsuite/27_io/objects/wchar_t/13.cc b/libstdc++-v3/testsuite/27_io/objects/wchar_t/13.cc
+index 43b6602..5d3d7b5 100644
+--- a/libstdc++-v3/testsuite/27_io/objects/wchar_t/13.cc
++++ b/libstdc++-v3/testsuite/27_io/objects/wchar_t/13.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "se_NO.UTF-8" }
++// { dg-require-namedlocale "no_NO.UTF-8" }
+ 
+ // 2003-09-04  Petur Runolfsson  <peturr02@ru.is>
+ 
+@@ -36,7 +36,7 @@ void test13()
+   bool test __attribute__((unused)) = true;
+   const char* name = "tmp_13";
+ 
+-  locale loc(locale("se_NO.UTF-8"));
++  locale loc(locale("no_NO.UTF-8"));
+   locale::global(loc);
+   std::ios_base::sync_with_stdio(false);
+   wcin.imbue(loc);

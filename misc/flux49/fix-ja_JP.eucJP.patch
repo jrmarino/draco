@@ -1,0 +1,1086 @@
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/always_noconv/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/codecvt/always_noconv/char/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/always_noconv/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/always_noconv/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/always_noconv/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/codecvt/always_noconv/wchar_t/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/always_noconv/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/always_noconv/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/encoding/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/codecvt/encoding/char/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/encoding/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/encoding/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/encoding/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/codecvt/encoding/wchar_t/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/encoding/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/encoding/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/in/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/codecvt/in/char/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/in/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/in/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/in/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/codecvt/in/wchar_t/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/in/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/in/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/length/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/codecvt/length/char/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/length/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/length/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/length/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/codecvt/length/wchar_t/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/length/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/length/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/max_length/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/codecvt/max_length/char/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/max_length/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/max_length/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/max_length/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/codecvt/max_length/wchar_t/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/max_length/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/max_length/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/out/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/codecvt/out/char/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/out/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/out/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/out/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/codecvt/out/wchar_t/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/out/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/out/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/unshift/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/codecvt/unshift/char/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/unshift/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/unshift/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/codecvt/unshift/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/codecvt/unshift/wchar_t/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/codecvt/unshift/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/codecvt/unshift/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/collate/compare/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/collate/compare/char/wrapped_locale.cc
+index fc630a8..946c998 100644
+--- a/libstdc++-v3/testsuite/22_locale/collate/compare/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/collate/compare/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "fr_FR" }
+ // { dg-require-namedlocale "en_US" }
+ // { dg-require-namedlocale "de_DE" }
+@@ -40,6 +40,6 @@ int main()
+   func_callback two;
+   two.push_back(&test01);
+   two.push_back(&test02);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/collate/compare/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/collate/compare/wchar_t/wrapped_locale.cc
+index 263c6b4..1734615 100644
+--- a/libstdc++-v3/testsuite/22_locale/collate/compare/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/collate/compare/wchar_t/wrapped_locale.cc
+@@ -2,7 +2,7 @@
+ // { dg-xfail-if "" { "*-*-hpux11.23" } { "*" } { "" } } */
+ // { dg-options "-finput-charset=ISO8859-1" }
+ // { dg-require-iconv "ISO8859-1" }
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "en_US" }
+ // { dg-require-namedlocale "fr_FR" }
+ // { dg-require-namedlocale "de_DE" }
+@@ -44,6 +44,6 @@ int main()
+   func_callback two;
+   two.push_back(&test01);
+   two.push_back(&test02);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/collate/hash/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/collate/hash/char/wrapped_locale.cc
+index 8fba98f..417766c 100644
+--- a/libstdc++-v3/testsuite/22_locale/collate/hash/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/collate/hash/char/wrapped_locale.cc
+@@ -1,7 +1,7 @@
+ // { dg-require-namedlocale "en_US" }
+ // { dg-require-namedlocale "fr_FR" }
+ // { dg-require-namedlocale "de_DE" }
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -40,6 +40,6 @@ int main()
+   func_callback two;
+   two.push_back(&test01);
+   two.push_back(&test02);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/collate/hash/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/collate/hash/wchar_t/wrapped_locale.cc
+index 263c6b4..1734615 100644
+--- a/libstdc++-v3/testsuite/22_locale/collate/hash/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/collate/hash/wchar_t/wrapped_locale.cc
+@@ -2,7 +2,7 @@
+ // { dg-xfail-if "" { "*-*-hpux11.23" } { "*" } { "" } } */
+ // { dg-options "-finput-charset=ISO8859-1" }
+ // { dg-require-iconv "ISO8859-1" }
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "en_US" }
+ // { dg-require-namedlocale "fr_FR" }
+ // { dg-require-namedlocale "de_DE" }
+@@ -44,6 +44,6 @@ int main()
+   func_callback two;
+   two.push_back(&test01);
+   two.push_back(&test02);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/collate/transform/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/collate/transform/char/wrapped_locale.cc
+index 267b029..ab472ac 100644
+--- a/libstdc++-v3/testsuite/22_locale/collate/transform/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/collate/transform/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "en_US" }
+ // { dg-require-namedlocale "fr_FR" }
+ // { dg-require-namedlocale "de_DE" }
+@@ -35,6 +35,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test02);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/collate/transform/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/collate/transform/wchar_t/wrapped_locale.cc
+index e8b09e4..e7129a7 100644
+--- a/libstdc++-v3/testsuite/22_locale/collate/transform/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/collate/transform/wchar_t/wrapped_locale.cc
+@@ -2,7 +2,7 @@
+ // { dg-xfail-if "" { "*-*-hpux11.23" } { "*" } { "" } } */
+ // { dg-options "-finput-charset=ISO8859-1" }
+ // { dg-require-iconv "ISO8859-1" }
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "en_US" }
+ // { dg-require-namedlocale "fr_FR" }
+ // { dg-require-namedlocale "de_DE" }
+@@ -39,6 +39,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test02);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/ctype/cons/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/ctype/cons/char/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/ctype/cons/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/ctype/cons/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/ctype/is/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/ctype/is/char/wrapped_locale.cc
+index 4ca4984..7b756af 100644
+--- a/libstdc++-v3/testsuite/22_locale/ctype/is/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/ctype/is/char/wrapped_locale.cc
+@@ -1,5 +1,5 @@
+ // { dg-require-namedlocale "de_DE" }
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -43,6 +43,6 @@ int main()
+   two.push_back(&test01);
+   two.push_back(&test02);
+   two.push_back(&test03);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/ctype/is/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/ctype/is/wchar_t/wrapped_locale.cc
+index d4ff1a4..c029332 100644
+--- a/libstdc++-v3/testsuite/22_locale/ctype/is/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/ctype/is/wchar_t/wrapped_locale.cc
+@@ -1,5 +1,5 @@
+ // { dg-require-namedlocale "de_DE" }
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -38,6 +38,6 @@ int main()
+   func_callback two;
+   two.push_back(&test01);
+   two.push_back(&test02);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/ctype/narrow/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/ctype/narrow/char/wrapped_locale.cc
+index 303275c..81ca5a2 100644
+--- a/libstdc++-v3/testsuite/22_locale/ctype/narrow/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/ctype/narrow/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -37,6 +37,6 @@ int main()
+   func_callback two;
+   two.push_back(&test01);
+   two.push_back(&test02);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/ctype/narrow/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/ctype/narrow/wchar_t/wrapped_locale.cc
+index 3ae613f..2c45f99 100644
+--- a/libstdc++-v3/testsuite/22_locale/ctype/narrow/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/ctype/narrow/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -37,6 +37,6 @@ int main()
+   func_callback two;
+   two.push_back(&test01);
+   two.push_back(&test02);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/ctype/scan/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/ctype/scan/char/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/ctype/scan/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/ctype/scan/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/ctype/scan/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/ctype/scan/wchar_t/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/ctype/scan/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/ctype/scan/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/ctype/to/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/ctype/to/char/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/ctype/to/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/ctype/to/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/ctype/to/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/ctype/to/wchar_t/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/ctype/to/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/ctype/to/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/ctype/widen/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/ctype/widen/char/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/ctype/widen/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/ctype/widen/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/ctype/widen/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/ctype/widen/wchar_t/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/ctype/widen/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/ctype/widen/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/locale/cons/40184.cc b/libstdc++-v3/testsuite/22_locale/locale/cons/40184.cc
+index 2445e43..c181fec 100644
+--- a/libstdc++-v3/testsuite/22_locale/locale/cons/40184.cc
++++ b/libstdc++-v3/testsuite/22_locale/locale/cons/40184.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // Copyright (C) 2009 Free Software Foundation
+ //
+@@ -29,7 +29,7 @@ void test01()
+   using namespace std;
+   bool test __attribute__((unused)) = true;
+ 
+-  locale locf(locale("C"), "ja_JP.eucjp", locale::monetary);
++  locale locf(locale("C"), "ja_JP.eucJP", locale::monetary);
+ 
+   const moneypunct<wchar_t, false>& mpf = 
+     use_facet<moneypunct<wchar_t, false> >(locf);
+@@ -40,7 +40,7 @@ void test01()
+ 
+   VERIFY( mpf.curr_symbol() == mpf_copy.curr_symbol() );
+ 
+-  locale loct(locale("C"), "ja_JP.eucjp", locale::monetary);
++  locale loct(locale("C"), "ja_JP.eucJP", locale::monetary);
+ 
+   const moneypunct<wchar_t, true>& mpt = 
+     use_facet<moneypunct<wchar_t, true> >(loct);
+diff --git a/libstdc++-v3/testsuite/22_locale/messages/members/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/messages/members/char/wrapped_locale.cc
+index 8e60edf..68e1539 100644
+--- a/libstdc++-v3/testsuite/22_locale/messages/members/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/messages/members/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE" }
+ // { dg-require-namedlocale "fr_FR" }
+ // { dg-require-namedlocale "en_US" }
+@@ -45,6 +45,6 @@ int main()
+   two.push_back(&test01);
+   two.push_back(&test02);
+   two.push_back(&test03);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/money_get/get/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/money_get/get/char/wrapped_locale.cc
+index 795271f..24c9d4c 100644
+--- a/libstdc++-v3/testsuite/22_locale/money_get/get/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/money_get/get/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE@euro" }
+ // { dg-require-namedlocale "en_HK" }
+ 
+@@ -69,6 +69,6 @@ int main()
+   two.push_back(&test06);
+   two.push_back(&test07);
+   two.push_back(&test08);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/money_get/get/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/money_get/get/wchar_t/wrapped_locale.cc
+index 795271f..24c9d4c 100644
+--- a/libstdc++-v3/testsuite/22_locale/money_get/get/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/money_get/get/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE@euro" }
+ // { dg-require-namedlocale "en_HK" }
+ 
+@@ -69,6 +69,6 @@ int main()
+   two.push_back(&test06);
+   two.push_back(&test07);
+   two.push_back(&test08);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/money_put/put/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/money_put/put/char/wrapped_locale.cc
+index b160fb7..843c9af 100644
+--- a/libstdc++-v3/testsuite/22_locale/money_put/put/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/money_put/put/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE@euro" }
+ // { dg-require-namedlocale "en_HK" }
+ 
+@@ -59,6 +59,6 @@ int main()
+   two.push_back(&test04);
+   two.push_back(&test05);
+   two.push_back(&test06);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/money_put/put/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/money_put/put/wchar_t/wrapped_locale.cc
+index b160fb7..843c9af 100644
+--- a/libstdc++-v3/testsuite/22_locale/money_put/put/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/money_put/put/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE@euro" }
+ // { dg-require-namedlocale "en_HK" }
+ 
+@@ -59,6 +59,6 @@ int main()
+   two.push_back(&test04);
+   two.push_back(&test05);
+   two.push_back(&test06);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/moneypunct/members/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/moneypunct/members/char/wrapped_locale.cc
+index 2c45660..82ca6ab 100644
+--- a/libstdc++-v3/testsuite/22_locale/moneypunct/members/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/moneypunct/members/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+@@ -38,6 +38,6 @@ int main()
+   func_callback two;
+   two.push_back(&test01);
+   two.push_back(&test02);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/moneypunct/members/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/moneypunct/members/wchar_t/wrapped_locale.cc
+index d4ff1a4..c029332 100644
+--- a/libstdc++-v3/testsuite/22_locale/moneypunct/members/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/moneypunct/members/wchar_t/wrapped_locale.cc
+@@ -1,5 +1,5 @@
+ // { dg-require-namedlocale "de_DE" }
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -38,6 +38,6 @@ int main()
+   func_callback two;
+   two.push_back(&test01);
+   two.push_back(&test02);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/num_get/get/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/num_get/get/char/wrapped_locale.cc
+index 6f937a9..6ecb526 100644
+--- a/libstdc++-v3/testsuite/22_locale/num_get/get/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/num_get/get/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE" }
+ // { dg-require-namedlocale "en_HK" }
+ 
+@@ -59,6 +59,6 @@ int main()
+   two.push_back(&test04);
+   two.push_back(&test05);
+   two.push_back(&test06);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/num_get/get/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/num_get/get/wchar_t/wrapped_locale.cc
+index 6f937a9..6ecb526 100644
+--- a/libstdc++-v3/testsuite/22_locale/num_get/get/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/num_get/get/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE" }
+ // { dg-require-namedlocale "en_HK" }
+ 
+@@ -59,6 +59,6 @@ int main()
+   two.push_back(&test04);
+   two.push_back(&test05);
+   two.push_back(&test06);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/num_put/put/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/num_put/put/char/wrapped_locale.cc
+index 867992f..1e949e8 100644
+--- a/libstdc++-v3/testsuite/22_locale/num_put/put/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/num_put/put/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE" }
+ // { dg-require-namedlocale "en_HK" }
+ // { dg-require-namedlocale "es_ES" }
+@@ -55,6 +55,6 @@ int main()
+   two.push_back(&test03);
+   two.push_back(&test04);
+   two.push_back(&test05);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/num_put/put/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/num_put/put/wchar_t/wrapped_locale.cc
+index d85c72a..87486c4 100644
+--- a/libstdc++-v3/testsuite/22_locale/num_put/put/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/num_put/put/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE" }
+ // { dg-require-namedlocale "en_HK" }
+ 
+@@ -54,6 +54,6 @@ int main()
+   two.push_back(&test03);
+   two.push_back(&test04);
+   two.push_back(&test05);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/numpunct/members/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/numpunct/members/char/wrapped_locale.cc
+index 4fb0787..52fcad3 100644
+--- a/libstdc++-v3/testsuite/22_locale/numpunct/members/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/numpunct/members/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE" }
+ // { dg-require-namedlocale "en_US" }
+ // { dg-require-namedlocale "is_IS" }
+@@ -40,6 +40,6 @@ int main()
+   func_callback two;
+   two.push_back(&test01);
+   two.push_back(&test02);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/numpunct/members/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/numpunct/members/wchar_t/wrapped_locale.cc
+index 4fb0787..52fcad3 100644
+--- a/libstdc++-v3/testsuite/22_locale/numpunct/members/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/numpunct/members/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE" }
+ // { dg-require-namedlocale "en_US" }
+ // { dg-require-namedlocale "is_IS" }
+@@ -40,6 +40,6 @@ int main()
+   func_callback two;
+   two.push_back(&test01);
+   two.push_back(&test02);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/time_get/date_order/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/time_get/date_order/char/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/time_get/date_order/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/time_get/date_order/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/time_get/date_order/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/time_get/date_order/wchar_t/wrapped_locale.cc
+index ac0fccc..092fce7 100644
+--- a/libstdc++-v3/testsuite/22_locale/time_get/date_order/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/time_get/date_order/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -32,6 +32,6 @@ int main()
+   using namespace __gnu_test;
+   func_callback two;
+   two.push_back(&test01);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/time_get/get_date/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/time_get/get_date/char/wrapped_locale.cc
+index a4edc45..63b06d8 100644
+--- a/libstdc++-v3/testsuite/22_locale/time_get/get_date/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/time_get/get_date/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE" }
+ // { dg-require-namedlocale "en_HK" }
+ 
+@@ -44,6 +44,6 @@ int main()
+   two.push_back(&test01);
+   two.push_back(&test02);
+   two.push_back(&test03);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/time_get/get_date/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/time_get/get_date/wchar_t/wrapped_locale.cc
+index a4edc45..63b06d8 100644
+--- a/libstdc++-v3/testsuite/22_locale/time_get/get_date/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/time_get/get_date/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE" }
+ // { dg-require-namedlocale "en_HK" }
+ 
+@@ -44,6 +44,6 @@ int main()
+   two.push_back(&test01);
+   two.push_back(&test02);
+   two.push_back(&test03);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/time_get/get_monthname/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/time_get/get_monthname/char/wrapped_locale.cc
+index a4edc45..63b06d8 100644
+--- a/libstdc++-v3/testsuite/22_locale/time_get/get_monthname/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/time_get/get_monthname/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE" }
+ // { dg-require-namedlocale "en_HK" }
+ 
+@@ -44,6 +44,6 @@ int main()
+   two.push_back(&test01);
+   two.push_back(&test02);
+   two.push_back(&test03);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/time_get/get_monthname/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/time_get/get_monthname/wchar_t/wrapped_locale.cc
+index a4edc45..63b06d8 100644
+--- a/libstdc++-v3/testsuite/22_locale/time_get/get_monthname/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/time_get/get_monthname/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE" }
+ // { dg-require-namedlocale "en_HK" }
+ 
+@@ -44,6 +44,6 @@ int main()
+   two.push_back(&test01);
+   two.push_back(&test02);
+   two.push_back(&test03);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/time_get/get_time/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/time_get/get_time/char/wrapped_locale.cc
+index a4edc45..63b06d8 100644
+--- a/libstdc++-v3/testsuite/22_locale/time_get/get_time/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/time_get/get_time/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE" }
+ // { dg-require-namedlocale "en_HK" }
+ 
+@@ -44,6 +44,6 @@ int main()
+   two.push_back(&test01);
+   two.push_back(&test02);
+   two.push_back(&test03);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/time_get/get_time/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/time_get/get_time/wchar_t/wrapped_locale.cc
+index a4edc45..63b06d8 100644
+--- a/libstdc++-v3/testsuite/22_locale/time_get/get_time/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/time_get/get_time/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE" }
+ // { dg-require-namedlocale "en_HK" }
+ 
+@@ -44,6 +44,6 @@ int main()
+   two.push_back(&test01);
+   two.push_back(&test02);
+   two.push_back(&test03);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/time_get/get_weekday/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/time_get/get_weekday/char/wrapped_locale.cc
+index a4edc45..63b06d8 100644
+--- a/libstdc++-v3/testsuite/22_locale/time_get/get_weekday/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/time_get/get_weekday/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ // { dg-require-namedlocale "de_DE" }
+ // { dg-require-namedlocale "en_HK" }
+ 
+@@ -44,6 +44,6 @@ int main()
+   two.push_back(&test01);
+   two.push_back(&test02);
+   two.push_back(&test03);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/time_get/get_weekday/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/time_get/get_weekday/wchar_t/wrapped_locale.cc
+index 610c7db..7dac32e 100644
+--- a/libstdc++-v3/testsuite/22_locale/time_get/get_weekday/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/time_get/get_weekday/wchar_t/wrapped_locale.cc
+@@ -1,6 +1,6 @@
+ // { dg-require-namedlocale "en_HK" }
+ // { dg-require-namedlocale "de_DE" }
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -44,6 +44,6 @@ int main()
+   two.push_back(&test01);
+   two.push_back(&test02);
+   two.push_back(&test03);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/time_get/get_year/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/time_get/get_year/char/wrapped_locale.cc
+index 45dda12..49716ce 100644
+--- a/libstdc++-v3/testsuite/22_locale/time_get/get_year/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/time_get/get_year/char/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -37,6 +37,6 @@ int main()
+   func_callback two;
+   two.push_back(&test01);
+   two.push_back(&test03);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/time_get/get_year/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/time_get/get_year/wchar_t/wrapped_locale.cc
+index 45dda12..49716ce 100644
+--- a/libstdc++-v3/testsuite/22_locale/time_get/get_year/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/time_get/get_year/wchar_t/wrapped_locale.cc
+@@ -1,4 +1,4 @@
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -37,6 +37,6 @@ int main()
+   func_callback two;
+   two.push_back(&test01);
+   two.push_back(&test03);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/time_put/put/char/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/time_put/put/char/wrapped_locale.cc
+index 4128ef4..9e92e64 100644
+--- a/libstdc++-v3/testsuite/22_locale/time_put/put/char/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/time_put/put/char/wrapped_locale.cc
+@@ -80,6 +80,6 @@ int main()
+   two.push_back(&test08);
+   two.push_back(&test09);
+   two.push_back(&test10);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
+diff --git a/libstdc++-v3/testsuite/22_locale/time_put/put/wchar_t/wrapped_locale.cc b/libstdc++-v3/testsuite/22_locale/time_put/put/wchar_t/wrapped_locale.cc
+index a998999..12dff1e 100644
+--- a/libstdc++-v3/testsuite/22_locale/time_put/put/wchar_t/wrapped_locale.cc
++++ b/libstdc++-v3/testsuite/22_locale/time_put/put/wchar_t/wrapped_locale.cc
+@@ -2,7 +2,7 @@
+ // { dg-require-namedlocale "en_HK" }
+ // { dg-require-namedlocale "es_ES" }
+ // { dg-require-namedlocale "fr_FR@euro" }
+-// { dg-require-namedlocale "ja_JP.eucjp" }
++// { dg-require-namedlocale "ja_JP.eucJP" }
+ 
+ // 2001-08-15 Benjamin Kosnik  <bkoz@redhat.com>
+ 
+@@ -81,6 +81,6 @@ int main()
+   two.push_back(&test08);
+   two.push_back(&test09);
+   two.push_back(&test10);
+-  run_tests_wrapped_locale("ja_JP.eucjp", two);
++  run_tests_wrapped_locale("ja_JP.eucJP", two);
+   return 0;
+ }
