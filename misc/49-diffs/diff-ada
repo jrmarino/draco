@@ -689,7 +689,7 @@
     ---------------------------
 --- /dev/null
 +++ gcc/ada/g-socthi-bsd.adb
-@@ -0,0 +1,376 @@
+@@ -0,0 +1,361 @@
 +------------------------------------------------------------------------------
 +--                                                                          --
 +--                         GNAT COMPILER COMPONENTS                         --
@@ -698,7 +698,7 @@
 +--                                                                          --
 +--                                 B o d y                                  --
 +--                                                                          --
-+--                     Copyright (C) 2001-2010, AdaCore                     --
++--                     Copyright (C) 2001-2012, AdaCore                     --
 +--                                                                          --
 +-- GNAT is free software;  you can  redistribute it  and/or modify it under --
 +-- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -853,12 +853,11 @@
 +      Addr    : System.Address;
 +      Addrlen : not null access C.int) return C.int
 +   is
-+      Res : constant C.int := Syscall_Accept (S, Addr, Addrlen);
++      R : constant C.int := Syscall_Accept (S, Addr, Addrlen);
 +   begin
 +
-+      Disable_SIGPIPE (Res);
-+      return Res;
-+
++      Disable_SIGPIPE (R);
++      return R;
 +   end C_Accept;
 +
 +   ---------------
@@ -871,9 +870,7 @@
 +      Namelen : C.int) return C.int
 +   is
 +   begin
-+
 +      return Syscall_Connect (S, Name, Namelen);
-+
 +   end C_Connect;
 +
 +   ------------------
@@ -882,29 +879,29 @@
 +
 +   function Socket_Ioctl
 +     (S   : C.int;
-+      Req : C.int;
++      Req : SOSC.IOCTL_Req_T;
 +      Arg : access C.int) return C.int
 +   is
-+      --  Currently all requests are of the FIONBIO type, so always calc flags
-+      use Interfaces;
-+      flags    : constant Unsigned_32 :=
-+                          Unsigned_32 (C_Fcntl (S, SOSC.F_GETFL, 0));
-+      nonblock : constant Unsigned_32 := Unsigned_32 (SOSC.FNDELAY);
-+      enabled  : constant Boolean := Arg.all = 1;
-+      newval   : C.int;
 +   begin
 +      if Req = SOSC.FIONBIO then
-+         if enabled then
-+            newval := C.int (flags or nonblock);
-+         elsif (flags and nonblock) > 0 then
-+            newval := C.int (flags - nonblock);
-+         else
-+            newval := C.int (flags);
-+         end if;
-+         return C_Fcntl (Fd => S, Cmd => SOSC.F_SETFL, Val => newval);
-+      else
-+         return C_Ioctl (Fd => S, Req => Req, Arg => Arg);
++         declare
++            use Interfaces;
++            flags    : constant Unsigned_32 :=
++                                Unsigned_32 (C_Fcntl (S, SOSC.F_GETFL, 0));
++            nonblock : constant Unsigned_32 := Unsigned_32 (SOSC.FNDELAY);
++            enabled  : constant Boolean := Arg.all = 1;
++            newval   : C.int := C.int (flags);
++         begin
++            if enabled then
++               newval := C.int (flags or nonblock);
++            elsif (flags and nonblock) > 0 then
++               newval := C.int (flags - nonblock);
++            end if;
++            return C_Fcntl (Fd => S, Cmd => SOSC.F_SETFL, Val => newval);
++         end;
 +      end if;
++
++      return C_Ioctl (S, Req, Arg);
 +   end Socket_Ioctl;
 +
 +   ------------
@@ -918,9 +915,7 @@
 +      Flags : C.int) return C.int
 +   is
 +   begin
-+
 +      return Syscall_Recv (S, Msg, Len, Flags);
-+
 +   end C_Recv;
 +
 +   ----------------
@@ -936,9 +931,7 @@
 +      Fromlen : not null access C.int) return C.int
 +   is
 +   begin
-+
 +      return Syscall_Recvfrom (S, Msg, Len, Flags, From, Fromlen);
-+
 +   end C_Recvfrom;
 +
 +   ---------------
@@ -951,9 +944,7 @@
 +      Flags : C.int) return System.CRTL.ssize_t
 +   is
 +   begin
-+
 +      return  Syscall_Recvmsg (S, Msg, Flags);
-+
 +   end C_Recvmsg;
 +
 +   ---------------
@@ -966,9 +957,7 @@
 +      Flags : C.int) return System.CRTL.ssize_t
 +   is
 +   begin
-+
 +      return Syscall_Sendmsg (S, Msg, Flags);
-+
 +   end C_Sendmsg;
 +
 +   --------------
@@ -984,9 +973,7 @@
 +      Tolen : C.int) return C.int
 +   is
 +   begin
-+
 +      return Syscall_Sendto (S, Msg, Len, Flags, To, Tolen);
-+
 +   end C_Sendto;
 +
 +   --------------
@@ -998,12 +985,10 @@
 +      Typ      : C.int;
 +      Protocol : C.int) return C.int
 +   is
-+      Res : constant C.int := Syscall_Socket (Domain, Typ, Protocol);
++      R : constant C.int := Syscall_Socket (Domain, Typ, Protocol);
 +   begin
-+
-+      Disable_SIGPIPE (Res);
-+      return Res;
-+
++      Disable_SIGPIPE (R);
++      return R;
 +   end C_Socket;
 +
 +   --------------
@@ -1068,7 +1053,7 @@
 +end GNAT.Sockets.Thin;
 --- /dev/null
 +++ gcc/ada/g-socthi-netbsd.adb
-@@ -0,0 +1,378 @@
+@@ -0,0 +1,363 @@
 +------------------------------------------------------------------------------
 +--                                                                          --
 +--                         GNAT COMPILER COMPONENTS                         --
@@ -1077,7 +1062,7 @@
 +--                                                                          --
 +--                                 B o d y                                  --
 +--                                                                          --
-+--                     Copyright (C) 2001-2010, AdaCore                     --
++--                     Copyright (C) 2001-2012, AdaCore                     --
 +--                                                                          --
 +-- GNAT is free software;  you can  redistribute it  and/or modify it under --
 +-- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -1234,12 +1219,11 @@
 +      Addr    : System.Address;
 +      Addrlen : not null access C.int) return C.int
 +   is
-+      Res : constant C.int := Syscall_Accept (S, Addr, Addrlen);
++      R : constant C.int := Syscall_Accept (S, Addr, Addrlen);
 +   begin
 +
-+      Disable_SIGPIPE (Res);
-+      return Res;
-+
++      Disable_SIGPIPE (R);
++      return R;
 +   end C_Accept;
 +
 +   ---------------
@@ -1252,9 +1236,7 @@
 +      Namelen : C.int) return C.int
 +   is
 +   begin
-+
 +      return Syscall_Connect (S, Name, Namelen);
-+
 +   end C_Connect;
 +
 +   ------------------
@@ -1263,29 +1245,29 @@
 +
 +   function Socket_Ioctl
 +     (S   : C.int;
-+      Req : C.int;
++      Req : SOSC.IOCTL_Req_T;
 +      Arg : access C.int) return C.int
 +   is
-+      --  Currently all requests are of the FIONBIO type, so always calc flags
-+      use Interfaces;
-+      flags    : constant Unsigned_32 :=
-+                          Unsigned_32 (C_Fcntl (S, SOSC.F_GETFL, 0));
-+      nonblock : constant Unsigned_32 := Unsigned_32 (SOSC.FNDELAY);
-+      enabled  : constant Boolean := Arg.all = 1;
-+      newval   : C.int;
 +   begin
 +      if Req = SOSC.FIONBIO then
-+         if enabled then
-+            newval := C.int (flags or nonblock);
-+         elsif (flags and nonblock) > 0 then
-+            newval := C.int (flags - nonblock);
-+         else
-+            newval := C.int (flags);
-+         end if;
-+         return C_Fcntl (Fd => S, Cmd => SOSC.F_SETFL, Val => newval);
-+      else
-+         return C_Ioctl (Fd => S, Req => Req, Arg => Arg);
++         declare
++            use Interfaces;
++            flags    : constant Unsigned_32 :=
++                                Unsigned_32 (C_Fcntl (S, SOSC.F_GETFL, 0));
++            nonblock : constant Unsigned_32 := Unsigned_32 (SOSC.FNDELAY);
++            enabled  : constant Boolean := Arg.all = 1;
++            newval   : C.int := C.int (flags);
++         begin
++            if enabled then
++               newval := C.int (flags or nonblock);
++            elsif (flags and nonblock) > 0 then
++               newval := C.int (flags - nonblock);
++            end if;
++            return C_Fcntl (Fd => S, Cmd => SOSC.F_SETFL, Val => newval);
++         end;
 +      end if;
++
++      return C_Ioctl (S, Req, Arg);
 +   end Socket_Ioctl;
 +
 +   ------------
@@ -1299,9 +1281,7 @@
 +      Flags : C.int) return C.int
 +   is
 +   begin
-+
 +      return Syscall_Recv (S, Msg, Len, Flags);
-+
 +   end C_Recv;
 +
 +   ----------------
@@ -1317,9 +1297,7 @@
 +      Fromlen : not null access C.int) return C.int
 +   is
 +   begin
-+
 +      return Syscall_Recvfrom (S, Msg, Len, Flags, From, Fromlen);
-+
 +   end C_Recvfrom;
 +
 +   ---------------
@@ -1332,9 +1310,7 @@
 +      Flags : C.int) return System.CRTL.ssize_t
 +   is
 +   begin
-+
 +      return  Syscall_Recvmsg (S, Msg, Flags);
-+
 +   end C_Recvmsg;
 +
 +   ---------------
@@ -1347,9 +1323,7 @@
 +      Flags : C.int) return System.CRTL.ssize_t
 +   is
 +   begin
-+
 +      return Syscall_Sendmsg (S, Msg, Flags);
-+
 +   end C_Sendmsg;
 +
 +   --------------
@@ -1365,9 +1339,7 @@
 +      Tolen : C.int) return C.int
 +   is
 +   begin
-+
 +      return Syscall_Sendto (S, Msg, Len, Flags, To, Tolen);
-+
 +   end C_Sendto;
 +
 +   --------------
@@ -1379,12 +1351,10 @@
 +      Typ      : C.int;
 +      Protocol : C.int) return C.int
 +   is
-+      Res : constant C.int := Syscall_Socket (Domain, Typ, Protocol);
++      R : constant C.int := Syscall_Socket (Domain, Typ, Protocol);
 +   begin
-+
-+      Disable_SIGPIPE (Res);
-+      return Res;
-+
++      Disable_SIGPIPE (R);
++      return R;
 +   end C_Socket;
 +
 +   --------------
@@ -1458,7 +1428,7 @@
 +--                                                                          --
 +--                                 S p e c                                  --
 +--                                                                          --
-+--                     Copyright (C) 2001-2010, AdaCore                     --
++--                     Copyright (C) 2001-2012, AdaCore                     --
 +--                                                                          --
 +-- GNAT is free software;  you can  redistribute it  and/or modify it under --
 +-- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -1572,7 +1542,7 @@
 +
 +   function Socket_Ioctl
 +     (S   : C.int;
-+      Req : C.int;
++      Req : SOSC.IOCTL_Req_T;
 +      Arg : access C.int) return C.int;
 +
 +   function C_Listen
@@ -9133,7 +9103,7 @@
 +endif
 +
 +# x86 DragonFly
-+ifeq ($(strip $(filter-out %86 dragonfly%,$(arch) $(osys))),)
++ifeq ($(strip $(filter-out %86 dragonfly%,$(target_cpu) $(target_os))),)
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-exetim.adb<a-exetim-posix.adb \
 +  a-exetim.ads<a-exetim-default.ads \
@@ -9168,7 +9138,7 @@
 +endif
 +
 +# x86_64 DragonFly
-+ifeq ($(strip $(filter-out x86_64 dragonfly%,$(arch) $(osys))),)
++ifeq ($(strip $(filter-out x86_64 dragonfly%,$(target_cpu) $(target_os))),)
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-exetim.adb<a-exetim-posix.adb \
 +  a-exetim.ads<a-exetim-default.ads \
@@ -9202,7 +9172,7 @@
  endif
  
 +# x86 OpenBSD
-+ifeq ($(strip $(filter-out %86 openbsd%,$(arch) $(osys))),)
++ifeq ($(strip $(filter-out %86 openbsd%,$(target_cpu) $(target_os))),)
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-exetim.adb<a-exetim-posix.adb \
 +  a-exetim.ads<a-exetim-default.ads \
@@ -9237,7 +9207,7 @@
 +endif
 +
 +# x86_64 OpenBSD
-+ifeq ($(strip $(filter-out x86_64 openbsd%,$(arch) $(osys))),)
++ifeq ($(strip $(filter-out x86_64 openbsd%,$(target_cpu) $(target_os))),)
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-exetim.adb<a-exetim-posix.adb \
 +  a-exetim.ads<a-exetim-default.ads \
@@ -9272,7 +9242,7 @@
 +endif
 +
 +# x86 NetBSD (5+ only)
-+ifeq ($(strip $(filter-out %86 netbsd%,$(arch) $(osys))),)
++ifeq ($(strip $(filter-out %86 netbsd%,$(target_cpu) $(target_os))),)
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-exetim.adb<a-exetim-posix.adb \
 +  a-exetim.ads<a-exetim-default.ads \
@@ -9290,7 +9260,7 @@
 +  $(X86_TARGET_PAIRS) \
 +  system.ads<system-netbsd-x86.ads
 +
-+  ifeq ($(strip $(filter-out %86 netbsdelf5%,$(arch) $(osys))),)
++  ifeq ($(strip $(filter-out %86 netbsdelf5%,$(target_cpu) $(target_os))),)
 +    LIBGNAT_TARGET_PAIRS+= \
 +    s-osinte.ads<s-osinte-netbsd.ads \
 +    s-osprim.adb<s-osprim-bsd32.adb
@@ -9316,7 +9286,7 @@
 +endif
 +
 +# x86_64 NetBSD (5+ only)
-+ifeq ($(strip $(filter-out x86_64 netbsd%,$(arch) $(osys))),)
++ifeq ($(strip $(filter-out x86_64 netbsd%,$(target_cpu) $(target_os))),)
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-exetim.adb<a-exetim-posix.adb \
 +  a-exetim.ads<a-exetim-default.ads \
@@ -9334,7 +9304,7 @@
 +  $(X86_64_TARGET_PAIRS) \
 +  system.ads<system-netbsd-x86_64.ads
 +
-+  ifeq ($(strip $(filter-out x86_64 netbsd5%,$(arch) $(osys))),)
++  ifeq ($(strip $(filter-out x86_64 netbsd5%,$(target_cpu) $(target_os))),)
 +    LIBGNAT_TARGET_PAIRS+= \
 +    s-osinte.ads<s-osinte-netbsd.ads \
 +    s-osprim.adb<s-osprim-bsd32.adb
@@ -9360,7 +9330,7 @@
 +endif
 +
 +# Android (ARM)
-+ifeq ($(strip $(filter-out arm% android eabi,$(targ))),)
++ifeq ($(strip $(filter-out arm% android eabi,$(target_cpu))),)
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-intnam.ads<a-intnam-linux.ads \
 +  s-inmaop.adb<s-inmaop-posix.adb \
@@ -9376,7 +9346,7 @@
 +  s-taspri.ads<s-taspri-posix-noaltstack.ads \
 +  s-tpopsp.adb<s-tpopsp-posix-foreign.adb
 +
-+  ifeq ($(strip $(filter-out arm%b,$(arch))),)
++  ifeq ($(strip $(filter-out arm%b,$(target_cpu))),)
 +    LIBGNAT_TARGET_PAIRS += \
 +    system.ads<system-linux-armeb.ads
 +  else

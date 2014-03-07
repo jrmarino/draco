@@ -93,7 +93,7 @@
 +endif
 +
 +# x86 DragonFly
-+ifeq ($(strip $(filter-out %86 dragonfly%,$(arch) $(osys))),)
++ifeq ($(strip $(filter-out %86 dragonfly%,$(target_cpu) $(target_os))),)
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-exetim.adb<a-exetim-posix.adb \
 +  a-exetim.ads<a-exetim-default.ads \
@@ -128,7 +128,7 @@
 +endif
 +
 +# x86_64 DragonFly
-+ifeq ($(strip $(filter-out x86_64 dragonfly%,$(arch) $(osys))),)
++ifeq ($(strip $(filter-out x86_64 dragonfly%,$(target_cpu) $(target_os))),)
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-exetim.adb<a-exetim-posix.adb \
 +  a-exetim.ads<a-exetim-default.ads \
@@ -162,7 +162,7 @@
  endif
  
 +# x86 OpenBSD
-+ifeq ($(strip $(filter-out %86 openbsd%,$(arch) $(osys))),)
++ifeq ($(strip $(filter-out %86 openbsd%,$(target_cpu) $(target_os))),)
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-exetim.adb<a-exetim-posix.adb \
 +  a-exetim.ads<a-exetim-default.ads \
@@ -197,7 +197,7 @@
 +endif
 +
 +# x86_64 OpenBSD
-+ifeq ($(strip $(filter-out x86_64 openbsd%,$(arch) $(osys))),)
++ifeq ($(strip $(filter-out x86_64 openbsd%,$(target_cpu) $(target_os))),)
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-exetim.adb<a-exetim-posix.adb \
 +  a-exetim.ads<a-exetim-default.ads \
@@ -232,7 +232,7 @@
 +endif
 +
 +# x86 NetBSD (5+ only)
-+ifeq ($(strip $(filter-out %86 netbsd%,$(arch) $(osys))),)
++ifeq ($(strip $(filter-out %86 netbsd%,$(target_cpu) $(target_os))),)
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-exetim.adb<a-exetim-posix.adb \
 +  a-exetim.ads<a-exetim-default.ads \
@@ -250,7 +250,7 @@
 +  $(X86_TARGET_PAIRS) \
 +  system.ads<system-netbsd-x86.ads
 +
-+  ifeq ($(strip $(filter-out %86 netbsdelf5%,$(arch) $(osys))),)
++  ifeq ($(strip $(filter-out %86 netbsdelf5%,$(target_cpu) $(target_os))),)
 +    LIBGNAT_TARGET_PAIRS+= \
 +    s-osinte.ads<s-osinte-netbsd.ads \
 +    s-osprim.adb<s-osprim-bsd32.adb
@@ -276,7 +276,7 @@
 +endif
 +
 +# x86_64 NetBSD (5+ only)
-+ifeq ($(strip $(filter-out x86_64 netbsd%,$(arch) $(osys))),)
++ifeq ($(strip $(filter-out x86_64 netbsd%,$(target_cpu) $(target_os))),)
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-exetim.adb<a-exetim-posix.adb \
 +  a-exetim.ads<a-exetim-default.ads \
@@ -294,7 +294,7 @@
 +  $(X86_64_TARGET_PAIRS) \
 +  system.ads<system-netbsd-x86_64.ads
 +
-+  ifeq ($(strip $(filter-out x86_64 netbsd5%,$(arch) $(osys))),)
++  ifeq ($(strip $(filter-out x86_64 netbsd5%,$(target_cpu) $(target_os))),)
 +    LIBGNAT_TARGET_PAIRS+= \
 +    s-osinte.ads<s-osinte-netbsd.ads \
 +    s-osprim.adb<s-osprim-bsd32.adb
@@ -320,7 +320,7 @@
 +endif
 +
 +# Android (ARM)
-+ifeq ($(strip $(filter-out arm% android eabi,$(targ))),)
++ifeq ($(strip $(filter-out arm% android eabi,$(target_cpu))),)
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-intnam.ads<a-intnam-linux.ads \
 +  s-inmaop.adb<s-inmaop-posix.adb \
@@ -336,7 +336,7 @@
 +  s-taspri.ads<s-taspri-posix-noaltstack.ads \
 +  s-tpopsp.adb<s-tpopsp-posix-foreign.adb
 +
-+  ifeq ($(strip $(filter-out arm%b,$(arch))),)
++  ifeq ($(strip $(filter-out arm%b,$(target_cpu))),)
 +    LIBGNAT_TARGET_PAIRS += \
 +    system.ads<system-linux-armeb.ads
 +  else

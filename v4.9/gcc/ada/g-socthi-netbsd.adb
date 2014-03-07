@@ -6,7 +6,7 @@
 --                                                                          --
 --                                 B o d y                                  --
 --                                                                          --
---                     Copyright (C) 2001-2010, AdaCore                     --
+--                     Copyright (C) 2001-2012, AdaCore                     --
 --                                                                          --
 -- GNAT is free software;  you can  redistribute it  and/or modify it under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -163,12 +163,11 @@ package body GNAT.Sockets.Thin is
       Addr    : System.Address;
       Addrlen : not null access C.int) return C.int
    is
-      Res : constant C.int := Syscall_Accept (S, Addr, Addrlen);
+      R : constant C.int := Syscall_Accept (S, Addr, Addrlen);
    begin
 
-      Disable_SIGPIPE (Res);
-      return Res;
-
+      Disable_SIGPIPE (R);
+      return R;
    end C_Accept;
 
    ---------------
@@ -181,9 +180,7 @@ package body GNAT.Sockets.Thin is
       Namelen : C.int) return C.int
    is
    begin
-
       return Syscall_Connect (S, Name, Namelen);
-
    end C_Connect;
 
    ------------------
@@ -192,29 +189,29 @@ package body GNAT.Sockets.Thin is
 
    function Socket_Ioctl
      (S   : C.int;
-      Req : C.int;
+      Req : SOSC.IOCTL_Req_T;
       Arg : access C.int) return C.int
    is
-      --  Currently all requests are of the FIONBIO type, so always calc flags
-      use Interfaces;
-      flags    : constant Unsigned_32 :=
-                          Unsigned_32 (C_Fcntl (S, SOSC.F_GETFL, 0));
-      nonblock : constant Unsigned_32 := Unsigned_32 (SOSC.FNDELAY);
-      enabled  : constant Boolean := Arg.all = 1;
-      newval   : C.int;
    begin
       if Req = SOSC.FIONBIO then
-         if enabled then
-            newval := C.int (flags or nonblock);
-         elsif (flags and nonblock) > 0 then
-            newval := C.int (flags - nonblock);
-         else
-            newval := C.int (flags);
-         end if;
-         return C_Fcntl (Fd => S, Cmd => SOSC.F_SETFL, Val => newval);
-      else
-         return C_Ioctl (Fd => S, Req => Req, Arg => Arg);
+         declare
+            use Interfaces;
+            flags    : constant Unsigned_32 :=
+                                Unsigned_32 (C_Fcntl (S, SOSC.F_GETFL, 0));
+            nonblock : constant Unsigned_32 := Unsigned_32 (SOSC.FNDELAY);
+            enabled  : constant Boolean := Arg.all = 1;
+            newval   : C.int := C.int (flags);
+         begin
+            if enabled then
+               newval := C.int (flags or nonblock);
+            elsif (flags and nonblock) > 0 then
+               newval := C.int (flags - nonblock);
+            end if;
+            return C_Fcntl (Fd => S, Cmd => SOSC.F_SETFL, Val => newval);
+         end;
       end if;
+
+      return C_Ioctl (S, Req, Arg);
    end Socket_Ioctl;
 
    ------------
@@ -228,9 +225,7 @@ package body GNAT.Sockets.Thin is
       Flags : C.int) return C.int
    is
    begin
-
       return Syscall_Recv (S, Msg, Len, Flags);
-
    end C_Recv;
 
    ----------------
@@ -246,9 +241,7 @@ package body GNAT.Sockets.Thin is
       Fromlen : not null access C.int) return C.int
    is
    begin
-
       return Syscall_Recvfrom (S, Msg, Len, Flags, From, Fromlen);
-
    end C_Recvfrom;
 
    ---------------
@@ -261,9 +254,7 @@ package body GNAT.Sockets.Thin is
       Flags : C.int) return System.CRTL.ssize_t
    is
    begin
-
       return  Syscall_Recvmsg (S, Msg, Flags);
-
    end C_Recvmsg;
 
    ---------------
@@ -276,9 +267,7 @@ package body GNAT.Sockets.Thin is
       Flags : C.int) return System.CRTL.ssize_t
    is
    begin
-
       return Syscall_Sendmsg (S, Msg, Flags);
-
    end C_Sendmsg;
 
    --------------
@@ -294,9 +283,7 @@ package body GNAT.Sockets.Thin is
       Tolen : C.int) return C.int
    is
    begin
-
       return Syscall_Sendto (S, Msg, Len, Flags, To, Tolen);
-
    end C_Sendto;
 
    --------------
@@ -308,12 +295,10 @@ package body GNAT.Sockets.Thin is
       Typ      : C.int;
       Protocol : C.int) return C.int
    is
-      Res : constant C.int := Syscall_Socket (Domain, Typ, Protocol);
+      R : constant C.int := Syscall_Socket (Domain, Typ, Protocol);
    begin
-
-      Disable_SIGPIPE (Res);
-      return Res;
-
+      Disable_SIGPIPE (R);
+      return R;
    end C_Socket;
 
    --------------

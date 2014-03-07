@@ -49,24 +49,6 @@
  insn-preds.c: s-preds; @true
  tm-preds.h: s-preds-h; @true
  tm-constrs.h: s-constrs-h; @true
-@@ -2919,7 +2930,7 @@ $(build_htmldir)/gccinstall/index.html:
- 	DESTDIR=$(@D) \
- 	$(SHELL) $(srcdir)/doc/install.texi2html
- 
--MANFILES = doc/gcov.1 doc/cpp.1 doc/gcc.1 doc/gfdl.7 doc/gpl.7 doc/fsf-funding.7
-+MANFILES = doc/gcov.1 doc/cpp.1 doc/gcc.1
- 
- generated-manpages: man
- 
-@@ -3073,7 +3084,7 @@ maintainer-clean:
- # Install the driver last so that the window when things are
- # broken is small.
- install: install-common $(INSTALL_HEADERS) \
--    install-cpp install-man install-info install-@POSUB@ \
-+    install-cpp install-man install-@POSUB@ \
-     install-driver install-lto-wrapper install-gcc-ar
- 
- ifeq ($(enable_plugin),yes)
 @@ -3207,6 +3218,9 @@ install-driver: installdirs xgcc$(exeext
  	-rm -f $(DESTDIR)$(bindir)/$(target_noncanonical)-gcc-$(version)$(exeext)
  	-( cd $(DESTDIR)$(bindir) && \
@@ -77,15 +59,3 @@
  	-if [ ! -f gcc-cross$(exeext) ] ; then \
  	  rm -f $(DESTDIR)$(bindir)/$(target_noncanonical)-gcc-tmp$(exeext); \
  	  ( cd $(DESTDIR)$(bindir) && \
-@@ -3275,10 +3289,7 @@ install-html: $(HTMLS_BUILD) lang.instal
- install-man: lang.install-man \
- 	$(DESTDIR)$(man1dir)/$(GCC_INSTALL_NAME)$(man1ext) \
- 	$(DESTDIR)$(man1dir)/$(CPP_INSTALL_NAME)$(man1ext) \
--	$(DESTDIR)$(man1dir)/$(GCOV_INSTALL_NAME)$(man1ext) \
--	$(DESTDIR)$(man7dir)/fsf-funding$(man7ext) \
--	$(DESTDIR)$(man7dir)/gfdl$(man7ext) \
--	$(DESTDIR)$(man7dir)/gpl$(man7ext)
-+	$(DESTDIR)$(man1dir)/$(GCOV_INSTALL_NAME)$(man1ext)
- 
- $(DESTDIR)$(man7dir)/%$(man7ext): doc/%.7 installdirs
- 	-rm -f $@
