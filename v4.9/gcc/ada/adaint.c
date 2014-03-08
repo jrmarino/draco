@@ -3958,15 +3958,6 @@ __gnat_cpu_set (int cpu, size_t count ATTRIBUTE_UNUSED, cpu_set_t *set)
   CPU_SET (cpu - 1, set);
 }
 #endif /* !CPU_ALLOC */
-#ifdef __ANDROID__
-/* No-op, Android doesn't support pthread_rwlockattr_setkind_np, but we want
-   to use the s-taprop-linux.ads without modification */
-int __gnat_set_threadlock_kind (pthread_rwlockattr_t *attr ATTRIBUTE_UNUSED,
-    int pref ATTRIBUTE_UNUSED)
-{
-  return 0;
-}
-#endif /* __Android__ */
 #endif /* linux */
 
 /* Return the load address of the executable, or 0 if not known.  In the

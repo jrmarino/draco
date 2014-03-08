@@ -1,6 +1,6 @@
---- gnattools/configure.ac.orig	2014-01-27 03:18:29.000000000 -0500
+--- gnattools/configure.ac.orig	2014-03-08 04:49:08.000000000 -0500
 +++ gnattools/configure.ac
-@@ -79,10 +79,30 @@ case "${target}" in
+@@ -79,11 +79,27 @@ case "${target}" in
      mlib-tgt-specific.adb<mlib-tgt-specific-darwin.adb \
      indepsw.adb<indepsw-darwin.adb"
      ;;
@@ -13,7 +13,7 @@
      TOOLS_TARGET_PAIRS="\
      mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
      indepsw.adb<indepsw-gnu.adb"
-+    ;;
+     ;;
 +  *-*-netbsd*)
 +    TOOLS_TARGET_PAIRS="\
 +    mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
@@ -24,10 +24,7 @@
 +    mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
 +    indepsw.adb<indepsw-gnu.adb"
 +    ;;
-+  arm*-android_eabi)
-+    TOOLS_TARGET_PAIRS="\
-+    mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
-+    indepsw.adb<indepsw-gnu.adb"
-     ;;
++  # Next line covers arm*-*-linux-androideabi
    *-*-linux*)
      TOOLS_TARGET_PAIRS="\
+     mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
