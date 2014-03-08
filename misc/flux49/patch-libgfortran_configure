@@ -1,0 +1,11 @@
+--- libgfortran/configure.orig	2014-03-02 12:50:29.000000000 -0500
++++ libgfortran/configure
+@@ -26337,7 +26337,7 @@ $as_echo "#define SUPPORTS_WEAK 1" >>con
+ 
+   fi
+   case "$host" in
+-    *-*-darwin* | *-*-hpux* | *-*-cygwin* | *-*-mingw* )
++    *-*-darwin* | *-*-hpux* | *-*-cygwin* | *-*-mingw* | *-*-netbsd* )
+ 
+ $as_echo "#define GTHREAD_USE_WEAK 0" >>confdefs.h
+ 
