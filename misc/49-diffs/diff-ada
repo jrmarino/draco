@@ -445,7 +445,7 @@
 +end Ada.Interrupts.Names;
 --- gcc/ada/adaint.c.orig
 +++ gcc/ada/adaint.c
-@@ -1136,6 +1136,7 @@
+@@ -1144,6 +1144,7 @@
    strcpy (path, "GNAT-XXXXXX");
  
  #if (defined (__FreeBSD__) || defined (__NetBSD__) || defined (__OpenBSD__) \
@@ -453,7 +453,7 @@
    || defined (linux) || defined(__GLIBC__)) && !defined (__vxworks)
    return mkstemp (path);
  #elif defined (__Lynx__)
-@@ -1286,7 +1287,49 @@
+@@ -1310,7 +1311,49 @@
      free (pname);
    }
  
@@ -503,7 +503,7 @@
    || defined (__OpenBSD__) || defined(__GLIBC__)
  #define MAX_SAFE_PATH 1000
    char *tmpdir = getenv ("TMPDIR");
-@@ -2535,7 +2578,9 @@
+@@ -2562,7 +2605,9 @@
  {
    int cores = 1;
  
@@ -514,7 +514,7 @@
    cores = (int) sysconf (_SC_NPROCESSORS_ONLN);
  
  #elif defined (__hpux__)
-@@ -3581,35 +3626,6 @@
+@@ -3608,35 +3653,6 @@
  }
  #endif
  
@@ -650,7 +650,7 @@
     ---------------------------
 --- /dev/null
 +++ gcc/ada/g-socthi-bsd.adb
-@@ -0,0 +1,361 @@
+@@ -0,0 +1,356 @@
 +------------------------------------------------------------------------------
 +--                                                                          --
 +--                         GNAT COMPILER COMPONENTS                         --
@@ -659,7 +659,7 @@
 +--                                                                          --
 +--                                 B o d y                                  --
 +--                                                                          --
-+--                     Copyright (C) 2001-2012, AdaCore                     --
++--                     Copyright (C) 2001-2013, AdaCore                     --
 +--                                                                          --
 +-- GNAT is free software;  you can  redistribute it  and/or modify it under --
 +-- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -696,9 +696,6 @@
 +with Interfaces.C; use Interfaces.C;
 +
 +package body GNAT.Sockets.Thin is
-+
-+   Unknown_System_Error : constant C.Strings.chars_ptr :=
-+                            C.Strings.New_String ("Unknown system error");
 +
 +   function Syscall_Accept
 +     (S       : C.int;
@@ -1007,14 +1004,12 @@
 +   -- Socket_Error_Message --
 +   --------------------------
 +
-+   function Socket_Error_Message
-+     (Errno : Integer) return C.Strings.chars_ptr
-+   is separate;
++   function Socket_Error_Message (Errno : Integer) return String is separate;
 +
 +end GNAT.Sockets.Thin;
 --- /dev/null
 +++ gcc/ada/g-socthi-netbsd.adb
-@@ -0,0 +1,363 @@
+@@ -0,0 +1,358 @@
 +------------------------------------------------------------------------------
 +--                                                                          --
 +--                         GNAT COMPILER COMPONENTS                         --
@@ -1023,7 +1018,7 @@
 +--                                                                          --
 +--                                 B o d y                                  --
 +--                                                                          --
-+--                     Copyright (C) 2001-2012, AdaCore                     --
++--                     Copyright (C) 2001-2013, AdaCore                     --
 +--                                                                          --
 +-- GNAT is free software;  you can  redistribute it  and/or modify it under --
 +-- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -1062,9 +1057,6 @@
 +with Interfaces.C; use Interfaces.C;
 +
 +package body GNAT.Sockets.Thin is
-+
-+   Unknown_System_Error : constant C.Strings.chars_ptr :=
-+                            C.Strings.New_String ("Unknown system error");
 +
 +   function Syscall_Accept
 +     (S       : C.int;
@@ -1373,14 +1365,12 @@
 +   -- Socket_Error_Message --
 +   --------------------------
 +
-+   function Socket_Error_Message
-+     (Errno : Integer) return C.Strings.chars_ptr
-+   is separate;
++   function Socket_Error_Message (Errno : Integer) return String is separate;
 +
 +end GNAT.Sockets.Thin;
 --- /dev/null
 +++ gcc/ada/g-socthi-netbsd6.ads
-@@ -0,0 +1,260 @@
+@@ -0,0 +1,259 @@
 +------------------------------------------------------------------------------
 +--                                                                          --
 +--                         GNAT COMPILER COMPONENTS                         --
@@ -1389,7 +1379,7 @@
 +--                                                                          --
 +--                                 S p e c                                  --
 +--                                                                          --
-+--                     Copyright (C) 2001-2012, AdaCore                     --
++--                     Copyright (C) 2001-2013, AdaCore                     --
 +--                                                                          --
 +-- GNAT is free software;  you can  redistribute it  and/or modify it under --
 +-- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -1418,7 +1408,7 @@
 +
 +--  This is the NetBSD 6+ version
 +
-+with Interfaces.C.Strings;
++with Interfaces.C;
 +
 +with GNAT.OS_Lib;
 +with GNAT.Sockets.Thin_Common;
@@ -1441,7 +1431,7 @@
 +   function Socket_Errno return Integer renames GNAT.OS_Lib.Errno;
 +   --  Returns last socket error number
 +
-+   function Socket_Error_Message (Errno : Integer) return C.Strings.chars_ptr;
++   function Socket_Error_Message (Errno : Integer) return String;
 +   --  Returns the error message string for the error number Errno. If Errno is
 +   --  not known, returns "Unknown system error".
 +
@@ -1451,8 +1441,7 @@
 +
 +   package Host_Error_Messages is
 +
-+      function Host_Error_Message
-+        (H_Errno : Integer) return C.Strings.chars_ptr;
++      function Host_Error_Message (H_Errno : Integer) return String;
 +      --  Returns the error message string for the host error number H_Errno.
 +      --  If H_Errno is not known, returns "Unknown system error".
 +
@@ -1865,7 +1854,7 @@
  # define Has_Sockaddr_Len 0
 --- gcc/ada/init.c.orig
 +++ gcc/ada/init.c
-@@ -1619,7 +1619,7 @@
+@@ -1623,7 +1623,7 @@
  /* FreeBSD Section */
  /*******************/
  
@@ -1874,7 +1863,7 @@
  
  #include <signal.h>
  #include <sys/ucontext.h>
-@@ -1664,7 +1664,7 @@
+@@ -1668,7 +1668,7 @@
  }
  
  void
@@ -1883,7 +1872,7 @@
  {
    struct sigaction act;
  
-@@ -2457,9 +2457,13 @@
+@@ -2461,9 +2461,13 @@
     initialization of the FP processor.  This version is used under INTERIX
     and WIN32.  */
  
@@ -2003,17 +1992,6 @@
     Gcc_Path : String_Access := null;
  
     Non_Empty_Node : constant Project_Node_Id := 1;
---- gcc/ada/s-fileio.adb.orig
-+++ gcc/ada/s-fileio.adb
-@@ -241,7 +241,7 @@
-       Close_Status : int := 0;
-       Dup_Strm     : Boolean := False;
-       File         : AFCB_Ptr renames File_Ptr.all;
--      Errno        : Integer;
-+      Errno        : Integer := 0;
- 
-    begin
-       --  Take a task lock, to protect the global data value Open_Files
 --- /dev/null
 +++ gcc/ada/s-osinte-dragonfly.adb
 @@ -0,0 +1,116 @@
@@ -8158,7 +8136,7 @@
  TARGET_ADA_SRCS =
 --- gcc/ada/gcc-interface/Makefile.in.orig
 +++ gcc/ada/gcc-interface/Makefile.in
-@@ -1037,9 +1037,11 @@
+@@ -1043,9 +1043,11 @@
  ifeq ($(strip $(filter-out arm% linux-androideabi,$(target_cpu) $(target_os))),)
    LIBGNAT_TARGET_PAIRS = \
    a-intnam.ads<a-intnam-linux.ads \
@@ -8170,7 +8148,7 @@
    s-osinte.adb<s-osinte-android.adb \
    s-osinte.ads<s-osinte-android.ads \
    s-osprim.adb<s-osprim-posix.adb \
-@@ -1049,10 +1051,6 @@
+@@ -1055,10 +1057,6 @@
    system.ads<system-linux-armel.ads \
    $(DUMMY_SOCKETS_TARGET_PAIRS)
  
@@ -8181,7 +8159,7 @@
    GNATRTL_SOCKETS_OBJS =
    EXTRA_GNATRTL_TASKING_OBJS=s-linux.o
    EH_MECHANISM=
-@@ -1065,6 +1063,7 @@
+@@ -1071,6 +1069,7 @@
  ifeq ($(strip $(filter-out sparc% sun solaris%,$(target_cpu) $(target_vendor) $(target_os))),)
    LIBGNAT_TARGET_PAIRS_COMMON = \
    a-intnam.ads<a-intnam-solaris.ads \
@@ -8189,7 +8167,7 @@
    s-inmaop.adb<s-inmaop-posix.adb \
    s-intman.adb<s-intman-solaris.adb \
    s-mudido.adb<s-mudido-affinity.adb \
-@@ -1107,6 +1106,8 @@
+@@ -1113,6 +1112,8 @@
    TOOLS_TARGET_PAIRS=mlib-tgt-specific.adb<mlib-tgt-specific-solaris.adb
  
    EH_MECHANISM=-gcc
@@ -8198,7 +8176,7 @@
    THREADSLIB = -lposix4 -lthread
    MISCLIB = -lposix4 -lnsl -lsocket
    SO_OPTS = -Wl,-h,
-@@ -1318,12 +1319,17 @@
+@@ -1324,12 +1325,17 @@
  # x86 FreeBSD
  ifeq ($(strip $(filter-out %86 freebsd%,$(target_cpu) $(target_os))),)
    LIBGNAT_TARGET_PAIRS = \
@@ -8218,7 +8196,7 @@
    s-taprop.adb<s-taprop-posix.adb \
    s-taspri.ads<s-taspri-posix.ads \
    s-tpopsp.adb<s-tpopsp-posix.adb \
-@@ -1331,11 +1337,12 @@
+@@ -1337,11 +1343,12 @@
    $(X86_TARGET_PAIRS) \
    system.ads<system-freebsd-x86.ads
  
@@ -8233,7 +8211,7 @@
  
    EH_MECHANISM=-gcc
    THREADSLIB= -lpthread
-@@ -1347,12 +1354,17 @@
+@@ -1353,12 +1360,17 @@
  # x86-64 FreeBSD
  ifeq ($(strip $(filter-out %86_64 freebsd%,$(target_cpu) $(target_os))),)
    LIBGNAT_TARGET_PAIRS = \
@@ -8253,7 +8231,7 @@
    s-taprop.adb<s-taprop-posix.adb \
    s-taspri.ads<s-taspri-posix.ads \
    s-tpopsp.adb<s-tpopsp-posix.adb \
-@@ -1360,11 +1372,240 @@
+@@ -1366,11 +1378,240 @@
    $(X86_64_TARGET_PAIRS) \
    system.ads<system-freebsd-x86_64.ads
  

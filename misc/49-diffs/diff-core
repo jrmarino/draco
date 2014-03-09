@@ -1329,7 +1329,7 @@
  	;;
  i[34567]86-*-openbsd2.*|i[34567]86-*openbsd3.[0123])
  	tm_file="i386/i386.h i386/unix.h i386/bsd.h i386/gas.h i386/gstabs.h openbsd-oldgas.h openbsd.h i386/openbsd.h"
-@@ -4101,6 +4132,8 @@
+@@ -4106,6 +4137,8 @@
  		;;
  	i[34567]86-*-mingw* | x86_64-*-mingw*)
  		;;
@@ -1424,7 +1424,7 @@
  	  ( cd $(DESTDIR)$(bindir) && \
 --- libgcc/config.host.orig
 +++ libgcc/config.host
-@@ -201,6 +201,11 @@
+@@ -207,6 +207,11 @@
    tmake_file="$tmake_file t-darwin ${cpu_type}/t-darwin t-libgcc-pic t-slibgcc-darwin"
    extra_parts="crt3.o crttms.o crttme.o"
    ;;
@@ -1436,7 +1436,7 @@
  *-*-freebsd*)
    # This is the generic ELF configuration of FreeBSD.  Later
    # machine-specific sections may refine and add to this
-@@ -229,7 +234,8 @@
+@@ -235,7 +240,8 @@
    extra_parts="crtbegin.o crtbeginS.o crtend.o crtendS.o"
    ;;
  *-*-netbsd*)
@@ -1446,7 +1446,7 @@
    # NetBSD 1.7 and later are set up to use GCC's crtstuff for
    # ELF configurations.  We will clear extra_parts in the
    # a.out configurations.
-@@ -293,7 +299,10 @@
+@@ -299,7 +305,10 @@
  esac
  
  case ${host} in
@@ -1458,7 +1458,7 @@
    enable_execute_stack=enable-execute-stack-mprotect.c
    ;;
  i[34567]86-*-mingw* | x86_64-*-mingw*)
-@@ -536,16 +545,29 @@
+@@ -542,16 +551,29 @@
  x86_64-*-elf*)
  	tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
  	;;
@@ -1488,7 +1488,7 @@
  	;;
  i[34567]86-*-openbsd2.*|i[34567]86-*openbsd3.[0123])
  	;;
-@@ -1250,6 +1272,7 @@
+@@ -1256,6 +1278,7 @@
    i[34567]86-*-solaris2* | x86_64-*-solaris2.1[0-9]* | \
    i[34567]86-*-cygwin* | x86_64-*-cygwin* | \
    i[34567]86-*-mingw* | x86_64-*-mingw* | \
