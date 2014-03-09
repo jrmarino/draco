@@ -1,8 +1,9 @@
 /* DWARF2 EH unwinding support for FreeBSD: AMD x86-64 and x86.
-   Copyright (C) 2010, 2012 John Marino <draco@marino.st>
-
-/* Do code reading to identify a signal frame, and set the frame
-   state data appropriately.  See unwind-dw2.c for the structs. */
+ *  Copyright (C) 2010, 2012, 2014 John Marino <draco@marino.st>
+ *
+ *  Do code reading to identify a signal frame, and set the frame
+ *  state data appropriately.  See unwind-dw2.c for the structs.
+ */
 
 #include <sys/types.h>
 #include <signal.h>
@@ -38,12 +39,13 @@ static _Unwind_Reason_Code
 x86_64_freebsd_fallback_frame_state
 (struct _Unwind_Context *context, _Unwind_FrameState *fs)
 {
-  unsigned char *pc = context->ra;
-  unsigned char *sigtramp_start, *sigtramp_end;
   struct sigframe *sf;
   long new_cfa;
 
 #if (__FreeBSD__ < 9)
+  unsigned char *pc = context->ra;
+  unsigned char *sigtramp_start, *sigtramp_end;
+
   x86_64_sigtramp_range(&sigtramp_start, &sigtramp_end);
   if (pc >= sigtramp_end || pc < sigtramp_start)
     return _URC_END_OF_STACK;
@@ -117,6 +119,12 @@ x86_64_freebsd_fallback_frame_state
 
 #define MD_FALLBACK_FRAME_STATE_FOR x86_freebsd_fallback_frame_state
 
+/*
+ * We can't use KERN_PS_STRINGS anymore if we want to support FreeBSD32
+ * compat on AMD64.  The sigtramp is in a shared page in that case so the
+ * x86_sigtramp_range only works on a true i386 system.  We have to
+ * search for the sigtramp frame if we want it working everywhere.
+
 #include <sys/sysctl.h>
 static void
 x86_sigtramp_range (unsigned char **start, unsigned char **end)
@@ -133,20 +141,31 @@ x86_sigtramp_range (unsigned char **start, unsigned char **end)
   *start = (unsigned char *)ps_strings - 128;
   *end   = (unsigned char *)ps_strings;
 }
+*/
 
 
 static _Unwind_Reason_Code
 x86_freebsd_fallback_frame_state
 (struct _Unwind_Context *context, _Unwind_FrameState *fs)
 {
-  unsigned char *pc = context->ra;
-  unsigned char *sigtramp_start, *sigtramp_end;
   struct sigframe *sf;
   long new_cfa;
 
-  x86_sigtramp_range(&sigtramp_start, &sigtramp_end);
+/*
+ * i386 sigtramp frame we are looking for follows.
+ * Apparently PSL_VM is variable, so we can't look past context->ra + 4
+ * <sigcode>:
+ *   0:	ff 54 24 10          	call   *0x10(%esp)          *SIGF_HANDLER
+ *   4:	8d 44 24 20          	lea    0x20(%esp),%eax       SIGF_UC
+ *   8:	50                   	push   %eax
+ *   9:	f7 40 54 ?? ?? ?? ?? 	testl  $PSL_VM,0x54(%eax)
+ *  10:	75 03                	jne    15 <sigcode+0x15>
+ *  12:	8e 68 14             	mov    0x14(%eax),%gs        UC_GS
+ *  15:	a1 a1 01 00 00       	mov    0x1a1,%eax           $SYS_sigreturn
+ */
 
-  if (pc >= sigtramp_end || pc < sigtramp_start)
+  if (!(   *(unsigned int *)(context->ra - 4) == 0x102454ff
+        && *(unsigned int *)(context->ra)     == 0x2024448d ))
     return _URC_END_OF_STACK;
 
   sf = (struct sigframe *) context->cfa;
