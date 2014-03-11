@@ -158,10 +158,10 @@ x86_freebsd_fallback_frame_state
  *   0:	ff 54 24 10          	call   *0x10(%esp)          *SIGF_HANDLER
  *   4:	8d 44 24 20          	lea    0x20(%esp),%eax       SIGF_UC
  *   8:	50                   	push   %eax
- *   9:	f7 40 54 ?? ?? ?? ?? 	testl  $PSL_VM,0x54(%eax)
+ *   9:	f7 40 54 00 00 02 00 	testl  $0x20000,0x54(%eax)  $PSL_VM
  *  10:	75 03                	jne    15 <sigcode+0x15>
  *  12:	8e 68 14             	mov    0x14(%eax),%gs        UC_GS
- *  15:	a1 a1 01 00 00       	mov    0x1a1,%eax           $SYS_sigreturn
+ *  15:	b8 a1 01 00 00       	mov    0x1a1,%eax           $SYS_sigreturn
  */
 
   if (!(   *(unsigned int *)(context->ra - 4) == 0x102454ff

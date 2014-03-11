@@ -153,7 +153,7 @@
 +   } \
 +   %{static:-Bstatic} \
 +  } \
-+  %{!static:--hash-style=both -rpath @PREFIX@/gcc-aux/lib} \
++  %{!static:--hash-style=gnu -rpath @PREFIX@/gcc-aux/lib} \
 +  %{symbolic:-Bsymbolic}"
 +
 +#undef  LINK_SPEC
@@ -438,20 +438,22 @@
 +
 --- gcc/config/i386/freebsd.h.orig
 +++ gcc/config/i386/freebsd.h
-@@ -90,6 +90,12 @@
+@@ -90,6 +90,14 @@
     When the -shared link option is used a final link is not being
     done.  */
  
 +#if FBSD_MAJOR < 9
 +#define ELF_HASH_STYLE ""
-+#else
++#elif FBSD_MAJOR < 10
 +#define ELF_HASH_STYLE "--hash-style=both "
++#else
++#define ELF_HASH_STYLE "--hash-style=gnu "
 +#endif
 +
  #undef	LINK_SPEC
  #define LINK_SPEC "\
    %{p:%nconsider using '-pg' instead of '-p' with gprof(1)} \
-@@ -101,6 +107,7 @@
+@@ -101,6 +109,7 @@
          %{rdynamic:-export-dynamic} \
          -dynamic-linker %(fbsd_dynamic_linker) } \
      %{static:-Bstatic}} \
@@ -459,7 +461,7 @@
    %{symbolic:-Bsymbolic}"
  
  /* A C statement to output to the stdio stream FILE an assembler
-@@ -147,3 +154,5 @@
+@@ -147,3 +156,5 @@
  
  #define TARGET_ASM_FILE_END file_end_indicate_exec_stack
  
@@ -1021,10 +1023,10 @@
 + *   0:	ff 54 24 10          	call   *0x10(%esp)          *SIGF_HANDLER
 + *   4:	8d 44 24 20          	lea    0x20(%esp),%eax       SIGF_UC
 + *   8:	50                   	push   %eax
-+ *   9:	f7 40 54 ?? ?? ?? ?? 	testl  $PSL_VM,0x54(%eax)
++ *   9:	f7 40 54 00 00 02 00 	testl  $0x20000,0x54(%eax)  $PSL_VM
 + *  10:	75 03                	jne    15 <sigcode+0x15>
 + *  12:	8e 68 14             	mov    0x14(%eax),%gs        UC_GS
-+ *  15:	a1 a1 01 00 00       	mov    0x1a1,%eax           $SYS_sigreturn
++ *  15:	b8 a1 01 00 00       	mov    0x1a1,%eax           $SYS_sigreturn
 + */
 +
 +  if (!(   *(unsigned int *)(context->ra - 4) == 0x102454ff

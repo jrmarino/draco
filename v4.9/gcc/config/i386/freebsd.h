@@ -92,8 +92,10 @@ along with GCC; see the file COPYING3.  If not see
 
 #if FBSD_MAJOR < 9
 #define ELF_HASH_STYLE ""
-#else
+#elif FBSD_MAJOR < 10
 #define ELF_HASH_STYLE "--hash-style=both "
+#else
+#define ELF_HASH_STYLE "--hash-style=gnu "
 #endif
 
 #undef	LINK_SPEC

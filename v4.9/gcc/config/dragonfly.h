@@ -86,7 +86,7 @@ along with GCC; see the file COPYING3.  If not see
    } \
    %{static:-Bstatic} \
   } \
-  %{!static:--hash-style=both -rpath @PREFIX@/gcc-aux/lib} \
+  %{!static:--hash-style=gnu -rpath @PREFIX@/gcc-aux/lib} \
   %{symbolic:-Bsymbolic}"
 
 #undef  LINK_SPEC
