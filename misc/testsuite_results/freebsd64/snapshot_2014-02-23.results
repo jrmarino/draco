@@ -1,0 +1,50 @@
+Test Run By root on Sat Mar  8 12:09:34 CET 2014
+		=== acats configuration ===
+target gcc is /mech/construction/usr/ports/lang/gcc-aux/work/build/gcc/xgcc
+  -B/mech/construction/usr/ports/lang/gcc-aux/work/build/gcc/
+Reading specs from /mech/construction/usr/ports/lang/gcc-aux/work/build/gcc/specs
+  COLLECT_GCC=/mech/construction/usr/ports/lang/gcc-aux/work/build/gcc/xgcc
+  COLLECT_LTO_WRAPPER=/mech/construction/usr/ports/lang/gcc-aux/work/build/gcc/lto-wrapper Target: x86_64-aux-freebsd10.0
+   Configured with: /mech/construction/usr/ports/lang/gcc-aux/work/gcc-4.9-20140223/configure --enable-languages='c
+   c++ ada fortran objc' --build=x86_64-aux-freebsd10.0 --prefix=/usr/local/gcc-aux --with-system-zlib
+   --with-gmp=/usr/local --with-mpfr=/usr/local --with-mpc=/usr/local --enable-shared --enable-threads=posix
+   --disable-libmudflap --disable-libgomp --disable-libssp --enable-libquadmath --enable-nls --disable-bootstrap
+   Thread model: posix gcc version 4.9.0 20140223 (prerelease) -=> GNAT AUX [FreeBSD64] (GCC)
+host=x86_64-aux-freebsd10.0
+target=x86_64-aux-freebsd10.0
+gnatmake is /mech/construction/usr/ports/lang/gcc-aux/work/build/gcc/gnatmake
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+		=== acats Summary ===
+# of expected passes		2320
+# of unexpected failures	0
+
+=== Completed: Sat Mar  8 12:18:19 CET 2014 ===
+
+
+Test Run By root on Sat Mar  8 12:18:19 2014
+Native configuration is x86_64-aux-freebsd10.0
+
+		=== gnat tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+UNSUPPORTED: gnat.dg/fp_exception.adb
+UNSUPPORTED: gnat.dg/return3.adb
+UNSUPPORTED: gnat.dg/specs/debug1.ads
+
+		=== gnat Summary ===
+
+# of expected passes		1220
+# of expected failures		18
+# of unsupported tests		3
+/mech/construction/usr/ports/lang/gcc-aux/work/build/gcc/gnatmake version 4.9.0 20140223 (prerelease)
+   -=> GNAT AUX [FreeBSD64]
+
+

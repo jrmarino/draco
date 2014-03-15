@@ -1,0 +1,48 @@
+Test Run By root on Sun Mar  9 16:25:36 UTC 2014
+		=== acats configuration ===
+target gcc is /wrkdirs/usr/ports/lang/gcc-aux/work/build/gcc/xgcc -B/wrkdirs/usr/ports/lang/gcc-aux/work/build/gcc/
+Reading specs from /wrkdirs/usr/ports/lang/gcc-aux/work/build/gcc/specs
+  COLLECT_GCC=/wrkdirs/usr/ports/lang/gcc-aux/work/build/gcc/xgcc
+  COLLECT_LTO_WRAPPER=/wrkdirs/usr/ports/lang/gcc-aux/work/build/gcc/lto-wrapper Target: i386-aux-freebsd10.0
+   Configured with: /wrkdirs/usr/ports/lang/gcc-aux/work/gcc-4.9-20140223/configure --enable-languages='c
+   c++ ada fortran objc' --build=i386-aux-freebsd10.0 --prefix=/usr/local/gcc-aux --with-system-zlib
+  --with-gmp=/usr/local --with-mpfr=/usr/local --with-mpc=/usr/local --enable-shared --enable-threads=posix
+   --disable-libmudflap --disable-libgomp --disable-libssp --enable-libquadmath --enable-nls --disable-bootstrap
+   Thread model: posix gcc version 4.9.0 20140223 (prerelease) -=> GNAT AUX [FreeBSD] (GCC)
+host=i386-aux-freebsd10.0
+target=i386-aux-freebsd10.0
+gnatmake is /wrkdirs/usr/ports/lang/gcc-aux/work/build/gcc/gnatmake
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+		=== acats Summary ===
+# of expected passes		2320
+# of unexpected failures	0
+
+=== Completed: Sun Mar  9 16:34:26 UTC 2014 ===
+
+
+Test Run By root on Sun Mar  9 16:34:26 2014
+Native configuration is i386-aux-freebsd10.0
+
+		=== gnat tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+UNSUPPORTED: gnat.dg/fp_exception.adb
+UNSUPPORTED: gnat.dg/return3.adb
+UNSUPPORTED: gnat.dg/specs/debug1.ads
+
+		=== gnat Summary ===
+
+# of expected passes		1220
+# of expected failures		18
+# of unsupported tests		3
+/wrkdirs/usr/ports/lang/gcc-aux/work/build/gcc/gnatmake version 4.9.0 20140223 (prerelease) -=> GNAT AUX [FreeBSD]
+
+
