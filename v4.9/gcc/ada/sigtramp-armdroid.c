@@ -34,21 +34,6 @@
  ******************************************************/
 
 #include "sigtramp.h"
-
-#ifndef _ARCH_ARM_SYS_UCONTEXT_H_
-#include <signal.h>
-typedef sigcontext mcontext_t;
-typedef struct ucontext {
-  uint32_t          uc_flags;
-  struct ucontext*  uc_link;
-  stack_t           uc_stack;
-  mcontext_t        uc_mcontext;
-  sigset_t          uc_sigmask;
-  int               _unused[32 - sizeof(sigset_t)/sizeof(int)];
-  uint32_t          uc_regspace[128] __attribute__((aligned__(8)));
-} ucontext_t;
-#endif /* _ARCH_ARM_SYS_UCONTEXT_H_ */
-
 /* See sigtramp.h for a general explanation of functionality.  */
 
 /* ----------------------
@@ -85,14 +70,14 @@ typedef struct ucontext {
 
 extern void __gnat_sigtramp_common
   (int signo, void *siginfo, void *sigcontext,
-   sighandler_t * handler);
+   __sigtramphandler_t * handler);
 
 void __gnat_sigtramp (int signo, void *si, void *sc,
-                      sighandler_t * handler)
+                      __sigtramphandler_t * handler)
      __attribute__((optimize(2)));
 
 void __gnat_sigtramp (int signo, void *si, void *ucontext,
-                      sighandler_t * handler)
+                      __sigtramphandler_t * handler)
 {
   struct sigcontext *mcontext = &((ucontext_t *) ucontext)->uc_mcontext;
 
