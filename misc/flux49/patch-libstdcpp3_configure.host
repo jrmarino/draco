@@ -1,11 +1,14 @@
---- libstdc++-v3/configure.host.orig	2013-07-04 16:07:44.000000000 -0500
+--- libstdc++-v3/configure.host.orig	2014-04-08 07:27:25.000000000 -0500
 +++ libstdc++-v3/configure.host
-@@ -230,6 +230,9 @@ case "${host_os}" in
+@@ -230,6 +230,12 @@ case "${host_os}" in
      os_include_dir="os/generic"
      atomicity_dir="cpu/generic"
      ;;
 +  dragonfly*)
 +    os_include_dir="os/bsd/dragonfly"
++    ;;
++  linux-androideabi)
++    os_include_dir="os/bionic"
 +    ;;
    bsd*)
      # Plain BSD attempts to share FreeBSD files.

@@ -80,10 +80,10 @@ index c1ca796..cf01e0e 100644
  
  // 20.6.6.2 Template class shared_ptr [util.smartptr.shared]
  
--// { dg-do run { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* mips-sgi-irix6* } }
--// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-netbsd* *-*-linux* mips-sgi-irix6* } }
-+// { dg-do run { target *-*-freebsd* *-*-dragonfly* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* mips-sgi-irix6* } }
-+// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-dragonfly* *-*-netbsd* *-*-linux* mips-sgi-irix6* } }
+-// { dg-do run { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-gnu* *-*-solaris* *-*-cygwin *-*-darwin* } }
+-// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-gnu* } }
++// { dg-do run { target *-*-freebsd* *-*-dragonfly* *-*-netbsd* *-*-linux* *-*-gnu* *-*-solaris* *-*-cygwin *-*-darwin* } }
++// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-dragonfly* *-*-netbsd* *-*-linux* *-*-gnu* } }
  // { dg-options " -std=gnu++0x -pthreads" { target *-*-solaris* } }
  // { dg-options " -std=gnu++0x " { target *-*-cygwin *-*-darwin* } }
  
@@ -533,18 +533,6 @@ diff --git a/libstdc++-v3/testsuite/30_threads/lock/4.cc b/libstdc++-v3/testsuit
 index c71a8a0..7d8cb95 100644
 --- a/libstdc++-v3/testsuite/30_threads/lock/4.cc
 +++ b/libstdc++-v3/testsuite/30_threads/lock/4.cc
-@@ -1,5 +1,5 @@
--// { dg-do run { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* } }
--// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* } }
-+// { dg-do run { target *-*-freebsd* *-*-dragonfly* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* mips-sgi-irix6* } }
-+// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-dragonfly* *-*-netbsd* *-*-linux* mips-sgi-irix6* } }
- // { dg-options " -std=gnu++0x -pthreads" { target *-*-solaris* } }
- // { dg-options " -std=gnu++0x " { target *-*-cygwin *-*-darwin* } }
- // { dg-require-cstdint "" }
-diff --git a/libstdc++-v3/testsuite/30_threads/lock_guard/cons/1.cc b/libstdc++-v3/testsuite/30_threads/lock_guard/cons/1.cc
-index f450d51..3f4cec5 100644
---- a/libstdc++-v3/testsuite/30_threads/lock_guard/cons/1.cc
-+++ b/libstdc++-v3/testsuite/30_threads/lock_guard/cons/1.cc
 @@ -1,5 +1,5 @@
 -// { dg-do run { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* } }
 -// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* } }

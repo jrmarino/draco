@@ -1,4 +1,4 @@
---- gcc/Makefile.in.orig	2014-02-06 05:58:16.000000000 -0500
+--- gcc/Makefile.in.orig	2014-04-08 07:35:23.000000000 -0500
 +++ gcc/Makefile.in
 @@ -1152,7 +1152,6 @@ OBJS = \
  	insn-emit.o \
@@ -49,13 +49,13 @@
  insn-preds.c: s-preds; @true
  tm-preds.h: s-preds-h; @true
  tm-constrs.h: s-constrs-h; @true
-@@ -3207,6 +3218,9 @@ install-driver: installdirs xgcc$(exeext
- 	-rm -f $(DESTDIR)$(bindir)/$(target_noncanonical)-gcc-$(version)$(exeext)
- 	-( cd $(DESTDIR)$(bindir) && \
- 	   $(LN) $(GCC_INSTALL_NAME)$(exeext) $(target_noncanonical)-gcc-$(version)$(exeext) )
+@@ -3210,6 +3221,9 @@ install-driver: installdirs xgcc$(exeext
+ 	  ( cd $(DESTDIR)$(bindir) && \
+ 	    $(LN) $(GCC_INSTALL_NAME)$(exeext) $(target_noncanonical)-gcc-$(version)$(exeext) ); \
+ 	fi
 +	-if [ -f gnat1$(exeext) ] ; then \
 +	  ( cd $(DESTDIR)$(bindir) && $(LN) $(GCC_INSTALL_NAME)$(exeext) ada$(exeext) ) \
 +	fi
- 	-if [ ! -f gcc-cross$(exeext) ] ; then \
+ 	-if [ ! -f gcc-cross$(exeext) ] \
+ 	    && [ "$(GCC_INSTALL_NAME)" != "$(GCC_TARGET_INSTALL_NAME)" ]; then \
  	  rm -f $(DESTDIR)$(bindir)/$(target_noncanonical)-gcc-tmp$(exeext); \
- 	  ( cd $(DESTDIR)$(bindir) && \
