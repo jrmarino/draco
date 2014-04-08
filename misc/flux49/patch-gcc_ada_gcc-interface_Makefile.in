@@ -20,7 +20,7 @@
    s-tpopsp.adb<s-tpopsp-posix-foreign.adb \
    system.ads<system-linux-armel.ads \
 +  a-exexpr.adb<a-exexpr-gcc.adb \
-+  s-excmac.ads<s-excmac-arm.ads
++  s-excmac.ads<s-excmac-arm.ads \
    $(DUMMY_SOCKETS_TARGET_PAIRS)
  
 -  TOOLS_TARGET_PAIRS =  \
@@ -30,7 +30,7 @@
    GNATRTL_SOCKETS_OBJS =
    EXTRA_GNATRTL_TASKING_OBJS=s-linux.o
 -  EH_MECHANISM=
-+  EXTRA_LIBGNAT_OBJS+=raise-gcc.o sigtramp-android.o
++  EXTRA_LIBGNAT_OBJS+=raise-gcc.o sigtramp-armdroid.o
 +  EXTRA_GNATRTL_NONTASKING_OBJS+=g-cppexc.o s-excmac.o
 +  EH_MECHANISM=-arm
    THREADSLIB =
@@ -355,7 +355,7 @@
  socket.o  : socket.c gsocket.h
  sysdep.o  : sysdep.c
  raise.o   : raise.c raise.h
-+sigtramp-android.o : sigtramp-android.c sigtramp.h
++sigtramp-armdroid.o : sigtramp-armdroid.c sigtramp.h
  sigtramp-armvxw.o : sigtramp-armvxw.c sigtramp.h
  sigtramp-ppcvxw.o : sigtramp-ppcvxw.c sigtramp.h
  terminals.o : terminals.c
