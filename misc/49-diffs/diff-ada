@@ -7404,7 +7404,7 @@
 +end System.OS_Primitives;
 --- /dev/null
 +++ gcc/ada/sigtramp-armdroid.c
-@@ -0,0 +1,176 @@
+@@ -0,0 +1,161 @@
 +/****************************************************************************
 + *                                                                          *
 + *                         GNAT COMPILER COMPONENTS                         *
@@ -7441,21 +7441,6 @@
 + ******************************************************/
 +
 +#include "sigtramp.h"
-+
-+#ifndef _ARCH_ARM_SYS_UCONTEXT_H_
-+#include <signal.h>
-+typedef sigcontext mcontext_t;
-+typedef struct ucontext {
-+  uint32_t          uc_flags;
-+  struct ucontext*  uc_link;
-+  stack_t           uc_stack;
-+  mcontext_t        uc_mcontext;
-+  sigset_t          uc_sigmask;
-+  int               _unused[32 - sizeof(sigset_t)/sizeof(int)];
-+  uint32_t          uc_regspace[128] __attribute__((aligned__(8)));
-+} ucontext_t;
-+#endif /* _ARCH_ARM_SYS_UCONTEXT_H_ */
-+
 +/* See sigtramp.h for a general explanation of functionality.  */
 +
 +/* ----------------------
@@ -7492,14 +7477,14 @@
 +
 +extern void __gnat_sigtramp_common
 +  (int signo, void *siginfo, void *sigcontext,
-+   sighandler_t * handler);
++   __sigtramphandler_t * handler);
 +
 +void __gnat_sigtramp (int signo, void *si, void *sc,
-+                      sighandler_t * handler)
++                      __sigtramphandler_t * handler)
 +     __attribute__((optimize(2)));
 +
 +void __gnat_sigtramp (int signo, void *si, void *ucontext,
-+                      sighandler_t * handler)
++                      __sigtramphandler_t * handler)
 +{
 +  struct sigcontext *mcontext = &((ucontext_t *) ucontext)->uc_mcontext;
 +
@@ -7581,6 +7566,49 @@
 +asm (SIGTRAMP_START(TRAMP_COMMON));
 +asm (SIGTRAMP_BODY);
 +asm (SIGTRAMP_END(TRAMP_COMMON));
+--- gcc/ada/sigtramp.h.orig
++++ gcc/ada/sigtramp.h
+@@ -6,7 +6,7 @@
+  *                                                                          *
+  *                              C Header File                               *
+  *                                                                          *
+- *          Copyright (C) 2011-2013, Free Software Foundation, Inc.         *
++ *          Copyright (C) 2011-2014, Free Software Foundation, Inc.         *
+  *                                                                          *
+  * GNAT is free software;  you can  redistribute it  and/or modify it under *
+  * terms of the  GNU General Public License as published  by the Free Soft- *
+@@ -41,10 +41,29 @@
+ extern "C" {
+ #endif
+ 
+-  typedef void sighandler_t (int signo, void *siginfo, void *sigcontext);
++#ifdef __ANDROID__
++#include <stdlib.h>
++#include <asm/signal.h>
++#include <asm/sigcontext.h>
++
++/* Android SDK doesn't define these structs */
++typedef struct sigcontext mcontext_t;
++
++typedef struct ucontext
++  {
++    unsigned long uc_flags;
++    struct ucontext *uc_link;
++    stack_t uc_stack;
++    mcontext_t uc_mcontext;
++} ucontext_t;
++#endif
++
++  /* This typedef signature sometimes conflicts with the sighandler_t from
++     system headers so call it something unique.  */
++  typedef void __sigtramphandler_t (int signo, void *siginfo, void *sigcontext);
+ 
+   void __gnat_sigtramp  (int signo, void *siginfo, void *sigcontext,
+-			 sighandler_t * handler);
++			 __sigtramphandler_t * handler);
+ 
+   /* To be called from an established signal handler.  Setup the DWARF CFI
+      bits letting unwinders walk through the signal frame up into the
 --- gcc/ada/sysdep.c.orig
 +++ gcc/ada/sysdep.c
 @@ -263,6 +263,7 @@
