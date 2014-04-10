@@ -121,16 +121,7 @@ regenerate_patch ${CXX_SUFFIX} patch-libstdcpp3_configure.host
 pattern="^gcc/testsuite/c-c..-common"
 suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${CXX_SUITE_SUFFIX} suite[@]
-regenerate_patch ${CXX_SUITE_SUFFIX} gxx_ts1.patch
-regenerate_patch ${CXX_SUITE_SUFFIX} libstdcxx-testsuite.patch
-regenerate_patch ${CXX_SUITE_SUFFIX} libstdcxx_section30.patch
 regenerate_patch ${CXX_SUITE_SUFFIX} libstdc++.exp.patch
-regenerate_patch ${CXX_SUITE_SUFFIX} libstdxx_ts_missing_debug_checks.patch
-regenerate_patch ${CXX_SUITE_SUFFIX} fix_locales.patch
-regenerate_patch ${CXX_SUITE_SUFFIX} fix-ja_JP.eucJP.patch
-regenerate_patch ${CXX_SUITE_SUFFIX} fix-hong_kong.patch
-regenerate_patch ${CXX_SUITE_SUFFIX} fix-norway.patch
-regenerate_patch ${CXX_SUITE_SUFFIX} fix-random-locales.patch
 
 pattern="^gcc/testsuite/gcc.dg"
 suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
