@@ -207,6 +207,7 @@
  || defined (__DragonFly__) \
  || defined (__NetBSD__) \
  || defined (__OpenBSD__) \
+ || defined (__ANDROID__) \
  || defined (__hpux__) \
  || defined (_WIN32) \
  || defined (__APPLE__)

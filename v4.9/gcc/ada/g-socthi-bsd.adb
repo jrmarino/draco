@@ -193,7 +193,7 @@ package body GNAT.Sockets.Thin is
             use Interfaces;
             flags    : constant Unsigned_32 :=
                                 Unsigned_32 (C_Fcntl (S, SOSC.F_GETFL, 0));
-            nonblock : constant Unsigned_32 := Unsigned_32 (SOSC.FNDELAY);
+            nonblock : constant Unsigned_32 := Unsigned_32 (SOSC.O_NDELAY);
             enabled  : constant Boolean := Arg.all = 1;
             newval   : C.int := C.int (flags);
          begin
