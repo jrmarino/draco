@@ -95,7 +95,6 @@ fortran=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${F95_SUFFIX} fortran[@]
 regenerate_patch ${F95_SUFFIX} patch-libgfortran_acinclude.m4
 regenerate_patch ${F95_SUFFIX} patch-libgfortran_configure
-regenerate_patch ${F95_SUFFIX} patch-libquadmath_Makefile.in
 
 pattern="^gcc/testsuite|^gcc/ada|^gcc/fortran|^libstdc..-v3"
 core=`cd ${DRACO} && find * -type d | sort | ${GREPPROG} -vE $pattern`
