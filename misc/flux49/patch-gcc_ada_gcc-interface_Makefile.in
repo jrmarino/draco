@@ -1,41 +1,30 @@
---- gcc/ada/gcc-interface/Makefile.in.orig	2014-04-12 09:45:38.000000000 -0500
+--- gcc/ada/gcc-interface/Makefile.in.orig	2014-04-18 02:31:16.000000000 -0500
 +++ gcc/ada/gcc-interface/Makefile.in
-@@ -1044,25 +1044,24 @@ endif
+@@ -1044,6 +1044,7 @@ endif
  ifeq ($(strip $(filter-out arm% linux-androideabi,$(target_cpu) $(target_os))),)
    LIBGNAT_TARGET_PAIRS = \
    a-intnam.ads<a-intnam-linux.ads \
 +  g-socthi.adb<g-socthi-bsd.adb \
    s-inmaop.adb<s-inmaop-posix.adb \
--  s-intman.adb<s-intman-posix.adb \
--  s-linux.ads<s-linux.ads \
-+  s-intman.adb<s-intman-android.adb \
-+  s-linux.ads<s-linux-android.ads \
-   s-osinte.adb<s-osinte-android.adb \
-   s-osinte.ads<s-osinte-android.ads \
-   s-osprim.adb<s-osprim-posix.adb \
-   s-taprop.adb<s-taprop-posix.adb \
--  s-taspri.ads<s-taspri-posix-noaltstack.ads \
-+  s-taspri.ads<s-taspri-posix.ads \
-   s-tpopsp.adb<s-tpopsp-posix-foreign.adb \
+   s-intman.adb<s-intman-android.adb \
+   s-linux.ads<s-linux-android.ads \
+@@ -1056,13 +1057,9 @@ ifeq ($(strip $(filter-out arm% linux-an
    system.ads<system-linux-armel.ads \
+   a-exexpr.adb<a-exexpr-gcc.adb \
+   s-excmac.ads<s-excmac-arm.ads \
 -  $(DUMMY_SOCKETS_TARGET_PAIRS)
-+  a-exexpr.adb<a-exexpr-gcc.adb \
-+  s-excmac.ads<s-excmac-arm.ads
- 
+-
 -  TOOLS_TARGET_PAIRS =  \
 -    mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
 -    indepsw.adb<indepsw-gnu.adb
--
++  a-exexpr.adb<a-exexpr-gcc.adb \
++  s-excmac.ads<s-excmac-arm.ads
+ 
 -  GNATRTL_SOCKETS_OBJS =
    EXTRA_GNATRTL_TASKING_OBJS=s-linux.o
--  EH_MECHANISM=
-+  EXTRA_LIBGNAT_OBJS+=raise-gcc.o sigtramp-armdroid.o
-+  EXTRA_GNATRTL_NONTASKING_OBJS+=g-cppexc.o s-excmac.o
-+  EH_MECHANISM=-arm
-   THREADSLIB =
-   GNATLIB_SHARED = gnatlib-shared-dual
-   LIBRARY_VERSION := $(LIB_VERSION)
-@@ -1072,6 +1071,7 @@ endif
+   EXTRA_LIBGNAT_OBJS+=raise-gcc.o sigtramp-armdroid.o
+   EXTRA_GNATRTL_NONTASKING_OBJS+=g-cppexc.o s-excmac.o
+@@ -1076,6 +1073,7 @@ endif
  ifeq ($(strip $(filter-out sparc% sun solaris%,$(target_cpu) $(target_vendor) $(target_os))),)
    LIBGNAT_TARGET_PAIRS_COMMON = \
    a-intnam.ads<a-intnam-solaris.ads \
@@ -43,7 +32,7 @@
    s-inmaop.adb<s-inmaop-posix.adb \
    s-intman.adb<s-intman-solaris.adb \
    s-mudido.adb<s-mudido-affinity.adb \
-@@ -1114,6 +1114,8 @@ ifeq ($(strip $(filter-out sparc% sun so
+@@ -1118,6 +1116,8 @@ ifeq ($(strip $(filter-out sparc% sun so
    TOOLS_TARGET_PAIRS=mlib-tgt-specific.adb<mlib-tgt-specific-solaris.adb
  
    EH_MECHANISM=-gcc
@@ -52,7 +41,7 @@
    THREADSLIB = -lposix4 -lthread
    MISCLIB = -lposix4 -lnsl -lsocket
    SO_OPTS = -Wl,-h,
-@@ -1325,12 +1327,17 @@ endif
+@@ -1329,12 +1329,17 @@ endif
  # x86 FreeBSD
  ifeq ($(strip $(filter-out %86 freebsd%,$(target_cpu) $(target_os))),)
    LIBGNAT_TARGET_PAIRS = \
@@ -72,7 +61,7 @@
    s-taprop.adb<s-taprop-posix.adb \
    s-taspri.ads<s-taspri-posix.ads \
    s-tpopsp.adb<s-tpopsp-posix.adb \
-@@ -1338,11 +1345,12 @@ ifeq ($(strip $(filter-out %86 freebsd%,
+@@ -1342,11 +1347,12 @@ ifeq ($(strip $(filter-out %86 freebsd%,
    $(X86_TARGET_PAIRS) \
    system.ads<system-freebsd-x86.ads
  
@@ -87,7 +76,7 @@
  
    EH_MECHANISM=-gcc
    THREADSLIB= -lpthread
-@@ -1354,12 +1362,17 @@ endif
+@@ -1358,12 +1364,17 @@ endif
  # x86-64 FreeBSD
  ifeq ($(strip $(filter-out %86_64 freebsd%,$(target_cpu) $(target_os))),)
    LIBGNAT_TARGET_PAIRS = \
@@ -107,7 +96,7 @@
    s-taprop.adb<s-taprop-posix.adb \
    s-taspri.ads<s-taspri-posix.ads \
    s-tpopsp.adb<s-tpopsp-posix.adb \
-@@ -1367,11 +1380,240 @@ ifeq ($(strip $(filter-out %86_64 freebs
+@@ -1371,11 +1382,240 @@ ifeq ($(strip $(filter-out %86_64 freebs
    $(X86_64_TARGET_PAIRS) \
    system.ads<system-freebsd-x86_64.ads
  
@@ -350,11 +339,3 @@
  
    EH_MECHANISM=-gcc
    THREADSLIB= -lpthread
-@@ -3063,6 +3305,7 @@ mkdir.o   : mkdir.c
- socket.o  : socket.c gsocket.h
- sysdep.o  : sysdep.c
- raise.o   : raise.c raise.h
-+sigtramp-armdroid.o : sigtramp-armdroid.c sigtramp.h
- sigtramp-armvxw.o : sigtramp-armvxw.c sigtramp.h
- sigtramp-ppcvxw.o : sigtramp-ppcvxw.c sigtramp.h
- terminals.o : terminals.c
