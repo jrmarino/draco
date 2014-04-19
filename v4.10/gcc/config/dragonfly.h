@@ -84,7 +84,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
    } \
    %{static:-Bstatic} \
   } \
-  %{!static:--hash-style=gnu -rpath /usr/local/gcc-aux/lib} \
+  %{!static:--hash-style=gnu} \
   %{symbolic:-Bsymbolic}"
 
 #undef  LINK_SPEC
