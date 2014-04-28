@@ -1,0 +1,48 @@
+Test Run By root on Mon Apr 28 14:54:22 CEST 2014
+		=== acats configuration ===
+target gcc is /mech/pkgsrc-work/lang/gcc-aux/work/build/gcc/xgcc -B/mech/pkgsrc-work/lang/gcc-aux/work/build/gcc/
+Reading specs from /mech/pkgsrc-work/lang/gcc-aux/work/build/gcc/specs
+  COLLECT_GCC=/mech/pkgsrc-work/lang/gcc-aux/work/build/gcc/xgcc
+  COLLECT_LTO_WRAPPER=/mech/pkgsrc-work/lang/gcc-aux/work/build/gcc/lto-wrapper Target: x86_64-aux-netbsd6.1.4
+   Configured with: /mech/pkgsrc-work/lang/gcc-aux/work/gcc-4.9.0/configure --enable-languages='c ada
+   c++ fortran objc' --build=x86_64-aux-netbsd6.1.4 --prefix=/usr/pkg/gcc-aux --with-system-zlib --with-gmp=/usr/pkg
+   --with-mpfr=/usr/pkg --with-mpc=/usr/pkg --enable-threads=posix --disable-libmudflap --disable-libgomp
+   --disable-libssp --disable-libquadmath --enable-nls --with-libiconv-prefix=/usr --enable-shared --disable-bootstrap
+   --with-ld=/usr/bin/ld --with-as=/usr/bin/as Thread model: posix gcc version 4.9.0 (GCC)
+host=x86_64-aux-netbsd6.1.4
+target=x86_64-aux-netbsd6.1.4
+gnatmake is /mech/pkgsrc-work/lang/gcc-aux/work/build/gcc/gnatmake
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+		=== acats Summary ===
+# of expected passes		2320
+# of unexpected failures	0
+
+=== Completed: Mon Apr 28 15:05:43 CEST 2014 ===
+
+
+Test Run By root on Mon Apr 28 15:05:43 2014
+Native configuration is x86_64-aux-netbsd6.1.4
+
+		=== gnat tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+UNSUPPORTED: gnat.dg/fp_exception.adb
+UNSUPPORTED: gnat.dg/return3.adb
+UNSUPPORTED: gnat.dg/specs/debug1.ads
+
+		=== gnat Summary ===
+
+# of expected passes		1221
+# of expected failures		18
+# of unsupported tests		3
+/mech/pkgsrc-work/lang/gcc-aux/work/build/gcc/gnatmake version 4.9.0
+
+

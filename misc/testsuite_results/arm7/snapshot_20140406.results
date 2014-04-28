@@ -1,0 +1,72 @@
+Test Run By root on Sat Apr 12 22:38:52 CEST 2014
+		=== acats configuration ===
+target gcc is /mech/construction/mech/ptrees/default/lang/gnatdroid-armv7/work/build/gcc/xgcc
+  -B/mech/construction/mech/ptrees/default/lang/gnatdroid-armv7/work/build/gcc/
+Reading specs from /mech/construction/mech/ptrees/default/lang/gnatdroid-armv7/work/build/gcc/specs
+  COLLECT_GCC=/mech/construction/mech/ptrees/default/lang/gnatdroid-armv7/work/build/gcc/xgcc
+  COLLECT_LTO_WRAPPER=/mech/construction/mech/ptrees/default/lang/gnatdroid-armv7/work/build/gcc/lto-wrapper Target:
+   arm-aux-linux-androideabi Configured with:
+  /mech/construction/mech/ptrees/default/lang/gnatdroid-armv7/work/gcc-4.9-20140406/configure --enable-languages='c
+   c++ ada' --target=arm-aux-linux-androideabi --program-prefix=arm-aux-linux-androideabi-
+  --prefix=/usr/local/android/ARMv7 --with-arch=armv7-a --with-system-zlib --with-gmp=/usr/local --with-mpfr=/usr/local
+   --with-mpc=/usr/local --with-sysroot=/usr/local/android --with-float=soft --with-fpu=neon --enable-target-optspace
+   --enable-threads=posix --enable-cxx-flags=-frtti --disable-bootstrap --disable-shared --disable-libssp
+   --disable-libgomp --disable-libmudflap --disable-libquadmath --disable-libsanitizer --disable-libitm
+   --disable-sjlj-exceptions --disable-tls --disable-nls Thread model: posix gcc version 4.9.0 20140406
+   (prerelease) -=> GNAT AUX [FreeBSD64 x Android ARMv7] (GCC)
+host=x86_64-aux-freebsd10.0
+target=arm-aux-linux-androideabi
+gnatmake-cross is /mech/construction/mech/ptrees/default/lang/gnatdroid-armv7/work/build/gcc/gnatmake-cross
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+All tests are being cross-compiled without execution first.
+Transfer files to remote device: root@tablet:/data/local/testsuite/
+FAIL:	c52103x
+FAIL:	c52104x
+FAIL:	c52104y
+FAIL:	cb1010c
+FAIL:	cb1010d
+		=== acats Summary ===
+# of expected passes		2314
+# of unexpected failures	5
+
+=== Completed: Sat Apr 12 22:51:09 CEST 2014 ===
+
+
+Test Run By root on Sat Apr 12 21:42:41 2014
+Target is arm-aux-linux-androideabi
+Host   is x86_64-unknown-freebsd10.0
+
+		=== gnat tests ===
+
+Schedule of variations:
+    gnatdroid
+
+Running target gnatdroid
+UNSUPPORTED: gnat.dg/fp_exception.adb
+FAIL: gnat.dg/null_pointer_deref1.adb execution test
+FAIL: gnat.dg/null_pointer_deref3.adb execution test
+UNSUPPORTED: gnat.dg/sse_nolib.adb
+UNSUPPORTED: gnat.dg/unchecked_convert5b.adb
+UNSUPPORTED: gnat.dg/unchecked_convert6b.adb
+UNSUPPORTED: gnat.dg/vect1.adb
+UNSUPPORTED: gnat.dg/vect2.adb
+UNSUPPORTED: gnat.dg/vect3.adb
+UNSUPPORTED: gnat.dg/vect4.adb
+UNSUPPORTED: gnat.dg/vect5.adb
+UNSUPPORTED: gnat.dg/vect6.adb
+
+		=== gnat Summary ===
+
+# of expected passes		1201
+# of unexpected failures	2
+# of expected failures		18
+# of unsupported tests		10
+/mech/construction/mech/ptrees/default/lang/gnatdroid-armv7/work/build/gcc/gnatmake version 4.9.0 20140406
+   (prerelease) -=> GNAT AUX [FreeBSD64 x Android ARMv7]
+
+
