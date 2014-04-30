@@ -307,10 +307,8 @@ case ${host} in
 esac
 
 case ${host} in
-*-*-dragonfly* | *-*-freebsd* | *-*-netbsd* | *-*-openbsd*)
-  enable_execute_stack=enable-execute-stack-bsd.c
-  ;;
-*-*-darwin* | *-*-solaris2*)
+*-*-darwin* | *-*-dragonfly* | *-*-freebsd* | *-*-netbsd* | *-*-openbsd* | \
+  *-*-solaris2*)
   enable_execute_stack=enable-execute-stack-mprotect.c
   ;;
 i[34567]86-*-mingw* | x86_64-*-mingw*)
