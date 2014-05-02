@@ -323,6 +323,49 @@
 +
 +#define INTPTR_TYPE       (LONG_TYPE_SIZE == 64 ? "long int" : "int")
 +#define UINTPTR_TYPE      (LONG_TYPE_SIZE == 64 ? "long unsigned int" : "unsigned int")
+--- gcc/config/openbsd-libpthread.h.orig
++++ gcc/config/openbsd-libpthread.h
+@@ -18,5 +18,5 @@
+    along with GCC; see the file COPYING3.  If not see
+    <http://www.gnu.org/licenses/>.  */
+ 
+-#define OBSD_LIB_SPEC "%{!shared:%{pthread:-lpthread} -lc}"
++#define OBSD_LIB_SPEC "%{pthread:-lpthread%{!shared:%{p|pg:_p}}} %{!shared:-lc%{p:_p}%{!p:%{pg:_p}}}"
+ 
+--- gcc/config/openbsd.h.orig
++++ gcc/config/openbsd.h
+@@ -108,9 +108,9 @@
+    This two-stage defines makes it easy to pick that for targets that
+    have subspecs.  */
+ #ifdef CPP_CPU_SPEC
+-#define OBSD_CPP_SPEC "%(cpp_cpu) %{posix:-D_POSIX_SOURCE} %{pthread:-D_POSIX_THREADS}"
++#define OBSD_CPP_SPEC "%(cpp_cpu) %{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
+ #else
+-#define OBSD_CPP_SPEC "%{posix:-D_POSIX_SOURCE} %{pthread:-D_POSIX_THREADS}"
++#define OBSD_CPP_SPEC "%{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
+ #endif
+ 
+ #undef LIB_SPEC
+@@ -285,5 +285,9 @@
+ 
+ /* Storage layout.  */
+ 
++/* The system headers on OpenBSD are C++-aware.  */
++#undef NO_IMPLICIT_EXTERN_C
++#define NO_IMPLICIT_EXTERN_C
++
+ 
+ #define HAVE_ENABLE_EXECUTE_STACK
+--- gcc/config/openbsd.opt.orig
++++ gcc/config/openbsd.opt
+@@ -32,4 +32,7 @@
+ pthread
+ Driver
+ 
++rdynamic
++Driver
++
+ ; This comment is to ensure we retain the blank line above.
 --- /dev/null
 +++ gcc/config/i386/dragonfly.h
 @@ -0,0 +1,105 @@
@@ -505,6 +548,46 @@
 +#if defined(HAVE_LD_EH_FRAME_HDR)
 +#define LINK_EH_SPEC "%{!static:--eh-frame-hdr} "
 +#endif
+--- gcc/config/i386/openbsd.h.orig
++++ gcc/config/i386/openbsd.h
+@@ -38,10 +38,10 @@
+ 
+ /* This must agree with <machine/ansi.h> */
+ #undef SIZE_TYPE
+-#define SIZE_TYPE "unsigned int"
++#define SIZE_TYPE "long unsigned int"
+ 
+ #undef PTRDIFF_TYPE
+-#define PTRDIFF_TYPE "int"
++#define PTRDIFF_TYPE "long int"
+ 
+ #undef WCHAR_TYPE
+ #define WCHAR_TYPE "int"
+@@ -49,6 +49,9 @@
+ #undef WCHAR_TYPE_SIZE
+ #define WCHAR_TYPE_SIZE 32
+ 
++#undef WINT_TYPE
++#define WINT_TYPE "int"
++
+ /* Assembler format: overall framework.  */
+ 
+ #undef ASM_APP_ON
+--- gcc/config/i386/openbsdelf.h.orig
++++ gcc/config/i386/openbsdelf.h
+@@ -97,9 +97,12 @@
+    %{shared:-shared} %{R*} \
+    %{static:-Bstatic} \
+    %{!static:-Bdynamic} \
++   %{rdynamic:-export-dynamic} \
+    %{assert*} \
+    -dynamic-linker /usr/libexec/ld.so"
+ 
++#define SUBTARGET32_DEFAULT_CPU "i486"
++
+ #undef STARTFILE_SPEC
+ #define STARTFILE_SPEC "\
+ 	%{!shared: %{pg:gcrt0%O%s} %{!pg:%{p:gcrt0%O%s} %{!p:crt0%O%s}} \
 --- gcc/ginclude/stddef.h.orig
 +++ gcc/ginclude/stddef.h
 @@ -50,12 +50,21 @@
