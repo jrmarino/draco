@@ -1,4 +1,4 @@
---- gcc/ada/gcc-interface/Makefile.in.orig	2014-04-18 02:31:16.000000000 -0500
+--- gcc/ada/gcc-interface/Makefile.in.orig	2014-05-04 06:57:59.000000000 -0500
 +++ gcc/ada/gcc-interface/Makefile.in
 @@ -1044,6 +1044,7 @@ endif
  ifeq ($(strip $(filter-out arm% linux-androideabi,$(target_cpu) $(target_os))),)
@@ -214,9 +214,9 @@
 +  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
 +  EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
 +
-+  EH_MECHANISM=
++  EH_MECHANISM=-gcc
 +  THREADSLIB= -lpthread
-+  GMEM_LIB =
++  GMEM_LIB = gmemlib
 +  LIBRARY_VERSION := $(LIB_VERSION)
 +  MISCLIB = -lutil
 +endif

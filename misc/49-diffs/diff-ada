@@ -7011,7 +7011,7 @@
    *off = tp.tm_gmtoff;
 --- /dev/null
 +++ gcc/ada/system-dragonfly-x86.ads
-@@ -0,0 +1,143 @@
+@@ -0,0 +1,144 @@
 +------------------------------------------------------------------------------
 +--                                                                          --
 +--                        GNAT RUN-TIME COMPONENTS                          --
@@ -7146,6 +7146,7 @@
 +   Stack_Check_Probes        : constant Boolean := True;
 +   Stack_Check_Limits        : constant Boolean := False;
 +   Support_Aggregates        : constant Boolean := True;
++   Support_Atomic_Primitives : constant Boolean := True;
 +   Support_Composite_Assign  : constant Boolean := True;
 +   Support_Composite_Compare : constant Boolean := True;
 +   Support_Long_Shifts       : constant Boolean := True;
@@ -7157,7 +7158,7 @@
 +end System;
 --- /dev/null
 +++ gcc/ada/system-dragonfly-x86_64.ads
-@@ -0,0 +1,143 @@
+@@ -0,0 +1,144 @@
 +------------------------------------------------------------------------------
 +--                                                                          --
 +--                        GNAT RUN-TIME COMPONENTS                          --
@@ -7292,6 +7293,7 @@
 +   Stack_Check_Probes        : constant Boolean := True;
 +   Stack_Check_Limits        : constant Boolean := False;
 +   Support_Aggregates        : constant Boolean := True;
++   Support_Atomic_Primitives : constant Boolean := True;
 +   Support_Composite_Assign  : constant Boolean := True;
 +   Support_Composite_Compare : constant Boolean := True;
 +   Support_Long_Shifts       : constant Boolean := True;
@@ -7303,7 +7305,7 @@
 +end System;
 --- /dev/null
 +++ gcc/ada/system-netbsd-x86.ads
-@@ -0,0 +1,143 @@
+@@ -0,0 +1,144 @@
 +------------------------------------------------------------------------------
 +--                                                                          --
 +--                        GNAT RUN-TIME COMPONENTS                          --
@@ -7438,6 +7440,7 @@
 +   Stack_Check_Probes        : constant Boolean := True;
 +   Stack_Check_Limits        : constant Boolean := False;
 +   Support_Aggregates        : constant Boolean := True;
++   Support_Atomic_Primitives : constant Boolean := True;
 +   Support_Composite_Assign  : constant Boolean := True;
 +   Support_Composite_Compare : constant Boolean := True;
 +   Support_Long_Shifts       : constant Boolean := True;
@@ -7449,7 +7452,7 @@
 +end System;
 --- /dev/null
 +++ gcc/ada/system-netbsd-x86_64.ads
-@@ -0,0 +1,143 @@
+@@ -0,0 +1,144 @@
 +------------------------------------------------------------------------------
 +--                                                                          --
 +--                        GNAT RUN-TIME COMPONENTS                          --
@@ -7584,6 +7587,7 @@
 +   Stack_Check_Probes        : constant Boolean := True;
 +   Stack_Check_Limits        : constant Boolean := False;
 +   Support_Aggregates        : constant Boolean := True;
++   Support_Atomic_Primitives : constant Boolean := True;
 +   Support_Composite_Assign  : constant Boolean := True;
 +   Support_Composite_Compare : constant Boolean := True;
 +   Support_Long_Shifts       : constant Boolean := True;
@@ -7605,7 +7609,7 @@
 +--                                 S p e c                                  --
 +--                          (OpenBSD/x86 Version)                        --
 +--                                                                          --
-+--          Copyright (C) 1992-2011, Free Software Foundation, Inc.         --
++--          Copyright (C) 1992-2012, Free Software Foundation, Inc.         --
 +--                                                                          --
 +-- This specification is derived from the Ada Reference Manual for use with --
 +-- GNAT. The copyright notice above, and the license provisions that follow --
@@ -7737,7 +7741,7 @@
 +   Always_Compatible_Rep     : constant Boolean := False;
 +   Suppress_Standard_Library : constant Boolean := False;
 +   Use_Ada_Main_Program_Name : constant Boolean := False;
-+   ZCX_By_Default            : constant Boolean := False;
++   ZCX_By_Default            : constant Boolean := True;
 +
 +end System;
 --- /dev/null
@@ -7750,9 +7754,9 @@
 +--                               S Y S T E M                                --
 +--                                                                          --
 +--                                 S p e c                                  --
-+--                        (OpenBSD/x86_64 Version)                       --
++--                         (OpenBSD/x86_64 Version)                         --
 +--                                                                          --
-+--          Copyright (C) 1992-2011, Free Software Foundation, Inc.         --
++--          Copyright (C) 1992-2012, Free Software Foundation, Inc.         --
 +--                                                                          --
 +-- This specification is derived from the Ada Reference Manual for use with --
 +-- GNAT. The copyright notice above, and the license provisions that follow --
@@ -7884,7 +7888,7 @@
 +   Always_Compatible_Rep     : constant Boolean := False;
 +   Suppress_Standard_Library : constant Boolean := False;
 +   Use_Ada_Main_Program_Name : constant Boolean := False;
-+   ZCX_By_Default            : constant Boolean := False;
++   ZCX_By_Default            : constant Boolean := True;
 +
 +end System;
 --- gcc/ada/terminals.c.orig
@@ -8368,9 +8372,9 @@
 +  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
 +  EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
 +
-+  EH_MECHANISM=
++  EH_MECHANISM=-gcc
 +  THREADSLIB= -lpthread
-+  GMEM_LIB =
++  GMEM_LIB = gmemlib
 +  LIBRARY_VERSION := $(LIB_VERSION)
 +  MISCLIB = -lutil
 +endif
