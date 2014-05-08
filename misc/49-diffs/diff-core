@@ -1,3 +1,7 @@
+--- gcc/DEV-PHASE.orig
++++ gcc/DEV-PHASE
+@@ -0,0 +1 @@
++release
 --- /dev/null
 +++ gcc/config/dragonfly-stdint.h
 @@ -0,0 +1,56 @@
