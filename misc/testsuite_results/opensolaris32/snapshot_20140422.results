@@ -1,0 +1,50 @@
+Test Run By root on Thu May  8 03:23:54 CEST 2014
+		=== acats configuration ===
+target gcc is /mech/pkgsrc-work/lang/gcc-aux/work/build/gcc/xgcc -B/mech/pkgsrc-work/lang/gcc-aux/work/build/gcc/
+Reading specs from /mech/pkgsrc-work/lang/gcc-aux/work/build/gcc/specs
+  COLLECT_GCC=/mech/pkgsrc-work/lang/gcc-aux/work/build/gcc/xgcc
+  COLLECT_LTO_WRAPPER=/mech/pkgsrc-work/lang/gcc-aux/work/build/gcc/lto-wrapper Target: x86_64-aux-solaris2.11
+   Configured with: /mech/pkgsrc-work/lang/gcc-aux/work/gcc-4.9.0/configure --enable-languages='c ada
+   c++' --build=x86_64-aux-solaris2.11 --prefix=/usr/pkg/gcc-aux --enable-threads=posix --disable-libmudflap
+   --disable-libgomp --disable-libssp --enable-libquadmath --enable-nls --with-libiconv-prefix=/usr/pkg
+   --with-gmp=/usr/pkg --with-mpfr=/usr/pkg --with-mpc=/usr/pkg --with-system-zlib --enable-shared --disable-bootstrap
+   --enable-multilib --with-gnu-as --with-as=/usr/pkg/bin/gas --without-gnu-ld --with-ld=/usr/bin/ld Thread
+   model: posix gcc version 4.9.0 (GCC)
+host=x86_64-aux-solaris2.11
+target=x86_64-aux-solaris2.11
+gnatmake is a tracked alias for /mech/pkgsrc-work/lang/gcc-aux/work/build/gcc/gnatmake
+
+		=== acats support ===
+Generating support files... done.
+Compiling support files... done.
+
+		=== acats tests ===
+		=== acats Summary ===
+# of expected passes		2320
+# of unexpected failures	0
+
+=== Completed: Thu May  8 03:49:54 CEST 2014 ===
+
+
+Test Run By root on Thu May  8 03:49:54 2014
+Native configuration is x86_64-aux-solaris2.11
+
+		=== gnat tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+UNSUPPORTED: gnat.dg/lto14.adb
+UNSUPPORTED: gnat.dg/return3.adb
+UNSUPPORTED: gnat.dg/socket1.adb
+UNSUPPORTED: gnat.dg/specs/debug1.ads
+
+		=== gnat Summary ===
+
+# of expected passes		1220
+# of expected failures		18
+# of unsupported tests		4
+/mech/pkgsrc-work/lang/gcc-aux/work/build/gcc/gnatmake version 4.9.0
+
+
