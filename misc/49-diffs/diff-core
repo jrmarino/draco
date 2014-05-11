@@ -350,7 +350,18 @@
  #endif
  
  #undef LIB_SPEC
-@@ -285,5 +285,9 @@
+@@ -143,6 +143,10 @@
+ #define LIB_SPEC OBSD_LIB_SPEC
+ #endif
+ 
++#undef LINK_PIE_SPEC
++#define LINK_PIE_SPEC "%{pie:-pie} %{p|pg|nopie|-nopie} "
++#endif
++
+ #define TARGET_POSIX_IO
+ 
+ /* All new versions of OpenBSD have C99 functions.  We redefine this hook
+@@ -285,5 +289,9 @@
  
  /* Storage layout.  */
  
@@ -1394,7 +1405,36 @@
  	;;
  i[34567]86-*-openbsd2.*|i[34567]86-*openbsd3.[0123])
  	tm_file="i386/i386.h i386/unix.h i386/bsd.h i386/gas.h i386/gstabs.h openbsd-oldgas.h openbsd.h i386/openbsd.h"
-@@ -4109,6 +4140,8 @@
+@@ -1375,6 +1406,7 @@
+ 	use_collect2=yes
+ 	;;
+ i[34567]86-*-openbsd*)
++	tm_defines="${tm_defines} PIE_DEFAULT=1"
+ 	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h"
+ 	tm_file="${tm_file} openbsd.h openbsd-stdint.h openbsd-libpthread.h i386/openbsdelf.h"
+ 	extra_options="${extra_options} openbsd.opt"
+@@ -1382,6 +1414,7 @@
+ 	gnu_ld=yes
+ 	;;
+ x86_64-*-openbsd*)
++	tm_defines="${tm_defines} PIE_DEFAULT=1"
+ 	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h"
+ 	tm_file="${tm_file} openbsd.h openbsd-stdint.h openbsd-libpthread.h i386/x86-64.h i386/openbsdelf.h"
+ 	extra_options="${extra_options} openbsd.opt"
+@@ -2927,6 +2960,12 @@
+     arch_without_sse2=yes
+     arch_without_64bit=yes
+     ;;
++  i386-*-openbsd*)
++    arch=i486
++    cpu=generic
++    arch_without_sse2=yes
++    arch_without_64bit=yes
++    ;;
+   i386-*-*)
+     arch=i386
+     cpu=i386
+@@ -4109,6 +4148,8 @@
  		;;
  	i[34567]86-*-mingw* | x86_64-*-mingw*)
  		;;
