@@ -143,6 +143,10 @@ while (0)
 #define LIB_SPEC OBSD_LIB_SPEC
 #endif
 
+#undef LINK_PIE_SPEC
+#define LINK_PIE_SPEC "%{pie:-pie} %{p|pg|nopie|-nopie} "
+#endif
+
 #define TARGET_POSIX_IO
 
 /* All new versions of OpenBSD have C99 functions.  We redefine this hook

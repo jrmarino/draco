@@ -651,7 +651,7 @@ case ${target} in
     "" | yes | posix)
       thread_file='posix'
       ;;
-    no | gnat | single)
+    no | single)
       # Let these non-posix thread selections fall through if requested
       ;;
     *)
