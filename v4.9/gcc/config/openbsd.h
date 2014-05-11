@@ -144,7 +144,7 @@ while (0)
 #endif
 
 #undef LINK_PIE_SPEC
-#define LINK_PIE_SPEC "%{pie:-pie} %{p|pg|nopie|-nopie} "
+#define LINK_PIE_SPEC "%{pie:-pie} %{p|pg|nopie:-nopie} "
 
 #define TARGET_POSIX_IO
 
