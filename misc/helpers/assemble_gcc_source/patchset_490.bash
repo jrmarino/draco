@@ -99,6 +99,7 @@ regenerate_patch ${F95_SUFFIX} patch-libgfortran_configure
 pattern="^gcc/testsuite|^gcc/ada|^gcc/fortran|^libstdc..-v3"
 core=`cd ${DRACO} && find * -type d | sort | ${GREPPROG} -vE $pattern`
 produce_patch ${CORE_SUFFIX} core[@]
+regenerate_patch ${CORE_SUFFIX} patch-gcc_builtins.c
 regenerate_patch ${CORE_SUFFIX} patch-gcc_config.gcc
 regenerate_patch ${CORE_SUFFIX} patch-gcc_configure
 regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in

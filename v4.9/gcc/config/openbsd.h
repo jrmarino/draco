@@ -288,6 +288,9 @@ do {									 \
 
 /* Storage layout.  */
 
+/* Silence "unsafe GNU crap" messages */
+#define NO_UNSAFE_BUILTINS
+
 /* The system headers on OpenBSD are C++-aware.  */
 #undef NO_IMPLICIT_EXTERN_C
 #define NO_IMPLICIT_EXTERN_C
