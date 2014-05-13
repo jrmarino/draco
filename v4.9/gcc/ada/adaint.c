@@ -577,8 +577,8 @@ __gnat_try_lock (char *dir, char *file)
   GNAT_STRUCT_STAT stat_result;
   int fd;
 
-  sprintf (full_path, "%s%c%s", dir, DIR_SEPARATOR, file);
-  sprintf (temp_file, "%s%cTMP-%ld-%ld",
+  snprintf (full_path, 256, "%s%c%s", dir, DIR_SEPARATOR, file);
+  snprintf (temp_file, 256, "%s%cTMP-%ld-%ld",
            dir, DIR_SEPARATOR, (long)getpid(), (long)getppid ());
 
   /* Create the temporary file and write the process number.  */
@@ -745,7 +745,8 @@ __gnat_os_filename (char *filename ATTRIBUTE_UNUSED,
   strcpy (encoding, "encoding=utf8");
   *e_length = strlen (encoding);
 #else
-  strcpy (os_name, filename);
+  /* o_length is initialized with max os_name size (2x filename size) */
+  strncpy (os_name, filename, *o_length);
   *o_length = strlen (filename);
   *e_length = 0;
 #endif
@@ -1141,7 +1142,7 @@ __gnat_open_new_temp (char *path, int fmode)
   int fd;
   int o_fmode = O_BINARY;
 
-  strcpy (path, "GNAT-XXXXXX");
+  strncpy (path, "GNAT-XXXXXX", 12);
 
 #if (defined (__FreeBSD__) || defined (__NetBSD__) || defined (__OpenBSD__) \
   || defined (__DragonFly__) \
@@ -1325,9 +1326,9 @@ __gnat_tmp_name (char *tmp_filename)
   char *datadir = getenv ("ANDROID_DATA");
 
   if (datadir == NULL)
-    strcpy (tmp_filename, "/data/local/tmp/gnat-XXXXXX");
+    strncpy (tmp_filename, "/data/local/tmp/gnat-XXXXXX", L_tmpnam);
   else
-    sprintf (tmp_filename, "%s/local/tmp/gnat-XXXXXX", datadir);
+    snprintf (tmp_filename, L_tmpnam, "%s/local/tmp/gnat-XXXXXX", datadir);
 
   testfd = mkstemp (tmp_filename);
   if (testfd != -1)
@@ -1339,9 +1340,9 @@ __gnat_tmp_name (char *tmp_filename)
   char *sdcard = getenv ("EXTERNAL_STORAGE");
 
   if (sdcard == NULL)
-    strcpy (tmp_filename, "/sdcard/gnat-XXXXXX");
+    strncpy (tmp_filename, "/sdcard/gnat-XXXXXX", L_tmpnam);
   else
-    sprintf (tmp_filename, "%s/gnat-XXXXXX", sdcard);
+    snprintf (tmp_filename, L_tmpnam, "%s/gnat-XXXXXX", sdcard);
 
   testfd = mkstemp (tmp_filename);
   if (testfd != -1)
@@ -1361,9 +1362,9 @@ __gnat_tmp_name (char *tmp_filename)
   /* If tmpdir is longer than MAX_SAFE_PATH, revert to default value to avoid
      a buffer overflow.  */
   if (tmpdir == NULL || strlen (tmpdir) > MAX_SAFE_PATH)
-    strcpy (tmp_filename, "/tmp/gnat-XXXXXX");
+    strncpy (tmp_filename, "/tmp/gnat-XXXXXX", L_tmpnam);
   else
-    sprintf (tmp_filename, "%s/gnat-XXXXXX", tmpdir);
+    snprintf (tmp_filename, L_tmpnam, "%s/gnat-XXXXXX", tmpdir);
 
   close (mkstemp(tmp_filename));
 #elif defined (__vxworks) && !(defined (__RTP__) || defined (VTHREADS))

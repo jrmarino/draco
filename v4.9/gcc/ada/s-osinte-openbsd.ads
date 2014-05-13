@@ -46,7 +46,7 @@ with Interfaces.C;
 package System.OS_Interface is
    pragma Preelaborate;
 
-   pragma Linker_Options ("-pthread");
+   pragma Linker_Options ("-lpthread");
 
    subtype int            is Interfaces.C.int;
    subtype short          is Interfaces.C.short;
@@ -155,21 +155,13 @@ package System.OS_Interface is
    --  sigcontext is architecture dependent, so define it private
    type struct_sigcontext is private;
 
-   type old_struct_sigaction is record
+   type struct_sigaction is record
       sa_handler : System.Address;
       sa_mask    : sigset_t;
       sa_flags   : int;
    end record;
-   pragma Convention (C, old_struct_sigaction);
+   pragma Convention (C, struct_sigaction);
 
-   type new_struct_sigaction is record
-      sa_handler : System.Address;
-      sa_flags   : int;
-      sa_mask    : sigset_t;
-   end record;
-   pragma Convention (C, new_struct_sigaction);
-
-   subtype struct_sigaction is new_struct_sigaction;
    type struct_sigaction_ptr is access all struct_sigaction;
 
    SIG_BLOCK   : constant := 1;
@@ -220,9 +212,6 @@ package System.OS_Interface is
    end record;
    pragma Convention (C, struct_timezone);
 
-   procedure usleep (useconds : unsigned_long);
-   pragma Import (C, usleep, "usleep");
-
    -------------------------
    -- Priority Scheduling --
    -------------------------
@@ -240,6 +229,8 @@ package System.OS_Interface is
    -------------
 
    type pid_t is private;
+
+   Self_PID : constant pid_t;
 
    function kill (pid : pid_t; sig : Signal) return int;
    pragma Import (C, kill, "kill");
@@ -628,6 +619,7 @@ private
    pragma Convention (C, struct_sigcontext);
 
    type pid_t is new int;
+   Self_PID : constant pid_t := 0;
 
    type time_t is new int;
 
