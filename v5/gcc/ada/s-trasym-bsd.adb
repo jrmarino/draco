@@ -2,7 +2,7 @@
 --                                                                          --
 --                         GNAT RUN-TIME COMPONENTS                         --
 --                                                                          --
---             G N A T . T R A C E B A C K . S Y M B O L I C                --
+--           S Y S T E M . T R A C E B A C K . S Y M B O L I C              --
 --                                                                          --
 --                                 B o d y                                  --
 --                                                                          --
@@ -39,7 +39,7 @@
 with System.Soft_Links;
 with Ada.Exceptions.Traceback; use Ada.Exceptions.Traceback;
 
-package body GNAT.Traceback.Symbolic is
+package body System.Traceback.Symbolic is
 
    package TSL renames System.Soft_Links;
 
@@ -142,9 +142,10 @@ package body GNAT.Traceback.Symbolic is
 
    end Symbolic_Traceback;
 
-   function Symbolic_Traceback (E : Exception_Occurrence) return String is
+   function Symbolic_Traceback
+     (E : Ada.Exceptions.Exception_Occurrence) return String is
    begin
       return Symbolic_Traceback (Tracebacks (E));
    end Symbolic_Traceback;
 
-end GNAT.Traceback.Symbolic;
+end System.Traceback.Symbolic;
