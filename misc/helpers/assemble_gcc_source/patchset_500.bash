@@ -90,12 +90,12 @@ function remove_file () {
 rm -rf ${EXPANSE}/scratch
 mkdir -p ${OUTPUT_DIR} ${EXPANSE}/scratch
 pattern="^gcc/ada"
-#ada=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
-#produce_patch ${ADA_SUFFIX} ada[@]
-#regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Make-lang.in
-#regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Makefile.in
-#regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure.ac
-#regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure
+ada=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
+produce_patch ${ADA_SUFFIX} ada[@]
+regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Make-lang.in
+regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Makefile.in
+regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure.ac
+regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure
 
 pattern="^gcc/fortran"
 #no-free-df fortran=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
@@ -109,7 +109,7 @@ produce_patch ${CORE_SUFFIX} core[@]
 #openbsd regenerate_patch ${CORE_SUFFIX} patch-gcc_builtins.c
 #open/net regenerate_patch ${CORE_SUFFIX} patch-gcc_config.gcc
 #netbsd regenerate_patch ${CORE_SUFFIX} patch-gcc_configure
-#       DO IT regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
+regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
 #netbsd regenerate_patch ${CORE_SUFFIX} patch-libgcc_config.host
 #netbsd regenerate_patch ${CORE_SUFFIX} patch-libcilkrts_runtime_os-unix.c
 
