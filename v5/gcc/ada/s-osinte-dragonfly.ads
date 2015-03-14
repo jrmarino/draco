@@ -7,7 +7,7 @@
 --                                   S p e c                                --
 --                                                                          --
 --             Copyright (C) 1991-1994, Florida State University            --
---          Copyright (C) 1995-2011, Free Software Foundation, Inc.         --
+--          Copyright (C) 1995-2014, Free Software Foundation, Inc.         --
 --                                                                          --
 -- GNAT is free software;  you can  redistribute it  and/or modify it under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -201,6 +201,11 @@ package System.OS_Interface is
    pragma Import (C, nanosleep, "nanosleep");
 
    type clockid_t is new unsigned_long;
+
+   function clock_getres
+     (clock_id : clockid_t;
+      res      : access timespec) return int;
+   pragma Import (C, clock_getres, "clock_getres");
 
    function clock_gettime
      (clock_id : clockid_t;
@@ -632,8 +637,8 @@ private
    type time_t is new long;
 
    type timespec is record
-      tv_sec  : time_t;
-      tv_nsec : long;
+      ts_sec  : time_t;
+      ts_nsec : long;
    end record;
    pragma Convention (C, timespec);
 

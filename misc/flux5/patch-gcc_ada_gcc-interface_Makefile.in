@@ -49,9 +49,8 @@
    s-intman.adb<s-intman-posix.adb \
 +  s-mudido.adb<s-mudido-affinity.adb \
    s-osinte.adb<s-osinte-freebsd.adb \
--  s-osinte.ads<s-osinte-freebsd.ads \
+   s-osinte.ads<s-osinte-freebsd.ads \
 -  s-osprim.adb<s-osprim-posix.adb \
-+  s-osinte.ads<s-osinte-freebsd32.ads \
 +  s-osprim.adb<s-osprim-bsd32.adb \
    s-taprop.adb<s-taprop-posix.adb \
    s-taspri.ads<s-taspri-posix.ads \
@@ -84,9 +83,8 @@
    s-intman.adb<s-intman-posix.adb \
 +  s-mudido.adb<s-mudido-affinity.adb \
    s-osinte.adb<s-osinte-freebsd.adb \
--  s-osinte.ads<s-osinte-freebsd.ads \
+   s-osinte.ads<s-osinte-freebsd.ads \
 -  s-osprim.adb<s-osprim-posix.adb \
-+  s-osinte.ads<s-osinte-freebsd64.ads \
 +  s-osprim.adb<s-osprim-bsd64.adb \
    s-taprop.adb<s-taprop-posix.adb \
    s-taspri.ads<s-taspri-posix.ads \
