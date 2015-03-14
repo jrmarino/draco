@@ -134,5 +134,5 @@ suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${GCC_SUITE_SUFFIX} suite[@]
 
 pattern="^gcc/testsuite/gfortran"
-suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
-produce_patch ${FRT_SUITE_SUFFIX} suite[@]
+#blank suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
+#blank produce_patch ${FRT_SUITE_SUFFIX} suite[@]
