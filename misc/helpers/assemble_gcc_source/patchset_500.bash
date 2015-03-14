@@ -110,8 +110,7 @@ produce_patch ${CORE_SUFFIX} core[@]
 #open/net regenerate_patch ${CORE_SUFFIX} patch-gcc_config.gcc
 #netbsd regenerate_patch ${CORE_SUFFIX} patch-gcc_configure
 regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
-#netbsd regenerate_patch ${CORE_SUFFIX} patch-libgcc_config.host
-#netbsd regenerate_patch ${CORE_SUFFIX} patch-libcilkrts_runtime_os-unix.c
+regenerate_patch ${CORE_SUFFIX} patch-libgcc_config.host
 
 pattern="^gcc/testsuite/ada|^gcc/testsuite/gnat.dg"
 suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
