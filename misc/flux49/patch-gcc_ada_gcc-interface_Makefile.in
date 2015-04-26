@@ -1,4 +1,4 @@
---- gcc/ada/gcc-interface/Makefile.in.orig	2014-05-04 06:57:59.000000000 -0500
+--- gcc/ada/gcc-interface/Makefile.in.orig	2015-04-26 11:05:55 UTC
 +++ gcc/ada/gcc-interface/Makefile.in
 @@ -1044,6 +1044,7 @@ endif
  ifeq ($(strip $(filter-out arm% linux-androideabi,$(target_cpu) $(target_os))),)
@@ -339,3 +339,18 @@
  
    EH_MECHANISM=-gcc
    THREADSLIB= -lpthread
+@@ -2513,6 +2753,14 @@ GCC_LINK=$(CXX) $(GCC_LINK_FLAGS) $(ADA_
+ # Note: dummy target, stamp-tools is mainly handled by gnattools.
+ 
+ ../stamp-tools:
++	-$(RM) tools/*
++	-$(RMDIR) tools
++	-$(MKDIR) tools
++	-(cd tools; $(LN_S) ../sdefault.adb ../snames.ads ../snames.adb .)
++	-$(foreach PAIR,$(TOOLS_TARGET_PAIRS), \
++		$(RM) tools/$(word 1,$(subst <, ,$(PAIR)));\
++		$(LN_S) $(fsrcpfx)ada/$(word 2,$(subst <, ,$(PAIR))) \
++			tools/$(word 1,$(subst <, ,$(PAIR)));)
+ 	touch ../stamp-tools
+ 
+ # when compiling the tools, the runtime has to be first on the path so that
