@@ -40,6 +40,10 @@ function produce_patch () {
    for DIR in ${DIRECTORY_LIST[@]}; do
       echo "     Searching ${DIR}"
       FILES=${DIR}/*
+      if [ -z "${NETBSD}" ]
+      then
+         FILES=`echo ${FILES} | tr " " "\n" | ${GREPPROG} -v netbsd`
+      fi
       for F in ${FILES}; do
          if [ -f ${F} ]; then
             if [ -f ${RELEASE_DIR}/${F} ]; then
@@ -49,7 +53,9 @@ function produce_patch () {
                   ${DIFFPROG} -u ${RELEASE_DIR}/${F} ${F} --label=${F}.orig --label=${F} >> ${PATCH_FILE}
                fi
             else
-               ${DIFFPROG} -u /dev/null ${F} --label=/dev/null --label=${F} >> ${PATCH_FILE}
+               echo "==>  ${F}"
+               ${DIFFPROG} -u /dev/null ${F} --label=/dev/null --label=${F} \
+                 >> ${PATCH_FILE}
             fi
          fi
       done
@@ -95,12 +101,7 @@ function remove_file () {
 rm -rf ${EXPANSE}/scratch
 mkdir -p ${OUTPUT_DIR} ${EXPANSE}/scratch
 pattern="^gcc/ada"
-if [ -n "${NETBSD}" ]
-then
-ada=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern | ${GREPPROG} -v netbsd`
-else
 ada=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
-fi
 produce_patch ${ADA_SUFFIX} ada[@]
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Make-lang.in
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Makefile.in
