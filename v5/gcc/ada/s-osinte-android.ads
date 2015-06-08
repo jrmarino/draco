@@ -597,7 +597,7 @@ private
 
    type pid_t is new int;
 
-   type time_t is new long;
+   type time_t is new Long_Long_Integer;
 
    type timespec is record
       ts_sec  : time_t;

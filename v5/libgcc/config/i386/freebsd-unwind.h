@@ -1,9 +1,30 @@
 /* DWARF2 EH unwinding support for FreeBSD: AMD x86-64 and x86.
- *  Copyright (C) 2010, 2012, 2014 John Marino <draco@marino.st>
- *
- *  Do code reading to identify a signal frame, and set the frame
- *  state data appropriately.  See unwind-dw2.c for the structs.
- */
+   Copyright (C) 2015 Free Software Foundation, Inc.
+   Contributed by John Marino <gnugcc@marino.st>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
+
+/* Do code reading to identify a signal frame, and set the frame
+   state data appropriately.  See unwind-dw2.c for the structs. */
 
 #include <sys/types.h>
 #include <signal.h>
@@ -15,26 +36,6 @@
 #ifdef __x86_64__
 #define MD_FALLBACK_FRAME_STATE_FOR x86_64_freebsd_fallback_frame_state
 
-#if (__FreeBSD__ < 9)
-#include <sys/sysctl.h>
-static void
-x86_64_sigtramp_range (unsigned char **start, unsigned char **end)
-{
-  unsigned long ps_strings;
-  int mib[2];
-  size_t len;
-
-  mib[0] = CTL_KERN;
-  mib[1] = KERN_PS_STRINGS;
-  len = sizeof (ps_strings);
-  sysctl (mib, 2, &ps_strings, &len, NULL, 0);
-
-  *start = (unsigned char *)ps_strings - 32;
-  *end   = (unsigned char *)ps_strings;
-}
-#endif
-
-
 static _Unwind_Reason_Code
 x86_64_freebsd_fallback_frame_state
 (struct _Unwind_Context *context, _Unwind_FrameState *fs)
@@ -42,18 +43,11 @@ x86_64_freebsd_fallback_frame_state
   struct sigframe *sf;
   long new_cfa;
 
-#if (__FreeBSD__ < 9)
-  unsigned char *pc = context->ra;
-  unsigned char *sigtramp_start, *sigtramp_end;
-
-  x86_64_sigtramp_range(&sigtramp_start, &sigtramp_end);
-  if (pc >= sigtramp_end || pc < sigtramp_start)
-    return _URC_END_OF_STACK;
-#else
   /* Prior to FreeBSD 9, the signal trampoline was located immediately
      before the ps_strings.  To support non-executable stacks on AMD64,
-     the sigtramp was moved to a shared page for FreeBSD 9.  We are
-     stuck looking for frame patterns again (sys/amd64/amd64/sigtramp.S):
+     the sigtramp was moved to a shared page for FreeBSD 9.  Unfortunately
+     this means looking frame patterns again (sys/amd64/amd64/sigtramp.S)
+     rather than using the robust and convenient KERN_PS_STRINGS trick.
 
      <pc + 00>:  lea     0x10(%rsp),%rdi
      <pc + 05>:  pushq   $0x0
@@ -68,7 +62,6 @@ x86_64_freebsd_fallback_frame_state
         && *(unsigned int *)(context->ra +  8) == 0x01a1c0c7
         && *(unsigned int *)(context->ra + 12) == 0x050f0000 ))
     return _URC_END_OF_STACK;
-#endif
 
   sf = (struct sigframe *) context->cfa;
   new_cfa = sf->REG_NAME(rsp);
@@ -124,25 +117,7 @@ x86_64_freebsd_fallback_frame_state
  * compat on AMD64.  The sigtramp is in a shared page in that case so the
  * x86_sigtramp_range only works on a true i386 system.  We have to
  * search for the sigtramp frame if we want it working everywhere.
-
-#include <sys/sysctl.h>
-static void
-x86_sigtramp_range (unsigned char **start, unsigned char **end)
-{
-  unsigned long ps_strings;
-  int mib[2];
-  size_t len;
-
-  mib[0] = CTL_KERN;
-  mib[1] = KERN_PS_STRINGS;
-  len = sizeof (ps_strings);
-  sysctl (mib, 2, &ps_strings, &len, NULL, 0);
-
-  *start = (unsigned char *)ps_strings - 128;
-  *end   = (unsigned char *)ps_strings;
-}
-*/
-
+ */
 
 static _Unwind_Reason_Code
 x86_freebsd_fallback_frame_state

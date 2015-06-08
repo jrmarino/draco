@@ -5,7 +5,7 @@
 --                               S Y S T E M                                --
 --                                                                          --
 --                                 S p e c                                  --
---                       (DragonFly BSD/x86 Version)                        --
+--                           (NetBSD/x86 Version)                           --
 --                                                                          --
 --          Copyright (C) 1992-2011, Free Software Foundation, Inc.         --
 --                                                                          --

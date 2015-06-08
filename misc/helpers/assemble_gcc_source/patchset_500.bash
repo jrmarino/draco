@@ -14,7 +14,12 @@ ADA_SUITE_SUFFIX=ada-testsuite
 CXX_SUITE_SUFFIX=cxx-testsuite
 GCC_SUITE_SUFFIX=gcc-testsuite
 FRT_SUITE_SUFFIX=fortran-testsuite
+if [ -n "${NETBSD}" ]
+then
+OUTPUT_DIR=${EXPANSE}/patches-${GCCVERSION}-pkgsrc
+else
 OUTPUT_DIR=${EXPANSE}/patches-${GCCVERSION}
+fi
 RELEASE_DIR=${EXPANSE}/gcc-${GCCVERSION}
 SCRATCH_DIR=${EXPANSE}/scratch
 
@@ -90,7 +95,12 @@ function remove_file () {
 rm -rf ${EXPANSE}/scratch
 mkdir -p ${OUTPUT_DIR} ${EXPANSE}/scratch
 pattern="^gcc/ada"
+if [ -n "${NETBSD}" ]
+then
+ada=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern | ${GREPPROG} -v netbsd`
+else
 ada=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
+fi
 produce_patch ${ADA_SUFFIX} ada[@]
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Make-lang.in
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Makefile.in
@@ -100,15 +110,26 @@ regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure
 pattern="^gcc/fortran"
 #no-free-df fortran=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 #no-free-df produce_patch ${F95_SUFFIX} fortran[@]
-#netbsd regenerate_patch ${F95_SUFFIX} patch-libgfortran_acinclude.m4
-#netbsd regenerate_patch ${F95_SUFFIX} patch-libgfortran_configure
+if [ -n "${NETBSD}" ]
+then
+reset_patch ${F95_SUFFIX}
+regenerate_patch ${F95_SUFFIX} patch-libgfortran_acinclude.m4
+regenerate_patch ${F95_SUFFIX} patch-libgfortran_configure
+regenerate_patch ${F95_SUFFIX} patch-gcc_fortran_f95-lang.c
+fi
 
 pattern="^gcc/testsuite|^gcc/ada|^gcc/fortran|^libstdc..-v3"
 core=`cd ${DRACO} && find * -type d | sort | ${GREPPROG} -vE $pattern`
 produce_patch ${CORE_SUFFIX} core[@]
+if [ -n "${NETBSD}" ]
+then
+regenerate_patch ${CORE_SUFFIX} patch-gcc_config.gcc
+regenerate_patch ${CORE_SUFFIX} patch-gcc_configure
+regenerate_patch ${CORE_SUFFIX} patch-gcc_config_i386_netbsd-elf.h
+regenerate_patch ${CORE_SUFFIX} patch-libgcc_crtstuff.c
+regenerate_patch ${CORE_SUFFIX} patch-libgcc_unwind-dw2-fde-dip.c
 #openbsd regenerate_patch ${CORE_SUFFIX} patch-gcc_builtins.c
-#open/net regenerate_patch ${CORE_SUFFIX} patch-gcc_config.gcc
-#netbsd regenerate_patch ${CORE_SUFFIX} patch-gcc_configure
+fi
 regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
 regenerate_patch ${CORE_SUFFIX} patch-libgcc_config.host
 
@@ -117,9 +138,13 @@ suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${ADA_SUITE_SUFFIX} suite[@]
 
 pattern="^libstdc..-v3"
-#open/net cplusplus=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
-#open/net produce_patch ${CXX_SUFFIX} cplusplus[@]
+if [ -n "${NETBSD}" ]
+then
+cplusplus=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
+produce_patch ${CXX_SUFFIX} cplusplus[@]
+else
 reset_patch ${CXX_SUFFIX}
+fi
 regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_configure.host
 
 pattern="^gcc/testsuite/c-c..-common"

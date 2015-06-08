@@ -2070,6 +2070,18 @@ void (*__gnat_set_stack_limit_hook)(void) = (void (*)(void))0;
 
 #include <signal.h>
 #include <unistd.h>
+#include <time.h>
+
+#define netbsd_sigaction	sigaction
+#define netbsd_sigaddset	sigaddset
+#define netbsd_sigdelset	sigdelset
+#define netbsd_sigemptyset	sigemptyset
+#define netbsd_sigfillset	sigfillset
+#define netbsd_sigismember	sigismember
+#define netbsd_sigaltstack	sigaltstack
+#define netbsd_nanosleep	nanosleep
+#define netbsd_clock_gettime	clock_gettime
+#define netbsd_gettimeofday	gettimeofday
 
 static void
 __gnat_error_handler (int sig)
