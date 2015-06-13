@@ -57,20 +57,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     static const mask cntrl     = _CTYPE_C;
     static const mask punct     = _CTYPE_P;
     static const mask alnum     = _CTYPE_A | _CTYPE_D;
-#elif defined(_CTYPE_U)
-    typedef unsigned char      	mask;
-    static const mask upper    	= _CTYPE_U;
-    static const mask lower 	= _CTYPE_L;
-    static const mask alpha 	= _CTYPE_U | _CTYPE_L;
-    static const mask digit 	= _CTYPE_N;
-    static const mask xdigit 	= _CTYPE_N | _CTYPE_X;
-    static const mask space 	= _CTYPE_S;
-    static const mask print 	= _CTYPE_P | _CTYPE_U | _CTYPE_L | _CTYPE_N | _CTYPE_B;
-    static const mask graph 	= _CTYPE_P | _CTYPE_U | _CTYPE_L | _CTYPE_N;
-    static const mask cntrl 	= _CTYPE_C;
-    static const mask punct 	= _CTYPE_P;
-    static const mask alnum 	= _CTYPE_U | _CTYPE_L | _CTYPE_N;
-#else
+#elif !defined(_CTYPE_U)
     typedef unsigned char      	mask;
     static const mask upper    	= _U;
     static const mask lower 	= _L;
@@ -83,6 +70,22 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     static const mask cntrl 	= _C;
     static const mask punct 	= _P;
     static const mask alnum 	= _U | _L | _N;
+#else
+    typedef unsigned char      	mask;
+    static const mask upper    	= _CTYPE_U;
+    static const mask lower 	= _CTYPE_L;
+    static const mask alpha 	= _CTYPE_U | _CTYPE_L;
+    static const mask digit 	= _CTYPE_N;
+    static const mask xdigit 	= _CTYPE_N | _CTYPE_X;
+    static const mask space 	= _CTYPE_S;
+    static const mask print 	= _CTYPE_P | _CTYPE_U | _CTYPE_L | _CTYPE_N | _CTYPE_B;
+    static const mask graph 	= _CTYPE_P | _CTYPE_U | _CTYPE_L | _CTYPE_N;
+    static const mask cntrl 	= _CTYPE_C;
+    static const mask punct 	= _CTYPE_P;
+    static const mask alnum 	= _CTYPE_U | _CTYPE_L | _CTYPE_N;
+#endif
+#if __cplusplus >= 201103L
+    static const mask blank 	= space;
 #endif
   };
 
