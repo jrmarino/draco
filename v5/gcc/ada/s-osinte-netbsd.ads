@@ -135,23 +135,23 @@ package System.OS_Interface is
    function sigaddset
      (set : access sigset_t;
       sig : Signal) return int;
-   pragma Import (C, sigaddset, "netbsd_sigaddset");
+   pragma Import (C, sigaddset, "__sigaddset14");
 
    function sigdelset
      (set : access sigset_t;
       sig : Signal) return int;
-   pragma Import (C, sigdelset, "netbsd_sigdelset");
+   pragma Import (C, sigdelset, "__sigdelset14");
 
    function sigfillset (set : access sigset_t) return int;
-   pragma Import (C, sigfillset, "netbsd_sigfillset");
+   pragma Import (C, sigfillset, "__sigfillset14");
 
    function sigismember
      (set : access sigset_t;
       sig : Signal) return int;
-   pragma Import (C, sigismember, "netbsd_sigismember");
+   pragma Import (C, sigismember, "__sigismember14");
 
    function sigemptyset (set : access sigset_t) return int;
-   pragma Import (C, sigemptyset, "netbsd_sigemptyset");
+   pragma Import (C, sigemptyset, "__sigemptyset14");
 
    --  sigcontext is architecture dependent, so define it private
    type struct_sigcontext is private;
@@ -189,7 +189,7 @@ package System.OS_Interface is
      (sig  : Signal;
       act  : struct_sigaction_ptr;
       oact : struct_sigaction_ptr) return int;
-   pragma Import (C, sigaction, "netbsd_sigaction");
+   pragma Import (C, sigaction, "__sigaction14");
 
    ----------
    -- Time --
@@ -201,7 +201,7 @@ package System.OS_Interface is
    type timespec is private;
 
    function nanosleep (rqtp, rmtp : access timespec)  return int;
-   pragma Import (C, nanosleep, "netbsd_nanosleep");
+   pragma Import (C, nanosleep, "nanosleep");
 
    type clockid_t is new int;
 
@@ -209,7 +209,7 @@ package System.OS_Interface is
      (clock_id : clockid_t;
       tp       : access timespec)
       return int;
-   pragma Import (C, clock_gettime, "netbsd_clock_gettime");
+   pragma Import (C, clock_gettime, "clock_gettime");
 
    function To_Duration (TS : timespec) return Duration;
    pragma Inline (To_Duration);
@@ -306,7 +306,7 @@ package System.OS_Interface is
    function sigaltstack
      (ss  : not null access stack_t;
       oss : access stack_t) return int;
-   pragma Import (C, sigaltstack, "netbsd_sigaltstack");
+   pragma Import (C, sigaltstack, "__sigaltstack14");
 
    Alternate_Stack : aliased System.Address;
    --  This is a dummy definition, never used (Alternate_Stack_Size is null)

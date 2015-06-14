@@ -208,10 +208,6 @@
 #include <sys/select.h>
 #endif
 
-#ifdef __NetBSD__
-#include <sys/select.h>
-#endif
-
 #if defined (_AIX) || defined (__FreeBSD__) || defined (__hpux__) || \
     defined (__DragonFly__) || \
     defined (__NetBSD__) || defined (__OpenBSD__) || \
