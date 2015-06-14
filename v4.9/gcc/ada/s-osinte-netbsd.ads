@@ -32,7 +32,6 @@
 ------------------------------------------------------------------------------
 
 --  This is the NetBSD PTHREADS version of this package.
---  It is based off of the FreeBSD PTHREADS as of 4.2.3.
 
 --  This package encapsulates all direct interfaces to OS services
 --  that are needed by the tasking run-time (libgnarl).
@@ -224,6 +223,9 @@ package System.OS_Interface is
    end record;
    pragma Convention (C, struct_timezone);
 
+   procedure usleep (useconds : unsigned_long);
+   pragma Import (C, usleep, "usleep");
+
    -------------------------
    -- Priority Scheduling --
    -------------------------
@@ -285,7 +287,7 @@ package System.OS_Interface is
    PTHREAD_SCOPE_PROCESS : constant := 0;
    PTHREAD_SCOPE_SYSTEM  : constant := 2;
 
-   --  Read/Write lock not supported on OpenBSD. To add support both types
+   --  Read/Write lock not supported on NetBSD. To add support both types
    --  pthread_rwlock_t and pthread_rwlockattr_t must properly be defined
    --  with the associated routines pthread_rwlock_[init/destroy] and
    --  pthread_rwlock_[rdlock/wrlock/unlock].
@@ -307,7 +309,7 @@ package System.OS_Interface is
    function sigaltstack
      (ss  : not null access stack_t;
       oss : access stack_t) return int;
-   pragma Import (C, sigaltstack, "sigaltstack");
+   pragma Import (C, sigaltstack, "__sigaltstack14");
 
    Alternate_Stack : aliased System.Address;
    --  This is a dummy definition, never used (Alternate_Stack_Size is null)
@@ -615,8 +617,8 @@ private
    type time_t is new int;
 
    type timespec is record
-      tv_sec  : time_t;
-      tv_nsec : long;
+      ts_sec  : time_t;
+      ts_nsec : long;
    end record;
    pragma Convention (C, timespec);
 

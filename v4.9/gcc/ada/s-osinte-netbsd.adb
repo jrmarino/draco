@@ -99,7 +99,7 @@ package body System.OS_Interface is
 
    function To_Duration (TS : timespec) return Duration is
    begin
-      return Duration (TS.tv_sec) + Duration (TS.tv_nsec) / 10#1#E9;
+      return Duration (TS.ts_sec) + Duration (TS.ts_nsec) / 10#1#E9;
    end To_Duration;
 
    ------------------------
@@ -133,8 +133,8 @@ package body System.OS_Interface is
          F := F + 1.0;
       end if;
 
-      return timespec'(tv_sec => S,
-                       tv_nsec => long (Long_Long_Integer (F * 10#1#E9)));
+      return timespec'(ts_sec => S,
+                       ts_nsec => long (Long_Long_Integer (F * 10#1#E9)));
    end To_Timespec;
 
 end System.OS_Interface;
