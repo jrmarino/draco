@@ -1,4 +1,4 @@
---- gcc/ada/gcc-interface/Makefile.in.orig	2015-06-08 15:33:02 UTC
+--- gcc/ada/gcc-interface/Makefile.in.orig	2015-06-14 11:43:12 UTC
 +++ gcc/ada/gcc-interface/Makefile.in
 @@ -1136,6 +1136,7 @@ endif
  ifeq ($(strip $(filter-out arm% linux-androideabi,$(target_cpu) $(target_os))),)
@@ -58,7 +58,7 @@
    s-osinte.adb<s-osinte-freebsd.adb \
    s-osinte.ads<s-osinte-freebsd.ads \
    s-osprim.adb<s-osprim-posix.adb \
-@@ -1465,7 +1477,113 @@ ifeq ($(strip $(filter-out %86_64 freebs
+@@ -1465,6 +1477,106 @@ ifeq ($(strip $(filter-out %86_64 freebs
    mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
    GNATLIB_SHARED = gnatlib-shared-dual
  
@@ -110,8 +110,6 @@
 +# x86 NetBSD
 +ifeq ($(strip $(filter-out %86 netbsd%,$(target_cpu) $(target_os))),)
 +  LIBGNAT_TARGET_PAIRS = \
-+  a-exetim.adb<a-exetim-posix.adb \
-+  a-exetim.ads<a-exetim-default.ads \
 +  a-intnam.ads<a-intnam-netbsd.ads \
 +  g-socthi.adb<g-socthi-bsd.adb \
 +  s-trasym.adb<s-trasym-bsd.adb \
@@ -133,7 +131,6 @@
 +  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
 +  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
 +  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
-+  EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
 +
 +  EH_MECHANISM=-gcc
 +  THREADSLIB= -lpthread
@@ -145,8 +142,6 @@
 +# x86_64 NetBSD
 +ifeq ($(strip $(filter-out x86_64 netbsd%,$(target_cpu) $(target_os))),)
 +  LIBGNAT_TARGET_PAIRS = \
-+  a-exetim.adb<a-exetim-posix.adb \
-+  a-exetim.ads<a-exetim-default.ads \
 +  a-intnam.ads<a-intnam-netbsd.ads \
 +  g-socthi.adb<g-socthi-bsd.adb \
 +  s-trasym.adb<s-trasym-bsd.adb \
@@ -168,7 +163,5 @@
 +  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
 +  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
    EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
-+  EXTRA_GNATRTL_TASKING_OBJS=a-exetim.o
  
    EH_MECHANISM=-gcc
-   THREADSLIB= -lpthread
