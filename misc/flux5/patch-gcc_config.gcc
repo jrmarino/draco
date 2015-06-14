@@ -1,18 +1,20 @@
---- gcc/config.gcc.orig	2015-06-08 14:48:56 UTC
+--- gcc/config.gcc.orig	2015-06-14 21:43:44 UTC
 +++ gcc/config.gcc
-@@ -1393,12 +1393,14 @@ x86_64-*-freebsd*)
+@@ -1393,12 +1393,16 @@ x86_64-*-freebsd*)
  	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h ${fbsd_tm_file} i386/x86-64.h i386/freebsd.h i386/freebsd64.h"
  	;;
  i[34567]86-*-netbsdelf*)
 -	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h netbsd.h netbsd-elf.h i386/netbsd-elf.h"
 +	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h netbsd.h netbsd-elf.h i386/netbsd-elf.h freebsd-stdint.h"
  	extra_options="${extra_options} netbsd.opt netbsd-elf.opt"
++	tmake_file="${tmake_file} i386/t-crtstuff"
 +	use_gcc_stdint=wrap
  	;;
  x86_64-*-netbsd*)
 -	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h netbsd.h netbsd-elf.h i386/x86-64.h i386/netbsd64.h"
 +	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h netbsd.h netbsd-elf.h i386/x86-64.h i386/netbsd64.h freebsd-stdint.h"
  	extra_options="${extra_options} netbsd.opt netbsd-elf.opt"
++	tmake_file="${tmake_file} i386/t-crtstuff"
 +	use_gcc_stdint=wrap
  	;;
  i[34567]86-*-openbsd2.*|i[34567]86-*openbsd3.[0123])
