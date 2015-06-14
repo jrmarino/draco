@@ -12,7 +12,7 @@
  ifeq ($(strip $(filter-out sparc% sun solaris%,$(target_cpu) $(target_vendor) $(target_os))),)
    LIBGNAT_TARGET_PAIRS_COMMON = \
    a-intnam.ads<a-intnam-solaris.ads \
-+  s-trasym.adb<s-trasym-bsd.adb \
++  g-trasym.adb<g-trasym-bsd.adb \
    s-inmaop.adb<s-inmaop-posix.adb \
    s-intman.adb<s-intman-solaris.adb \
    s-mudido.adb<s-mudido-affinity.adb \
@@ -30,7 +30,7 @@
    LIBGNAT_TARGET_PAIRS = \
    a-intnam.ads<a-intnam-freebsd.ads \
 +  g-socthi.adb<g-socthi-bsd.adb \
-+  s-trasym.adb<s-trasym-bsd.adb \
++  g-trasym.adb<g-trasym-bsd.adb \
    s-inmaop.adb<s-inmaop-posix.adb \
    s-intman.adb<s-intman-posix.adb \
 +  s-mudido.adb<s-mudido-affinity.adb \
@@ -51,7 +51,7 @@
    LIBGNAT_TARGET_PAIRS = \
    a-intnam.ads<a-intnam-freebsd.ads \
 +  g-socthi.adb<g-socthi-bsd.adb \
-+  s-trasym.adb<s-trasym-bsd.adb \
++  g-trasym.adb<g-trasym-bsd.adb \
    s-inmaop.adb<s-inmaop-posix.adb \
    s-intman.adb<s-intman-posix.adb \
 +  s-mudido.adb<s-mudido-affinity.adb \
@@ -78,7 +78,7 @@
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-intnam.ads<a-intnam-dragonfly.ads \
 +  g-socthi.adb<g-socthi-bsd.adb \
-+  s-trasym.adb<s-trasym-bsd.adb \
++  g-trasym.adb<g-trasym-bsd.adb \
 +  s-inmaop.adb<s-inmaop-posix.adb \
 +  s-intman.adb<s-intman-posix.adb \
 +  s-mudido.adb<s-mudido-affinity.adb \
@@ -112,7 +112,7 @@
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-intnam.ads<a-intnam-netbsd.ads \
 +  g-socthi.adb<g-socthi-bsd.adb \
-+  s-trasym.adb<s-trasym-bsd.adb \
++  g-trasym.adb<g-trasym-bsd.adb \
 +  s-inmaop.adb<s-inmaop-posix.adb \
 +  s-intman.adb<s-intman-posix.adb \
 +  s-mudido.adb<s-mudido-affinity.adb \
@@ -144,7 +144,7 @@
 +  LIBGNAT_TARGET_PAIRS = \
 +  a-intnam.ads<a-intnam-netbsd.ads \
 +  g-socthi.adb<g-socthi-bsd.adb \
-+  s-trasym.adb<s-trasym-bsd.adb \
++  g-trasym.adb<g-trasym-bsd.adb \
 +  s-inmaop.adb<s-inmaop-posix.adb \
 +  s-intman.adb<s-intman-posix.adb \
 +  s-mudido.adb<s-mudido-affinity.adb \
