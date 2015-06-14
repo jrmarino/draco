@@ -14,9 +14,21 @@ ADA_SUITE_SUFFIX=ada-testsuite
 CXX_SUITE_SUFFIX=cxx-testsuite
 GCC_SUITE_SUFFIX=gcc-testsuite
 FRT_SUITE_SUFFIX=fortran-testsuite
+if [ -n "${NETBSD}" ]
+then
+OUTPUT_DIR=${EXPANSE}/patches-${GCCVERSION}-pkgsrc
+else
 OUTPUT_DIR=${EXPANSE}/patches-${GCCVERSION}
+fi
 RELEASE_DIR=${EXPANSE}/gcc-${GCCVERSION}
 SCRATCH_DIR=${EXPANSE}/scratch
+
+function reset_patch () {
+   PATCH_SUFFIX=${1}
+   PATCH_FILE=${OUTPUT_DIR}/diff-${PATCH_SUFFIX}
+   cd ${DRACO}
+   rm -f ${PATCH_FILE}
+}
 
 function produce_patch () {
    PATCH_SUFFIX=${1}
@@ -28,6 +40,11 @@ function produce_patch () {
    for DIR in ${DIRECTORY_LIST[@]}; do
       echo "     Searching ${DIR}"
       FILES=${DIR}/*
+      FILES=`echo ${FILES} | tr " " "\n" | ${GREPPROG} -v openbsd`
+      if [ -z "${NETBSD}" ]
+      then
+         FILES=`echo ${FILES} | tr " " "\n" | ${GREPPROG} -v netbsd`
+      fi
       for F in ${FILES}; do
          if [ -f ${F} ]; then
             if [ -f ${RELEASE_DIR}/${F} ]; then
@@ -37,7 +54,9 @@ function produce_patch () {
                   ${DIFFPROG} -u ${RELEASE_DIR}/${F} ${F} --label=${F}.orig --label=${F} >> ${PATCH_FILE}
                fi
             else
-               ${DIFFPROG} -u /dev/null ${F} --label=/dev/null --label=${F} >> ${PATCH_FILE}
+               echo "==>  ${F}"
+               ${DIFFPROG} -u /dev/null ${F} --label=/dev/null --label=${F} \
+                 >> ${PATCH_FILE}
             fi
          fi
       done
@@ -93,15 +112,21 @@ regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure
 pattern="^gcc/fortran"
 fortran=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${F95_SUFFIX} fortran[@]
+if [ -n "${NETBSD}" ]
+then
 regenerate_patch ${F95_SUFFIX} patch-libgfortran_acinclude.m4
 regenerate_patch ${F95_SUFFIX} patch-libgfortran_configure
+fi
 
 pattern="^gcc/testsuite|^gcc/ada|^gcc/fortran|^libstdc..-v3"
 core=`cd ${DRACO} && find * -type d | sort | ${GREPPROG} -vE $pattern`
 produce_patch ${CORE_SUFFIX} core[@]
-regenerate_patch ${CORE_SUFFIX} patch-gcc_builtins.c
+if [ -n "${NETBSD}" ]
+then
 regenerate_patch ${CORE_SUFFIX} patch-gcc_config.gcc
 regenerate_patch ${CORE_SUFFIX} patch-gcc_configure
+#regenerate_patch ${CORE_SUFFIX} patch-gcc_builtins.c
+fi
 regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
 regenerate_patch ${CORE_SUFFIX} patch-libgcc_config.host
 regenerate_patch ${CORE_SUFFIX} patch-libcilkrts_runtime_os-unix.c
