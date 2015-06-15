@@ -1,4 +1,4 @@
---- gcc/ada/gcc-interface/Makefile.in.orig	2015-06-14 11:43:12 UTC
+--- gcc/ada/gcc-interface/Makefile.in.orig	2015-06-15 07:57:41 UTC
 +++ gcc/ada/gcc-interface/Makefile.in
 @@ -1136,6 +1136,7 @@ endif
  ifeq ($(strip $(filter-out arm% linux-androideabi,$(target_cpu) $(target_os))),)
@@ -58,7 +58,7 @@
    s-osinte.adb<s-osinte-freebsd.adb \
    s-osinte.ads<s-osinte-freebsd.ads \
    s-osprim.adb<s-osprim-posix.adb \
-@@ -1465,6 +1477,106 @@ ifeq ($(strip $(filter-out %86_64 freebs
+@@ -1465,6 +1477,110 @@ ifeq ($(strip $(filter-out %86_64 freebs
    mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
    GNATLIB_SHARED = gnatlib-shared-dual
  
@@ -126,6 +126,8 @@
 +  $(X86_TARGET_PAIRS) \
 +  system.ads<system-netbsd-x86.ads
 +
++  TOOLS_TARGET_PAIRS = \
++  mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
 +  GNATLIB_SHARED = gnatlib-shared-dual
 +
 +  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
@@ -158,6 +160,8 @@
 +  $(X86_64_TARGET_PAIRS) \
 +  system.ads<system-netbsd-x86_64.ads
 +
++  TOOLS_TARGET_PAIRS = \
++  mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
 +  GNATLIB_SHARED = gnatlib-shared-dual
 +
 +  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
