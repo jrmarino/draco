@@ -1473,7 +1473,6 @@ ifeq ($(strip $(filter-out %86 freebsd%,$(target_cpu) $(target_os))),)
   LIBGNAT_TARGET_PAIRS = \
   a-intnam.ads<a-intnam-freebsd.ads \
   g-socthi.adb<g-socthi-bsd.adb \
-  g-trasym.adb<g-trasym-bsd.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-mudido.adb<s-mudido-affinity.adb \
@@ -1508,7 +1507,6 @@ ifeq ($(strip $(filter-out %86_64 freebsd%,$(target_cpu) $(target_os))),)
   LIBGNAT_TARGET_PAIRS = \
   a-intnam.ads<a-intnam-freebsd.ads \
   g-socthi.adb<g-socthi-bsd.adb \
-  g-trasym.adb<g-trasym-bsd.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-mudido.adb<s-mudido-affinity.adb \
@@ -1543,7 +1541,6 @@ ifeq ($(strip $(filter-out x86_64 dragonfly%,$(target_cpu) $(target_os))),)
   LIBGNAT_TARGET_PAIRS = \
   a-intnam.ads<a-intnam-dragonfly.ads \
   g-socthi.adb<g-socthi-bsd.adb \
-  g-trasym.adb<g-trasym-bsd.adb \
   s-inmaop.adb<s-inmaop-posix.adb \
   s-intman.adb<s-intman-posix.adb \
   s-mudido.adb<s-mudido-affinity.adb \
@@ -1553,6 +1550,7 @@ ifeq ($(strip $(filter-out x86_64 dragonfly%,$(target_cpu) $(target_os))),)
   s-taprop.adb<s-taprop-posix.adb \
   s-taspri.ads<s-taspri-posix.ads \
   s-tpopsp.adb<s-tpopsp-posix.adb \
+  s-trasym.adb<s-trasym-dwarf.adb \
   $(ATOMICS_TARGET_PAIRS) \
   $(X86_64_TARGET_PAIRS) \
   system.ads<system-dragonfly-x86_64.ads
