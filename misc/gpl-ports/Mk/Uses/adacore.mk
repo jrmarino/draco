@@ -14,14 +14,14 @@ _INCLUDE_USES_ADACORE_MK=    yes
 
 CC= ada
 
-. if ${ada_ARGS:Mrun}
+. if ${adacore_ARGS:Mrun}
 RUN_DEPENDS+=	${LOCALBASE}/gnat-gpl/bin/ada:${PORTSDIR}/adacore/gnat-gpl
 . endif
 
 BUILD_DEPENDS+=	${LOCALBASE}/gnat-gpl/bin/ada:${PORTSDIR}/adacore/gnat-gpl
 MAKE_ENV+=	PATH=${LOCALBASE}/gnat-gpl/bin:${PATH} \
-		ADA_PROJECT_PATH=${LOCALBASE}/lib/gnat-gpl
+		ADA_PROJECT_PATH=${LOCALBASE}/lib/gnat
 CONFIGURE_ENV+=	PATH=${LOCALBASE}/gnat-gpl/bin:${PATH} \
-		ADA_PROJECT_PATH=${LOCALBASE}/lib/gnat-gpl
+		ADA_PROJECT_PATH=${LOCALBASE}/lib/gnat
 
 .endif
