@@ -1,0 +1,8 @@
+The GNAT GPL compiler supports several languages: Ada, C, C++
+This is a private port that only exists to build SPARK on BSD platforms
+where only FSF GCC exists.
+
+This compiler implements the full Ada-83, Ada-95, Ada-2005 and Ada-2012
+standards.
+
+WWW: http://www.dragonlace.net/
