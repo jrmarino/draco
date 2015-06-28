@@ -1,0 +1,10 @@
+--- gnat2why/Makefile.orig	2015-06-24 21:40:55 UTC
++++ gnat2why/Makefile
+@@ -31,6 +31,7 @@ ifeq ($(filter-out CYGWIN%,$(uname)),)
+   LDFLAGS=-Wl,--stack=0x2000000
+   USE_LN=false
+ endif
++LDFLAGS=-static
+ 
+ .PHONY: setup force clean
+ 

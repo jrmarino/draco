@@ -1,0 +1,11 @@
+--- gnatprove/Makefile.orig	2015-06-24 21:40:55 UTC
++++ gnatprove/Makefile
+@@ -2,7 +2,7 @@ all: build
+ 
+ build: force
+ 	mkdir -p obj
+-	gprbuild -j0 -P gnatprove.gpr
++	gprbuild -j0 -P gnatprove.gpr -largs -static
+ 
+ PROD=-XBuild=Production
+ 
