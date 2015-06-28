@@ -5,7 +5,7 @@ PORTNAME=	gnat-gpl
 PORTVERSION=	2015
 CATEGORIES=	adacore
 MASTER_SITES=	http://downloads.dragonlace.net/src/:boot \
-		http://downloads.dragonlace.net/src/:gnat \
+		http://downloads.dragonlace.net/src/ \
 		LOCAL/marino:boot 
 DISTNAME=	gcc-4.9-gpl-2015-src
 DISTFILES=	${DISTNAME}.tar.bz2

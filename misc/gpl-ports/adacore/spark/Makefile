@@ -15,7 +15,8 @@ LICENSE=	GPLv3
 VALID_CATEGORIES=	adacore
 
 BUILD_DEPENDS=	gnatcoll-gpl>=2015:${PORTSDIR}/adacore/gnatcoll \
-		gnatpython>=20101207:${PORTSDIR}/devel/gnatpython
+		gnatpython>=20101207:${PORTSDIR}/devel/gnatpython \
+		gprbuild:${PORTSDIR}/devel/gprbuild
 RUN_DEPENDS=	gnatwhy3:${PORTSDIR}/math/why3-gpl \
 		alt-ergo-spark:${PORTSDIR}/math/alt-ergo-spark
 
