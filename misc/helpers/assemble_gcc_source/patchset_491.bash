@@ -110,12 +110,14 @@ regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure.ac
 regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure
 
 pattern="^gcc/fortran"
-fortran=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
-produce_patch ${F95_SUFFIX} fortran[@]
+#fortran=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
+#produce_patch ${F95_SUFFIX} fortran[@]
 if [ -n "${NETBSD}" ]
 then
+reset_patch ${F95_SUFFIX}
 regenerate_patch ${F95_SUFFIX} patch-libgfortran_acinclude.m4
 regenerate_patch ${F95_SUFFIX} patch-libgfortran_configure
+regenerate_patch ${F95_SUFFIX} patch-gcc_fortran_f95-lang.c
 fi
 
 pattern="^gcc/testsuite|^gcc/ada|^gcc/fortran|^libstdc..-v3"
