@@ -1,6 +1,6 @@
 #!/usr/local/bin/bash
 
-GCCVERSION=4.9.2
+GCCVERSION=4.9.3
 DRACO=/home/marino/github/draco/v4.9
 EXPANSE=/home/marino/GCC-TEST
 DIFFPROG=/usr/bin/diff
