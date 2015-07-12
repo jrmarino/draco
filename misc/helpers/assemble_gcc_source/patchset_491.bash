@@ -123,12 +123,12 @@ fi
 pattern="^gcc/testsuite|^gcc/ada|^gcc/fortran|^libstdc..-v3"
 core=`cd ${DRACO} && find * -type d | sort | ${GREPPROG} -vE $pattern`
 produce_patch ${CORE_SUFFIX} core[@]
-if [ -n "${NETBSD}" ]
-then
+#if [ -n "${NETBSD}" ]
+#then
 regenerate_patch ${CORE_SUFFIX} patch-gcc_config.gcc
 regenerate_patch ${CORE_SUFFIX} patch-gcc_configure
 #regenerate_patch ${CORE_SUFFIX} patch-gcc_builtins.c
-fi
+#fi
 regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
 regenerate_patch ${CORE_SUFFIX} patch-libgcc_config.host
 regenerate_patch ${CORE_SUFFIX} patch-libcilkrts_runtime_os-unix.c
