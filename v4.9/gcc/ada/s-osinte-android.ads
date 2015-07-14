@@ -595,8 +595,8 @@ private
    type time_t is new long;
 
    type timespec is record
-      ts_sec  : time_t;
-      ts_nsec : long;
+      tv_sec  : time_t;
+      tv_nsec : long;
    end record;
    pragma Convention (C, timespec);
 
