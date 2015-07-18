@@ -1,6 +1,6 @@
 #!/usr/local/bin/bash
 
-GCCVERSION=5-5.1.1
+GCCVERSION=5.2.0
 DRACO=/home/marino/github/draco/v5
 EXPANSE=/home/marino/GCC-TEST
 DIFFPROG=/usr/bin/diff
@@ -130,23 +130,28 @@ regenerate_patch ${CORE_SUFFIX} patch-gcc_config_i386_netbsd-elf.h
 regenerate_patch ${CORE_SUFFIX} patch-gcc_config_i386_netbsd64.h
 regenerate_patch ${CORE_SUFFIX} patch-libgcc_crtstuff.c
 regenerate_patch ${CORE_SUFFIX} patch-libgcc_unwind-dw2-fde-dip.c
+regenerate_patch ${CORE_SUFFIX} patch-libgcc_config.host
 #openbsd regenerate_patch ${CORE_SUFFIX} patch-gcc_builtins.c
 fi
 regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
-regenerate_patch ${CORE_SUFFIX} patch-libgcc_config.host
+regenerate_patch ${CORE_SUFFIX} patch-libgcc_config_i386_t-dragonfly
 
 pattern="^gcc/testsuite/ada|^gcc/testsuite/gnat.dg"
 suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${ADA_SUITE_SUFFIX} suite[@]
 
-pattern="^libstdc..-v3"
 if [ -n "${NETBSD}" ]
 then
+pattern="^libstdc..-v3"
 cplusplus=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${CXX_SUFFIX} cplusplus[@]
 else
-reset_patch ${CXX_SUFFIX}
+pattern="^libstdc..-v3/config/os/bsd/dragonfly"
+cplusplus=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
+produce_patch ${CXX_SUFFIX} cplusplus[@]
+#reset_patch ${CXX_SUFFIX}
 fi
+regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_configure
 regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_configure.host
 
 pattern="^gcc/testsuite/c-c..-common"

@@ -1,0 +1,11 @@
+--- libstdc++-v3/configure.orig	2015-07-18 10:31:53 UTC
++++ libstdc++-v3/configure
+@@ -16072,7 +16072,7 @@ $as_echo "darwin or freebsd" >&6; }
+ $as_echo "dragonfly" >&6; }
+ 
+       CLOCALE_H=config/locale/generic/c_locale.h
+-      CLOCALE_CC=config/locale/dragonfly/c_locale.cc
++      CLOCALE_CC=config/locale/generic/c_locale.cc
+       CCODECVT_CC=config/locale/generic/codecvt_members.cc
+       CCOLLATE_CC=config/locale/generic/collate_members.cc
+       CCTYPE_CC=config/locale/dragonfly/ctype_members.cc

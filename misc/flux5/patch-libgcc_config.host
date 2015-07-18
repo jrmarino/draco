@@ -1,4 +1,4 @@
---- libgcc/config.host.orig	2015-06-08 14:37:54 UTC
+--- libgcc/config.host.orig	2015-07-18 10:13:11 UTC
 +++ libgcc/config.host
 @@ -240,7 +240,8 @@ case ${host} in
    extra_parts="crtbegin.o crtbeginS.o crtend.o crtendS.o"
@@ -10,15 +10,8 @@
    # NetBSD 1.7 and later are set up to use GCC's crtstuff for
    # ELF configurations.  We will clear extra_parts in the
    # a.out configurations.
-@@ -567,14 +568,19 @@ x86_64-*-dragonfly*)
- 	;;
- i[34567]86-*-freebsd*)
- 	tmake_file="${tmake_file} i386/t-freebsd i386/t-crtstuff"
-+	md_unwind_header=i386/freebsd-unwind.h
- 	;;
- x86_64-*-freebsd*)
- 	tmake_file="${tmake_file} i386/t-freebsd i386/t-crtstuff"
-+	md_unwind_header=i386/freebsd-unwind.h
+@@ -574,9 +575,12 @@ x86_64-*-freebsd*)
+ 	md_unwind_header=i386/freebsd-unwind.h
  	;;
  i[34567]86-*-netbsdelf*)
 +	tmake_file="${tmake_file} i386/t-crtstuff"
