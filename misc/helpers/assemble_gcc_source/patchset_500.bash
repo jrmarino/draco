@@ -151,7 +151,7 @@ cplusplus=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${CXX_SUFFIX} cplusplus[@]
 #reset_patch ${CXX_SUFFIX}
 fi
-regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_configure
+#regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_configure
 regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_configure.host
 
 pattern="^gcc/testsuite/c-c..-common"
