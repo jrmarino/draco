@@ -12,7 +12,7 @@
 gccflags="-O2"
 gnatflags="-gnatws"
 tabtarget="/data/local/testsuite"
-STRIP="arm-aux-linux-androideabi-strip"
+STRIP="@REMOTE_TARGET@-strip"
 
 target_run () {
   # Run on rooted tablet (port 22 vs port 2222)
@@ -66,8 +66,8 @@ if [ "$dir" = "$testdir" ]; then
 fi
 
 target_gnatmake () {
-  echo gnatmake-cross --GCC=\"$GCC\" $gnatflags $gccflags $* -largs $EXTERNAL_OBJECTS --GCC=\"$GCC\"
-  gnatmake-cross --GCC="$GCC" $gnatflags $gccflags $* -largs $EXTERNAL_OBJECTS --GCC="$GCC"
+  echo gnatmake-cross --GCC=\"$GCC\" $gnatflags $gccflags $* -largs $EXTERNAL_OBJECTS --GCC=\"$GCC\" -fPIE -pie
+  gnatmake-cross --GCC="$GCC" $gnatflags $gccflags $* -largs $EXTERNAL_OBJECTS --GCC="$GCC" -fPIE -pie
 }
 
 target_gcc () {

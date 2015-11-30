@@ -7,7 +7,7 @@
 +  dragonfly*)
 +    os_include_dir="os/bsd/dragonfly"
 +    ;;
-+  linux-androideabi)
++  linux-android*)
 +    os_include_dir="os/bionic"
 +    ;;
    bsd*)

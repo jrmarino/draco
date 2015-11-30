@@ -105,7 +105,7 @@ pattern="^gcc/ada"
 ada=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${ADA_SUFFIX} ada[@]
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Make-lang.in
-regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Makefile.in
+#regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Makefile.in
 regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure.ac
 regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure
 
@@ -144,6 +144,7 @@ produce_patch ${CXX_SUFFIX} cplusplus[@]
 regenerate_patch ${CXX_SUFFIX} patch-libstdcpp3_acinclude.m4
 regenerate_patch ${CXX_SUFFIX} patch-libstdcpp3_configure
 regenerate_patch ${CXX_SUFFIX} patch-libstdcpp3_configure.host
+regenerate_patch ${CXX_SUFFIX} patch-libstdcpp3_config_os_bionic_ctype__base.h
 
 pattern="^gcc/testsuite/c-c..-common"
 suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
