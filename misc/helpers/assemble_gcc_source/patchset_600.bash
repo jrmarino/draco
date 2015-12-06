@@ -116,7 +116,8 @@ produce_patch ${ADA_SUITE_SUFFIX} suite[@]
 pattern="^libstdc..-v3"
 #open/net cplusplus=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 #open/net produce_patch ${CXX_SUFFIX} cplusplus[@]
-#reset_patch ${CXX_SUFFIX}
+reset_patch ${CXX_SUFFIX}
+regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_configure.host
 
 pattern="^gcc/testsuite/c-c..-common"
 #blank suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
