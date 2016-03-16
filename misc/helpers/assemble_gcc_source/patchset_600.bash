@@ -1,6 +1,6 @@
 #!/usr/local/bin/bash
 
-GCCVERSION=6-20160306
+GCCVERSION=6-20160313
 DRACO=/home/marino/github/draco/v6
 EXPANSE=/home/marino/GCC-TEST
 DIFFPROG=/usr/bin/diff
@@ -93,7 +93,7 @@ pattern="^gcc/ada"
 ada=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 produce_patch ${ADA_SUFFIX} ada[@]
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Make-lang.in
-#regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Makefile.in
+regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_init.c
 
 pattern="^gcc/fortran"
 #no-free-df fortran=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
