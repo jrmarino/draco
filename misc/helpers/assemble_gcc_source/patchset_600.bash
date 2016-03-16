@@ -118,6 +118,9 @@ pattern="^libstdc..-v3"
 #open/net produce_patch ${CXX_SUFFIX} cplusplus[@]
 reset_patch ${CXX_SUFFIX}
 regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_configure.host
+regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_config_os_bionic_ctype__base.h
+regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_src_c++11_futex.cc
+regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_src_filesystem_dir.cc
 
 pattern="^gcc/testsuite/c-c..-common"
 #blank suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
