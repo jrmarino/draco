@@ -1,0 +1,16 @@
+--- gcc/configure.orig	2016-12-05 16:26:37 UTC
++++ gcc/configure
+@@ -28658,6 +28658,13 @@ case "$target" in
+   *-linux-musl*)
+     gcc_cv_target_dl_iterate_phdr=yes
+     ;;
++  *-*-netbsd*)
++    if grep dl_iterate_phdr $target_header_dir/link_elf.h > /dev/null 2>&1; then
++      gcc_cv_target_dl_iterate_phdr=yes
++    else
++      gcc_cv_target_dl_iterate_phdr=no
++    fi
++    ;;
+ esac
+ 
+ if test x$gcc_cv_target_dl_iterate_phdr = xyes; then

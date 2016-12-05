@@ -1,5 +1,5 @@
 # Makefile for GNU Ada Compiler (GNAT).
-#   Copyright (C) 1994-2015 Free Software Foundation, Inc.
+#   Copyright (C) 1994-2016 Free Software Foundation, Inc.
 
 #This file is part of GCC.
 
@@ -1394,39 +1394,6 @@ ifeq ($(strip $(filter-out %86 linux%,$(target_cpu) $(target_os))),)
   LIBRARY_VERSION := $(LIB_VERSION)
 endif
 
-# x86 android
-ifeq ($(strip $(filter-out %86 linux-android,$(target_cpu) $(target_os))),)
-  LIBGNAT_TARGET_PAIRS = \
-  a-intnam.ads<a-intnam-linux.ads \
-  g-socthi.adb<g-socthi-bsd.adb \
-  s-inmaop.adb<s-inmaop-posix.adb \
-  s-intman.adb<s-intman-posix.adb \
-  s-linux.ads<s-linux-android.ads \
-  s-osinte.adb<s-osinte-android.adb \
-  s-osinte.ads<s-osinte-android.ads \
-  s-osprim.adb<s-osprim-posix.adb \
-  s-taprop.adb<s-taprop-posix.adb \
-  s-taspri.ads<s-taspri-posix.ads \
-  s-tpopsp.adb<s-tpopsp-posix-foreign.adb \
-  $(ATOMICS_TARGET_PAIRS) \
-  $(X86_TARGET_PAIRS) \
-  system.ads<system-linux-x86.ads
-
-  TOOLS_TARGET_PAIRS =  \
-    mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
-    indepsw.adb<indepsw-gnu.adb
-
-  EXTRA_LIBGNAT_OBJS=
-  EXTRA_GNATRTL_TASKING_OBJS=s-linux.o
-  EXTRA_GNATRTL_NONTASKING_OBJS=
-  EH_MECHANISM=-gcc
-  THREADSLIB=
-  MISCLIB=
-  GMEM_LIB=
-  GNATLIB_SHARED = gnatlib-shared-dual
-  LIBRARY_VERSION := $(LIB_VERSION)
-endif
-
 # x86 kfreebsd
 ifeq ($(strip $(filter-out %86 kfreebsd%,$(target_cpu) $(target_os))),)
   LIBGNAT_TARGET_PAIRS = \
@@ -1457,6 +1424,35 @@ ifeq ($(strip $(filter-out %86 kfreebsd%,$(target_cpu) $(target_os))),)
   MISCLIB = -lutil
 endif
 
+# i[3456]86-pc-gnu i.e. GNU Hurd
+ifeq ($(strip $(filter-out %86 pc gnu,$(target_cpu) $(target_vendor) $(target_os))),)
+  LIBGNAT_TARGET_PAIRS = \
+  a-intnam.ads<a-intnam-freebsd.ads \
+  s-inmaop.adb<s-inmaop-posix.adb \
+  s-intman.adb<s-intman-posix.adb \
+  s-osinte.adb<s-osinte-gnu.adb \
+  s-osinte.ads<s-osinte-gnu.ads \
+  s-osprim.adb<s-osprim-posix.adb \
+  s-taprop.adb<s-taprop-posix.adb \
+  s-taspri.ads<s-taspri-posix.ads \
+  s-tpopsp.adb<s-tpopsp-posix-foreign.adb \
+  $(ATOMICS_TARGET_PAIRS) \
+  $(X86_TARGET_PAIRS) \
+  system.ads<system-freebsd-x86.ads
+
+  TOOLS_TARGET_PAIRS =  \
+    mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
+    indepsw.adb<indepsw-gnu.adb
+
+  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
+
+  EH_MECHANISM=-gcc
+  THREADSLIB = -lpthread
+  GNATLIB_SHARED = gnatlib-shared-dual
+  GMEM_LIB = gmemlib
+  LIBRARY_VERSION := $(LIB_VERSION)
+endif
+
 ifeq ($(strip $(filter-out x86_64 kfreebsd%,$(target_cpu) $(target_os))),)
   LIBGNAT_TARGET_PAIRS = \
   a-intnam.ads<a-intnam-freebsd.ads \
@@ -1480,6 +1476,39 @@ ifeq ($(strip $(filter-out x86_64 kfreebsd%,$(target_cpu) $(target_os))),)
   THREADSLIB = -lpthread
   GNATLIB_SHARED = gnatlib-shared-dual
   GMEM_LIB = gmemlib
+  LIBRARY_VERSION := $(LIB_VERSION)
+endif
+
+# x86 android
+ifeq ($(strip $(filter-out %86 linux-android,$(target_cpu) $(target_os))),)
+  LIBGNAT_TARGET_PAIRS = \
+  a-intnam.ads<a-intnam-linux.ads \
+  g-socthi.adb<g-socthi-bsd.adb \
+  s-inmaop.adb<s-inmaop-posix.adb \
+  s-intman.adb<s-intman-posix.adb \
+  s-linux.ads<s-linux-android.ads \
+  s-osinte.adb<s-osinte-android.adb \
+  s-osinte.ads<s-osinte-android.ads \
+  s-osprim.adb<s-osprim-posix.adb \
+  s-taprop.adb<s-taprop-posix.adb \
+  s-taspri.ads<s-taspri-posix.ads \
+  s-tpopsp.adb<s-tpopsp-posix-foreign.adb \
+  $(ATOMICS_TARGET_PAIRS) \
+  $(X86_TARGET_PAIRS) \
+  system.ads<system-linux-x86.ads
+
+  TOOLS_TARGET_PAIRS =  \
+    mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb \
+    indepsw.adb<indepsw-gnu.adb
+
+  EXTRA_LIBGNAT_OBJS=
+  EXTRA_GNATRTL_TASKING_OBJS=s-linux.o
+  EXTRA_GNATRTL_NONTASKING_OBJS=
+  EH_MECHANISM=-gcc
+  THREADSLIB=
+  MISCLIB=
+  GMEM_LIB=
+  GNATLIB_SHARED = gnatlib-shared-dual
   LIBRARY_VERSION := $(LIB_VERSION)
 endif
 
@@ -1569,6 +1598,74 @@ ifeq ($(strip $(filter-out %86_64 dragonfly%,$(target_cpu) $(target_os))),)
   $(ATOMICS_TARGET_PAIRS) \
   $(X86_64_TARGET_PAIRS) \
   system.ads<system-dragonfly-x86_64.ads
+
+  TOOLS_TARGET_PAIRS = \
+  mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
+  GNATLIB_SHARED = gnatlib-shared-dual
+
+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
+  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
+
+  EH_MECHANISM=-gcc
+  THREADSLIB= -lpthread
+  GMEM_LIB = gmemlib
+  LIBRARY_VERSION := $(LIB_VERSION)
+  MISCLIB = -lutil
+endif
+
+# x86-64 NetBSD
+ifeq ($(strip $(filter-out %86_64 netbsd%,$(target_cpu) $(target_os))),)
+  LIBGNAT_TARGET_PAIRS = \
+  a-intnam.ads<a-intnam-netbsd.ads \
+  g-socthi.adb<g-socthi-bsd.adb \
+  s-trasym.adb<s-trasym-bsd.adb \
+  s-inmaop.adb<s-inmaop-posix.adb \
+  s-intman.adb<s-intman-posix.adb \
+  s-mudido.adb<s-mudido-affinity.adb \
+  s-osinte.adb<s-osinte-netbsd.adb \
+  s-osinte.ads<s-osinte-netbsd.ads \
+  s-osprim.adb<s-osprim-posix.adb \
+  s-taprop.adb<s-taprop-posix.adb \
+  s-taspri.ads<s-taspri-posix.ads \
+  s-tpopsp.adb<s-tpopsp-posix.adb \
+  $(ATOMICS_TARGET_PAIRS) \
+  $(X86_64_TARGET_PAIRS) \
+  system.ads<system-netbsd-x86_64.ads
+
+  TOOLS_TARGET_PAIRS = \
+  mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
+  GNATLIB_SHARED = gnatlib-shared-dual
+
+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
+  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
+
+  EH_MECHANISM=-gcc
+  THREADSLIB= -lpthread
+  GMEM_LIB = gmemlib
+  LIBRARY_VERSION := $(LIB_VERSION)
+  MISCLIB = -lutil
+endif
+
+# x86 NetBSD
+ifeq ($(strip $(filter-out %86 netbsd%,$(target_cpu) $(target_os))),)
+  LIBGNAT_TARGET_PAIRS = \
+  a-intnam.ads<a-intnam-netbsd.ads \
+  g-socthi.adb<g-socthi-bsd.adb \
+  s-trasym.adb<s-trasym-bsd.adb \
+  s-inmaop.adb<s-inmaop-posix.adb \
+  s-intman.adb<s-intman-posix.adb \
+  s-mudido.adb<s-mudido-affinity.adb \
+  s-osinte.adb<s-osinte-netbsd.adb \
+  s-osinte.ads<s-osinte-netbsd.ads \
+  s-osprim.adb<s-osprim-posix.adb \
+  s-taprop.adb<s-taprop-posix.adb \
+  s-taspri.ads<s-taspri-posix.ads \
+  s-tpopsp.adb<s-tpopsp-posix.adb \
+  $(ATOMICS_TARGET_PAIRS) \
+  $(X86_TARGET_PAIRS) \
+  system.ads<system-netbsd-x86.ads
 
   TOOLS_TARGET_PAIRS = \
   mlib-tgt-specific.adb<mlib-tgt-specific-linux.adb
@@ -2690,10 +2787,9 @@ gnatlink-re: ../stamp-tools gnatmake-re
 install-gcc-specs:
 #	Install all the requested GCC spec files.
 
-	for f in $(GCC_SPEC_FILES); do \
-	    $(INSTALL_DATA_DATE) $(srcdir)/ada/$$f \
-	    $(libsubdir)/$$(echo $$f|sed -e 's#_[a-zA-Z0-9]*##g'); \
-	done
+	$(foreach f,$(GCC_SPEC_FILES), \
+	    $(INSTALL_DATA_DATE) $(srcdir)/ada/$(f) \
+	    $(DESTDIR)$(libsubdir)/$$(echo $(f)|sed -e 's#_[a-zA-Z0-9]*##g');)
 
 install-gnatlib: ../stamp-gnatlib-$(RTSDIR) install-gcc-specs
 	$(RMDIR) $(DESTDIR)$(ADA_RTL_OBJ_DIR)
