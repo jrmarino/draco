@@ -6,7 +6,7 @@
  #undef LINK_SPEC
 -#define LINK_SPEC NETBSD_LINK_SPEC_ELF
 +#define LINK_SPEC NETBSD_LINK_SPEC_ELF \
-+"%{!static:-rpath @PREFIX@/gcc-aux/lib}"
++"%{!static:-rpath @PREFIX@/@GCCAUX@/lib}"
  
  #define NETBSD_ENTRY_POINT "__start"
  

@@ -72,7 +72,11 @@ function regenerate_patch () {
       FILE_PATH=`dirname ${FULL_PATH}`
       FILE_NAME=`basename ${FULL_PATH}`
       mkdir -p ${SCRATCH_DIR}/${FILE_PATH}
-      cp ${RELEASE_DIR}/${FILE_PATH}/${FILE_NAME} ${SCRATCH_DIR}/${FILE_PATH}
+      if [ -f ${RELEASE_DIR}/${FILE_PATH}/${FILE_NAME} ]; then
+         cp ${RELEASE_DIR}/${FILE_PATH}/${FILE_NAME} ${SCRATCH_DIR}/${FILE_PATH}
+      else
+	 touch ${RELEASE_DIR}/${FILE_PATH}/${FILE_NAME}
+      fi
    done
    PATCHLEVEL=`echo ${FILE_LIST} | awk "${AWKCM2}"`
    ${PACHPROG} -d ${SCRATCH_DIR} ${PATCHLEVEL} --backup < ${FLUX_PATCH}
@@ -103,8 +107,10 @@ if [ -n "${NETBSD}" ]
 then
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_a-intnam-netbsd.ads
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_s-osinte-netbsd.adb
-regenerate_patch ${ADA_SUFFIX} flux6/patch-gcc_ada_s-osinte-netbsd.ads
+regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_s-osinte-netbsd.ads
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_system-netbsd-x86__64.ads
+regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure
+regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure.ac
 fi
 
 pattern="^gcc/fortran"
