@@ -1,6 +1,6 @@
---- gcc/ada/s-osinte-netbsd.ads.orig	2016-12-05 15:06:19 UTC
+--- gcc/ada/s-osinte-netbsd.ads.orig	2016-12-06 02:19:08 UTC
 +++ gcc/ada/s-osinte-netbsd.ads
-@@ -0,0 +1,656 @@
+@@ -0,0 +1,638 @@
 +------------------------------------------------------------------------------
 +--                                                                          --
 +--                  GNAT RUN-TIME LIBRARY (GNARL) COMPONENTS                --
@@ -453,28 +453,10 @@
 +   function pthread_mutexattr_setprotocol
 +     (attr     : access pthread_mutexattr_t;
 +      protocol : int) return int;
-+   pragma Import
-+      (C, pthread_mutexattr_setprotocol, "pthread_mutexattr_setprotocol");
-+
-+   function pthread_mutexattr_getprotocol
-+     (attr     : access pthread_mutexattr_t;
-+      protocol : access int) return int;
-+   pragma Import
-+     (C, pthread_mutexattr_getprotocol, "pthread_mutexattr_getprotocol");
 +
 +   function pthread_mutexattr_setprioceiling
 +     (attr     : access pthread_mutexattr_t;
 +      prioceiling : int) return int;
-+   pragma Import
-+     (C, pthread_mutexattr_setprioceiling,
-+      "pthread_mutexattr_setprioceiling");
-+
-+   function pthread_mutexattr_getprioceiling
-+     (attr     : access pthread_mutexattr_t;
-+      prioceiling : access int) return int;
-+   pragma Import
-+     (C, pthread_mutexattr_getprioceiling,
-+      "pthread_mutexattr_getprioceiling");
 +
 +   type struct_sched_param is record
 +      sched_priority : int;
