@@ -129,10 +129,9 @@ core=`cd ${DRACO} && find * -type d | sort | ${GREPPROG} -vE $pattern`
 produce_patch ${CORE_SUFFIX} core[@]
 if [ -n "${NETBSD}" ]
 then
+regenerate_patch ${CORE_SUFFIX} patch-gcc_config_netbsd-elf.h
 regenerate_patch ${CORE_SUFFIX} patch-gcc_config.gcc
 regenerate_patch ${CORE_SUFFIX} patch-gcc_configure
-regenerate_patch ${CORE_SUFFIX} patch-gcc_config_i386_netbsd-elf.h
-regenerate_patch ${CORE_SUFFIX} patch-gcc_config_i386_netbsd64.h
 regenerate_patch ${CORE_SUFFIX} patch-libgcc_crtstuff.c
 regenerate_patch ${CORE_SUFFIX} patch-libgcc_unwind-dw2-fde-dip.c
 regenerate_patch ${CORE_SUFFIX} patch-libgcc_config.host

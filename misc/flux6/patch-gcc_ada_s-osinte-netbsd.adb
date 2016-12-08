@@ -1,6 +1,6 @@
---- gcc/ada/s-osinte-netbsd.adb.orig	2016-12-07 19:50:33 UTC
+--- gcc/ada/s-osinte-netbsd.adb.orig	2016-12-08 18:07:49 UTC
 +++ gcc/ada/s-osinte-netbsd.adb
-@@ -0,0 +1,116 @@
+@@ -0,0 +1,140 @@
 +------------------------------------------------------------------------------
 +--                                                                          --
 +--                  GNAT RUN-TIME LIBRARY (GNARL) COMPONENTS                --
@@ -71,6 +71,30 @@
 +   begin
 +      null;
 +   end pthread_init;
++
++   -----------------------------------
++   -- pthread_mutexattr_setprotocol --
++   -----------------------------------
++
++   function pthread_mutexattr_setprotocol
++     (attr     : access pthread_mutexattr_t;
++      protocol : int) return int is
++      pragma Unreferenced (attr, protocol);
++   begin
++      return 0;
++   end pthread_mutexattr_setprotocol;
++
++   --------------------------------------
++   -- pthread_mutexattr_setprioceiling --
++   --------------------------------------
++
++   function pthread_mutexattr_setprioceiling
++     (attr     : access pthread_mutexattr_t;
++      prioceiling : int) return int is
++      pragma Unreferenced (attr, prioceiling);
++   begin
++      return 0;
++   end pthread_mutexattr_setprioceiling;
 +
 +   -----------------
 +   -- To_Duration --
