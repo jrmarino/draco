@@ -136,7 +136,7 @@ regenerate_patch ${CORE_SUFFIX} patch-gcc_config_i386_netbsd64.h
 regenerate_patch ${CORE_SUFFIX} patch-libgcc_crtstuff.c
 regenerate_patch ${CORE_SUFFIX} patch-libgcc_unwind-dw2-fde-dip.c
 regenerate_patch ${CORE_SUFFIX} patch-libgcc_config.host
-regenerate_patch ${CORE_SUFFIX} patch-libgcc_config_i386_netbsd-unwind.h
+#regenerate_patch ${CORE_SUFFIX} patch-libgcc_config_i386_netbsd-unwind.h
 fi
 regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
 

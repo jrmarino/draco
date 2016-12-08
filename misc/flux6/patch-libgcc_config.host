@@ -15,11 +15,11 @@
  	;;
  i[34567]86-*-netbsdelf*)
 +	tmake_file="${tmake_file} i386/t-crtstuff"
-+	md_unwind_header=i386/netbsd-unwind.h
++	#md_unwind_header=i386/netbsd-unwind.h
  	;;
  x86_64-*-netbsd*)
  	tmake_file="${tmake_file} i386/t-crtstuff"
-+	md_unwind_header=i386/netbsd-unwind.h
++	#md_unwind_header=i386/netbsd-unwind.h
  	;;
  i[34567]86-*-openbsd2.*|i[34567]86-*openbsd3.[0123])
  	;;
