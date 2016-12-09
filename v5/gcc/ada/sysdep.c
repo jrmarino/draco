@@ -287,7 +287,7 @@ __gnat_ttyname (int filedes)
   || defined (__MACHTEN__) || defined (__hpux__) || defined (_AIX) \
   || (defined (__svr4__) && defined (i386)) || defined (__Lynx__) \
   || defined (__CYGWIN__) || defined (__FreeBSD__) || defined (__OpenBSD__) \
-  || defined (__DragonFly__) \
+  || defined (__DragonFly__) || defined (__NetBSD__) \
   || defined (__GLIBC__) || defined (__APPLE__)
 
 # ifdef __MINGW32__
@@ -340,7 +340,7 @@ getc_immediate_common (FILE *stream,
     || defined (__CYGWIN32__) || defined (__MACHTEN__) || defined (__hpux__) \
     || defined (_AIX) || (defined (__svr4__) && defined (i386)) \
     || defined (__Lynx__) || defined (__FreeBSD__) || defined (__OpenBSD__) \
-    || defined (__DragonFly__) \
+    || defined (__DragonFly__) || defined (__NetBSD__) \
     || defined (__GLIBC__) || defined (__APPLE__)
   char c;
   int nread;
@@ -361,7 +361,7 @@ getc_immediate_common (FILE *stream,
     || defined (__MACHTEN__) || defined (__hpux__) \
     || defined (_AIX) || (defined (__svr4__) && defined (i386)) \
     || defined (__Lynx__) || defined (__FreeBSD__) || defined (__OpenBSD__) \
-    || defined (__DragonFly__) \
+    || defined (__DragonFly__) || defined (__NetBSD__) \
     || defined (__GLIBC__) || defined (__APPLE__)
       eof_ch = termios_rec.c_cc[VEOF];
 
@@ -823,8 +823,7 @@ __gnat_localtime_tzoff (const time_t *timer ATTRIBUTE_UNUSED,
    struct tm */
 
 #elif defined (__APPLE__) || defined (__FreeBSD__) || defined (linux) \
-  || defined (__DragonFly__) \
-  || defined (__OpenBSD__) \
+  || defined (__DragonFly__) || defined (__NetBSD__) \
   || defined (__GLIBC__)
 {
   localtime_r (timer, &tp);
