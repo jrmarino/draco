@@ -618,7 +618,7 @@
 +
 +   type pid_t is new int;
 +
-+   type time_t is new long;
++   type time_t is new Interfaces.Integer_64;
 +
 +   type timespec is record
 +      ts_sec  : time_t;
