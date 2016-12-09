@@ -105,6 +105,7 @@ regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Make-lang.in
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_init.c
 if [ -n "${NETBSD}" ]
 then
+regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_sysdep.c
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_s-osinte-netbsd.adb
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_s-osinte-netbsd.ads
 regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure
