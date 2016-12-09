@@ -1,6 +1,6 @@
---- gcc/ada/s-osinte-netbsd.ads.orig	2016-12-08 18:07:47 UTC
+--- gcc/ada/s-osinte-netbsd.ads.orig	2016-12-08 23:59:23 UTC
 +++ gcc/ada/s-osinte-netbsd.ads
-@@ -0,0 +1,638 @@
+@@ -0,0 +1,634 @@
 +------------------------------------------------------------------------------
 +--                                                                          --
 +--                  GNAT RUN-TIME LIBRARY (GNARL) COMPONENTS                --
@@ -49,7 +49,7 @@
 +package System.OS_Interface is
 +   pragma Preelaborate;
 +
-+   pragma Linker_Options ("-lpthread");
++   pragma Linker_Options ("-pthread");
 +
 +   subtype int            is Interfaces.C.int;
 +   subtype short          is Interfaces.C.short;
@@ -60,7 +60,6 @@
 +   subtype unsigned_char  is Interfaces.C.unsigned_char;
 +   subtype plain_char     is Interfaces.C.plain_char;
 +   subtype size_t         is Interfaces.C.size_t;
-+   subtype int64_t        is Interfaces.Integer_64;
 +
 +   -----------
 +   -- Errno --
@@ -79,7 +78,7 @@
 +   -- Signals --
 +   -------------
 +
-+   Max_Interrupt : constant := 63;
++   Max_Interrupt : constant := 31;
 +   type Signal is new int range 0 .. Max_Interrupt;
 +   for Signal'Size use int'Size;
 +
@@ -113,10 +112,9 @@
 +   SIGVTALRM  : constant := 26; --  virtual timer expired
 +   SIGPROF    : constant := 27; --  profiling timer expired
 +   SIGWINCH   : constant := 28; --  window size change
-+   SIGINFO    : constant := 29; --  information request (BSD)
++   SIGINFO    : constant := 29; --  information request (NetBSD/FreeBSD)
 +   SIGUSR1    : constant := 30; --  user defined signal 1
 +   SIGUSR2    : constant := 31; --  user defined signal 2
-+   SIGPWR     : constant := 32; --  power fail/restart (not reset when caught)
 +
 +   SIGADAABORT : constant := SIGABRT;
 +   --  Change this if you want to use another signal for task abort.
@@ -181,10 +179,8 @@
 +   SIG_UNBLOCK : constant := 2;
 +   SIG_SETMASK : constant := 3;
 +
-+   SIG_DFL  : constant := 0;
-+   SIG_IGN  : constant := 1;
-+   SIG_ERR  : constant := -1;
-+   SIG_HOLD : constant := 3;
++   SIG_DFL : constant := 0;
++   SIG_IGN : constant := 1;
 +
 +   SA_SIGINFO : constant := 16#0040#;
 +   SA_ONSTACK : constant := 16#0001#;
@@ -204,7 +200,7 @@
 +
 +   type timespec is private;
 +
-+   function nanosleep (rqtp, rmtp : access timespec)  return int;
++   function nanosleep (rqtp, rmtp : access timespec) return int;
 +   pragma Import (C, nanosleep, "nanosleep");
 +
 +   type clockid_t is new unsigned;
@@ -622,7 +618,7 @@
 +
 +   type pid_t is new int;
 +
-+   type time_t is new int64_t;
++   type time_t is new long;
 +
 +   type timespec is record
 +      ts_sec  : time_t;
