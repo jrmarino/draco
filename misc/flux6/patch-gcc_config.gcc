@@ -1,6 +1,18 @@
---- gcc/config.gcc.orig	2016-12-05 16:21:32 UTC
+--- gcc/config.gcc.orig	2017-02-03 03:10:55 UTC
 +++ gcc/config.gcc
-@@ -1445,12 +1445,16 @@ x86_64-*-freebsd*)
+@@ -941,6 +941,11 @@ aarch64*-*-elf | aarch64*-*-rtems*)
+ 	done
+ 	TM_MULTILIB_CONFIG=`echo $TM_MULTILIB_CONFIG | sed 's/^,//'`
+ 	;;
++aarch64*-*-freebsd*)
++	tm_file="${tm_file} dbxelf.h elfos.h ${fbsd_tm_file}"
++	tm_file="${tm_file} aarch64/aarch64-elf.h aarch64/aarch64-freebsd.h"
++	tmake_file="${tmake_file} aarch64/t-aarch64 aarch64/t-aarch64-freebsd"
++	;;
+ aarch64*-*-linux*)
+ 	tm_file="${tm_file} dbxelf.h elfos.h gnu-user.h linux.h glibc-stdint.h"
+ 	tm_file="${tm_file} aarch64/aarch64-elf.h aarch64/aarch64-linux.h"
+@@ -1445,12 +1450,16 @@ x86_64-*-freebsd*)
  	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h ${fbsd_tm_file} i386/x86-64.h i386/freebsd.h i386/freebsd64.h"
  	;;
  i[34567]86-*-netbsdelf*)

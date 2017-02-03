@@ -1,0 +1,11 @@
+--- gcc/config.host.orig	2016-01-04 14:30:50 UTC
++++ gcc/config.host
+@@ -99,7 +99,7 @@ case ${host} in
+ esac
+ 
+ case ${host} in
+-  aarch64*-*-linux*)
++  aarch64*-*-freebsd* | aarch64*-*-linux*)
+     case ${target} in
+       aarch64*-*-*)
+ 	host_extra_gcc_objs="driver-aarch64.o"

@@ -129,14 +129,16 @@ produce_patch ${CORE_SUFFIX} core[@]
 if [ -n "${NETBSD}" ]
 then
 regenerate_patch ${CORE_SUFFIX} patch-gcc_config_netbsd-elf.h
-regenerate_patch ${CORE_SUFFIX} patch-gcc_config.gcc
 regenerate_patch ${CORE_SUFFIX} patch-gcc_configure
 regenerate_patch ${CORE_SUFFIX} patch-libgcc_crtstuff.c
 regenerate_patch ${CORE_SUFFIX} patch-libgcc_unwind-dw2-fde-dip.c
-regenerate_patch ${CORE_SUFFIX} patch-libgcc_config.host
 #regenerate_patch ${CORE_SUFFIX} patch-libgcc_config_i386_netbsd-unwind.h
 fi
+regenerate_patch ${CORE_SUFFIX} patch-configure
 regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
+regenerate_patch ${CORE_SUFFIX} patch-gcc_config.gcc
+regenerate_patch ${CORE_SUFFIX} patch-gcc_config.host
+regenerate_patch ${CORE_SUFFIX} patch-libgcc_config.host
 
 pattern="^gcc/testsuite/ada|^gcc/testsuite/gnat.dg"
 suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
