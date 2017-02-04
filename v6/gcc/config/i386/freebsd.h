@@ -77,12 +77,6 @@ along with GCC; see the file COPYING3.  If not see
    When the -shared link option is used a final link is not being
    done.  */
 
-#if FBSD_MAJOR < 10
-#define ELF_HASH_STYLE "--hash-style=both "
-#else
-#define ELF_HASH_STYLE "--hash-style=gnu "
-#endif
-
 #undef	LINK_SPEC
 #define LINK_SPEC "\
   %{p:%nconsider using '-pg' instead of '-p' with gprof(1)} \
@@ -94,7 +88,7 @@ along with GCC; see the file COPYING3.  If not see
         %{rdynamic:-export-dynamic} \
         -dynamic-linker %(fbsd_dynamic_linker) } \
     %{static:-Bstatic}} \
-  %{!static:" ELF_HASH_STYLE "-rpath @PREFIX@/@GCCAUX@/lib} \
+  %{!static:--hash-style=gnu -rpath @PREFIX@/@GCCAUX@/lib} \
   %{symbolic:-Bsymbolic}"
 
 /* A C statement to output to the stdio stream FILE an assembler

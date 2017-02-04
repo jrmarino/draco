@@ -1,4 +1,4 @@
---- libgcc/config.host.orig	2017-02-03 03:14:44 UTC
+--- libgcc/config.host.orig	2017-02-04 16:49:05 UTC
 +++ libgcc/config.host
 @@ -242,7 +242,8 @@ case ${host} in
    extra_parts="crtbegin.o crtbeginS.o crtend.o crtendS.o"
@@ -10,19 +10,7 @@
    # NetBSD 1.7 and later are set up to use GCC's crtstuff for
    # ELF configurations.  We will clear extra_parts in the
    # a.out configurations.
-@@ -333,6 +334,11 @@ aarch64*-*-elf | aarch64*-*-rtems*)
- 	tmake_file="${tmake_file} ${cpu_type}/t-aarch64"
- 	tmake_file="${tmake_file} ${cpu_type}/t-softfp t-softfp t-crtfm"
- 	;;
-+aarch64*-*-freebsd*)
-+	extra_parts="$extra_parts crtfastmath.o"
-+	tmake_file="${tmake_file} ${cpu_type}/t-aarch64"
-+	tmake_file="${tmake_file} ${cpu_type}/t-softfp t-softfp t-crtfm"
-+	;;
- aarch64*-*-linux*)
- 	extra_parts="$extra_parts crtfastmath.o"
- 	md_unwind_header=aarch64/linux-unwind.h
-@@ -597,9 +603,12 @@ x86_64-*-freebsd*)
+@@ -609,9 +610,12 @@ x86_64-*-freebsd*)
  	md_unwind_header=i386/freebsd-unwind.h
  	;;
  i[34567]86-*-netbsdelf*)
