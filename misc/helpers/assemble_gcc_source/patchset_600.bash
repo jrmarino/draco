@@ -137,6 +137,7 @@ regenerate_patch ${CORE_SUFFIX} patch-libgcc_unwind-dw2-fde-dip.c
 #regenerate_patch ${CORE_SUFFIX} patch-libgcc_config_i386_netbsd-unwind.h
 fi
 regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
+regenerate_patch ${CORE_SUFFIX} patch-gcc_expmed.c
 
 pattern="^gcc/testsuite/ada|^gcc/testsuite/gnat.dg"
 suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
