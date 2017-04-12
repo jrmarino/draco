@@ -32,7 +32,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #include <signal.h>
 #include <sys/ucontext.h>
 #include <machine/sigframe.h>
-#if __DragonFly_version > 400900
+#if __DragonFly_version > 400800
 #include <sys/kinfo.h>
 #endif
 
@@ -51,7 +51,7 @@ x86_64_outside_sigtramp_range (unsigned char *pc)
 
   if (sigtramp_range_determined == 0)
     {
-#if __DragonFly_version > 400900
+#if __DragonFly_version > 400800
       struct kinfo_sigtramp kst = {0};
       size_t len = sizeof (kst);
       int mib[3] = { CTL_KERN, KERN_PROC, KERN_PROC_SIGTRAMP };
