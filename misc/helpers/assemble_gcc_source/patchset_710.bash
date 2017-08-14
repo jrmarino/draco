@@ -1,6 +1,6 @@
 #!/usr/local/bin/bash
 
-GCCVERSION=7.1.0
+GCCVERSION=7.2.0
 DRACO=/home/marino/github/draco/v7
 EXPANSE=/home/marino/GCC-TEST
 DIFFPROG=/usr/bin/diff
@@ -108,6 +108,7 @@ core=`cd ${DRACO} && find * -type d | sort | ${GREPPROG} -vE $pattern`
 produce_patch ${CORE_SUFFIX} core[@]
 regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
 regenerate_patch ${CORE_SUFFIX} patch-gcc_config_i386_gnu-user64.h
+regenerate_patch ${CORE_SUFFIX} patch-dwarf2out.c
 
 pattern="^gcc/testsuite/ada|^gcc/testsuite/gnat.dg"
 suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
