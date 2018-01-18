@@ -350,7 +350,7 @@ along with GCC; see the file COPYING3.  If not see
 #undef  LINK_SPEC
 #define LINK_SPEC \
   "%{h*} %{v:-V} \
-   %{!shared:%{!static:-R@PREFIX@/@GCCAUX@/lib/amd64 %{rdynamic: " RDYNAMIC_SPEC "}}} \
+   %{!shared:%{!static:-R/lib/amd64:@PREFIX@/@GCCAUX@/lib/amd64 %{rdynamic: " RDYNAMIC_SPEC "}}} \
    %{static:-dn -Bstatic} \
    %{shared:-G -dy %{!mimpure-text:-z text}} " \
    LINK_LIBGCC_MAPFILE_SPEC LINK_CLEARCAP_SPEC " \
