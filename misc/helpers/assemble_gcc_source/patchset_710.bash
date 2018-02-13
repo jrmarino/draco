@@ -54,14 +54,17 @@ function produce_patch () {
 function gen_throw_patch () {
    FILE_PATH=${1}
    FILE_NAME=${2}
+   REL_NAME=${FILE_PATH}/${FILE_NAME}
    PATCH_FILE=${OUTPUT_DIR}/diff-${CXX_SUFFIX}
-   FULL_PATH=${SCRATCH_DIR}/${FILE_PATH}/${FILE_NAME}
-   SRC_PATH=${RELEASE_DIR}/${FILE_PATH}/${FILE_NAME}
+   FULL_PATH=${SCRATCH_DIR}/${REL_NAME}
+   SRC_PATH=${RELEASE_DIR}/${REL_NAME}
    mkdir -p ${SCRATCH_DIR}/${FILE_PATH}
    if [ -f ${SRC_PATH} ]; then
       cp -a ${SRC_PATH} ${FULL_PATH}.orig
       sed -E 's|throw[ ]?\(\)|_GTHROW|g' ${SRC_PATH} > ${FULL_PATH}
-      ${DIFFPROG} -u ${FULL_PATH}.orig ${FULL_PATH} --label=${FULL_PATH}.orig --label=${FULL_PATH} >> ${PATCH_FILE}
+      (cd ${SCRATCH_DIR} && ${DIFFPROG} -u ${REL_NAME}.orig \
+          ${REL_NAME} --label=${REL_NAME}.orig --label=${REL_NAME} \
+          >> ${PATCH_FILE})
       echo "generated throw() patch ${FILE_PATH}/${FILE_NAME}"
    else
       echo "throw file ${SOURCE_PATH}/${FILE_NAME} does not exist!"
