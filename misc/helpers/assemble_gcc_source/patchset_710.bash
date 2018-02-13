@@ -51,6 +51,23 @@ function produce_patch () {
    done
 }
 
+function gen_throw_patch () {
+   FILE_PATH=${1}
+   FILE_NAME=${2}
+   PATCH_FILE=${OUTPUT_DIR}/diff-${CXX_SUFFIX}
+   FULL_PATH=${SCRATCH_DIR}/${FILE_PATH}/${FILE_NAME}
+   SRC_PATH=${RELEASE_DIR}/${FILE_PATH}/${FILE_NAME}
+   mkdir -p ${SCRATCH_DIR}/${FILE_PATH}
+   if [ -f ${SRC_PATH} ]; then
+      cp -a ${SRC_PATH} ${FULL_PATH}.orig
+      sed -E 's|throw[ ]?\(\)|_GTHROW|g' ${SRC_PATH} > ${FULL_PATH}
+      ${DIFFPROG} -u ${FULL_PATH}.orig ${FULL_PATH} --label=${FULL_PATH}.orig --label=${FULL_PATH} >> ${PATCH_FILE}
+      echo "generated throw() patch ${FILE_PATH}/${FILE_NAME}"
+   else
+      echo "throw file ${SOURCE_PATH}/${FILE_NAME} does not exist!"
+   fi
+}
+
 function regenerate_patch () {
    PATCH_SUFFIX=${1}
    FLUX_NAME=${2}
@@ -118,6 +135,13 @@ regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_configure.host
 regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_config_os_bionic_ctype__base.h
 regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_src_c++11_futex.cc
 regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_src_filesystem_dir.cc
+regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_include_bits_c++config
+gen_throw_patch libstdc++-v3/include/c_global cstdio
+gen_throw_patch libstdc++-v3/include/c_global cstdlib
+gen_throw_patch libstdc++-v3/include/c_global cwchar
+gen_throw_patch libstdc++-v3/include/c_std cstdio
+gen_throw_patch libstdc++-v3/include/c_std cstdlib
+gen_throw_patch libstdc++-v3/include/c_std cwchar
 
 pattern="^gcc/testsuite/c-c..-common"
 #blank suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
