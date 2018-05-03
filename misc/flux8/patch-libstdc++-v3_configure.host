@@ -1,0 +1,12 @@
+--- libstdc++-v3/configure.host.orig	2018-05-03 15:12:22 UTC
++++ libstdc++-v3/configure.host
+@@ -258,6 +258,9 @@ case "${host_os}" in
+   freebsd*)
+     os_include_dir="os/bsd/freebsd"
+     ;;
++  linux-android*)
++    os_include_dir="os/bionic"
++    ;;
+   linux-musl*)
+     os_include_dir="os/generic"
+     ;;
