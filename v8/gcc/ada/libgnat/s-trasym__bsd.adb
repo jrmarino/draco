@@ -98,8 +98,6 @@ package body System.Traceback.Symbolic is
       Len    : Integer := B_Size;
       Res    : String (1 .. B_Size);
 
-      use type System.Address;
-
    begin
       if Traceback'Length = 0 then
          return "";
