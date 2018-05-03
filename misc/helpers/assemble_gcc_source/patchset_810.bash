@@ -121,6 +121,7 @@ reset_patch ${ADA_SUFFIX}
 produce_patch ${ADA_SUFFIX} ada[@]
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Make-lang.in
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_init.c
+regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_link.c
 
 pattern="^gcc/fortran"
 #no-free-df fortran=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
