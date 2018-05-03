@@ -1261,7 +1261,7 @@ ifeq ($(strip $(filter-out %86_64 freebsd%,$(target_cpu) $(target_os))),)
   s-trasym.adb<libgnat/s-trasym__bsd.adb \
   s-taprop.adb<libgnarl/s-taprop__posix.adb \
   s-taspri.ads<libgnarl/s-taspri__posix.ads \
-  s-tpopsp.adb<libgnarl/s-tpopsp__posix.adb \  
+  s-tpopsp.adb<libgnarl/s-tpopsp__posix.adb \
   $(TRASYM_DWARF_UNIX_PAIRS) \
   $(ATOMICS_TARGET_PAIRS) \
   $(X86_64_TARGET_PAIRS) \

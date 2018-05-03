@@ -21,13 +21,10 @@ SCRATCH_DIR=${EXPANSE}/scratch
 function reset_patch () {
    PATCH_SUFFIX=${1}
    PATCH_FILE=${OUTPUT_DIR}/diff-${PATCH_SUFFIX}
+   PATCH_LINK=${OUTPUT_DIR}/patch-diff-${PATCH_SUFFIX}
    cd ${DRACO}
-   rm -f ${PATCH_FILE}
-}
-
-function link_patch () {
-   PATCH_SUFFIX=${1}
-   ln -s diff-${PATCH_SUFFIX} ${OUTPUT_DIR}/patch-diff-${PATCH_SUFFIX}
+   rm -f ${PATCH_FILE} ${PATCH_LINK}
+   ln -s diff-${PATCH_SUFFIX} ${PATCH_LINK}
 }
 
 function produce_patch () {
@@ -120,10 +117,10 @@ rm -rf ${EXPANSE}/scratch
 mkdir -p ${OUTPUT_DIR} ${EXPANSE}/scratch
 pattern="^gcc/ada"
 ada=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
+reset_patch ${ADA_SUFFIX}
 produce_patch ${ADA_SUFFIX} ada[@]
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Make-lang.in
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_init.c
-link_patch ${ADA_SUFFIX}
 
 pattern="^gcc/fortran"
 #no-free-df fortran=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
@@ -131,15 +128,15 @@ pattern="^gcc/fortran"
 
 pattern="^gcc/testsuite|^gcc/ada|^gcc/fortran|^libstdc..-v3"
 core=`cd ${DRACO} && find * -type d | sort | ${GREPPROG} -vE $pattern`
+reset_patch ${CORE_SUFFIX}
 produce_patch ${CORE_SUFFIX} core[@]
 regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
 regenerate_patch ${CORE_SUFFIX} patch-gcc_config_i386_gnu-user64.h
-link_patch ${CORE_SUFFIX}
 
 pattern="^gcc/testsuite/ada|^gcc/testsuite/gnat.dg"
 suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
+reset_patch ${ADA_SUITE_SUFFIX}
 produce_patch ${ADA_SUITE_SUFFIX} suite[@]
-link_patch ${ADA_SUITE_SUFFIX}
 
 reset_patch ${CXX_SUFFIX}
 regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_configure.host
@@ -152,17 +149,16 @@ gen_throw_patch libstdc++-v3/include/c_global cwchar
 gen_throw_patch libstdc++-v3/include/c_std cstdio
 gen_throw_patch libstdc++-v3/include/c_std cstdlib
 gen_throw_patch libstdc++-v3/include/c_std cwchar
-link_patch ${CXX_SUFFIX}
 
 pattern="^gcc/testsuite/c-c..-common"
 #blank suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 #blank produce_patch ${CXX_SUITE_SUFFIX} suite[@]
-reset_patch ${CXX_SUITE_SUFFIX}
+#reset_patch ${CXX_SUITE_SUFFIX}
 
 pattern="^gcc/testsuite/gcc.dg"
 suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
+reset_patch ${GCC_SUITE_SUFFIX}
 produce_patch ${GCC_SUITE_SUFFIX} suite[@]
-link_patch ${GCC_SUITE_SUFFIX}
 
 pattern="^gcc/testsuite/gfortran"
 #blank suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
