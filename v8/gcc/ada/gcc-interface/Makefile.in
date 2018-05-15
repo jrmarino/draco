@@ -1305,7 +1305,8 @@ ifeq ($(strip $(filter-out %86_64 dragonfly%,$(target_cpu) $(target_os))),)
 
   EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
   EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
-  EXTRA_GNATRTL_NONTASKING_OBJS=g-sse.o g-ssvety.o
+  EXTRA_GNATRTL_NONTASKING_OBJS += g-sse.o g-ssvety.o
+  EXTRA_GNATRTL_NONTASKING_OBJS += $(TRASYM_DWARF_UNIX_OBJS)
 
   EH_MECHANISM=-gcc
   THREADSLIB= -lpthread
