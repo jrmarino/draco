@@ -1,6 +1,6 @@
 #!/raven/bin/bash
 
-GCCVERSION=8.1.0
+GCCVERSION=8.2.0
 DRACO=/home/marino/github/draco/v8
 EXPANSE=/home/marino/GCC-TEST
 DIFFPROG=/usr/bin/diff
