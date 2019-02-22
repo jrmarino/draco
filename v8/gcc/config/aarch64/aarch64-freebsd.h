@@ -41,7 +41,7 @@
     %{symbolic:-Bsymbolic}                                      \
     %{static:-Bstatic}                                          \
     %{!static:                                                  \
-    %{!static:--hash-style=gnu --enable-new-dtags -rpath @PREFIX@/@GCCAUX@/lib}   \
+    %{!static:--hash-style=gnu --enable-new-dtags -rpath @PREFIX@/@GCCAUX@/lib:@PREFIX@/lib}   \
       %{rdynamic:-export-dynamic}                               \
       %{!shared:-dynamic-linker " FBSD_DYNAMIC_LINKER " }}      \
     -X" SUBTARGET_EXTRA_LINK_SPEC "                             \

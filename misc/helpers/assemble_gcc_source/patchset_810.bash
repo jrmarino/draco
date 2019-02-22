@@ -1,6 +1,6 @@
 #!/raven/bin/bash
 
-GCCVERSION=8.2.0
+GCCVERSION=8.3.0
 DRACO=/home/marino/github/draco/v8
 EXPANSE=/home/marino/GCC-TEST
 DIFFPROG=/usr/bin/diff
@@ -121,7 +121,6 @@ reset_patch ${ADA_SUFFIX}
 produce_patch ${ADA_SUFFIX} ada[@]
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Make-lang.in
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_init.c
-regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_link.c
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_libgnat_g-socthi.ads
 
 pattern="^gcc/fortran"

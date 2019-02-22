@@ -387,7 +387,7 @@ along with GCC; see the file COPYING3.  If not see
    %{static:-dn -Bstatic} \
    %{shared:-G -dy %{!mimpure-text:-z text}} " \
    LINK_LIBGCC_MAPFILE_SPEC LINK_CLEARCAP_SPEC " \
-   %{!static:-R/lib/amd64:@PREFIX@/@GCCAUX@/lib/amd64} \
+   %{!static:-R/lib/amd64:@PREFIX@/@GCCAUX@/lib/amd64:@PREFIX@/lib} \
    %{symbolic:-Bsymbolic -G -dy -z text} \
    %(link_arch) \
    %{Qy:} %{!Qn:-Qy}"
