@@ -1474,10 +1474,10 @@ procedure Gnatls is
          if Add_Default_Dir then
 
             --  /raven/share/gpr
-            Add_Str_To_Name_Buffer ("@PREFIX@/share/gpr");
+            Add_Str_To_Name_Buffer (Path_Separator & "@PREFIX@/share/gpr");
 
             --  /raven/lib/gnat
-            Add_Str_To_Name_Buffer ("@PREFIX@/lib/gnat");
+            Add_Str_To_Name_Buffer (Path_Separator & "@PREFIX@/lib/gnat");
 
          end if;
 
