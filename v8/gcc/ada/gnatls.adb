@@ -32,7 +32,6 @@ with Butil;       use Butil;
 with Csets;
 with Fname;       use Fname;
 with Gnatvsn;     use Gnatvsn;
-with Make_Util;   use Make_Util;
 with Namet;       use Namet;
 with Opt;         use Opt;
 with Osint;       use Osint;
@@ -1286,31 +1285,10 @@ procedure Gnatls is
          --  The path name(s) of directories where project files may reside.
          --  May be empty.
 
-         Prefix  : String_Ptr;
-         Runtime : String_Ptr;
-
-         procedure Add_Target (Suffix : String);
-         --  Add :<prefix>/<target>/Suffix to the project path
-
          FD  : File_Descriptor;
          Len : Integer;
 
-         ----------------
-         -- Add_Target --
-         ----------------
-
-         procedure Add_Target (Suffix : String) is
-            Extra_Sep : constant String :=
-               (if Target_Name (Target_Name'Last) = '/' then
-                  ""
-                else
-                  (1 => Directory_Separator));
-            --  Note: Target_Name has a trailing / when it comes from Sdefault
-
-         begin
-            Add_Str_To_Name_Buffer
-              (Path_Separator & Prefix.all & Target_Name & Extra_Sep & Suffix);
-         end Add_Target;
+         pragma Unreferenced (Runtime_Name);
 
       --  Start of processing for Initialize_Default_Project_Path
 
