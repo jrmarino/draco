@@ -240,7 +240,7 @@ extern GTY(()) int darwin_ms_struct;
    multiple times on a command line with different arguments each time,
    so put a * after their names so all of them get passed.  */
 #define LINK_SPEC  \
-  "%{static}%{!static:-dynamic -rpath @PREFIX@/@GCCAUX@/lib:@PREFIX@/lib} \
+  "%{static}%{!static:-dynamic -rpath @PREFIX@/@GCCAUX@/lib:@LOCALBASE@/lib} \
    %:remove-outfile(-ldl) \
    %:remove-outfile(-lm) \
    %:remove-outfile(-lpthread) \

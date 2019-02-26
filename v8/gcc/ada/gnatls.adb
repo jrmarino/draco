@@ -1475,11 +1475,11 @@ procedure Gnatls is
 
             --  /raven/share/gpr
             Add_Str_To_Name_Buffer (Path_Separator &
-              "@PREFIX@/share/gpr");
+              "@LOCALBASE@/share/gpr");
 
             --  /raven/lib/gnat
             Add_Str_To_Name_Buffer (Path_Separator &
-              "@PREFIX@/lib/gnat");
+              "@LOCALBASE@/lib/gnat");
 
          end if;
 

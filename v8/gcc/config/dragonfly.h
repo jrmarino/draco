@@ -84,7 +84,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
    } \
    %{static:-Bstatic} \
   } \
-  %{!static:--hash-style=gnu --enable-new-dtags -rpath @PREFIX@/@GCCAUX@/lib:@PREFIX@/lib} \
+  %{!static:--hash-style=gnu --enable-new-dtags -rpath @PREFIX@/@GCCAUX@/lib:@LOCALBASE@/lib} \
   %{symbolic:-Bsymbolic}"
 
 #undef  LINK_SPEC

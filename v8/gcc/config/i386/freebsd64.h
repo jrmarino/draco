@@ -41,5 +41,5 @@ along with GCC; see the file COPYING3.  If not see
         %{rdynamic:-export-dynamic} \
 	-dynamic-linker %(fbsd_dynamic_linker) } \
     %{static:-Bstatic}} \
-  %{!static:--hash-style=gnu -rpath @PREFIX@/@GCCAUX@/lib:@PREFIX@/lib} \
+  %{!static:--hash-style=gnu -rpath @PREFIX@/@GCCAUX@/lib:@LOCALBASE@/lib} \
   %{symbolic:-Bsymbolic}"
