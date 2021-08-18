@@ -67,7 +67,7 @@ package body GNAT.Sockets.Thin is
    function Syscall_Recv
      (S     : C.int;
       Msg   : System.Address;
-      Len   : C.int;
+      Len   : C.size_t;
       Flags : C.int) return C.int;
    pragma Import (C, Syscall_Recv, "recv");
    --  The recv() function receives a message from a socket.  The call can be
@@ -79,7 +79,7 @@ package body GNAT.Sockets.Thin is
    function Syscall_Recvfrom
      (S       : C.int;
       Msg     : System.Address;
-      Len     : C.int;
+      Len     : C.size_t;
       Flags   : C.int;
       From    : System.Address;
       Fromlen : not null access C.int) return C.int;
@@ -115,7 +115,7 @@ package body GNAT.Sockets.Thin is
    function Syscall_Sendto
      (S     : C.int;
       Msg   : System.Address;
-      Len   : C.int;
+      Len   : C.size_t;
       Flags : C.int;
       To    : System.Address;
       Tolen : C.int) return C.int;
@@ -216,7 +216,7 @@ package body GNAT.Sockets.Thin is
    function C_Recv
      (S     : C.int;
       Msg   : System.Address;
-      Len   : C.int;
+      Len   : C.size_t;
       Flags : C.int) return C.int
    is
    begin
@@ -230,7 +230,7 @@ package body GNAT.Sockets.Thin is
    function C_Recvfrom
      (S       : C.int;
       Msg     : System.Address;
-      Len     : C.int;
+      Len     : C.size_t;
       Flags   : C.int;
       From    : System.Address;
       Fromlen : not null access C.int) return C.int
@@ -272,7 +272,7 @@ package body GNAT.Sockets.Thin is
    function C_Sendto
      (S     : C.int;
       Msg   : System.Address;
-      Len   : C.int;
+      Len   : C.size_t;
       Flags : C.int;
       To    : System.Address;
       Tolen : C.int) return C.int
