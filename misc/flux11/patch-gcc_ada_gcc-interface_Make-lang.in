@@ -1,0 +1,11 @@
+--- gcc/ada/gcc-interface/Make-lang.in.orig	2018-05-03 15:12:22 UTC
++++ gcc/ada/gcc-interface/Make-lang.in
+@@ -640,7 +640,7 @@
+  ada/widechar.o
+ 
+ # Language-independent object files.
+-ADA_BACKEND = $(BACKEND) attribs.o
++ADA_BACKEND = $(BACKEND2) attribs.o
+ 
+ # List of target dependent sources, overridden below as necessary
+ TARGET_ADA_SRCS =
