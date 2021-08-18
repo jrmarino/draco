@@ -34,10 +34,6 @@
 --  today to provide symbolic traceback support for gnu/kFreeBSD.
 --  Incorporated in GNAT-AUX by John Marino <http://www.dragonlace.net>
 
-pragma Polling (Off);
---  We must turn polling off for this unit, because otherwise we can get
---  elaboration circularities when polling is turned on.
-
 with Ada.Exceptions.Traceback; use Ada.Exceptions.Traceback;
 with System.Soft_Links;
 
