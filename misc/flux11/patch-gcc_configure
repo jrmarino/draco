@@ -1,0 +1,16 @@
+--- gcc/configure.orig	2021-10-03 15:10:23.126237160 +0000
++++ gcc/configure	2021-10-03 15:11:23.609700272 +0000
+@@ -30989,6 +30989,13 @@
+       gcc_cv_target_dl_iterate_phdr=no
+     fi
+     ;;
++  *-*-netbsd*)
++    if grep dl_iterate_phdr $target_header_dir/link_elf.h > /dev/null 2>&1; then
++      gcc_cv_target_dl_iterate_phdr=yes
++    else
++      gcc_cv_target_dl_iterate_phdr=no
++    fi
++    ;;
+   *-linux-musl*)
+     gcc_cv_target_dl_iterate_phdr=yes
+     ;;

@@ -835,6 +835,7 @@ __gnat_rmdir (char *path)
 }
 
 #if defined (_WIN32) || defined (__linux__) || defined (__sun__) \
+  || defined (__NetBSD__) \
   || defined (__FreeBSD__) || defined(__DragonFly__) || defined (__QNX__)
 #define HAS_TARGET_WCHAR_T
 #endif
@@ -3718,6 +3719,60 @@ void __gnat_killprocesstree (int pid, int sig_num)
      See: /usr/include/sys/procfs.h (struct pstatus).
   */
 }
+
+int
+wrapped_nanosleep (const struct timespec *rqtp, struct timespec *rmtp) {
+   return nanosleep (rqtp, rmtp);
+}
+int
+wrapped_gettimeofday (struct timeval *tp, struct timezone *tzp) {
+   return gettimeofday (tp, tzp);
+}
+
+#if defined(__NetBSD__)
+/* It's 2021, and NetBSD still doesn't use symbol versioning in their
+ * libraries.  They mimic this by having header macros rename the function
+ * at compile time.  If we don't wrap the functions, the osinte specification
+ * for NetBSD would need to import e.g. __sigaltstack14 instead of sigaltstack.
+ * By wrapping, new versions won't break gnat.
+ */
+int
+wrapped_sigemptyset (sigset_t *set) {
+   return sigemptyset (set);
+}
+int
+wrapped_sigfillset (sigset_t *set) {
+   return sigfillset (set);
+}
+int
+wrapped_sigaddset (sigset_t *set, int signo) {
+   return sigaddset (set, signo);
+}
+int
+wrapped_sigdelset (sigset_t *set, int signo) {
+   return sigdelset (set, signo);
+}
+int
+wrapped_sigismember (sigset_t *set, int signo) {
+   return sigismember (set, signo);
+}
+int
+wrapped_sigaltstack (const stack_t *ss, stack_t *oss) {
+   return sigaltstack (ss, oss);
+}
+int
+wrapped_sigaction (int sig, const struct sigaction *act, struct sigaction *oact) {
+   return sigaction (sig, act, oact);
+}
+int
+wrapped_clock_getres (clockid_t clock_id, struct timespec *res) {
+   return clock_getres (clock_id, res);
+}
+int
+wrapped_clock_gettime (clockid_t clock_id, struct timespec *tp) {
+   return clock_gettime (clock_id, tp);
+}
+#endif
 
 #ifdef __cplusplus
 }

@@ -122,6 +122,9 @@ produce_patch ${ADA_SUFFIX} ada[@]
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Make-lang.in
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_init.c
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_libgnat_g-socthi.ads
+regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_s-oscons-tmplt.c
+regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_sysdep.c
+regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure
 
 pattern="^gcc/fortran"
 #no-free-df fortran=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
@@ -133,6 +136,8 @@ reset_patch ${CORE_SUFFIX}
 produce_patch ${CORE_SUFFIX} core[@]
 regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
 regenerate_patch ${CORE_SUFFIX} patch-gcc_config_i386_gnu-user64.h
+regenerate_patch ${CORE_SUFFIX} patch-gcc_config_netbsd-elf.h
+regenerate_patch ${CORE_SUFFIX} patch-gcc_configure
 regenerate_patch ${CORE_SUFFIX} patch-gcc_gcc.c
 
 pattern="^gcc/testsuite/ada|^gcc/testsuite/gnat.dg"
