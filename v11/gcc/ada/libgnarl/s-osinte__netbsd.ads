@@ -234,8 +234,8 @@ package System.OS_Interface is
    -------------------------
 
    SCHED_FIFO  : constant := 1;
-   SCHED_OTHER : constant := 2;
-   SCHED_RR    : constant := 3;
+   SCHED_OTHER : constant := 0;
+   SCHED_RR    : constant := 2;
 
    function To_Target_Priority
      (Prio : System.Any_Priority) return Interfaces.C.int;
@@ -352,7 +352,7 @@ package System.OS_Interface is
    --  FSU_THREADS requires pthread_init, which is nonstandard and this should
    --  be invoked during the elaboration of s-taprop.adb.
 
-   --  FreeBSD does not require this so we provide an empty Ada body
+   --  NetBSD does not require this so we provide an empty Ada body
 
    procedure pthread_init;
 

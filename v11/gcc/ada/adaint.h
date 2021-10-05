@@ -354,12 +354,6 @@ extern int    __gnat_sals_init_using_constructors  (void);
 
 extern const void * __gnat_get_executable_load_address  (void);
 
-/* all posix platforms (s-osprim__posix) */
-#include <time.h>
-extern int    wrapped_nanosleep (const struct timespec *, struct timespec *);
-#include <sys/time.h>
-extern int    wrapped_gettimeofday (struct timeval *, struct timezone *);
-
 #if defined(__NetBSD__)
 #include <signal.h>
 extern int    wrapped_sigemptyset (sigset_t *);
@@ -369,7 +363,8 @@ extern int    wrapped_sigdelset   (sigset_t *, int);
 extern int    wrapped_sigismember (sigset_t *, int);
 extern int    wrapped_sigaltstack (const stack_t *, stack_t *);
 extern int    wrapped_sigaction   (int, const struct sigaction *, struct sigaction *);
-/* <time.h> */
+#include <time.h>
+extern int    wrapped_nanosleep (const struct timespec *, struct timespec *);
 extern int    wrapped_clock_getres  (clockid_t, struct timespec *);
 extern int    wrapped_clock_gettime (clockid_t, struct timespec *);
 #endif
