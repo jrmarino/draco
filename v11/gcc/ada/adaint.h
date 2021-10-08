@@ -363,8 +363,11 @@ extern int    wrapped_sigdelset   (sigset_t *, int);
 extern int    wrapped_sigismember (sigset_t *, int);
 extern int    wrapped_sigaltstack (const stack_t *, stack_t *);
 extern int    wrapped_sigaction   (int, const struct sigaction *, struct sigaction *);
+#endif
 #include <time.h>
-extern int    wrapped_nanosleep (const struct timespec *, struct timespec *);
+extern int    wrapped_nanosleep     (const struct timespec *, struct timespec *);
+extern int    wrapped_gettimeofday  (struct timeval *, void *);
+#if defined(__NetBSD__)
 extern int    wrapped_clock_getres  (clockid_t, struct timespec *);
 extern int    wrapped_clock_gettime (clockid_t, struct timespec *);
 #endif

@@ -3756,10 +3756,6 @@ wrapped_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
    return sigaction (sig, act, oact);
 }
 int
-wrapped_nanosleep (const struct timespec *rqtp, struct timespec *rmtp) {
-   return nanosleep (rqtp, rmtp);
-}
-int
 wrapped_clock_getres (clockid_t clock_id, struct timespec *res) {
    return clock_getres (clock_id, res);
 }
@@ -3768,6 +3764,14 @@ wrapped_clock_gettime (clockid_t clock_id, struct timespec *tp) {
    return clock_gettime (clock_id, tp);
 }
 #endif
+int
+wrapped_nanosleep (const struct timespec *rqtp, struct timespec *rmtp) {
+   return nanosleep (rqtp, rmtp);
+}
+int
+wrapped_gettimeofday (struct timeval * tp, void * tzp) {
+   return gettimeofday (tp, tzp);
+}
 
 #ifdef __cplusplus
 }

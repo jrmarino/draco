@@ -1,4 +1,4 @@
---- gcc/ada/s-oscons-tmplt.c.orig	2021-10-04 02:44:18 UTC
+--- gcc/ada/s-oscons-tmplt.c.orig	2021-10-06 14:52:39 UTC
 +++ gcc/ada/s-oscons-tmplt.c
 @@ -410,7 +410,7 @@ CND(FNDELAY, "Nonblocking")
  
