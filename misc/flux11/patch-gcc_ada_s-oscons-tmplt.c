@@ -1,4 +1,4 @@
---- gcc/ada/s-oscons-tmplt.c.orig	2021-10-06 14:52:39 UTC
+--- gcc/ada/s-oscons-tmplt.c.orig	2021-10-08 15:14:31 UTC
 +++ gcc/ada/s-oscons-tmplt.c
 @@ -410,7 +410,7 @@ CND(FNDELAY, "Nonblocking")
  
@@ -26,3 +26,11 @@
   || defined(__DragonFly__) || defined(__QNX__)
  /** On these platforms use system provided monotonic clock instead of
   ** the default CLOCK_REALTIME. We then need to set up cond var attributes
+@@ -1962,6 +1963,7 @@ CNS(CLOCK_RT_Ada, "")
+ #endif
+ 
+ #if defined (__APPLE__) || defined (__linux__) || defined (__ANDROID__) \
++  || defined (__NetBSD__) \
+   || defined (__QNX__) || defined (__rtems__) || defined (DUMMY)
+ /*
+ 
