@@ -356,20 +356,20 @@ extern const void * __gnat_get_executable_load_address  (void);
 
 #if defined(__NetBSD__)
 #include <signal.h>
-extern int    wrapped_sigemptyset (sigset_t *);
-extern int    wrapped_sigfillset  (sigset_t *);
-extern int    wrapped_sigaddset   (sigset_t *, int);
-extern int    wrapped_sigdelset   (sigset_t *, int);
-extern int    wrapped_sigismember (sigset_t *, int);
-extern int    wrapped_sigaltstack (const stack_t *, stack_t *);
-extern int    wrapped_sigaction   (int, const struct sigaction *, struct sigaction *);
+extern int    __gnat_sigemptyset (sigset_t *);
+extern int    __gnat_sigfillset  (sigset_t *);
+extern int    __gnat_sigaddset   (sigset_t *, int);
+extern int    __gnat_sigdelset   (sigset_t *, int);
+extern int    __gnat_sigismember (sigset_t *, int);
+extern int    __gnat_sigaltstack (const stack_t *, stack_t *);
+extern int    __gnat_sigaction   (int, const struct sigaction *, struct sigaction *);
 #endif
 #include <time.h>
-extern int    wrapped_nanosleep     (const struct timespec *, struct timespec *);
-extern int    wrapped_gettimeofday  (struct timeval *, void *);
+extern int    __gnat_nanosleep     (const struct timespec *, struct timespec *);
+extern int    __gnat_gettimeofday  (struct timeval *, void *);
 #if defined(__NetBSD__)
-extern int    wrapped_clock_getres  (clockid_t, struct timespec *);
-extern int    wrapped_clock_gettime (clockid_t, struct timespec *);
+extern int    __gnat_clock_getres  (clockid_t, struct timespec *);
+extern int    __gnat_clock_gettime (clockid_t, struct timespec *);
 #endif
 
 #ifdef __cplusplus

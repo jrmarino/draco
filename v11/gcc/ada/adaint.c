@@ -3728,48 +3728,48 @@ void __gnat_killprocesstree (int pid, int sig_num)
  * By wrapping, new versions won't break gnat.
  */
 int
-wrapped_sigemptyset (sigset_t *set) {
+__gnat_sigemptyset (sigset_t *set) {
    return sigemptyset (set);
 }
 int
-wrapped_sigfillset (sigset_t *set) {
+__gnat_sigfillset (sigset_t *set) {
    return sigfillset (set);
 }
 int
-wrapped_sigaddset (sigset_t *set, int signo) {
+__gnat_sigaddset (sigset_t *set, int signo) {
    return sigaddset (set, signo);
 }
 int
-wrapped_sigdelset (sigset_t *set, int signo) {
+__gnat_sigdelset (sigset_t *set, int signo) {
    return sigdelset (set, signo);
 }
 int
-wrapped_sigismember (sigset_t *set, int signo) {
+__gnat_sigismember (sigset_t *set, int signo) {
    return sigismember (set, signo);
 }
 int
-wrapped_sigaltstack (const stack_t *ss, stack_t *oss) {
+__gnat_sigaltstack (const stack_t *ss, stack_t *oss) {
    return sigaltstack (ss, oss);
 }
 int
-wrapped_sigaction (int sig, const struct sigaction *act, struct sigaction *oact) {
+__gnat_sigaction (int sig, const struct sigaction *act, struct sigaction *oact) {
    return sigaction (sig, act, oact);
 }
 int
-wrapped_clock_getres (clockid_t clock_id, struct timespec *res) {
+__gnat_clock_getres (clockid_t clock_id, struct timespec *res) {
    return clock_getres (clock_id, res);
 }
 int
-wrapped_clock_gettime (clockid_t clock_id, struct timespec *tp) {
+__gnat_clock_gettime (clockid_t clock_id, struct timespec *tp) {
    return clock_gettime (clock_id, tp);
 }
 #endif
 int
-wrapped_nanosleep (const struct timespec *rqtp, struct timespec *rmtp) {
+__gnat_nanosleep (const struct timespec *rqtp, struct timespec *rmtp) {
    return nanosleep (rqtp, rmtp);
 }
 int
-wrapped_gettimeofday (struct timeval * tp, void * tzp) {
+__gnat_gettimeofday (struct timeval * tp, void * tzp) {
    return gettimeofday (tp, tzp);
 }
 

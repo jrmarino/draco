@@ -136,23 +136,23 @@ package System.OS_Interface is
    function sigaddset
      (set : access sigset_t;
       sig : Signal) return int;
-   pragma Import (C, sigaddset, "wrapped_sigaddset");
+   pragma Import (C, sigaddset, "__gnat_sigaddset");
 
    function sigdelset
      (set : access sigset_t;
       sig : Signal) return int;
-   pragma Import (C, sigdelset, "wrapped_sigdelset");
+   pragma Import (C, sigdelset, "__gnat_sigdelset");
 
    function sigfillset (set : access sigset_t) return int;
-   pragma Import (C, sigfillset, "wrapped_sigfillset");
+   pragma Import (C, sigfillset, "__gnat_sigfillset");
 
    function sigismember
      (set : access sigset_t;
       sig : Signal) return int;
-   pragma Import (C, sigismember, "wrapped_sigismember");
+   pragma Import (C, sigismember, "__gnat_sigismember");
 
    function sigemptyset (set : access sigset_t) return int;
-   pragma Import (C, sigemptyset, "wrapped_sigemptyset");
+   pragma Import (C, sigemptyset, "__gnat_sigemptyset");
 
    --  sigcontext is architecture dependent, so define it private
    type struct_sigcontext is private;
@@ -188,7 +188,7 @@ package System.OS_Interface is
      (sig  : Signal;
       act  : struct_sigaction_ptr;
       oact : struct_sigaction_ptr) return int;
-   pragma Import (C, sigaction, "wrapped_sigaction");
+   pragma Import (C, sigaction, "__gnat_sigaction");
 
    ----------
    -- Time --
@@ -200,20 +200,20 @@ package System.OS_Interface is
    type timespec is private;
 
    function nanosleep (rqtp, rmtp : access timespec) return int;
-   pragma Import (C, nanosleep, "wrapped_nanosleep");
+   pragma Import (C, nanosleep, "__gnat_nanosleep");
 
    type clockid_t is new int;
 
    function clock_getres
      (clock_id : clockid_t;
       res      : access timespec) return int;
-   pragma Import (C, clock_getres, "wrapped_clock_getres");
+   pragma Import (C, clock_getres, "__gnat_clock_getres");
 
    function clock_gettime
      (clock_id : clockid_t;
       tp       : access timespec)
       return int;
-   pragma Import (C, clock_gettime, "wrapped_clock_gettime");
+   pragma Import (C, clock_gettime, "__gnat_clock_gettime");
 
    function To_Duration (TS : timespec) return Duration;
    pragma Inline (To_Duration);
@@ -315,7 +315,7 @@ package System.OS_Interface is
    function sigaltstack
      (ss  : not null access stack_t;
       oss : access stack_t) return int;
-   pragma Import (C, sigaltstack, "wrapped_sigaltstack");
+   pragma Import (C, sigaltstack, "__gnat_sigaltstack");
 
    Alternate_Stack : aliased System.Address;
    --  This is a dummy definition, never used (Alternate_Stack_Size is null)

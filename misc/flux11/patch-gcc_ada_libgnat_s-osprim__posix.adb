@@ -5,7 +5,7 @@
  
     function nanosleep (rqtp, rmtp : not null access timespec) return Integer;
 -   pragma Import (C, nanosleep, "nanosleep");
-+   pragma Import (C, nanosleep, "wrapped_nanosleep");
++   pragma Import (C, nanosleep, "__gnat_nanosleep");
  
     -----------
     -- Clock --
@@ -14,7 +14,7 @@
          (Tv : access timeval;
           Tz : System.Address := System.Null_Address) return Integer;
 -      pragma Import (C, gettimeofday, "gettimeofday");
-+      pragma Import (C, gettimeofday, "wrapped_gettimeofday");
++      pragma Import (C, gettimeofday, "__gnat_gettimeofday");
  
     begin
        --  The return codes for gettimeofday are as follows (from man pages):
