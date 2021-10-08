@@ -282,15 +282,14 @@ package System.OS_Interface is
    type pthread_t           is private;
    subtype Thread_Id        is pthread_t;
 
-   type pthread_mutex_t     is limited private;
-   type pthread_cond_t      is limited private;
-   type pthread_attr_t      is limited private;
-   type pthread_mutexattr_t is limited private;
-   type pthread_condattr_t  is limited private;
-   type pthread_key_t       is private;
-
-   subtype pthread_rwlock_t     is limited private;
-   subtype pthread_rwlockattr_t is limited private;
+   type pthread_mutex_t      is limited private;
+   type pthread_cond_t       is limited private;
+   type pthread_attr_t       is limited private;
+   type pthread_mutexattr_t  is limited private;
+   type pthread_condattr_t   is limited private;
+   type pthread_rwlock_t     is limited private;
+   type pthread_rwlockattr_t is limited private;
+   type pthread_key_t        is private;
 
    PTHREAD_CREATE_DETACHED : constant := 1;
    PTHREAD_CREATE_JOINABLE : constant := 0;
@@ -637,7 +636,7 @@ private
 
    type pthread_attr_t is record
       Data : char_array (1 .. System.OS_Constants.PTHREAD_ATTR_SIZE);
-   end record
+   end record;
    pragma Convention (C, pthread_attr_t);
    for pthread_attr_t'Alignment use size_t'Alignment;
 
