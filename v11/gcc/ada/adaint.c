@@ -3772,6 +3772,15 @@ int
 __gnat_gettimeofday (struct timeval * tp, void * tzp) {
    return gettimeofday (tp, tzp);
 }
+int
+__gnat_select(int nfds, fd_set * readfds, fd_set * writefds,
+              fd_set * exceptfds, struct timeval * timeout) {
+   return select (nfds, readfds, writefds, exceptfds, timeout);
+}
+int
+__gnat_socket (int domain, int type, int protocol) {
+   return socket (domain, type, protocol);
+}
 
 #ifdef __cplusplus
 }

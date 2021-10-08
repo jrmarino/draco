@@ -367,6 +367,10 @@ extern int    __gnat_sigaction   (int, const struct sigaction *, struct sigactio
 #include <time.h>
 extern int    __gnat_nanosleep     (const struct timespec *, struct timespec *);
 extern int    __gnat_gettimeofday  (struct timeval *, void *);
+#include <sys/select.h>
+extern int    __gnat_select        (int, fd_set *, fd_set *, fd_set *, struct timeval *);
+#include <sys/socket.h>
+extern int    __gnat_socket        (int, int, int);
 #if defined(__NetBSD__)
 extern int    __gnat_clock_getres  (clockid_t, struct timespec *);
 extern int    __gnat_clock_gettime (clockid_t, struct timespec *);

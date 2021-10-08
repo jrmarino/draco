@@ -42,6 +42,7 @@
 with Ada.Unchecked_Conversion;
 
 with Interfaces.C;
+with System.OS_Constants;
 
 package System.OS_Interface is
    pragma Preelaborate;
@@ -58,6 +59,7 @@ package System.OS_Interface is
    subtype unsigned_char  is Interfaces.C.unsigned_char;
    subtype plain_char     is Interfaces.C.plain_char;
    subtype size_t         is Interfaces.C.size_t;
+   subtype char_array     is Interfaces.C.char_array;
    subtype int64          is Interfaces.Integer_64;
 
    -----------
@@ -287,19 +289,14 @@ package System.OS_Interface is
    type pthread_condattr_t  is limited private;
    type pthread_key_t       is private;
 
+   subtype pthread_rwlock_t     is limited private;
+   subtype pthread_rwlockattr_t is limited private;
+
    PTHREAD_CREATE_DETACHED : constant := 1;
    PTHREAD_CREATE_JOINABLE : constant := 0;
 
    PTHREAD_SCOPE_PROCESS : constant := 0;
    PTHREAD_SCOPE_SYSTEM  : constant := 2;
-
-   --  Read/Write lock not supported on freebsd. To add support both types
-   --  pthread_rwlock_t and pthread_rwlockattr_t must properly be defined
-   --  with the associated routines pthread_rwlock_[init/destroy] and
-   --  pthread_rwlock_[rdlock/wrlock/unlock].
-
-   subtype pthread_rwlock_t     is pthread_mutex_t;
-   subtype pthread_rwlockattr_t is pthread_mutexattr_t;
 
    -----------
    -- Stack --
@@ -438,8 +435,8 @@ package System.OS_Interface is
    --------------------------
 
    PTHREAD_PRIO_NONE    : constant := 0;
-   PTHREAD_PRIO_PROTECT : constant := 2;
    PTHREAD_PRIO_INHERIT : constant := 1;
+   PTHREAD_PRIO_PROTECT : constant := 2;
 
    function pthread_mutexattr_setprotocol
      (attr     : access pthread_mutexattr_t;
@@ -606,11 +603,6 @@ package System.OS_Interface is
    -- Non-portable Pthread Functions --
    ------------------------------------
 
-   function pthread_set_name_np
-     (thread : pthread_t;
-      name   : System.Address) return int;
-   pragma Import (C, pthread_set_name_np, "pthread_set_name_np");
-
 private
 
    type sigset_t is array (1 .. 4) of unsigned;
@@ -640,12 +632,49 @@ private
    end record;
    pragma Convention (C, timespec);
 
-   type pthread_t           is new System.Address;
-   type pthread_attr_t      is new System.Address;
-   type pthread_mutex_t     is new System.Address;
-   type pthread_mutexattr_t is new System.Address;
-   type pthread_cond_t      is new System.Address;
-   type pthread_condattr_t  is new System.Address;
-   type pthread_key_t       is new int;
+   type pthread_t     is new System.Address;
+   type pthread_key_t is new int;
+
+   type pthread_attr_t is record
+      Data : char_array (1 .. System.OS_Constants.PTHREAD_ATTR_SIZE);
+   end record
+   pragma Convention (C, pthread_attr_t);
+   for pthread_attr_t'Alignment use size_t'Alignment;
+
+   type pthread_mutex_t is record
+      Data : char_array (1 .. System.OS_Constants.PTHREAD_MUTEX_SIZE);
+   end record;
+   pragma Convention (C, pthread_mutex_t);
+   for pthread_mutex_t'Alignment use size_t'Alignment;
+
+   type pthread_mutexattr_t is record
+      Data : char_array (1 .. System.OS_Constants.PTHREAD_MUTEXATTR_SIZE);
+   end record;
+   pragma Convention (C, pthread_mutexattr_t);
+   for pthread_mutexattr_t'Alignment use size_t'Alignment;
+
+   type pthread_cond_t is record
+      Data : char_array (1 .. System.OS_Constants.PTHREAD_COND_SIZE);
+   end record;
+   pragma Convention (C, pthread_cond_t);
+   for pthread_cond_t'Alignment use size_t'Alignment;
+
+   type pthread_condattr_t is record
+      Data : char_array (1 .. System.OS_Constants.PTHREAD_CONDATTR_SIZE);
+   end record;
+   pragma Convention (C, pthread_condattr_t);
+   for pthread_condattr_t'Alignment use size_t'Alignment;
+
+   type pthread_rwlock_t is record
+      Data : char_array (1 .. System.OS_Constants.PTHREAD_RWLOCK_SIZE);
+   end record;
+   pragma Convention (C, pthread_rwlock_t);
+   for pthread_rwlock_t'Alignment use size_t'Alignment;
+
+   type pthread_rwlockattr_t is record
+      Data : char_array (1 .. System.OS_Constants.PTHREAD_RWLOCKATTR_SIZE);
+   end record;
+   pragma Convention (C, pthread_rwlockattr_t);
+   for pthread_rwlockattr_t'Alignment use size_t'Alignment;
 
 end System.OS_Interface;

@@ -128,7 +128,7 @@ package body GNAT.Sockets.Thin is
      (Domain   : C.int;
       Typ      : C.int;
       Protocol : C.int) return C.int;
-   pragma Import (C, Syscall_Socket, "socket");
+   pragma Import (C, Syscall_Socket, "__gnat_socket");
    --  The socket() function is used to create an unbound socket and returns a
    --  file descriptor that can be used with other socket functions.  Upon
    --  failure, a -1 is returned and ERRNO is set.
