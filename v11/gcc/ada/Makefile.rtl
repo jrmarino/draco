@@ -2058,7 +2058,7 @@ ifeq ($(strip $(filter-out %86_64 netbsd%,$(target_cpu) $(target_os))),)
   g-socthi.adb<libgnat/g-socthi__bsd.adb \
   s-osprim.adb<libgnat/s-osprim__posix.adb \
   s-trasym.adb<libgnat/s-trasym__bsd.adb \
-  s-taprop.adb<libgnarl/s-taprop__netbsd.adb \
+  s-taprop.adb<libgnarl/s-taprop__posix.adb \
   s-taspri.ads<libgnarl/s-taspri__posix.ads \
   s-tpopsp.adb<libgnarl/s-tpopsp__posix.adb \
   $(TRASYM_DWARF_UNIX_PAIRS) \

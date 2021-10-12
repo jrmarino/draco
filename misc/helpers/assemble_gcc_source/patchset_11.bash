@@ -122,6 +122,10 @@ reset_patch ${ADA_SUFFIX}
 produce_patch ${ADA_SUFFIX} ada[@]
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Make-lang.in
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_init.c
+regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_libgnarl_s-taprop-posix.adb
+regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_s-osinte-android.ads
+regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_s-osinte-dragonfly.ads
+regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_s-osinte-freebsd.ads
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_libgnat_g-socthi.ads
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_libgnat_s-osprim__posix.adb
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_s-oscons-tmplt.c

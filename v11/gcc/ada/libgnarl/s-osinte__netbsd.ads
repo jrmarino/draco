@@ -236,9 +236,14 @@ package System.OS_Interface is
    -- Priority Scheduling --
    -------------------------
 
-   SCHED_FIFO  : constant := 1;
    SCHED_OTHER : constant := 0;
+   SCHED_FIFO  : constant := 1;
    SCHED_RR    : constant := 2;
+
+   --  pthread_setschedparam is implementation-defined for SCHED_OTHER.
+   --  NetBSD only supports PRI_NONE (-1), see <sys/param.h>
+   STATIC_PRIORITY_FOR_SCHEDULER : constant Boolean := True;
+   DEFAULT_SCHEDULER_PRIORITY    : constant := -1;
 
    function To_Target_Priority
      (Prio : System.Any_Priority) return Interfaces.C.int;
