@@ -366,7 +366,7 @@ extern int    __gnat_sigaction   (int, const struct sigaction *, struct sigactio
 #endif
 #include <time.h>
 extern int    __gnat_nanosleep     (const struct timespec *, struct timespec *);
-extern int    __gnat_gettimeofday  (struct timeval *, void *);
+extern int    __gnat_gettimeofday  (struct timeval *, struct timezone *);
 #include <sys/select.h>
 extern int    __gnat_select        (int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include <sys/socket.h>

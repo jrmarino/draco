@@ -3769,7 +3769,7 @@ __gnat_nanosleep (const struct timespec *rqtp, struct timespec *rmtp) {
    return nanosleep (rqtp, rmtp);
 }
 int
-__gnat_gettimeofday (struct timeval * tp, void * tzp) {
+__gnat_gettimeofday (struct timeval * tp, struct timezone * tzp) {
    return gettimeofday (tp, tzp);
 }
 int

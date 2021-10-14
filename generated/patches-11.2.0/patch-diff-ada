@@ -297,7 +297,7 @@
 +   return nanosleep (rqtp, rmtp);
 +}
 +int
-+__gnat_gettimeofday (struct timeval * tp, void * tzp) {
++__gnat_gettimeofday (struct timeval * tp, struct timezone * tzp) {
 +   return gettimeofday (tp, tzp);
 +}
 +int
@@ -331,7 +331,7 @@
 +#endif
 +#include <time.h>
 +extern int    __gnat_nanosleep     (const struct timespec *, struct timespec *);
-+extern int    __gnat_gettimeofday  (struct timeval *, void *);
++extern int    __gnat_gettimeofday  (struct timeval *, struct timezone *);
 +#include <sys/select.h>
 +extern int    __gnat_select        (int, fd_set *, fd_set *, fd_set *, struct timeval *);
 +#include <sys/socket.h>
