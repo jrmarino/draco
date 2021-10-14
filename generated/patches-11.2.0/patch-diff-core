@@ -156,6 +156,16 @@
     %{!shared: \
       -dc -dp \
       %{!nostdlib: \
+@@ -101,6 +102,9 @@
+ #undef SUBTARGET_EXTRA_SPECS
+ #define SUBTARGET_EXTRA_SPECS   NETBSD_SUBTARGET_EXTRA_SPECS
+ 
++/* Define this to be nonzero if static stack checking is supported. */
++#define STACK_CHECK_STATIC_BUILTIN 1
++
+ /* Use --as-needed -lgcc_s for eh support.  */
+ #ifdef HAVE_LD_AS_NEEDED
+ #define USE_LD_AS_NEEDED 1
 --- gcc/configure.orig
 +++ gcc/configure
 @@ -30989,6 +30989,13 @@
