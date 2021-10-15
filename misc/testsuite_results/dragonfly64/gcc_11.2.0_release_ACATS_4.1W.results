@@ -1,0 +1,17 @@
+Test Run By marino on Thu Oct 14 23:46:29 UTC 2021
+		=== acats configuration ===
+target gcc is /raven/toolchain/gcc11/bin/gcc
+Using built-in specs. COLLECT_GCC=/raven/toolchain/gcc11/bin/gcc COLLECT_LTO_WRAPPER=/raven/toolchain/gcc11/libexec/gcc/x86_64-raven-dragonfly6.0/11.2.0/lto-wrapper Target: x86_64-raven-dragonfly6.0 Configured with: /construction/gcc11/gcc-11.2.0/configure --enable-languages=c,c++,ada,fortran --with-local-prefix=/raven --with-gmp=/raven --with-mpc=/raven --with-mpfr=/raven --enable-shared --enable-threads=posix --enable-checking=release --enable-libquadmath --enable-nls --enable-gnu-indirect-function --disable-multilib --disable-libsanitizer --disable-libvtv --disable-libmpx --disable-libcilkrts --with-pkgversion=Ravenports --with-gnu-as --with-as=/raven/toolchain/bin/as --with-ld=/raven/toolchain/bin/ld --with-libiconv-prefix=/construction/gcc11/fake --prefix=/raven/toolchain/gcc11 --disable-dependency-tracking --localstatedir=/var --mandir=/raven/toolchain/gcc11/share/man --infodir=/raven/toolchain/gcc11/share/info/. --build=x86_64-raven-dragonfly6.0 Thread model: posix Supported LTO compression algorithms: zlib gcc version 11.2.0 (Ravenports)
+host=x86_64-raven-dragonfly6.0
+target=x86_64-raven-dragonfly6.0
+
+
+		=== acats Summary ===
+# of expected passes		2531
+# of unexpected failures	13
+# of expected failures		1484
+# of unresolved testcases	11
+# of unsupported tests		124
+*** FAILURES: c324006 c35503d c35503f c415001 c611a04 cxaib05 cxaib08 cxd1003 cxd1004 cxd1005 cxd2006 cxd3001 cxd3002 
+
+/raven/share/ACATS/run_all.sh completed at Fri Oct 15 00:17:26 UTC 2021
