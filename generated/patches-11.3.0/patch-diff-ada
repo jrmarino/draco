@@ -315,7 +315,7 @@
  #endif
 --- gcc/ada/adaint.h.orig
 +++ gcc/ada/adaint.h
-@@ -354,6 +354,28 @@
+@@ -354,6 +354,29 @@
  
  extern const void * __gnat_get_executable_load_address  (void);
  
@@ -330,6 +330,7 @@
 +extern int    __gnat_sigaction   (int, const struct sigaction *, struct sigaction *);
 +#endif
 +#include <time.h>
++#include <sys/time.h>
 +extern int    __gnat_nanosleep     (const struct timespec *, struct timespec *);
 +extern int    __gnat_gettimeofday  (struct timeval *, struct timezone *);
 +#include <sys/select.h>
