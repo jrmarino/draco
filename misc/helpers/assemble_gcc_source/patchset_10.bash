@@ -1,6 +1,6 @@
 #!/raven/bin/bash
 
-GCCVERSION=10.1.0
+GCCVERSION=10.4.0
 DRACO=/home/marino/github/draco/v10
 EXPANSE=/home/marino/GCC-TEST
 DIFFPROG=/usr/bin/diff
@@ -17,6 +17,7 @@ FRT_SUITE_SUFFIX=fortran-testsuite
 OUTPUT_DIR=${EXPANSE}/patches-${GCCVERSION}
 RELEASE_DIR=${EXPANSE}/gcc-${GCCVERSION}
 SCRATCH_DIR=${EXPANSE}/scratch
+GENERATED_DIR=${DRACO}/../generated/patches-${GCCVERSION}
 
 function reset_patch () {
    PATCH_SUFFIX=${1}
@@ -165,3 +166,10 @@ produce_patch ${GCC_SUITE_SUFFIX} suite[@]
 pattern="^gcc/testsuite/gfortran"
 #blank suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 #blank produce_patch ${FRT_SUITE_SUFFIX} suite[@]
+
+
+# copy to generated directory
+mkdir -p "${GENERATED_DIR}"
+for part in ada ada-testsuite core cxx gcc-testsuite; do
+  cp -RH ${OUTPUT_DIR}/patch-diff-${part} ${GENERATED_DIR}/patch-diff-${part}
+done
