@@ -1,0 +1,11 @@
+--- gcc/ada/gcc-interface/Make-lang.in.orig
++++ gcc/ada/gcc-interface/Make-lang.in
+@@ -702,7 +702,7 @@
+ endif
+ 
+ # Language-independent object files.
+-ADA_BACKEND = $(BACKEND) attribs.o
++ADA_BACKEND = $(BACKEND2) attribs.o
+ 
+ # List of target dependent sources, overridden below as necessary
+ TARGET_ADA_SRCS =
