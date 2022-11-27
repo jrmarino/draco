@@ -32,7 +32,7 @@
  
  insn-modes.cc: s-modes; @true
  insn-modes.h: s-modes-h; @true
-+insn-modes-ada.c: s-modes-ada; @true
++insn-modes-ada.cc: s-modes-ada; @true
  insn-modes-inline.h: s-modes-inline-h; @true
  min-insn-modes.cc: s-modes-m; @true
  
@@ -42,8 +42,8 @@
  
 +s-modes-ada: s-modes
 +	$(shell sed -e 's/: TARGET_96_ROUND_53_LONG_DOUBLE \? &ieee_extended_intel_96_round_53_format //' \
-+		< insn-modes.c > tmp-modes-ada.c)
-+	$(SHELL) $(srcdir)/../move-if-change tmp-modes-ada.c insn-modes-ada.c
++		< insn-modes.cc > tmp-modes-ada.cc)
++	$(SHELL) $(srcdir)/../move-if-change tmp-modes-ada.cc insn-modes-ada.cc
 +	$(STAMP) s-modes-ada
 +
  insn-preds.cc: s-preds; @true
