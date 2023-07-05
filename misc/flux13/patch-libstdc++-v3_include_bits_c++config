@@ -1,0 +1,15 @@
+--- libstdc++-v3/include/bits/c++config.orig	2018-05-03 15:39:13 UTC
++++ libstdc++-v3/include/bits/c++config
+@@ -30,6 +30,12 @@
+ #ifndef _GLIBCXX_CXX_CONFIG_H
+ #define _GLIBCXX_CXX_CONFIG_H 1
+ 
++#ifdef __clang__
++#define _GTHROW
++#else
++#define _GTHROW throw()
++#endif
++
+ // The major release number for the GCC release the C++ library belongs to.
+ #define _GLIBCXX_RELEASE
+ 
