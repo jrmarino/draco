@@ -203,3 +203,31 @@
      }
  
    gcc_assert (!IS_ABSOLUTE_PATH (tooldir_base_prefix));
+@@ -7904,16 +7909,6 @@
+   *cp++ = '.';
+   *cp = '\0';
+ 
+-  /* Exclude directories that the linker is known to search.  */
+-  if (linker
+-      && IS_DIR_SEPARATOR (path[0])
+-      && ((cp - path == 6
+-	   && filename_ncmp (path + 1, "lib", 3) == 0)
+-	  || (cp - path == 10
+-	      && filename_ncmp (path + 1, "usr", 3) == 0
+-	      && IS_DIR_SEPARATOR (path[4])
+-	      && filename_ncmp (path + 5, "lib", 3) == 0)))
+-    return 0;
+ 
+   return (stat (path, &st) >= 0 && S_ISDIR (st.st_mode));
+ }
+--- libcc1/configure.orig
++++ libcc1/configure
+@@ -9193,7 +9193,7 @@
+       if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
+ 	archive_cmds='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags'  # a.out
+       else
+-	archive_cmds='$LD -shared -o $lib $libobjs $deplibs $linker_flags'      # ELF
++	archive_cmds='$CC -shared -o $lib $libobjs $deplibs $linker_flags'      # ELF
+       fi
+       hardcode_libdir_flag_spec='-R$libdir'
+       hardcode_direct=yes
