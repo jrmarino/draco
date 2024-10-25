@@ -1,0 +1,16 @@
+--- libstdc++-v3/include/bits/c++config.orig
++++ libstdc++-v3/include/bits/c++config
+@@ -32,6 +32,13 @@
+ 
+ #pragma GCC system_header
+ 
++#ifdef __clang__
++#define _GTHROW
++#define _GLIBCXX_NOTHROW
++#else
++#define _GTHROW throw()
++#endif
++
+ // The major release number for the GCC release the C++ library belongs to.
+ #define _GLIBCXX_RELEASE
+ 
