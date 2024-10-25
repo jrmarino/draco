@@ -500,7 +500,7 @@
  #endif
  
  /* Include every system header we need */
-@@ -1113,10 +1113,10 @@
+@@ -1113,23 +1113,27 @@
  #include <sys/types.h>
  #include <sys/wait.h>
  #include <unistd.h>
@@ -513,7 +513,14 @@
  #   include <sys/signal.h>
  #endif
  #if defined (__hpux__)
-@@ -1129,7 +1129,11 @@
+ #   include <sys/stropts.h>
+ #endif
+-#if defined (__APPLE__)
++#if defined (__APPLE__) || defined(__NetBSD__)
+ #   include <util.h>
+ #endif
+-#if defined (__FreeBSD__)
++#if defined (__FreeBSD__) || defined(__DragonFly__)
  #   include <libutil.h>
  #endif
  
@@ -551,7 +558,7 @@
       functionalities such as termios are not available.  */
 --- /dev/null
 +++ gcc/ada/traceback_symbolic.c
-@@ -0,0 +1,201 @@
+@@ -0,0 +1,198 @@
 +/*
 +  Copyright (C) 1999 by Juergen Pfeifer <juergen.pfeifer@gmx.net>
 +  Ada for Linux Team (ALT)
@@ -613,6 +620,7 @@
 +#include <unistd.h>
 +#include <string.h>
 +#include <signal.h>
++#include <stdio.h>
 +
 +#define CLOSE_SENDPIPE close(sendpipe[0]); close(sendpipe[1])
 +#define CLOSE_READPIPE close(readpipe[0]); close(readpipe[1])
@@ -625,11 +633,7 @@
 +#define CHILD_READ   sendpipe[0]
 +#define PARENT_WRITE sendpipe[1]
 +
-+#if defined (__sun__)
-+#define ADDR2LINE_PROG        "/usr/gnu/bin/addr2line"
-+#else
 +#define ADDR2LINE_PROG        "/usr/bin/addr2line"
-+#endif
 +
 +void
 +convert_addresses (const char *file_name,

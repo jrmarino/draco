@@ -59,6 +59,7 @@ convert_addresses (const char *file_name ATTRIBUTE_UNUSED,
 #include <unistd.h>
 #include <string.h>
 #include <signal.h>
+#include <stdio.h>
 
 #define CLOSE_SENDPIPE close(sendpipe[0]); close(sendpipe[1])
 #define CLOSE_READPIPE close(readpipe[0]); close(readpipe[1])
@@ -71,11 +72,7 @@ convert_addresses (const char *file_name ATTRIBUTE_UNUSED,
 #define CHILD_READ   sendpipe[0]
 #define PARENT_WRITE sendpipe[1]
 
-#if defined (__sun__)
-#define ADDR2LINE_PROG        "/usr/gnu/bin/addr2line"
-#else
 #define ADDR2LINE_PROG        "/usr/bin/addr2line"
-#endif
 
 void
 convert_addresses (const char *file_name,

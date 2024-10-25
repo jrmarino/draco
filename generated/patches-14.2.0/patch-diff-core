@@ -231,3 +231,14 @@
        fi
        hardcode_libdir_flag_spec='-R$libdir'
        hardcode_direct=yes
+--- libssp/ssp.c.orig
++++ libssp/ssp.c
+@@ -131,7 +131,7 @@
+ 
+       progname_len = strlen (__progname);
+       len = msg1len + progname_len + sizeof(msg2)-1 + 1;
+-      p = buf = alloca (len);
++      p = buf = __builtin_alloca (len);
+ 
+       memcpy (p, msg1, msg1len);
+       p += msg1len;

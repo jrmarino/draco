@@ -146,6 +146,7 @@ regenerate_patch ${CORE_SUFFIX} patch-gcc_config_netbsd-elf.h
 regenerate_patch ${CORE_SUFFIX} patch-gcc_configure
 regenerate_patch ${CORE_SUFFIX} patch-gcc_gcc.cc
 regenerate_patch ${CORE_SUFFIX} patch-libcc1_configure
+regenerate_patch ${CORE_SUFFIX} patch-libssp_ssp.c
 
 pattern="^gcc/testsuite/ada|^gcc/testsuite/gnat.dg"
 suite=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
