@@ -81,4 +81,6 @@
 #undef MCOUNT_NAME
 #define MCOUNT_NAME ".mcount"
 
+/* Static stack checking is supported by means of probes.  */
+#define STACK_CHECK_STATIC_BUILTIN 1
 #endif  /* GCC_AARCH64_FREEBSD_H */

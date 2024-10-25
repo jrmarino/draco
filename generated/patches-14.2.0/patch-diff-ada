@@ -521,7 +521,7 @@
 +#define CDISABLE _PC_VDISABLE
 +#else
  #define CDISABLE _POSIX_VDISABLE
-+endif
++#endif
  
  /* POSIX does not specify how to open the master side of a terminal.Several
     methods are available (system specific):
@@ -2285,3 +2285,15 @@
    || defined (__DJGPP__) || defined (__QNX__)
  {
    localtime_r (&time, &tp);
+--- gnattools/configure.orig
++++ gnattools/configure
+@@ -2069,6 +2069,9 @@
+   *-*-freebsd*)
+     TOOLS_TARGET_PAIRS="indepsw.adb<indepsw-gnu.adb"
+     ;;
++  *-*-netbsd*)
++    TOOLS_TARGET_PAIRS="indepsw.adb<indepsw-gnu.adb"
++    ;;
+   *-*-linux*)
+     TOOLS_TARGET_PAIRS="indepsw.adb<indepsw-gnu.adb"
+     ;;

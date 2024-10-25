@@ -11,7 +11,7 @@
     %:remove-outfile(-lpthread) \
 --- gcc/config/dragonfly.h.orig
 +++ gcc/config/dragonfly.h
-@@ -84,7 +84,7 @@
+@@ -84,13 +84,13 @@
     } \
     %{static:-Bstatic} \
    } \
@@ -20,6 +20,13 @@
    %{symbolic:-Bsymbolic}"
  
  #undef  LINK_SPEC
+ #define LINK_SPEC DFBSD_LINK_SPEC
+ 
+-#define DFBSD_DYNAMIC_LINKER "/usr/libexec/ld-elf.so.2"
++#define DFBSD_DYNAMIC_LINKER "/libexec/ld-elf.so.2"
+ 
+ 
+ /* Use --as-needed -lgcc_s for eh support.  */
 --- gcc/config/sol2.h.orig
 +++ gcc/config/sol2.h
 @@ -417,6 +417,7 @@
@@ -41,6 +48,13 @@
        %{rdynamic:-export-dynamic}                               \
        %{!shared:-dynamic-linker " FBSD_DYNAMIC_LINKER " }}      \
      -X" SUBTARGET_EXTRA_LINK_SPEC "                             \
+@@ -81,4 +81,6 @@
+ #undef MCOUNT_NAME
+ #define MCOUNT_NAME ".mcount"
+ 
++/* Static stack checking is supported by means of probes.  */
++#define STACK_CHECK_STATIC_BUILTIN 1
+ #endif  /* GCC_AARCH64_FREEBSD_H */
 --- gcc/config/i386/freebsd64.h.orig
 +++ gcc/config/i386/freebsd64.h
 @@ -41,6 +41,7 @@

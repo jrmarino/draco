@@ -1133,7 +1133,7 @@ __gnat_setup_winsize (void *desc ATTRIBUTE_UNUSED,
 #define CDISABLE _PC_VDISABLE
 #else
 #define CDISABLE _POSIX_VDISABLE
-endif
+#endif
 
 /* POSIX does not specify how to open the master side of a terminal.Several
    methods are available (system specific):

@@ -130,7 +130,7 @@ regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_libgnat_g-socthi.ads
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_libgnat_s-osprim__posix.adb
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_s-oscons-tmplt.c
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_sysdep.c
-regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure-14.2
+regenerate_patch ${ADA_SUFFIX} patch-gnattools_configure
 
 pattern="^gcc/fortran"
 #no-free-df fortran=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
