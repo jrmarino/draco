@@ -299,24 +299,7 @@
    s-osprim.adb<libgnat/s-osprim__posix.adb \
    s-taprop.adb<libgnarl/s-taprop__posix.adb \
    s-taspri.ads<libgnarl/s-taspri__posix.ads \
-@@ -1462,6 +1463,7 @@
-   s-osinte.adb<libgnarl/s-osinte__solaris.adb \
-   s-osinte.ads<libgnarl/s-osinte__solaris.ads \
-   s-osprim.adb<libgnat/s-osprim__solaris.adb \
-+  s-trasym.adb<libgnat/s-trasym__bsd.adb \
-   s-taprop.adb<libgnarl/s-taprop__solaris.adb \
-   s-tasinf.adb<libgnarl/s-tasinf__solaris.adb \
-   s-tasinf.ads<libgnarl/s-tasinf__solaris.ads \
-@@ -1541,6 +1543,8 @@
-   EXTRA_GNATRTL_NONTASKING_OBJS += $(TRASYM_DWARF_UNIX_OBJS)
- 
-   EH_MECHANISM=-gcc
-+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
-+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
-   MISCLIB = -lnsl -lsocket
-   SO_OPTS = -Wl,-h,
-   GNATLIB_SHARED = gnatlib-shared-dual
-@@ -1683,6 +1687,34 @@
+@@ -1683,6 +1684,34 @@
    LIBRARY_VERSION := $(LIB_VERSION)
  endif
  
@@ -351,73 +334,36 @@
  # aarch64 FreeBSD
  ifeq ($(strip $(filter-out %aarch64 freebsd%,$(target_cpu) $(target_os))),)
    LIBGNAT_TARGET_PAIRS = \
-@@ -1694,7 +1726,9 @@
+@@ -1694,6 +1723,7 @@
    s-mudido.adb<libgnarl/s-mudido__affinity.adb \
    s-osinte.adb<libgnarl/s-osinte__freebsd.adb \
    s-osinte.ads<libgnarl/s-osinte__freebsd.ads \
 +  g-socthi.adb<libgnat/g-socthi__bsd.adb \
    s-osprim.adb<libgnat/s-osprim__posix.adb \
-+  s-trasym.adb<libgnat/s-trasym__bsd.adb \
    s-taprop.adb<libgnarl/s-taprop__posix.adb \
    s-taspri.ads<libgnarl/s-taspri__posix.ads \
-   s-tpopsp.adb<libgnarl/s-tpopsp__posix.adb \
-@@ -1707,6 +1741,9 @@
- 
-   GNATLIB_SHARED = gnatlib-shared-dual
- 
-+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
-+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
-+
-   EH_MECHANISM=-gcc
-   THREADSLIB= -lpthread
-   GMEM_LIB = gmemlib
-@@ -1723,7 +1760,9 @@
+@@ -1723,6 +1753,7 @@
    s-mudido.adb<libgnarl/s-mudido__affinity.adb \
    s-osinte.adb<libgnarl/s-osinte__freebsd.adb \
    s-osinte.ads<libgnarl/s-osinte__freebsd.ads \
 +  g-socthi.adb<libgnat/g-socthi__bsd.adb \
    s-osprim.adb<libgnat/s-osprim__posix.adb \
-+  s-trasym.adb<libgnat/s-trasym__bsd.adb \
    s-taprop.adb<libgnarl/s-taprop__posix.adb \
    s-taspri.ads<libgnarl/s-taspri__posix.ads \
-   s-tpopsp.adb<libgnarl/s-tpopsp__posix.adb \
-@@ -1737,6 +1776,9 @@
-   EXTRA_GNATRTL_NONTASKING_OBJS += g-sse.o g-ssvety.o
-   EXTRA_GNATRTL_NONTASKING_OBJS += $(TRASYM_DWARF_UNIX_OBJS)
- 
-+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
-+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
-+
-   EH_MECHANISM=-gcc
-   THREADSLIB= -lpthread
-   GMEM_LIB = gmemlib
-@@ -1753,7 +1795,9 @@
+@@ -1753,6 +1784,7 @@
    s-mudido.adb<libgnarl/s-mudido__affinity.adb \
    s-osinte.adb<libgnarl/s-osinte__freebsd.adb \
    s-osinte.ads<libgnarl/s-osinte__freebsd.ads \
 +  g-socthi.adb<libgnat/g-socthi__bsd.adb \
    s-osprim.adb<libgnat/s-osprim__posix.adb \
-+  s-trasym.adb<libgnat/s-trasym__bsd.adb \
    s-taprop.adb<libgnarl/s-taprop__posix.adb \
    s-taspri.ads<libgnarl/s-taspri__posix.ads \
-   s-tpopsp.adb<libgnarl/s-tpopsp__posix.adb \
-@@ -1769,6 +1813,9 @@
-   EXTRA_GNATRTL_NONTASKING_OBJS += $(TRASYM_DWARF_UNIX_OBJS)
-   EXTRA_GNATRTL_NONTASKING_OBJS += $(GNATRTL_128BIT_OBJS)
- 
-+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
-+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
-+
-   EH_MECHANISM=-gcc
-   THREADSLIB= -lpthread
-   GMEM_LIB = gmemlib
-@@ -1785,10 +1832,13 @@
+@@ -1785,10 +1817,12 @@
    s-mudido.adb<libgnarl/s-mudido__affinity.adb \
    s-osinte.adb<libgnarl/s-osinte__dragonfly.adb \
    s-osinte.ads<libgnarl/s-osinte__dragonfly.ads \
 +  g-socthi.adb<libgnat/g-socthi__bsd.adb \
    s-osprim.adb<libgnat/s-osprim__posix.adb \
-+  s-trasym.adb<libgnat/s-trasym__bsd.adb \
    s-taprop.adb<libgnarl/s-taprop__posix.adb \
    s-taspri.ads<libgnarl/s-taspri__posix.ads \
    s-tpopsp.adb<libgnarl/s-tpopsp__posix.adb \
@@ -425,18 +371,15 @@
    $(ATOMICS_TARGET_PAIRS) \
    $(X86_64_TARGET_PAIRS) \
    $(GNATRTL_128BIT_PAIRS) \
-@@ -1797,13 +1847,54 @@
+@@ -1797,6 +1831,7 @@
    GNATLIB_SHARED = gnatlib-shared-dual
  
    EXTRA_GNATRTL_NONTASKING_OBJS += g-sse.o g-ssvety.o
 +  EXTRA_GNATRTL_NONTASKING_OBJS += $(TRASYM_DWARF_UNIX_OBJS)
    EXTRA_GNATRTL_NONTASKING_OBJS += $(GNATRTL_128BIT_OBJS)
  
-+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
-+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
-+
    EH_MECHANISM=-gcc
-   THREADSLIB= -lpthread
+@@ -1804,6 +1839,39 @@
    GMEM_LIB = gmemlib
    LIBRARY_VERSION := $(LIB_VERSION)
    MISCLIB = -lutil
@@ -453,7 +396,6 @@
 +  s-osinte.ads<libgnarl/s-osinte__netbsd.ads \
 +  g-socthi.adb<libgnat/g-socthi__bsd.adb \
 +  s-osprim.adb<libgnat/s-osprim__posix.adb \
-+  s-trasym.adb<libgnat/s-trasym__bsd.adb \
 +  s-taprop.adb<libgnarl/s-taprop__posix.adb \
 +  s-taspri.ads<libgnarl/s-taspri__posix.ads \
 +  s-tpopsp.adb<libgnarl/s-tpopsp__posix.adb \
@@ -468,9 +410,6 @@
 +  EXTRA_GNATRTL_NONTASKING_OBJS += g-sse.o g-ssvety.o
 +  EXTRA_GNATRTL_NONTASKING_OBJS += $(TRASYM_DWARF_UNIX_OBJS)
 +  EXTRA_GNATRTL_NONTASKING_OBJS += $(GNATRTL_128BIT_OBJS)
-+
-+  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
-+  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
 +
 +  EH_MECHANISM=-gcc
 +  THREADSLIB= -lpthread -lrt
@@ -556,207 +495,6 @@
    /* On systems such as Solaris we are using stream. We need to push the right
       "modules" in order to get the expected terminal behaviors. Otherwise
       functionalities such as termios are not available.  */
---- /dev/null
-+++ gcc/ada/traceback_symbolic.c
-@@ -0,0 +1,198 @@
-+/*
-+  Copyright (C) 1999 by Juergen Pfeifer <juergen.pfeifer@gmx.net>
-+  Ada for Linux Team (ALT)
-+  Heavily modified by John Marino <http://www.dragonlace.net>
-+
-+  Permission is hereby granted, free of charge, to any person obtaining a
-+  copy of this software and associated documentation files (the
-+  "Software"), to deal in the Software without restriction, including
-+  without limitation the rights to use, copy, modify, merge, publish,
-+  distribute, distribute with modifications, sublicense, and/or sell
-+  copies of the Software, and to permit persons to whom the Software is
-+  furnished to do so, subject to the following conditions:
-+
-+  The above copyright notice and this permission notice shall be included
-+  in all copies or substantial portions of the Software.
-+
-+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-+  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-+  IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-+  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-+  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
-+  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-+
-+  Except as contained in this notice, the name(s) of the above copyright
-+  holders shall not be used in advertising or otherwise to promote the
-+  sale, use or other dealings in this Software without prior written
-+  authorization.
-+*/
-+
-+#ifdef IS_CROSS
-+
-+
-+/*
-+ * Running addr2line doesn't make sense for cross-compiled objects.
-+ * Create a dummy function to satisfy g-trasym.o
-+ */
-+
-+void
-+convert_addresses (const char *file_name ATTRIBUTE_UNUSED,
-+                   void *addrs ATTRIBUTE_UNUSED,
-+                   int n_addr ATTRIBUTE_UNUSED,
-+                   void *buf ATTRIBUTE_UNUSED,
-+                   int *len ATTRIBUTE_UNUSED)
-+{
-+  *len = 0;
-+}
-+
-+#else
-+
-+
-+/*
-+ * use the external program /usr/bin/addr2line to convert addresses
-+ * into file names and line numbers
-+ */
-+
-+#include <sys/types.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <string.h>
-+#include <signal.h>
-+#include <stdio.h>
-+
-+#define CLOSE_SENDPIPE close(sendpipe[0]); close(sendpipe[1])
-+#define CLOSE_READPIPE close(readpipe[0]); close(readpipe[1])
-+#define DUP2CLOSE(oldfd, newfd) dup2(oldfd, newfd); close(oldfd);
-+#define RESTSIG sigaction(SIGPIPE,&oact,NULL)
-+
-+#define MAX_LINE     1024
-+#define PARENT_READ  readpipe[0]
-+#define CHILD_WRITE  readpipe[1]
-+#define CHILD_READ   sendpipe[0]
-+#define PARENT_WRITE sendpipe[1]
-+
-+#define ADDR2LINE_PROG        "/usr/bin/addr2line"
-+
-+void
-+convert_addresses (const char *file_name,
-+                   void *addrs,
-+                   int   n_addr,
-+                   void *buf,
-+                   int  *len)
-+{
-+  int max_len = *len;
-+  pid_t childpid;
-+
-+  struct sigaction act, oact;
-+
-+  int sendpipe[2] = {-1,-1},        /* parent -> child */
-+      readpipe[2] = {-1,-1};        /* parent <- child */
-+
-+  *len = 0;
-+  act.sa_handler = SIG_IGN;
-+  sigemptyset(&act.sa_mask);
-+  act.sa_flags = 0;
-+  if (sigaction(SIGPIPE,&act,&oact) < 0)
-+    return;
-+
-+  if (pipe(sendpipe) < 0) { RESTSIG; return; }
-+  if (pipe(readpipe) < 0) { CLOSE_SENDPIPE; RESTSIG; return; }
-+  if ((childpid = fork()) < 0) {
-+    CLOSE_READPIPE;
-+    CLOSE_SENDPIPE;
-+    RESTSIG;
-+    return;
-+  }
-+
-+  if (childpid == 0) {    /* child process */
-+    close(PARENT_WRITE);
-+    close(PARENT_READ);
-+    if ((CHILD_READ != STDIN_FILENO) && (CHILD_WRITE != STDOUT_FILENO)) {
-+      if ((CHILD_READ == STDOUT_FILENO) && (CHILD_WRITE == STDIN_FILENO)) {
-+        const int temp_fd = dup(CHILD_WRITE);
-+        close (CHILD_WRITE);
-+        DUP2CLOSE (CHILD_READ, STDIN_FILENO);
-+        DUP2CLOSE (temp_fd,    STDOUT_FILENO);
-+      }
-+      else if ((CHILD_READ == STDIN_FILENO) && (CHILD_WRITE > 1)) {
-+        DUP2CLOSE (CHILD_WRITE, STDOUT_FILENO);
-+      }
-+      else if ((CHILD_READ > 1) && (CHILD_WRITE == STDOUT_FILENO)) {
-+        DUP2CLOSE (CHILD_READ, STDIN_FILENO);
-+      }
-+      else if ((CHILD_READ > 1) && (CHILD_WRITE == STDIN_FILENO)) {
-+        DUP2CLOSE (CHILD_WRITE, STDOUT_FILENO);
-+        DUP2CLOSE (CHILD_READ,  STDIN_FILENO);
-+      }
-+      else {
-+        /* CHILD_READ >= 1 and CHILD_WRITE > 1 */
-+        DUP2CLOSE (CHILD_READ,  STDIN_FILENO);
-+        DUP2CLOSE (CHILD_WRITE, STDOUT_FILENO);
-+      }
-+    }
-+    /* As pointed out by Florian Weimer to JP, it is a security threat to call
-+       the script with a user defined environment and using the path. That
-+       would be Trojans pleasure.  Therefore the absolute path to addr2line
-+       and an empty environment is used. That should be safe.
-+    */
-+    char *const argv[] = { "addr2line",
-+                           "-e", file_name,
-+                           "--demangle=gnat",
-+                           "--functions",
-+                           "--basenames",
-+                           NULL };
-+    char *const envp[] = { NULL };
-+    if (execve(ADDR2LINE_PROG, argv, envp) < 0) {
-+      close (CHILD_WRITE);
-+      close (CHILD_READ);
-+      RESTSIG;
-+      exit (1);
-+    }
-+  }
-+
-+  /* Below this line is parent process */
-+  int i, n;
-+  char hex[16];
-+  char line[MAX_LINE + 1];
-+  char *p;
-+  char *s = buf;
-+  long *trace_address = addrs;
-+
-+  close(CHILD_WRITE);
-+  close(CHILD_READ);
-+
-+  for(i=0; i < n_addr; i++) {
-+    snprintf(hex,sizeof(hex),"%#lx\n",*trace_address);
-+    write(PARENT_WRITE,hex,strlen(hex));
-+    n = read(PARENT_READ,line,MAX_LINE);
-+    if (n<=0)
-+      break;
-+
-+    line[n]=0;
-+    /* We have approx. 16 additional chars for "%#lx in " clause.
-+       We use this info to prevent a buffer overrun. */
-+    if (n + 16 + (*len) > max_len)
-+      break;
-+
-+    p = strchr(line,'\n');
-+    if (p) {
-+      if (*(p+1)) {
-+        *p = 0;
-+        *len += snprintf(s, (max_len - (*len)), "%#lx in %s at %s",
-+                         *trace_address, line, p+1);
-+      }
-+      else {
-+        *len += snprintf(s, (max_len - (*len)), "%#lx at %s",
-+                         *trace_address, line);
-+      }
-+      s = buf + (*len);
-+    }
-+    trace_address += 1;
-+  }
-+  close (PARENT_WRITE);
-+  close (PARENT_READ);
-+  RESTSIG;
-+}
-+
-+#endif
 --- /dev/null
 +++ gcc/ada/libgnarl/s-osinte__netbsd.adb
 @@ -0,0 +1,115 @@
@@ -1921,180 +1659,6 @@
 +   function Socket_Error_Message (Errno : Integer) return String is separate;
 +
 +end GNAT.Sockets.Thin;
---- /dev/null
-+++ gcc/ada/libgnat/s-trasym__bsd.adb
-@@ -0,0 +1,171 @@
-+------------------------------------------------------------------------------
-+--                                                                          --
-+--                         GNAT RUN-TIME COMPONENTS                         --
-+--                                                                          --
-+--           S Y S T E M . T R A C E B A C K . S Y M B O L I C              --
-+--                                                                          --
-+--                                 B o d y                                  --
-+--                                                                          --
-+--                     Copyright (C) 1999-2018, AdaCore                     --
-+--                                                                          --
-+-- GNAT is free software;  you can  redistribute it  and/or modify it under --
-+-- terms of the  GNU General Public License as published  by the Free Soft- --
-+-- ware  Foundation;  either version 3,  or (at your option) any later ver- --
-+-- sion.  GNAT is distributed in the hope that it will be useful, but WITH- --
-+-- OUT ANY WARRANTY;  without even the  implied warranty of MERCHANTABILITY --
-+-- or FITNESS FOR A PARTICULAR PURPOSE.                                     --
-+--                                                                          --
-+-- As a special exception under Section 7 of GPL version 3, you are granted --
-+-- additional permissions described in the GCC Runtime Library Exception,   --
-+-- version 3.1, as published by the Free Software Foundation.               --
-+--                                                                          --
-+-- You should have received a copy of the GNU General Public License and    --
-+-- a copy of the GCC Runtime Library Exception along with this program;     --
-+-- see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see    --
-+-- <http://www.gnu.org/licenses/>.                                          --
-+--                                                                          --
-+-- GNAT was originally developed  by the GNAT team at  New York University. --
-+-- Extensive contributions were provided by Ada Core Technologies Inc.      --
-+--                                                                          --
-+------------------------------------------------------------------------------
-+
-+--  Run-time symbolic traceback support
-+--  This file is based on the work by Juergen Pfiefer which is still used
-+--  today to provide symbolic traceback support for gnu/kFreeBSD.
-+--  Incorporated in GNAT-AUX by John Marino <http://www.dragonlace.net>
-+
-+with Ada.Exceptions.Traceback; use Ada.Exceptions.Traceback;
-+with System.Soft_Links;
-+
-+package body System.Traceback.Symbolic is
-+
-+   --  Note that Suppress_Hex is ignored in this version of this package.
-+
-+   package TSL renames System.Soft_Links;
-+
-+   --  To perform the raw addresses to symbolic form translation we rely on a
-+   --  libaddr2line symbolizer which examines debug info from a provided
-+   --  executable file name, and an absolute path is needed to ensure the file
-+   --  is always found. This is "__gnat_locate_exec_on_path (gnat_argv [0])"
-+   --  for our executable file, a fairly heavy operation so we cache the
-+   --  result.
-+
-+   Exename : System.Address;
-+   --  Pointer to the name of the executable file to be used on all
-+   --  invocations of the libaddr2line symbolization service.
-+
-+   Exename_Resolved : Boolean := False;
-+   --  Flag to indicate whether we have performed the executable file name
-+   --  resolution already. Relying on a not null Exename for this purpose
-+   --  would be potentially inefficient as this is what we will get if the
-+   --  resolution attempt fails.
-+
-+   ------------------------
-+   -- Symbolic_Traceback --
-+   ------------------------
-+
-+   function Symbolic_Traceback
-+     (Traceback : System.Traceback_Entries.Tracebacks_Array) return String
-+   is
-+      procedure convert_addresses
-+        (filename : System.Address;
-+         addrs    : System.Address;
-+         n_addrs  : Integer;
-+         buf      : System.Address;
-+         len      : System.Address);
-+      pragma Import (C, convert_addresses, "convert_addresses");
-+      --  This is the procedure version of the Ada-aware addr2line. It places
-+      --  in BUF a string representing the symbolic translation of the N_ADDRS
-+      --  raw addresses provided in ADDRS, looked up in debug information from
-+      --  FILENAME. LEN points to an integer which contains the size of the
-+      --  BUF buffer at input and the result length at output.
-+      --
-+      --  Note that this procedure is *not* thread-safe.
-+
-+      type Argv_Array is array (0 .. 0) of System.Address;
-+      gnat_argv : access Argv_Array;
-+      pragma Import (C, gnat_argv, "gnat_argv");
-+
-+      function locate_exec_on_path
-+        (c_exename : System.Address) return System.Address;
-+      pragma Import (C, locate_exec_on_path, "__gnat_locate_exec_on_path");
-+
-+      B_Size : constant Integer := 256 * Traceback'Length;
-+      Len    : Integer := B_Size;
-+      Res    : String (1 .. B_Size);
-+
-+   begin
-+      if Traceback'Length = 0 then
-+         return "";
-+      end if;
-+
-+      --  If our input set of raw addresses is not empty, resort to the
-+      --  libaddr2line service to symbolize it all.
-+
-+      --  Compute, cache and provide the absolute path to our executable file
-+      --  name as the binary file where the relevant debug information is to be
-+      --  found. If the executable file name resolution fails, we have no
-+      --  sensible basis to invoke the symbolizer at all.
-+
-+      --  Protect all this against concurrent accesses explicitly, as the
-+      --  underlying services are potentially thread unsafe.
-+
-+      TSL.Lock_Task.all;
-+
-+      if not Exename_Resolved then
-+         Exename := locate_exec_on_path (gnat_argv (0));
-+         Exename_Resolved := True;
-+      end if;
-+
-+      if Exename /= System.Null_Address then
-+         Len := Res'Length;
-+         convert_addresses
-+           (Exename, Traceback'Address, Traceback'Length,
-+            Res (1)'Address, Len'Address);
-+      end if;
-+
-+      TSL.Unlock_Task.all;
-+
-+      --  Return what the addr2line symbolizer has produced if we have called
-+      --  it (the executable name resolution succeeded), or an empty string
-+      --  otherwise.
-+
-+      if Exename /= System.Null_Address then
-+         return Res (1 .. Len);
-+      else
-+         return "";
-+      end if;
-+   end Symbolic_Traceback;
-+
-+   --  "No_Hex" is ignored in this version, because otherwise we have nothing
-+   --  at all to print.
-+
-+   function Symbolic_Traceback_No_Hex
-+     (Traceback : System.Traceback_Entries.Tracebacks_Array) return String is
-+   begin
-+      return Symbolic_Traceback (Traceback);
-+   end Symbolic_Traceback_No_Hex;
-+
-+   function Symbolic_Traceback
-+     (E : Ada.Exceptions.Exception_Occurrence) return String
-+   is
-+   begin
-+      return Symbolic_Traceback (Tracebacks (E));
-+   end Symbolic_Traceback;
-+
-+   function Symbolic_Traceback_No_Hex
-+     (E : Ada.Exceptions.Exception_Occurrence) return String is
-+   begin
-+      return Symbolic_Traceback (E);
-+   end Symbolic_Traceback_No_Hex;
-+
-+   ------------------
-+   -- Enable_Cache --
-+   ------------------
-+
-+   procedure Enable_Cache (Include_Modules : Boolean := False) is
-+   begin
-+      null;
-+   end Enable_Cache;
-+
-+end System.Traceback.Symbolic;
 --- gcc/ada/gcc-interface/Make-lang.in.orig
 +++ gcc/ada/gcc-interface/Make-lang.in
 @@ -723,7 +723,7 @@

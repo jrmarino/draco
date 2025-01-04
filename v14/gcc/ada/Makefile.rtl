@@ -1463,7 +1463,6 @@ ifeq ($(strip $(filter-out sparc% sun solaris%,$(target_cpu) $(target_vendor) $(
   s-osinte.adb<libgnarl/s-osinte__solaris.adb \
   s-osinte.ads<libgnarl/s-osinte__solaris.ads \
   s-osprim.adb<libgnat/s-osprim__solaris.adb \
-  s-trasym.adb<libgnat/s-trasym__bsd.adb \
   s-taprop.adb<libgnarl/s-taprop__solaris.adb \
   s-tasinf.adb<libgnarl/s-tasinf__solaris.adb \
   s-tasinf.ads<libgnarl/s-tasinf__solaris.ads \
@@ -1543,8 +1542,6 @@ ifeq ($(strip $(filter-out %86 %x86_64 solaris2%,$(target_cpu) $(target_os))),)
   EXTRA_GNATRTL_NONTASKING_OBJS += $(TRASYM_DWARF_UNIX_OBJS)
 
   EH_MECHANISM=-gcc
-  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
-  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
   MISCLIB = -lnsl -lsocket
   SO_OPTS = -Wl,-h,
   GNATLIB_SHARED = gnatlib-shared-dual
@@ -1728,7 +1725,6 @@ ifeq ($(strip $(filter-out %aarch64 freebsd%,$(target_cpu) $(target_os))),)
   s-osinte.ads<libgnarl/s-osinte__freebsd.ads \
   g-socthi.adb<libgnat/g-socthi__bsd.adb \
   s-osprim.adb<libgnat/s-osprim__posix.adb \
-  s-trasym.adb<libgnat/s-trasym__bsd.adb \
   s-taprop.adb<libgnarl/s-taprop__posix.adb \
   s-taspri.ads<libgnarl/s-taspri__posix.ads \
   s-tpopsp.adb<libgnarl/s-tpopsp__posix.adb \
@@ -1740,9 +1736,6 @@ ifeq ($(strip $(filter-out %aarch64 freebsd%,$(target_cpu) $(target_os))),)
   EXTRA_GNATRTL_NONTASKING_OBJS = $(GNATRTL_128BIT_OBJS)
 
   GNATLIB_SHARED = gnatlib-shared-dual
-
-  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
-  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
 
   EH_MECHANISM=-gcc
   THREADSLIB= -lpthread
@@ -1762,7 +1755,6 @@ ifeq ($(strip $(filter-out %86 freebsd%,$(target_cpu) $(target_os))),)
   s-osinte.ads<libgnarl/s-osinte__freebsd.ads \
   g-socthi.adb<libgnat/g-socthi__bsd.adb \
   s-osprim.adb<libgnat/s-osprim__posix.adb \
-  s-trasym.adb<libgnat/s-trasym__bsd.adb \
   s-taprop.adb<libgnarl/s-taprop__posix.adb \
   s-taspri.ads<libgnarl/s-taspri__posix.ads \
   s-tpopsp.adb<libgnarl/s-tpopsp__posix.adb \
@@ -1775,9 +1767,6 @@ ifeq ($(strip $(filter-out %86 freebsd%,$(target_cpu) $(target_os))),)
 
   EXTRA_GNATRTL_NONTASKING_OBJS += g-sse.o g-ssvety.o
   EXTRA_GNATRTL_NONTASKING_OBJS += $(TRASYM_DWARF_UNIX_OBJS)
-
-  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
-  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
 
   EH_MECHANISM=-gcc
   THREADSLIB= -lpthread
@@ -1797,7 +1786,6 @@ ifeq ($(strip $(filter-out %86_64 freebsd%,$(target_cpu) $(target_os))),)
   s-osinte.ads<libgnarl/s-osinte__freebsd.ads \
   g-socthi.adb<libgnat/g-socthi__bsd.adb \
   s-osprim.adb<libgnat/s-osprim__posix.adb \
-  s-trasym.adb<libgnat/s-trasym__bsd.adb \
   s-taprop.adb<libgnarl/s-taprop__posix.adb \
   s-taspri.ads<libgnarl/s-taspri__posix.ads \
   s-tpopsp.adb<libgnarl/s-tpopsp__posix.adb \
@@ -1812,9 +1800,6 @@ ifeq ($(strip $(filter-out %86_64 freebsd%,$(target_cpu) $(target_os))),)
   EXTRA_GNATRTL_NONTASKING_OBJS += g-sse.o g-ssvety.o
   EXTRA_GNATRTL_NONTASKING_OBJS += $(TRASYM_DWARF_UNIX_OBJS)
   EXTRA_GNATRTL_NONTASKING_OBJS += $(GNATRTL_128BIT_OBJS)
-
-  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
-  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
 
   EH_MECHANISM=-gcc
   THREADSLIB= -lpthread
@@ -1834,7 +1819,6 @@ ifeq ($(strip $(filter-out %86_64 dragonfly%,$(target_cpu) $(target_os))),)
   s-osinte.ads<libgnarl/s-osinte__dragonfly.ads \
   g-socthi.adb<libgnat/g-socthi__bsd.adb \
   s-osprim.adb<libgnat/s-osprim__posix.adb \
-  s-trasym.adb<libgnat/s-trasym__bsd.adb \
   s-taprop.adb<libgnarl/s-taprop__posix.adb \
   s-taspri.ads<libgnarl/s-taspri__posix.ads \
   s-tpopsp.adb<libgnarl/s-tpopsp__posix.adb \
@@ -1849,9 +1833,6 @@ ifeq ($(strip $(filter-out %86_64 dragonfly%,$(target_cpu) $(target_os))),)
   EXTRA_GNATRTL_NONTASKING_OBJS += g-sse.o g-ssvety.o
   EXTRA_GNATRTL_NONTASKING_OBJS += $(TRASYM_DWARF_UNIX_OBJS)
   EXTRA_GNATRTL_NONTASKING_OBJS += $(GNATRTL_128BIT_OBJS)
-
-  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
-  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
 
   EH_MECHANISM=-gcc
   THREADSLIB= -lpthread
@@ -1871,7 +1852,6 @@ ifeq ($(strip $(filter-out %86_64 netbsd%,$(target_cpu) $(target_os))),)
   s-osinte.ads<libgnarl/s-osinte__netbsd.ads \
   g-socthi.adb<libgnat/g-socthi__bsd.adb \
   s-osprim.adb<libgnat/s-osprim__posix.adb \
-  s-trasym.adb<libgnat/s-trasym__bsd.adb \
   s-taprop.adb<libgnarl/s-taprop__posix.adb \
   s-taspri.ads<libgnarl/s-taspri__posix.ads \
   s-tpopsp.adb<libgnarl/s-tpopsp__posix.adb \
@@ -1886,9 +1866,6 @@ ifeq ($(strip $(filter-out %86_64 netbsd%,$(target_cpu) $(target_os))),)
   EXTRA_GNATRTL_NONTASKING_OBJS += g-sse.o g-ssvety.o
   EXTRA_GNATRTL_NONTASKING_OBJS += $(TRASYM_DWARF_UNIX_OBJS)
   EXTRA_GNATRTL_NONTASKING_OBJS += $(GNATRTL_128BIT_OBJS)
-
-  EXTRA_LIBGNAT_SRCS+= traceback_symbolic.c
-  EXTRA_LIBGNAT_OBJS+= traceback_symbolic.o
 
   EH_MECHANISM=-gcc
   THREADSLIB= -lpthread -lrt
