@@ -364,8 +364,10 @@ extern int    __gnat_nanosleep     (const struct timespec *, struct timespec *);
 extern int    __gnat_gettimeofday  (struct timeval *, struct timezone *);
 #include <sys/select.h>
 extern int    __gnat_select        (int, fd_set *, fd_set *, fd_set *, struct timeval *);
+#if defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__)
 #include <sys/socket.h>
 extern int    __gnat_socket        (int, int, int);
+#endif
 #if defined(__NetBSD__)
 extern int    __gnat_clock_getres  (clockid_t, struct timespec *);
 extern int    __gnat_clock_gettime (clockid_t, struct timespec *);

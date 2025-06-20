@@ -1,0 +1,308 @@
+--- gcc/config/darwin.h.orig
++++ gcc/config/darwin.h
+@@ -264,8 +264,6 @@
+   "%{weak_reference_mismatches*:\
+     -Xlinker -weak_reference_mismatches -Xlinker %*} \
+     %<weak_reference_mismatches*",					\
+-  "%{weak_framework*: -Xlinker -weak_framework -Xlinker %*} \
+-    %<weak_framework*",							\
+   "%{whyload:-Xlinker -whyload} %<whyload",				\
+   "%{whatsloaded:-Xlinker -whatsloaded} %<whatsloaded",			\
+   "%{w:-Xlinker -w}",							\
+@@ -284,17 +282,12 @@
+ #define DARWIN_RDYNAMIC "%{rdynamic:%nrdynamic is not supported}"
+ #endif
+ 
+-#if LD64_HAS_MACOS_VERSION_MIN
+-# define DARWIN_PLATFORM_ID \
+-  "%{mmacosx-version-min=*:-macos_version_min %*} "
+-#else
+-# if LD64_HAS_PLATFORM_VERSION
+-#  define DARWIN_PLATFORM_ID \
++#if LD64_HAS_PLATFORM_VERSION
++#define DARWIN_PLATFORM_ID \
+   "%{mmacosx-version-min=*: -platform_version macos %* 0.0} "
+-# else
+-#  define DARWIN_PLATFORM_ID \
++#else
++#define DARWIN_PLATFORM_ID \
+   "%{mmacosx-version-min=*:-macosx_version_min %*} "
+-# endif
+ #endif
+ 
+ /* Code built with mdynamic-no-pic does not support PIE/PIC, so  we disallow
+@@ -491,7 +484,7 @@
+    line with different arguments each time, so put a * after their names so
+    all of them get passed.  */
+ #define LINK_SPEC  \
+-  "%{static}%{!static:%{!dynamic:-dynamic}} \
++  "%{static}%{!static:%{!dynamic:-dynamic -rpath @PREFIX@/@GCCAUX@/lib:@LOCALBASE@/lib}} \
+    %:remove-outfile(-ldl) \
+    %:remove-outfile(-lm) \
+    %:remove-outfile(-lpthread) \
+@@ -652,8 +645,6 @@
+    additional options.  Actually, currently these are the same as GAS.  */
+ #define ASM_OPTIONS "%{v} %{w:-W} %{I*}"
+ #endif
+-
+-#define AS_NEEDS_DASH_FOR_PIPED_INPUT
+ 
+ /* Default Darwin ASM_SPEC, very simple. */
+ #define ASM_SPEC \
+--- gcc/config/dragonfly.h.orig
++++ gcc/config/dragonfly.h
+@@ -84,13 +84,13 @@
+    } \
+    %{static:-Bstatic} \
+   } \
+-  %{!static:--hash-style=gnu} \
++  %{!static:--hash-style=gnu --enable-new-dtags -rpath @PREFIX@/@GCCAUX@/lib:@LOCALBASE@/lib} \
+   %{symbolic:-Bsymbolic}"
+ 
+ #undef  LINK_SPEC
+ #define LINK_SPEC DFBSD_LINK_SPEC
+ 
+-#define DFBSD_DYNAMIC_LINKER "/usr/libexec/ld-elf.so.2"
++#define DFBSD_DYNAMIC_LINKER "/libexec/ld-elf.so.2"
+ 
+ 
+ /* Use --as-needed -lgcc_s for eh support.  */
+--- gcc/config/sol2.h.orig
++++ gcc/config/sol2.h
+@@ -417,6 +417,7 @@
+    %{static:-dn -Bstatic} \
+    %{shared:-G -dy %{!mimpure-text:-z text}} " \
+    LINK_LIBGCC_MAPFILE_SPEC LINK_CLEARCAP_SPEC " \
++   %{!static:-R/lib/amd64:@PREFIX@/@GCCAUX@/lib/amd64:@LOCALBASE@/lib} \
+    %{symbolic:-Bsymbolic -G -dy -z text} \
+    %(link_arch) \
+    %{Qy:} %{!Qn:-Qy}"
+--- gcc/config/aarch64/aarch64-freebsd.h.orig
++++ gcc/config/aarch64/aarch64-freebsd.h
+@@ -35,13 +35,12 @@
+ #undef  FBSD_TARGET_LINK_SPEC
+ #define FBSD_TARGET_LINK_SPEC "                                 \
+     %{p:%nconsider using `-pg' instead of `-p' with gprof (1)}  \
+-    " FBSD_LINK_PG_NOTE "					\
+     %{v:-V}                                                     \
+     %{assert*} %{R*} %{rpath*} %{defsym*}                       \
+     %{shared:-Bshareable %{h*} %{soname*}}                      \
+     %{symbolic:-Bsymbolic}                                      \
+     %{static:-Bstatic}                                          \
+-    %{!static:                                                  \
++    %{!static:--hash-style=gnu --enable-new-dtags -rpath @PREFIX@/@GCCAUX@/lib:@LOCALBASE@/lib \
+       %{rdynamic:-export-dynamic}                               \
+       %{!shared:-dynamic-linker " FBSD_DYNAMIC_LINKER " }}      \
+     -X" SUBTARGET_EXTRA_LINK_SPEC "                             \
+@@ -82,4 +81,6 @@
+ #undef MCOUNT_NAME
+ #define MCOUNT_NAME ".mcount"
+ 
++/* Static stack checking is supported by means of probes.  */
++#define STACK_CHECK_STATIC_BUILTIN 1
+ #endif  /* GCC_AARCH64_FREEBSD_H */
+--- gcc/config/i386/freebsd.h.orig
++++ gcc/config/i386/freebsd.h
+@@ -80,7 +80,6 @@
+ #undef	LINK_SPEC
+ #define LINK_SPEC "\
+   %{p:%nconsider using '-pg' instead of '-p' with gprof(1)} \
+-  " FBSD_LINK_PG_NOTE " \
+   %{v:-V} \
+   %{assert*} %{R*} %{rpath*} %{defsym*} \
+   %{shared:-Bshareable %{h*} %{soname*}} \
+@@ -89,6 +88,7 @@
+         %{rdynamic:-export-dynamic} \
+         -dynamic-linker %(fbsd_dynamic_linker) } \
+     %{static:-Bstatic}} \
++  %{!static:--hash-style=gnu -rpath @PREFIX@/@GCCAUX@/lib:@LOCALBASE@/lib} \
+   %{symbolic:-Bsymbolic}"
+ 
+ /* A C statement to output to the stdio stream FILE an assembler
+--- gcc/config/i386/freebsd64.h.orig
++++ gcc/config/i386/freebsd64.h
+@@ -33,7 +33,6 @@
+ #define LINK_SPEC "\
+   %{m32:-m elf_i386_fbsd}%{!m32:-m elf_x86_64_fbsd} \
+   %{p:%nconsider using '-pg' instead of '-p' with gprof(1)} \
+-  " FBSD_LINK_PG_NOTE " \
+   %{v:-V} \
+   %{assert*} %{R*} %{rpath*} %{defsym*} \
+   %{shared:-Bshareable %{h*} %{soname*}} \
+@@ -42,6 +41,7 @@
+         %{rdynamic:-export-dynamic} \
+ 	-dynamic-linker %(fbsd_dynamic_linker) } \
+     %{static:-Bstatic}} \
++  %{!static:--hash-style=gnu -rpath @PREFIX@/@GCCAUX@/lib:@LOCALBASE@/lib} \
+   %{symbolic:-Bsymbolic}"
+ 
+ #undef	MULTILIB_DEFAULTS
+--- gcc/Makefile.in.orig
++++ gcc/Makefile.in
+@@ -1373,7 +1373,6 @@
+ 	$(INSNEMIT_SEQ_O) \
+ 	insn-extract.o \
+ 	insn-latencytab.o \
+-	insn-modes.o \
+ 	insn-opinit.o \
+ 	insn-output.o \
+ 	insn-peep.o \
+@@ -1852,6 +1851,7 @@
+   $(OBJS-libcommon-target) main.o c-family/cppspec.o \
+   $(COLLECT2_OBJS) $(EXTRA_GCC_OBJS) $(GCOV_OBJS) $(GCOV_DUMP_OBJS) \
+   $(GCOV_TOOL_OBJS) $(GENGTYPE_OBJS) gcc-ar.o gcc-nm.o gcc-ranlib.o \
++  insn-modes.o insn-modes-ada.o \
+   lto-wrapper.o collect-utils.o
+ 
+ # for anything that is shared use the cc1plus profile data, as that
+@@ -1867,8 +1867,13 @@
+ ALL_HOST_OBJS = $(ALL_HOST_FRONTEND_OBJS) $(ALL_HOST_BACKEND_OBJS)
+ 
+ BACKEND = libbackend.a main.o libcommon-target.a libcommon.a \
++	insn-modes.o \
+ 	$(CPPLIB) $(LIBDECNUMBER)
+ 
++BACKEND2 = libbackend.a main.o libcommon-target.a libcommon.a \
++	insn-modes-ada.o \
++	$(CPPLIB) $(LIBDECNUMBER)
++
+ # This is defined to "yes" if Tree checking is enabled, which roughly means
+ # front-end checking.
+ TREECHECKING = @TREECHECKING@
+@@ -2638,6 +2643,7 @@
+ 
+ insn-modes.cc: s-modes; @true
+ insn-modes.h: s-modes-h; @true
++insn-modes-ada.cc: s-modes-ada; @true
+ insn-modes-inline.h: s-modes-inline-h; @true
+ min-insn-modes.cc: s-modes-m; @true
+ 
+@@ -2662,6 +2668,12 @@
+ 	$(SHELL) $(srcdir)/../move-if-change tmp-min-modes.cc min-insn-modes.cc
+ 	$(STAMP) s-modes-m
+ 
++s-modes-ada: s-modes
++	$(shell sed -e 's/: TARGET_96_ROUND_53_LONG_DOUBLE \? &ieee_extended_intel_96_round_53_format //' \
++		< insn-modes.cc > tmp-modes-ada.cc)
++	$(SHELL) $(srcdir)/../move-if-change tmp-modes-ada.cc insn-modes-ada.cc
++	$(STAMP) s-modes-ada
++
+ insn-preds.cc: s-preds; @true
+ tm-preds.h: s-preds-h; @true
+ tm-constrs.h: s-constrs-h; @true
+@@ -3966,6 +3978,9 @@
+ 	    rm -f $(DESTDIR)$(bindir)/$(FULL_DRIVER_NAME); \
+ 	    ( cd $(DESTDIR)$(bindir) && \
+ 	      $(LN) $(GCC_INSTALL_NAME)$(exeext) $(FULL_DRIVER_NAME) ); \
++	  fi; \
++	  if [ -f gnat1$(exeext) ] ; then \
++	    ( cd $(DESTDIR)$(bindir) && $(LN) $(GCC_INSTALL_NAME)$(exeext) ada$(exeext) ) \
+ 	  fi; \
+ 	  if [ ! -f gcc-cross$(exeext) ] \
+ 	      && [ "$(GCC_INSTALL_NAME)" != "$(GCC_TARGET_INSTALL_NAME)" ]; then \
+--- gcc/config/i386/gnu-user64.h.orig
++++ gcc/config/i386/gnu-user64.h
+@@ -57,6 +57,7 @@
+                    %{" SPEC_32 ":-m " GNU_USER_LINK_EMULATION32 "} \
+                    %{" SPEC_X32 ":-m " GNU_USER_LINK_EMULATIONX32 "} \
+   %{shared:-shared} \
++  %{!static:--enable-new-dtags -rpath @PREFIX@/@GCCAUX@/lib64:@LOCALBASE@/lib} \
+   %{!shared: \
+     %{!static: \
+       %{!static-pie: \
+--- gcc/config/netbsd-elf.h.orig
++++ gcc/config/netbsd-elf.h
+@@ -80,6 +80,7 @@
+   "%{assert*} %{R*} %{rpath*} \
+    %{shared:-shared} \
+    %{symbolic:-Bsymbolic} \
++   %{!static:-rpath @PREFIX@/@GCCAUX@/lib:@LOCALBASE@/lib} \
+    %{!shared: \
+      -dc -dp \
+      %{!nostdlib: \
+@@ -100,6 +101,9 @@
+ 
+ #undef SUBTARGET_EXTRA_SPECS
+ #define SUBTARGET_EXTRA_SPECS   NETBSD_SUBTARGET_EXTRA_SPECS
++
++/* Define this to be nonzero if static stack checking is supported. */
++#define STACK_CHECK_STATIC_BUILTIN 1
+ 
+ /* Use --as-needed -lgcc_s for eh support.  */
+ #ifdef HAVE_LD_AS_NEEDED
+--- gcc/configure.orig
++++ gcc/configure
+@@ -33703,6 +33703,13 @@
+       gcc_cv_target_dl_iterate_phdr=no
+     fi
+     ;;
++  *-*-netbsd*)
++    if grep dl_iterate_phdr $target_header_dir/link_elf.h > /dev/null 2>&1; then
++      gcc_cv_target_dl_iterate_phdr=yes
++    else
++      gcc_cv_target_dl_iterate_phdr=no
++    fi
++    ;;
+   *-linux-musl*)
+     gcc_cv_target_dl_iterate_phdr=yes
+     ;;
+--- gcc/gcc.cc.orig
++++ gcc/gcc.cc
+@@ -1653,6 +1653,9 @@
+ static const char *const standard_startfile_prefix_2
+   = STANDARD_STARTFILE_PREFIX_2;
+ 
++/* Since we hardset rpath to LOCALBASE, follow with library search path */
++static const char *const standard_raven_prefix = "@LOCALBASE@/lib/";
++
+ /* A relative path to be used in finding the location of tools
+    relative to the driver.  */
+ static const char *const tooldir_base_prefix = TOOLDIR_BASE_PREFIX;
+@@ -5490,6 +5493,8 @@
+ #endif
+       add_prefix (&startfile_prefixes, standard_exec_prefix, "BINUTILS",
+ 		  PREFIX_PRIORITY_LAST, 1, 0);
++      add_prefix (&startfile_prefixes, standard_raven_prefix, "BINUTILS",
++		  PREFIX_PRIORITY_LAST, 0, 0);
+     }
+ 
+   gcc_assert (!IS_ABSOLUTE_PATH (tooldir_base_prefix));
+@@ -8066,16 +8071,6 @@
+   *cp++ = '.';
+   *cp = '\0';
+ 
+-  /* Exclude directories that the linker is known to search.  */
+-  if (linker
+-      && IS_DIR_SEPARATOR (path[0])
+-      && ((cp - path == 6
+-	   && filename_ncmp (path + 1, "lib", 3) == 0)
+-	  || (cp - path == 10
+-	      && filename_ncmp (path + 1, "usr", 3) == 0
+-	      && IS_DIR_SEPARATOR (path[4])
+-	      && filename_ncmp (path + 5, "lib", 3) == 0)))
+-    return 0;
+ 
+   return (stat (path, &st) >= 0 && S_ISDIR (st.st_mode));
+ }
+--- libcc1/configure.orig
++++ libcc1/configure
+@@ -9282,7 +9282,7 @@
+       if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
+ 	archive_cmds='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags'  # a.out
+       else
+-	archive_cmds='$LD -shared -o $lib $libobjs $deplibs $linker_flags'      # ELF
++	archive_cmds='$CC -shared -o $lib $libobjs $deplibs $linker_flags'      # ELF
+       fi
+       hardcode_libdir_flag_spec='-R$libdir'
+       hardcode_direct=yes
+--- libssp/ssp.c.orig
++++ libssp/ssp.c
+@@ -131,7 +131,7 @@
+ 
+       progname_len = strlen (__progname);
+       len = msg1len + progname_len + sizeof(msg2)-1 + 1;
+-      p = buf = alloca (len);
++      p = buf = __builtin_alloca (len);
+ 
+       memcpy (p, msg1, msg1len);
+       p += msg1len;

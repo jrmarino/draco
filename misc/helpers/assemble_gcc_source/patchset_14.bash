@@ -1,11 +1,11 @@
 #!/raven/bin/bash
 
-GCCVERSION=14.2.0
+GCCVERSION=14.3.0
 DRACO=/home/marino/github/draco/v14
 EXPANSE=/home/marino/GCC-TEST
 DIFFPROG=/usr/bin/diff
 GREPPROG=/usr/bin/grep
-PACHPROG=/raven/share/raven/sysroot/Linux/usr/bin/patch
+PACHPROG=/usr/bin/patch
 ADA_SUFFIX=ada
 CORE_SUFFIX=core
 CXX_SUFFIX=cxx

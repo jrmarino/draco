@@ -3802,10 +3802,12 @@ __gnat_select(int nfds, fd_set * readfds, fd_set * writefds,
               fd_set * exceptfds, struct timeval * timeout) {
    return select (nfds, readfds, writefds, exceptfds, timeout);
 }
+#if defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__)
 int
 __gnat_socket (int domain, int type, int protocol) {
    return socket (domain, type, protocol);
 }
+#endif // __FreeBSD__ || __DragonFly__ || __NetBSD__
 
 #ifdef __cplusplus
 }
