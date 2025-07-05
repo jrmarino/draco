@@ -120,7 +120,6 @@ pattern="^gcc/ada"
 ada=`cd $DRACO && find * -type d | sort | ${GREPPROG} -E $pattern`
 reset_patch ${ADA_SUFFIX}
 produce_patch ${ADA_SUFFIX} ada[@]
-regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_gcc-interface_Make-lang.in
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_init.c
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_libgnarl_s-taprop-posix.adb
 regenerate_patch ${ADA_SUFFIX} patch-gcc_ada_s-osinte-android.ads
@@ -140,7 +139,6 @@ pattern="^gcc/testsuite|^gcc/ada|^gcc/fortran|^libstdc..-v3"
 core=`cd ${DRACO} && find * -type d | sort | ${GREPPROG} -vE $pattern`
 reset_patch ${CORE_SUFFIX}
 produce_patch ${CORE_SUFFIX} core[@]
-regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
 regenerate_patch ${CORE_SUFFIX} patch-gcc_config_i386_gnu-user64.h
 regenerate_patch ${CORE_SUFFIX} patch-gcc_config_netbsd-elf.h
 regenerate_patch ${CORE_SUFFIX} patch-gcc_configure

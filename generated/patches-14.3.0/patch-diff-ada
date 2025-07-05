@@ -1651,17 +1651,6 @@
 +   function Socket_Error_Message (Errno : Integer) return String is separate;
 +
 +end GNAT.Sockets.Thin;
---- gcc/ada/gcc-interface/Make-lang.in.orig
-+++ gcc/ada/gcc-interface/Make-lang.in
-@@ -723,7 +723,7 @@
- endif
- 
- # Language-independent object files.
--ADA_BACKEND = $(BACKEND) attribs.o
-+ADA_BACKEND = $(BACKEND2) attribs.o
- 
- # List of target dependent sources, overridden below as necessary
- TARGET_ADA_SRCS =
 --- gcc/ada/init.c.orig
 +++ gcc/ada/init.c
 @@ -2778,8 +2778,15 @@
