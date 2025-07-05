@@ -137,6 +137,18 @@
    %{symbolic:-Bsymbolic}"
  
  #undef	MULTILIB_DEFAULTS
+--- gcc/Makefile.in.orig
++++ gcc/Makefile.in
+@@ -3967,6 +3967,9 @@
+ 	    ( cd $(DESTDIR)$(bindir) && \
+ 	      $(LN) $(GCC_INSTALL_NAME)$(exeext) $(FULL_DRIVER_NAME) ); \
+ 	  fi; \
++	  if [ -f gnat1$(exeext) ] ; then \
++	    ( cd $(DESTDIR)$(bindir) && $(LN) $(GCC_INSTALL_NAME)$(exeext) ada$(exeext) ) \
++ 	  fi; \
+ 	  if [ ! -f gcc-cross$(exeext) ] \
+ 	      && [ "$(GCC_INSTALL_NAME)" != "$(GCC_TARGET_INSTALL_NAME)" ]; then \
+ 	    rm -f $(DESTDIR)$(bindir)/$(target_noncanonical)-gcc-tmp$(exeext); \
 --- gcc/config/i386/gnu-user64.h.orig
 +++ gcc/config/i386/gnu-user64.h
 @@ -57,6 +57,7 @@
