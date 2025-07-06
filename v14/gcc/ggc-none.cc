@@ -41,16 +41,16 @@ ggc_round_alloc_size (size_t requested_size)
 }
 
 extern "C" void *
-ggc_internal_alloc_ (size_t size, void (*f)(void *), size_t, size_t
-		     MEM_STAT_DECL)
+ggc_internal_alloc__ (size_t size, void (*f)(void *), size_t, size_t
+		      MEM_STAT_DECL)
 {
   gcc_assert (!f); // ggc-none doesn't support finalizers
   return xmalloc (size);
 }
 
 extern "C" void *
-ggc_internal_cleared_alloc_ (size_t size, void (*f)(void *), size_t, size_t
-			     MEM_STAT_DECL)
+ggc_internal_cleared_alloc__ (size_t size, void (*f)(void *), size_t, size_t
+                             MEM_STAT_DECL)
 {
   gcc_assert (!f); // ggc-none doesn't support finalizers
   return xcalloc (size, 1);
@@ -59,19 +59,19 @@ ggc_internal_cleared_alloc_ (size_t size, void (*f)(void *), size_t, size_t
 extern void *
 ggc_internal_alloc (size_t size, void (*f)(void *), size_t s,
 				size_t n MEM_STAT_DECL)
-     __attribute__((__alias__ ("ggc_internal_alloc_")));
+     __attribute__((__alias__ ("ggc_internal_alloc__")));
 extern void *
 ggc_internal_alloc_no_dtor (size_t size, void (*f)(void *), size_t s,
 			    size_t n MEM_STAT_DECL)
-     __attribute__((__alias__ ("ggc_internal_alloc_")));
+     __attribute__((__alias__ ("ggc_internal_alloc__")));
 extern void *
 ggc_internal_cleared_alloc (size_t size, void (*f)(void *),
 			    size_t s, size_t n MEM_STAT_DECL)
-     __attribute__((__alias__ ("ggc_internal_cleared_alloc_")));
+     __attribute__((__alias__ ("ggc_internal_cleared_alloc__")));
 extern void *
 ggc_internal_cleared_alloc_no_dtor (size_t size, void (*f)(void *),
 				    size_t s, size_t n MEM_STAT_DECL)
-     __attribute__((__alias__ ("ggc_internal_cleared_alloc_")));
+     __attribute__((__alias__ ("ggc_internal_cleared_alloc__")));
 
 void *
 ggc_realloc_stat (void *x, size_t size MEM_STAT_DECL)

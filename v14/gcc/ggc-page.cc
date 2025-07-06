@@ -1274,8 +1274,8 @@ add_finalizer (void *result, void (*f)(void *), size_t s, size_t n)
 /* Allocate a chunk of memory of SIZE bytes.  Its contents are undefined.  */
 
 extern "C" void *
-ggc_internal_alloc_ (size_t size, void (*f)(void *), size_t s, size_t n
-		     MEM_STAT_DECL)
+ggc_internal_alloc___ (size_t size, void (*f)(void *), size_t s, size_t n
+		       MEM_STAT_DECL)
 {
   size_t order, word, bit, object_offset, object_size;
   struct page_entry *entry;
@@ -1461,11 +1461,11 @@ ggc_internal_alloc_ (size_t size, void (*f)(void *), size_t s, size_t n
 extern void *
 ggc_internal_alloc (size_t size, void (*f)(void *), size_t s,
 		    size_t n MEM_STAT_DECL)
-     __attribute__((__alias__ ("ggc_internal_alloc_")));
+     __attribute__((__alias__ ("ggc_internal_alloc___")));
 extern void *
 ggc_internal_alloc_no_dtor (size_t size, void (*f)(void *), size_t s,
 			    size_t n MEM_STAT_DECL)
-     __attribute__((__alias__ ("ggc_internal_alloc_")));
+     __attribute__((__alias__ ("ggc_internal_alloc___")));
 
 /* Mark function for strings.  */
 
