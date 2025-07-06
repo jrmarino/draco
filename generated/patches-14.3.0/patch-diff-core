@@ -1,3 +1,229 @@
+--- gcc/genmatch.cc.orig
++++ gcc/genmatch.cc
+@@ -39,6 +39,14 @@
+ {
+   return NULL;
+ }
++
++void *
++ggc_internal_cleared_alloc_no_dtor (size_t, void (*)(void *),
++				    size_t, size_t MEM_STAT_DECL)
++{
++  return NULL;
++}
++
+ void ggc_free (void *)
+ {
+ }
+--- gcc/ggc-common.cc.orig
++++ gcc/ggc-common.cc
+@@ -119,14 +119,24 @@
+ }
+ 
+ /* Allocate a block of memory, then clear it.  */
+-void *
+-ggc_internal_cleared_alloc (size_t size, void (*f)(void *), size_t s, size_t n
+-			    MEM_STAT_DECL)
++extern "C" void *
++ggc_internal_cleared_alloc_ (size_t size, void (*f)(void *), size_t s, size_t n
++			     MEM_STAT_DECL)
+ {
+   void *buf = ggc_internal_alloc (size, f, s, n PASS_MEM_STAT);
+   memset (buf, 0, size);
+   return buf;
+ }
++
++extern void *
++ggc_internal_cleared_alloc (size_t size, void (*f)(void *), size_t s,
++			    size_t n MEM_STAT_DECL)
++     __attribute__((__alias__ ("ggc_internal_cleared_alloc_")));
++
++extern void *
++ggc_internal_cleared_alloc_no_dtor (size_t size, void (*f)(void *),
++				    size_t s, size_t n MEM_STAT_DECL)
++     __attribute__((__alias__ ("ggc_internal_cleared_alloc_")));
+ 
+ /* Resize a block of memory, possibly re-allocating it.  */
+ void *
+--- gcc/ggc-none.cc.orig
++++ gcc/ggc-none.cc
+@@ -40,21 +40,38 @@
+   return requested_size;
+ }
+ 
+-void *
+-ggc_internal_alloc (size_t size, void (*f)(void *), size_t, size_t
+-		    MEM_STAT_DECL)
++extern "C" void *
++ggc_internal_alloc_ (size_t size, void (*f)(void *), size_t, size_t
++		     MEM_STAT_DECL)
+ {
+   gcc_assert (!f); // ggc-none doesn't support finalizers
+   return xmalloc (size);
+ }
+ 
+-void *
+-ggc_internal_cleared_alloc (size_t size, void (*f)(void *), size_t, size_t
+-			    MEM_STAT_DECL)
++extern "C" void *
++ggc_internal_cleared_alloc_ (size_t size, void (*f)(void *), size_t, size_t
++			     MEM_STAT_DECL)
+ {
+   gcc_assert (!f); // ggc-none doesn't support finalizers
+   return xcalloc (size, 1);
+ }
++
++extern void *
++ggc_internal_alloc (size_t size, void (*f)(void *), size_t s,
++				size_t n MEM_STAT_DECL)
++     __attribute__((__alias__ ("ggc_internal_alloc_")));
++extern void *
++ggc_internal_alloc_no_dtor (size_t size, void (*f)(void *), size_t s,
++			    size_t n MEM_STAT_DECL)
++     __attribute__((__alias__ ("ggc_internal_alloc_")));
++extern void *
++ggc_internal_cleared_alloc (size_t size, void (*f)(void *),
++			    size_t s, size_t n MEM_STAT_DECL)
++     __attribute__((__alias__ ("ggc_internal_cleared_alloc_")));
++extern void *
++ggc_internal_cleared_alloc_no_dtor (size_t size, void (*f)(void *),
++				    size_t s, size_t n MEM_STAT_DECL)
++     __attribute__((__alias__ ("ggc_internal_cleared_alloc_")));
+ 
+ void *
+ ggc_realloc_stat (void *x, size_t size MEM_STAT_DECL)
+--- gcc/ggc-page.cc.orig
++++ gcc/ggc-page.cc
+@@ -1273,9 +1273,9 @@
+ 
+ /* Allocate a chunk of memory of SIZE bytes.  Its contents are undefined.  */
+ 
+-void *
+-ggc_internal_alloc (size_t size, void (*f)(void *), size_t s, size_t n
+-		    MEM_STAT_DECL)
++extern "C" void *
++ggc_internal_alloc_ (size_t size, void (*f)(void *), size_t s, size_t n
++		     MEM_STAT_DECL)
+ {
+   size_t order, word, bit, object_offset, object_size;
+   struct page_entry *entry;
+@@ -1457,6 +1457,15 @@
+ 
+   return result;
+ }
++
++extern void *
++ggc_internal_alloc (size_t size, void (*f)(void *), size_t s,
++		    size_t n MEM_STAT_DECL)
++     __attribute__((__alias__ ("ggc_internal_alloc_")));
++extern void *
++ggc_internal_alloc_no_dtor (size_t size, void (*f)(void *), size_t s,
++			    size_t n MEM_STAT_DECL)
++     __attribute__((__alias__ ("ggc_internal_alloc_")));
+ 
+ /* Mark function for strings.  */
+ 
+--- gcc/ggc.h.orig
++++ gcc/ggc.h
+@@ -127,13 +127,18 @@
+ 
+ /* The internal primitive.  */
+ extern void *ggc_internal_alloc (size_t, void (*)(void *), size_t,
+-				 size_t CXX_MEM_STAT_INFO)
++				 size_t CXX_MEM_STAT_INFO);
++/* If the second argument is non-NULL, it can't be marked ATTRIBUTE_MALLOC,
++   because ggc_free performs finalization.  Add an alias or wrapper used just
++   for the NULL finalizer which can be marked with ATTRIBUTE_MALLOC.  */
++extern void *ggc_internal_alloc_no_dtor (size_t, void (*)(void *), size_t,
++					 size_t CXX_MEM_STAT_INFO)
+      ATTRIBUTE_MALLOC;
+ 
+ inline void *
+ ggc_internal_alloc (size_t s CXX_MEM_STAT_INFO)
+ {
+-  return ggc_internal_alloc (s, NULL, 0, 1 PASS_MEM_STAT);
++  return ggc_internal_alloc_no_dtor (s, NULL, 0, 1 PASS_MEM_STAT);
+ }
+ 
+ extern size_t ggc_round_alloc_size (size_t requested_size);
+@@ -141,12 +146,16 @@
+ /* Allocates cleared memory.  */
+ extern void *ggc_internal_cleared_alloc (size_t, void (*)(void *),
+ 					 size_t, size_t
+-					 CXX_MEM_STAT_INFO) ATTRIBUTE_MALLOC;
++					 CXX_MEM_STAT_INFO);
++extern void *ggc_internal_cleared_alloc_no_dtor (size_t, void (*)(void *),
++						 size_t, size_t
++						 CXX_MEM_STAT_INFO)
++     ATTRIBUTE_MALLOC;
+ 
+ inline void *
+ ggc_internal_cleared_alloc (size_t s CXX_MEM_STAT_INFO)
+ {
+-  return ggc_internal_cleared_alloc (s, NULL, 0, 1 PASS_MEM_STAT);
++  return ggc_internal_cleared_alloc_no_dtor (s, NULL, 0, 1 PASS_MEM_STAT);
+ }
+ 
+ /* Resize a block.  */
+@@ -187,8 +196,8 @@
+     return static_cast<T *> (ggc_internal_alloc (sizeof (T), finalize<T>, 0, 1
+ 						 PASS_MEM_STAT));
+   else
+-    return static_cast<T *> (ggc_internal_alloc (sizeof (T), NULL, 0, 1
+-						 PASS_MEM_STAT));
++    return static_cast<T *> (ggc_internal_alloc_no_dtor (sizeof (T), NULL,
++							 0, 1 PASS_MEM_STAT));
+ }
+ 
+ /* GGC allocation function that does not call finalizer for type
+@@ -199,8 +208,8 @@
+ inline T *
+ ggc_alloc_no_dtor (ALONE_CXX_MEM_STAT_INFO)
+ {
+-  return static_cast<T *> (ggc_internal_alloc (sizeof (T), NULL, 0, 1
+-					       PASS_MEM_STAT));
++  return static_cast<T *> (ggc_internal_alloc_no_dtor (sizeof (T), NULL, 0, 1
++						       PASS_MEM_STAT));
+ }
+ 
+ template<typename T>
+@@ -212,8 +221,9 @@
+ 							 finalize<T>, 0, 1
+ 							 PASS_MEM_STAT));
+   else
+-    return static_cast<T *> (ggc_internal_cleared_alloc (sizeof (T), NULL, 0, 1
+-							 PASS_MEM_STAT));
++    return static_cast<T *> (ggc_internal_cleared_alloc_no_dtor (sizeof (T),
++								 NULL, 0, 1
++								 PASS_MEM_STAT));
+ }
+ 
+ template<typename T>
+@@ -224,8 +234,9 @@
+     return static_cast<T *> (ggc_internal_alloc (c * sizeof (T), finalize<T>,
+ 						 sizeof (T), c PASS_MEM_STAT));
+   else
+-    return static_cast<T *> (ggc_internal_alloc (c * sizeof (T), NULL, 0, 0
+-						 PASS_MEM_STAT));
++    return static_cast<T *> (ggc_internal_alloc_no_dtor (c * sizeof (T),
++							 NULL, 0, 0
++							 PASS_MEM_STAT));
+ }
+ 
+ template<typename T>
+@@ -238,8 +249,10 @@
+ 							 sizeof (T), c
+ 							 PASS_MEM_STAT));
+   else
+-    return static_cast<T *> (ggc_internal_cleared_alloc (c * sizeof (T), NULL,
+-							 0, 0 PASS_MEM_STAT));
++    return static_cast<T *> (ggc_internal_cleared_alloc_no_dtor (c
++								 * sizeof (T),
++								 NULL, 0, 0
++								 PASS_MEM_STAT));
+ }
+ 
+ inline void *
 --- gcc/config/darwin.h.orig
 +++ gcc/config/darwin.h
 @@ -264,8 +264,6 @@
