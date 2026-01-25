@@ -1869,7 +1869,6 @@ ifeq ($(strip $(filter-out %aarch64 freebsd%,$(target_cpu) $(target_os))),)
   s-inmaop.adb<libgnarl/s-inmaop__posix.adb \
   s-mudido.adb<libgnarl/s-mudido__affinity.adb \
   s-osinte.adb<libgnarl/s-osinte__freebsd.adb \
-  g-socthi.adb<libgnat/g-socthi__bsd.adb \
   s-oslock.ads<libgnat/s-oslock__posix.ads \
   s-osprim.adb<libgnat/s-osprim__posix.adb \
   s-taprop.adb<libgnarl/s-taprop__posix.adb \
@@ -1921,7 +1920,6 @@ ifeq ($(strip $(filter-out %86 freebsd%,$(target_cpu) $(target_os))),)
   s-mudido.adb<libgnarl/s-mudido__affinity.adb \
   s-osinte.adb<libgnarl/s-osinte__freebsd.adb \
   s-osinte.ads<libgnarl/s-osinte__freebsd.ads \
-  g-socthi.adb<libgnat/g-socthi__bsd.adb \
   s-oslock.ads<libgnat/s-oslock__posix.ads \
   s-osprim.adb<libgnat/s-osprim__posix.adb \
   s-taprop.adb<libgnarl/s-taprop__posix.adb \
@@ -1959,7 +1957,6 @@ ifeq ($(strip $(filter-out %86_64 freebsd%,$(target_cpu) $(target_os))),)
   s-mudido.adb<libgnarl/s-mudido__affinity.adb \
   s-osinte.adb<libgnarl/s-osinte__freebsd.adb \
   s-osinte.ads<libgnarl/s-osinte__freebsd.ads \
-  g-socthi.adb<libgnat/g-socthi__bsd.adb \
   s-oslock.ads<libgnat/s-oslock__posix.ads \
   s-osprim.adb<libgnat/s-osprim__posix.adb \
   s-taprop.adb<libgnarl/s-taprop__posix.adb \
@@ -1998,7 +1995,6 @@ ifeq ($(strip $(filter-out %86_64 dragonfly%,$(target_cpu) $(target_os))),)
   s-mudido.adb<libgnarl/s-mudido__affinity.adb \
   s-osinte.adb<libgnarl/s-osinte__dragonfly.adb \
   s-osinte.ads<libgnarl/s-osinte__dragonfly.ads \
-  g-socthi.adb<libgnat/g-socthi__bsd.adb \
   s-oslock.ads<libgnat/s-oslock__posix.ads \
   s-osprim.adb<libgnat/s-osprim__posix.adb \
   s-taprop.adb<libgnarl/s-taprop__posix.adb \
@@ -2037,7 +2033,6 @@ ifeq ($(strip $(filter-out %86_64 netbsd%,$(target_cpu) $(target_os))),)
   s-mudido.adb<libgnarl/s-mudido__affinity.adb \
   s-osinte.adb<libgnarl/s-osinte__netbsd.adb \
   s-osinte.ads<libgnarl/s-osinte__netbsd.ads \
-  g-socthi.adb<libgnat/g-socthi__bsd.adb \
   s-oslock.ads<libgnat/s-oslock__posix.ads \
   s-osprim.adb<libgnat/s-osprim__posix.adb \
   s-taprop.adb<libgnarl/s-taprop__posix.adb \
