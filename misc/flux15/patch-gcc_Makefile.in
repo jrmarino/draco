@@ -1,0 +1,12 @@
+--- gcc/Makefile.in.orig
++++ gcc/Makefile.in
+@@ -4181,6 +4181,9 @@ install-driver: installdirs xgcc$(exeext)
+ 	    ( cd $(DESTDIR)$(bindir) && \
+ 	      $(LN) $(GCC_INSTALL_NAME)$(exeext) $(FULL_DRIVER_NAME) ); \
+ 	  fi; \
++	  if [ -f gnat1$(exeext) ] ; then \
++	    ( cd $(DESTDIR)$(bindir) && $(LN) $(GCC_INSTALL_NAME)$(exeext) ada$(exeext) ) \
++ 	  fi; \
+ 	  if [ ! -f gcc-cross$(exeext) ] \
+ 	      && [ "$(GCC_INSTALL_NAME)" != "$(GCC_TARGET_INSTALL_NAME)" ]; then \
+ 	    rm -f $(DESTDIR)$(bindir)/$(target_noncanonical)-gcc-tmp$(exeext); \
