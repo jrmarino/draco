@@ -638,6 +638,7 @@ private
    end record;
    pragma Convention (C, timespec);
 
+   type pthread_t     is new System.Address;
    type pthread_key_t is new int;
 
    type pthread_attr_t is record

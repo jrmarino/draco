@@ -571,7 +571,7 @@
 +end System.OS_Interface;
 --- /dev/null
 +++ gcc/ada/libgnarl/s-osinte__netbsd.ads
-@@ -0,0 +1,679 @@
+@@ -0,0 +1,680 @@
 +------------------------------------------------------------------------------
 +--                                                                          --
 +--                  GNAT RUN-TIME LIBRARY (GNARL) COMPONENTS                --
@@ -1212,6 +1212,7 @@
 +   end record;
 +   pragma Convention (C, timespec);
 +
++   type pthread_t     is new System.Address;
 +   type pthread_key_t is new int;
 +
 +   type pthread_attr_t is record
