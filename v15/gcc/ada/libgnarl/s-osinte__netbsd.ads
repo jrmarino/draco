@@ -646,12 +646,6 @@ private
    pragma Convention (C, pthread_attr_t);
    for pthread_attr_t'Alignment use size_t'Alignment;
 
-   type pthread_mutex_t is record
-      Data : char_array (1 .. System.OS_Constants.PTHREAD_MUTEX_SIZE);
-   end record;
-   pragma Convention (C, pthread_mutex_t);
-   for pthread_mutex_t'Alignment use size_t'Alignment;
-
    type pthread_mutexattr_t is record
       Data : char_array (1 .. System.OS_Constants.PTHREAD_MUTEXATTR_SIZE);
    end record;
