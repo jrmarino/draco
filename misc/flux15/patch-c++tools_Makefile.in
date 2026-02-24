@@ -1,0 +1,19 @@
+--- c++tools/Makefile.in.orig	2026-02-24 00:34:52 UTC
++++ c++tools/Makefile.in
+@@ -36,6 +36,7 @@ VERSION.O := ../gcc/version.o
+ exeext := @EXEEXT@
+ LIBIBERTY := ../libiberty/libiberty.a
+ VERSION.O := ../gcc/version.o
++NETLIBS := @NETLIBS@
+ 
+ all::
+ 
+@@ -98,7 +99,7 @@ g++-mapper-server$(exeext): $(MAPPER.O) $(CODYLIB)
+ CODYLIB = ../libcody/libcody.a
+ CXXINC += -I$(srcdir)/../libcody -I$(srcdir)/../include -I$(srcdir)/../gcc -I. -I../gcc
+ g++-mapper-server$(exeext): $(MAPPER.O) $(CODYLIB)
+-	+$(CXX) $(LDFLAGS) $(PICFLAG) $(LD_PICFLAG) -o $@ $^ $(LIBIBERTY)
++	+$(CXX) $(LDFLAGS) $(PICFLAG) $(LD_PICFLAG) -o $@ $^ $(LIBIBERTY) $(NETLIBS)
+ 
+ # copy to gcc dir so tests there can run
+ all::../gcc/g++-mapper-server$(exeext)

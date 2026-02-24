@@ -1,0 +1,11 @@
+--- gcc/cp/Make-lang.in.orig	2026-02-24 00:55:48 UTC
++++ gcc/cp/Make-lang.in
+@@ -143,7 +143,7 @@ cc1plus$(exeext): $(CXX_OBJS) cc1plus-checksum.o $(BAC
+ cc1plus$(exeext): $(CXX_OBJS) cc1plus-checksum.o $(BACKEND) $(CODYLIB) $(LIBDEPS) $(c++.prev)
+ 	@$(call LINK_PROGRESS,$(INDEX.c++),start)
+ 	+$(LLINKER) $(ALL_LINKERFLAGS) $(LDFLAGS) -o $@ \
+-	      $(CXX_OBJS) cc1plus-checksum.o $(BACKEND) $(CODYLIB) \
++	      $(CXX_OBJS) cc1plus-checksum.o $(BACKEND) $(CODYLIB) $(NETLIBS) \
+ 		$(LIBS) $(BACKENDLIBS)
+ 	@$(call LINK_PROGRESS,$(INDEX.c++),end)
+ 

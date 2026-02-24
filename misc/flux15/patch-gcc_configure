@@ -1,16 +1,39 @@
---- gcc/configure.orig
+--- gcc/configure.orig	2026-02-24 00:50:44 UTC
 +++ gcc/configure
-@@ -33645,6 +33645,13 @@ case "$target" in
-       gcc_cv_target_dl_iterate_phdr=no
-     fi
+@@ -812,6 +812,7 @@ LDEXP_LIB
+ ZSTD_INCLUDE
+ DL_LIB
+ LDEXP_LIB
++NETLIBS
+ EXTRA_GCC_LIBS
+ GNAT_LIBEXC
+ COLLECT2_LIBS
+@@ -10304,6 +10305,14 @@ LIBS="$save_LIBS"
+ EXTRA_GCC_LIBS="$LIBS"
+ LIBS="$save_LIBS"
+ 
++case "$host" in
++  *-*-solaris2.11)
++    NETLIBS="-lsocket -lnsl"
++    ;;
++  *)
++    NETLIBS=""
++    ;;
++esac
+ 
+ # Some systems put ldexp and frexp in libm instead of libc; assume
+ # they're both in the same place.  jcf-dump needs them.
+@@ -33640,6 +33649,13 @@ case "$target" in
      ;;
-+  *-*-netbsd*)
-+    if grep dl_iterate_phdr $target_header_dir/link_elf.h > /dev/null 2>&1; then
+   *-*-dragonfly* | *-*-freebsd*)
+     if grep dl_iterate_phdr $target_header_dir/sys/link_elf.h > /dev/null 2>&1; then
 +      gcc_cv_target_dl_iterate_phdr=yes
 +    else
 +      gcc_cv_target_dl_iterate_phdr=no
 +    fi
 +    ;;
-   *-linux-musl*)
-     gcc_cv_target_dl_iterate_phdr=yes
-     ;;
++  *-*-netbsd*)
++    if grep dl_iterate_phdr $target_header_dir/link_elf.h > /dev/null 2>&1; then
+       gcc_cv_target_dl_iterate_phdr=yes
+     else
+       gcc_cv_target_dl_iterate_phdr=no

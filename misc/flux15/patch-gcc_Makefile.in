@@ -1,6 +1,14 @@
---- gcc/Makefile.in.orig
+--- gcc/Makefile.in.orig	2026-02-24 00:43:46 UTC
 +++ gcc/Makefile.in
-@@ -4181,6 +4181,9 @@ install-driver: installdirs xgcc$(exeext)
+@@ -451,6 +451,7 @@ CODYINC = -I$(srcdir)/../libcody
+ 
+ CODYLIB = ../libcody/libcody.a
+ CODYINC = -I$(srcdir)/../libcody
++NETLIBS = @NETLIBS@
+ 
+ # Where to find decNumber
+ enable_decimal_float = @enable_decimal_float@
+@@ -4181,6 +4182,9 @@ install-driver: installdirs xgcc$(exeext)
  	    ( cd $(DESTDIR)$(bindir) && \
  	      $(LN) $(GCC_INSTALL_NAME)$(exeext) $(FULL_DRIVER_NAME) ); \
  	  fi; \

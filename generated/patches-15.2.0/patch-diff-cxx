@@ -1,3 +1,49 @@
+--- c++tools/Makefile.in.orig
++++ c++tools/Makefile.in
+@@ -36,6 +36,7 @@ VERSION.O := ../gcc/version.o
+ exeext := @EXEEXT@
+ LIBIBERTY := ../libiberty/libiberty.a
+ VERSION.O := ../gcc/version.o
++NETLIBS := @NETLIBS@
+ 
+ all::
+ 
+@@ -98,7 +99,7 @@ g++-mapper-server$(exeext): $(MAPPER.O) $(CODYLIB)
+ CODYLIB = ../libcody/libcody.a
+ CXXINC += -I$(srcdir)/../libcody -I$(srcdir)/../include -I$(srcdir)/../gcc -I. -I../gcc
+ g++-mapper-server$(exeext): $(MAPPER.O) $(CODYLIB)
+-	+$(CXX) $(LDFLAGS) $(PICFLAG) $(LD_PICFLAG) -o $@ $^ $(LIBIBERTY)
++	+$(CXX) $(LDFLAGS) $(PICFLAG) $(LD_PICFLAG) -o $@ $^ $(LIBIBERTY) $(NETLIBS)
+ 
+ # copy to gcc dir so tests there can run
+ all::../gcc/g++-mapper-server$(exeext)
+--- c++tools/configure.orig
++++ c++tools/configure
+@@ -622,6 +622,7 @@ LIBOBJS
+ 
+ ac_subst_vars='LTLIBOBJS
+ LIBOBJS
++NETLIBS
+ get_gcc_base_ver
+ EGREP
+ GREP
+@@ -1669,6 +1670,16 @@ $as_echo "$ac_res" >&6; }
+   eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+ 
+ } # ac_fn_cxx_check_header_compile
++
++case "$host" in
++  *-*-solaris2.11)
++    NETLIBS="-lsocket -lnsl"
++    ;;
++  *)
++    NETLIBS=""
++    ;;
++esac
++
+ cat >config.log <<_ACEOF
+ This file contains any messages produced by compilers while
+ running configure, to aid debugging if configure makes a mistake.
 --- libstdc++-v3/configure.host.orig
 +++ libstdc++-v3/configure.host
 @@ -265,6 +265,9 @@ case "${host_os}" in
@@ -61,6 +107,20 @@
  // The major release number for the GCC release the C++ library belongs to.
  #define _GLIBCXX_RELEASE
  
+--- libstdc++-v3/testsuite/lib/dg-options.exp.orig
++++ libstdc++-v3/testsuite/lib/dg-options.exp
+@@ -296,7 +296,10 @@ proc add_options_for_net_ts { flags } {
+ # Add to FLAGS all the target-specific flags needed for networking.
+ 
+ proc add_options_for_net_ts { flags } {
+-    if { [istarget *-*-rtems*] } {
++    # Illumos needs libsocket and libnsl for networking applications.
++    if { [istarget *-*-solaris2.11] } {
++	return "$flags -lsocket -lnsl"
++    } elseif { [istarget *-*-rtems*] } {
+ 	return "$flags -lbsd -Wl,--gc-sections"
+     }
+     return $flags
 --- libstdc++-v3/include/c_global/cstdio.orig
 +++ libstdc++-v3/include/c_global/cstdio
 @@ -161,16 +161,16 @@ namespace __gnu_cxx

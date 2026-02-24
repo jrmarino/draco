@@ -1,0 +1,27 @@
+--- c++tools/configure.orig	2026-02-24 00:38:28 UTC
++++ c++tools/configure
+@@ -622,6 +622,7 @@ LIBOBJS
+ 
+ ac_subst_vars='LTLIBOBJS
+ LIBOBJS
++NETLIBS
+ get_gcc_base_ver
+ EGREP
+ GREP
+@@ -1669,6 +1670,16 @@ $as_echo "$ac_res" >&6; }
+   eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+ 
+ } # ac_fn_cxx_check_header_compile
++
++case "$host" in
++  *-*-solaris2.11)
++    NETLIBS="-lsocket -lnsl"
++    ;;
++  *)
++    NETLIBS=""
++    ;;
++esac
++
+ cat >config.log <<_ACEOF
+ This file contains any messages produced by compilers while
+ running configure, to aid debugging if configure makes a mistake.

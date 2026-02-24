@@ -137,7 +137,15 @@
  #undef	MULTILIB_DEFAULTS
 --- gcc/Makefile.in.orig
 +++ gcc/Makefile.in
-@@ -4181,6 +4181,9 @@ install-driver: installdirs xgcc$(exeext)
+@@ -451,6 +451,7 @@ CODYINC = -I$(srcdir)/../libcody
+ 
+ CODYLIB = ../libcody/libcody.a
+ CODYINC = -I$(srcdir)/../libcody
++NETLIBS = @NETLIBS@
+ 
+ # Where to find decNumber
+ enable_decimal_float = @enable_decimal_float@
+@@ -4181,6 +4182,9 @@ install-driver: installdirs xgcc$(exeext)
  	    ( cd $(DESTDIR)$(bindir) && \
  	      $(LN) $(GCC_INSTALL_NAME)$(exeext) $(FULL_DRIVER_NAME) ); \
  	  fi; \
@@ -177,22 +185,62 @@
  
  /* Use --as-needed -lgcc_s for eh support.  */
  #ifdef HAVE_LD_AS_NEEDED
+--- gcc/config.gcc.orig
++++ gcc/config.gcc
+@@ -1047,8 +1047,12 @@ case ${target} in
+   sol2_tm_file_head="elfos.h ${cpu_type}/sysv4.h"
+   sol2_tm_file_tail="${cpu_type}/sol2.h sol2.h"
+   sol2_tm_file="${sol2_tm_file_head} ${sol2_tm_file_tail}"
+-  # __cxa_atexit was introduced in Solaris 11.4.
+-  default_use_cxa_atexit=yes
++  case ${target} in
++    *-*-solaris2.11.[456789])
++      # __cxa_atexit was introduced in Solaris 11.4.
++      default_use_cxa_atexit=yes
++      ;;
++  esac
+   use_gcc_stdint=wrap
+   if test x$gnu_ld = xyes; then
+     tm_file="usegld.h ${tm_file}"
 --- gcc/configure.orig
 +++ gcc/configure
-@@ -33645,6 +33645,13 @@ case "$target" in
-       gcc_cv_target_dl_iterate_phdr=no
-     fi
+@@ -812,6 +812,7 @@ LDEXP_LIB
+ ZSTD_INCLUDE
+ DL_LIB
+ LDEXP_LIB
++NETLIBS
+ EXTRA_GCC_LIBS
+ GNAT_LIBEXC
+ COLLECT2_LIBS
+@@ -10304,6 +10305,14 @@ LIBS="$save_LIBS"
+ EXTRA_GCC_LIBS="$LIBS"
+ LIBS="$save_LIBS"
+ 
++case "$host" in
++  *-*-solaris2.11)
++    NETLIBS="-lsocket -lnsl"
++    ;;
++  *)
++    NETLIBS=""
++    ;;
++esac
+ 
+ # Some systems put ldexp and frexp in libm instead of libc; assume
+ # they're both in the same place.  jcf-dump needs them.
+@@ -33640,6 +33649,13 @@ case "$target" in
      ;;
-+  *-*-netbsd*)
-+    if grep dl_iterate_phdr $target_header_dir/link_elf.h > /dev/null 2>&1; then
+   *-*-dragonfly* | *-*-freebsd*)
+     if grep dl_iterate_phdr $target_header_dir/sys/link_elf.h > /dev/null 2>&1; then
 +      gcc_cv_target_dl_iterate_phdr=yes
 +    else
 +      gcc_cv_target_dl_iterate_phdr=no
 +    fi
 +    ;;
-   *-linux-musl*)
-     gcc_cv_target_dl_iterate_phdr=yes
-     ;;
++  *-*-netbsd*)
++    if grep dl_iterate_phdr $target_header_dir/link_elf.h > /dev/null 2>&1; then
+       gcc_cv_target_dl_iterate_phdr=yes
+     else
+       gcc_cv_target_dl_iterate_phdr=no
 --- gcc/gcc.cc.orig
 +++ gcc/gcc.cc
 @@ -1656,6 +1656,9 @@ static const char *const standard_startfile_prefix_2
@@ -214,6 +262,28 @@
      }
  
    gcc_assert (!IS_ABSOLUTE_PATH (tooldir_base_prefix));
+--- gcc/cp/Make-lang.in.orig
++++ gcc/cp/Make-lang.in
+@@ -143,7 +143,7 @@ cc1plus$(exeext): $(CXX_OBJS) cc1plus-checksum.o $(BAC
+ cc1plus$(exeext): $(CXX_OBJS) cc1plus-checksum.o $(BACKEND) $(CODYLIB) $(LIBDEPS) $(c++.prev)
+ 	@$(call LINK_PROGRESS,$(INDEX.c++),start)
+ 	+$(LLINKER) $(ALL_LINKERFLAGS) $(LDFLAGS) -o $@ \
+-	      $(CXX_OBJS) cc1plus-checksum.o $(BACKEND) $(CODYLIB) \
++	      $(CXX_OBJS) cc1plus-checksum.o $(BACKEND) $(CODYLIB) $(NETLIBS) \
+ 		$(LIBS) $(BACKENDLIBS)
+ 	@$(call LINK_PROGRESS,$(INDEX.c++),end)
+ 
+--- gcc/objcp/Make-lang.in.orig
++++ gcc/objcp/Make-lang.in
+@@ -80,7 +80,7 @@ cc1objplus$(exeext): $(OBJCXX_OBJS) cc1objplus-checksu
+ 	@$(call LINK_PROGRESS,$(INDEX.obj-c++),start)
+ 	+$(LLINKER) $(ALL_LINKERFLAGS) $(LDFLAGS) -o $@ \
+ 		$(OBJCXX_OBJS) cc1objplus-checksum.o $(BACKEND) \
+-		  $(CODYLIB) $(LIBS) $(BACKENDLIBS)
++		  $(CODYLIB) $(NETLIBS) $(LIBS) $(BACKENDLIBS)
+ 	@$(call LINK_PROGRESS,$(INDEX.obj-c++),end)
+ 
+ # Objective C++ language specific files.
 --- libcc1/configure.orig
 +++ libcc1/configure
 @@ -9282,7 +9282,7 @@ rm -f core conftest.err conftest.$ac_objext \

@@ -141,8 +141,11 @@ produce_patch ${CORE_SUFFIX} core[@]
 regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
 regenerate_patch ${CORE_SUFFIX} patch-gcc_config_i386_gnu-user64.h
 regenerate_patch ${CORE_SUFFIX} patch-gcc_config_netbsd-elf.h
+regenerate_patch ${CORE_SUFFIX} patch-gcc_config.gcc
 regenerate_patch ${CORE_SUFFIX} patch-gcc_configure
 regenerate_patch ${CORE_SUFFIX} patch-gcc_gcc.cc
+regenerate_patch ${CORE_SUFFIX} patch-gcc_cp_Make-lang.in
+regenerate_patch ${CORE_SUFFIX} patch-gcc_objcp_Make-lang.in
 regenerate_patch ${CORE_SUFFIX} patch-libcc1_configure
 regenerate_patch ${CORE_SUFFIX} patch-libssp_ssp.c
 
@@ -152,10 +155,13 @@ reset_patch ${ADA_SUITE_SUFFIX}
 produce_patch ${ADA_SUITE_SUFFIX} suite[@]
 
 reset_patch ${CXX_SUFFIX}
+regenerate_patch ${CXX_SUFFIX} patch-c++tools_Makefile.in
+regenerate_patch ${CXX_SUFFIX} patch-c++tools_configure
 regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_configure.host
 regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_config_os_bionic_ctype__base.h
 regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_src_c++11_futex.cc
 regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_include_bits_c++config
+regenerate_patch ${CXX_SUFFIX} patch-libstdc++-v3_testsuite_lib_dg-options.exp
 gen_throw_patch libstdc++-v3/include/c_global cstdio
 gen_throw_patch libstdc++-v3/include/c_global cstdlib
 gen_throw_patch libstdc++-v3/include/c_global cwchar

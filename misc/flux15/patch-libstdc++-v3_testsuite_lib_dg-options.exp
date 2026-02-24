@@ -1,0 +1,14 @@
+--- libstdc++-v3/testsuite/lib/dg-options.exp.orig	2026-02-24 00:59:24 UTC
++++ libstdc++-v3/testsuite/lib/dg-options.exp
+@@ -296,7 +296,10 @@ proc add_options_for_net_ts { flags } {
+ # Add to FLAGS all the target-specific flags needed for networking.
+ 
+ proc add_options_for_net_ts { flags } {
+-    if { [istarget *-*-rtems*] } {
++    # Illumos needs libsocket and libnsl for networking applications.
++    if { [istarget *-*-solaris2.11] } {
++	return "$flags -lsocket -lnsl"
++    } elseif { [istarget *-*-rtems*] } {
+ 	return "$flags -lbsd -Wl,--gc-sections"
+     }
+     return $flags
