@@ -141,6 +141,7 @@ produce_patch ${CORE_SUFFIX} core[@]
 regenerate_patch ${CORE_SUFFIX} patch-gcc_Makefile.in
 regenerate_patch ${CORE_SUFFIX} patch-gcc_config_i386_gnu-user64.h
 regenerate_patch ${CORE_SUFFIX} patch-gcc_config_netbsd-elf.h
+regenerate_patch ${CORE_SUFFIX} patch-gcc_config_freebsd-spec.h
 regenerate_patch ${CORE_SUFFIX} patch-gcc_config.gcc
 regenerate_patch ${CORE_SUFFIX} patch-gcc_configure
 regenerate_patch ${CORE_SUFFIX} patch-gcc_gcc.cc
